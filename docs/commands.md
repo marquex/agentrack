@@ -4,22 +4,22 @@ The library will provide a CLI command to interact with the issues, and it shoul
 
 The commands will print the output as JSON to be easily parsed by other tools and agents. The output will be printed to stdout, and any errors will be printed to stderr with a non-zero exit code.
 
-The format of the commands will be `trackgentic [subcommand] [arguments] [flags]`, where `subcommand` is the action to perform, `arguments` are the required parameters for the command, and `flags` are optional parameters that can modify the behavior of the command.
+The format of the commands will be `agt [subcommand] [arguments] [flags]`, where `subcommand` is the action to perform, `arguments` are the required parameters for the command, and `flags` are optional parameters that can modify the behavior of the command.
 
 ## Available subcommands
 
-### `trackgentic init`
+### `agt init`
 
 Initialize the issue tracker in the current directory by creating the necessary folders and files. This command should be run once when setting up the issue tracker for a repository.
 
 **Returns:**
-- `{ "result": "OK", path: "[path_to_trackgentic_directory]" }` if the initialization was successful
-- `{ "result": "ALREADY_INITIALIZED", path: "[path_to_existing_trackgentic_directory]" }` if the issue tracker is already initialized in the current directory or any of its parent directories.
+- `{ "result": "OK", path: "[path_to_agentrack_directory]" }` if the initialization was successful
+- `{ "result": "ALREADY_INITIALIZED", path: "[path_to_existing_agentrack_directory]" }` if the issue tracker is already initialized in the current directory or any of its parent directories.
 
 **Notes:**
 * This method is idempotent, if the issue tracker is already initialized it will not overwrite the existing files and will return an error indicating that it is already initialized.
 
-### `trackgentic create [title] [flags]`
+### `agt create [title] [flags]`
 
 Create a new issue with the given title and optional attributes specified by flags.
 
@@ -30,14 +30,14 @@ Create a new issue with the given title and optional attributes specified by fla
 * `--status [status]`: the initial status of the issue (default: `idea`)
 * `--priority [priority]`: a numeric priority from 1 (highest) to 5 (lowest). Default is `3`
 * `--parentId [parentId]`: the id of the parent issue, if this issue is a sub-issue
-* `--path [path]`: the path where the issue file will be created, if not provided it will be created in the default location `./trackgentic/issues/[issue_id].json`
+* `--path [path]`: the path where the issue file will be created, if not provided it will be created in the default location `./agentrack/issues/[issue_id].json`
 
 **Returns:**
 The id of the created issue: `{ "id": "[issue_id]" }`
 
 **Example:**
 ```bash
-> trackgentic create "Implement authentication" --description "We need to implement authentication for our app" --assignee "Alice" --tags "backend,security" --status "todo" --priority 2
+> agt create "Implement authentication" --description "We need to implement authentication for our app" --assignee "Alice" --tags "backend,security" --status "todo" --priority 2
 
 # returns {"id": "123456a2es"}
 ```
@@ -50,7 +50,7 @@ The id of the created issue: `{ "id": "[issue_id]" }`
 * The creation event is separate from the update event that sets the initial properties of the issue. This change we can reconstruct the state of the issue attributes just by looking at update events, and the creation event is just a marker that the issue was created at that time.
 * Once the file is created, the issue will be added to the index file with the initial metadata (id, title, path, status, assignee, parentId, tags and priority) so it can be easily found when listing or searching for issues.
 
-### `trackgentic update [issue_id] [flags]`
+### `agt update [issue_id] [flags]`
 
 Update an existing issue by id with optional attributes specified by flags. At least one flag must be provided to update the issue.
 
@@ -69,7 +69,7 @@ Update an existing issue by id with optional attributes specified by flags. At l
 
 **Example:**
 ```bash
-trackgentic update 123456a2es --status "in-progress" --assignee "Bob"
+agt update 123456a2es --status "in-progress" --assignee "Bob"
 
 # returns {"result": "OK"}
 ```
@@ -81,7 +81,7 @@ trackgentic update 123456a2es --status "in-progress" --assignee "Bob"
 * update events accept multiple attributes at once, if we want to calculate the state of one attribute we can just go through the `update` events and look for `content.[attribute]` to see when it was updated and what value it was set to.
 * Once the issue is updated, the computed state is calculated and the index file is updated with the new metadata (title, status, assignee, tags, priority and parentId) so it can be easily found when listing or searching for issues.
 
-### `trackgentic list [flags]`
+### `agt list [flags]`
 
 List issues based on optional filters specified by flags. If no flags are provided, all issues will be listed.
 
@@ -103,7 +103,7 @@ An array of issues that match the filters, each issue will include the following
 
 **Example:**
 ```bash
-trackgentic list --status "open" --assignee "Alice"
+agt list --status "open" --assignee "Alice"
 # returns [
 #   { "id": "123456a2es",
 #     "title": "Implement authentication",
@@ -121,7 +121,7 @@ trackgentic list --status "open" --assignee "Alice"
 * The open status is a special filter, not a real status. It just means to search for the issues in the `open` array in the index file, which includes all the issues that are not closed.
 * The items returned don't include the path to the issue file. Issue details must be retrieved with the `view` command.
 
-### `trackgentic view [issue_id]`
+### `agt view [issue_id]`
 
 Show the computed state of the issue with the given id.
 
@@ -142,7 +142,7 @@ An object representing the computed state of the issue, including the following 
 
 **Example:**
 ```bash
-trackgentic view 123456a2es
+agt view 123456a2es
 # returns {
 #   "id": "123456a2es",
 #   "title": "Implement authentication",
@@ -161,7 +161,7 @@ trackgentic view 123456a2es
 **Notes:**
 * This response is calculated from the fileTo compute the state of the issue, we need to read all the events in the issue file and apply them in order
 
-### `trackgentic history [issue_id]`
+### `agt history [issue_id]`
 
 Show the history of changes of the issue with the given id.
 
@@ -173,7 +173,7 @@ Can return issues errors (see Errors section below)
 **Example:**
 
 ```bash
-trackgentic history 123456a2es
+agt history 123456a2es
 # returns [
 #   { "timestamp": "2024-06-01T12:00:00Z", "type": "creation"},
 #   { "timestamp": "2024-06-01T12:00:00Z", "type": "update", "content": { "title": "Implement authentication", "description": "We need to implement authentication for our app", "assignee": "Alice", "tags": ["backend", "security"], "status": "todo" }},
@@ -183,7 +183,7 @@ trackgentic history 123456a2es
 
 
 
-### `trackgentic comments add [issue_id] --content [content]`
+### `agt comments add [issue_id] --content [content]`
 
 Add a comment to an existing issue by id.
 
@@ -197,7 +197,7 @@ Add a comment to an existing issue by id.
 
 **Example:**
 ```bash
-trackgentic comments add 123456a2es --content "This is a comment"
+agt comments add 123456a2es --content "This is a comment"
 # returns {"result": "OK"}
 ```
 
@@ -208,7 +208,7 @@ trackgentic comments add 123456a2es --content "This is a comment"
 * The comment id is generated when the comment is created and returned in the response so the caller can use it to update or delete the comment later.
 
 
-### `trackgentic comments update [issue_id] [comment_id] --content [content]`
+### `agt comments update [issue_id] [comment_id] --content [content]`
 
 Update the content of an existing comment by issue id and comment id.
 
@@ -223,7 +223,7 @@ Update the content of an existing comment by issue id and comment id.
 
 **Example:**
 ```bash
-trackgentic comments update 123456a2es comment-id --content "Updated comment content"
+agt comments update 123456a2es comment-id --content "Updated comment content"
 # returns {"result": "OK"}
 ```
 
@@ -235,7 +235,7 @@ trackgentic comments update 123456a2es comment-id --content "Updated comment con
 * When computing the current state of comments (e.g., in `comments list`), the latest `comment-update` event for a given comment id overrides the original content.
 
 
-### `trackgentic comments delete [issue_id] [comment_id]`
+### `agt comments delete [issue_id] [comment_id]`
 
 Delete an existing comment by issue id and comment id.
 
@@ -246,7 +246,7 @@ Delete an existing comment by issue id and comment id.
 
 **Example:**
 ```bash
-trackgentic comments delete 123456a2es comment-id
+agt comments delete 123456a2es comment-id
 # returns {"result": "OK"}
 ```
 
@@ -259,7 +259,7 @@ trackgentic comments delete 123456a2es comment-id
 * Deleting an already-deleted comment returns `COMMENT_NOT_FOUND`.
 
 
-### `trackgentic comments list [issue_id]`
+### `agt comments list [issue_id]`
 
 List the comments of the issue with the given id.
 
@@ -278,7 +278,7 @@ Can return issues errors (see Errors section below)
 
 **Example:**
 ```bash
-trackgentic comments list 123456a2es
+agt comments list 123456a2es
 # returns [
 #   {
 #     "id": "comment-id",
@@ -305,7 +305,7 @@ The message is optional and humar readable, while the error code is a fixed stri
 
 ### Global errors
 
-* `NOT_INITIALIZED`: The index file is missing, the user needs to initialize it by running `trackgentic init`
+* `NOT_INITIALIZED`: The index file is missing, the user needs to initialize it by running `agt init`
 * `TOKEN_REQUIRED`: A command was called without a token and the auth mode requires one.
 * `INVALID_TOKEN`: The provided token does not match any registered user.
 * `DEFAULT_USER_MISSING`: The authentication system is open for writing but there is no default user defined in config.json to attribute unauthenticated changes.

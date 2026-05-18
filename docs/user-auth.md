@@ -1,17 +1,17 @@
 # User Authentication
 
-Trackgentic is designed to be used by multiple actors — AI agents, humans, or automated systems. To know who is performing each action, we introduce a lightweight authentication system based on simple tokens. This is not cryptographically secure — it's a practical mechanism to attribute actions to users and prevent accidental impersonation.
+Agentrack is designed to be used by multiple actors — AI agents, humans, or automated systems. To know who is performing each action, we introduce a lightweight authentication system based on simple tokens. This is not cryptographically secure — it's a practical mechanism to attribute actions to users and prevent accidental impersonation.
 
 ## How it works
 
-1. A user registers with a name using `trackgentic users register`.
+1. A user registers with a name using `agt users register`.
 2. The system generates a short random token and stores it alongside the user name.
 3. Depending on the configured auth mode, the user may need to provide the token when executing commands.
 4. The system resolves the token to the user name and records it in the event.
 
 ## User registry file
 
-Registered users are stored in `.trackgentic/users.json`. This file is created automatically during `init` as an empty registry.
+Registered users are stored in `.agentrack/users.json`. This file is created automatically during `init` as an empty registry.
 
 ```json
 {
@@ -24,11 +24,11 @@ Registered users are stored in `.trackgentic/users.json`. This file is created a
 
 ### Token format
 
-Tokens are prefixed with `tk_` followed by 8 random alphanumeric characters (e.g., `tk_k7x2m9p4`). This is short enough to be practical and unique enough to avoid collisions in normal usage. The prefix makes tokens easy to identify as trackgentic tokens when seen in configuration or logs.
+Tokens are prefixed with `tk_` followed by 8 random alphanumeric characters (e.g., `tk_k7x2m9p4`). This is short enough to be practical and unique enough to avoid collisions in normal usage. The prefix makes tokens easy to identify as agentrack tokens when seen in configuration or logs.
 
 ## Auth mode
 
-The behavior of the system when a command is executed without a token is configurable. The auth mode is set in `.trackgentic/config.json` under the `auth` key.
+The behavior of the system when a command is executed without a token is configurable. The auth mode is set in `.agentrack/config.json` under the `auth` key.
 
 ```json
 {
@@ -69,11 +69,11 @@ All commands require a valid token — both reads and writes. Any command execut
 
 ## Passing the token
 
-Users identify themselves by setting the `TRACKGENTIC_USER_TOKEN` environment variable to their token before running commands. This keeps token management out of command-line arguments (where tokens could end up in shell history or process listings) and makes it easy for agents and scripts to authenticate once per session.
+Users identify themselves by setting the `AGENTACK_USER_TOKEN` environment variable to their token before running commands. This keeps token management out of command-line arguments (where tokens could end up in shell history or process listings) and makes it easy for agents and scripts to authenticate once per session.
 
 ```bash
-export TRACKGENTIC_USER_TOKEN=tk_k7x2m9p4
-trackgentic create "Fix login bug" --status todo
+export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+agt create "Fix login bug" --status todo
 ```
 
 ## Author field in events
@@ -90,7 +90,7 @@ When running in `open` mode without a token, the `author` field is set to the co
 
 ## CLI commands
 
-### `trackgentic users register [name]`
+### `agt users register [name]`
 
 Register a new user with the given name. The name must be unique among registered users.
 
@@ -100,7 +100,7 @@ Register a new user with the given name. The name must be unique among registere
 
 **Example:**
 ```bash
-trackgentic users register alice
+agt users register alice
 # returns { "result": "OK", "name": "alice", "token": "tk_k7x2m9p4" }
 ```
 
@@ -109,7 +109,7 @@ trackgentic users register alice
 * This command does not require a token (it's how users obtain their token).
 * The name `anonymous` is reserved for the default unauthenticated user and cannot be registered.
 
-### `trackgentic users list`
+### `agt users list`
 
 List all registered users.
 
@@ -120,7 +120,7 @@ An array of users, each with:
 
 **Example:**
 ```bash
-trackgentic users list
+agt users list
 # returns [
 #   { "name": "alice", "registeredAt": "2024-06-01T12:00:00Z" },
 #   { "name": "bob", "registeredAt": "2024-06-02T10:00:00Z" }
@@ -131,7 +131,7 @@ trackgentic users list
 * Tokens are **not** included in the list output.
 * This command does not require a token (subject to auth mode).
 
-### `trackgentic users revoke [name]`
+### `agt users revoke [name]`
 
 Revoke a user's token, effectively deregistering them. The user will no longer be able to authenticate.
 
@@ -141,15 +141,15 @@ Revoke a user's token, effectively deregistering them. The user will no longer b
 
 **Example:**
 ```bash
-export TRACKGENTIC_USER_TOKEN=tk_k7x2m9p4
-trackgentic users revoke bob
+export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+agt users revoke bob
 # returns { "result": "OK" }
 ```
 
 **Notes:**
-* Requires a valid token via the `TRACKGENTIC_USER_TOKEN` environment variable (the caller must be a registered user).
+* Requires a valid token via the `AGENTACK_USER_TOKEN` environment variable (the caller must be a registered user).
 
-### `trackgentic users regenerate [name]`
+### `agt users regenerate [name]`
 
 Generate a new token for an existing user, invalidating the old one. Useful if a token is accidentally exposed.
 
@@ -160,17 +160,17 @@ Generate a new token for an existing user, invalidating the old one. Useful if a
 
 **Example:**
 ```bash
-export TRACKGENTIC_USER_TOKEN=tk_k7x2m9p4
-trackgentic users regenerate alice
+export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+agt users regenerate alice
 # returns { "result": "OK", "name": "alice", "token": "tk_r5t1y8u2" }
 ```
 
 **Notes:**
-* The `TRACKGENTIC_USER_TOKEN` must contain the user's current token (only the user itself can regenerate its token).
+* The `AGENTACK_USER_TOKEN` must contain the user's current token (only the user itself can regenerate its token).
 
 ## Configuration
 
-Auth configuration lives in `.trackgentic/config.json`, which is created during `init` with the default settings:
+Auth configuration lives in `.agentrack/config.json`, which is created during `init` with the default settings:
 
 ```json
 {
@@ -196,7 +196,7 @@ The `mode` can be changed manually by editing the file. The `defaultUser` is onl
 ## Folder structure
 
 ```
-.trackgentic/
+.agentrack/
   config.json
   index.json
   dependencies.json
@@ -207,7 +207,7 @@ The `mode` can be changed manually by editing the file. The `defaultUser` is onl
 
 ## Impact on existing commands
 
-Whether a token is required depends on the auth mode. The user name resolved from the `TRACKGENTIC_USER_TOKEN` environment variable is recorded as `author` in every event. This means:
+Whether a token is required depends on the auth mode. The user name resolved from the `AGENTACK_USER_TOKEN` environment variable is recorded as `author` in every event. This means:
 
 * **`create`**: The `creation` and initial `update` events include the `author` field.
 * **`update`**: The `update` event includes the `author` field.

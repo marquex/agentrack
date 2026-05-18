@@ -1,23 +1,23 @@
 ---
-name: trackgentic
-description: "Interact with the trackgentic issue tracker. Use to create, list, view, update, and manage issues, comments, users, and blockages. Every agent should use this skill to track their work and coordinate with other agents."
+name: agentrack
+description: "Interact with the agentrack issue tracker. Use to create, list, view, update, and manage issues, comments, users, and blockages. Every agent should use this skill to track their work and coordinate with other agents."
 ---
 
-# Trackgentic — Issue Tracker for AI Agents
+# Agentrack — Issue Tracker for AI Agents
 
-Trackgentic is a file-backed, event-sourced, git-friendly issue tracker designed for AI agents. All commands are run via the `trackgentic` CLI.
+Agentrack is a file-backed, event-sourced, git-friendly issue tracker designed for AI agents. All commands are run via the `agt` CLI.
 
 ## Authentication
 
-**You do NOT need to provide a token.** The system automatically injects your token when you call trackgentic. Just run commands directly:
+**You do NOT need to provide a token.** The system automatically injects your token when you call agt. Just run commands directly:
 
 ```bash
-trackgentic <command> [options]
+agt <command> [options]
 ```
 
-A PreToolUse hook (`enforce-trackgentic-token.ts`) looks up your agent's token from `.trackgentic/users.json` using your agent name, strips any token you may have added to the command, and injects the correct one as `TRACKGENTIC_USER_TOKEN=xxx` before the command executes. This ensures every agent always uses its own registered token.
+A PreToolUse hook (`enforce-agentrack-token.ts`) looks up your agent's token from `.agentrack/users.json` using your agent name, strips any token you may have added to the command, and injects the correct one as `AGENTACK_USER_TOKEN=xxx` before the command executes. This ensures every agent always uses its own registered token.
 
-If your agent is not registered as a trackgentic user, the command will be blocked — ask your manager to register you first with `trackgentic users register "<agent-name>"`.
+If your agent is not registered as a agentrack user, the command will be blocked — ask your manager to register you first with `agt users register "<agent-name>"`.
 
 ## CLI Reference
 
@@ -30,7 +30,7 @@ Create, list, view, and update issues.
 The title is a **positional argument** — do NOT use `--title`.
 
 ```bash
-trackgentic create "My issue title" [options]
+agt create "My issue title" [options]
 ```
 
 Options:
@@ -46,7 +46,7 @@ Returns the created issue ID as JSON: `{ "id": "<issueId>" }`
 #### List issues
 
 ```bash
-trackgentic list [options]
+agt list [options]
 ```
 
 Options:
@@ -58,7 +58,7 @@ Options:
 #### View an issue
 
 ```bash
-trackgentic view <issueId>
+agt view <issueId>
 ```
 
 Returns the full computed state of an issue as JSON, including: id, title, description, status, priority, assignee, parentId, tags, createdAt, createdBy, updatedAt.
@@ -66,7 +66,7 @@ Returns the full computed state of an issue as JSON, including: id, title, descr
 #### Update an issue
 
 ```bash
-trackgentic update <issueId> [options]
+agt update <issueId> [options]
 ```
 
 Options:
@@ -83,7 +83,7 @@ Returns `{ "result": "OK" }` on success.
 #### View issue history
 
 ```bash
-trackgentic history <issueId>
+agt history <issueId>
 ```
 
 Returns the raw event history for an issue.
@@ -94,10 +94,10 @@ Manage comments on issues.
 
 | Command | Description |
 |---------|-------------|
-| `trackgentic comments add <issueId> --content "<content>"` | Add a comment to an issue |
-| `trackgentic comments update <issueId> <commentId> --content "<content>"` | Update an existing comment |
-| `trackgentic comments delete <issueId> <commentId>` | Delete a comment |
-| `trackgentic comments list <issueId>` | List all comments on an issue |
+| `agt comments add <issueId> --content "<content>"` | Add a comment to an issue |
+| `agt comments update <issueId> <commentId> --content "<content>"` | Update an existing comment |
+| `agt comments delete <issueId> <commentId>` | Delete a comment |
+| `agt comments list <issueId>` | List all comments on an issue |
 
 ### Blockages
 
@@ -107,10 +107,10 @@ The `--by` option is variadic: pass multiple issue IDs separated by spaces after
 
 | Command | Description |
 |---------|-------------|
-| `trackgentic blockages add <blockedId> --by <id1> <id2> ...` | Add blocker dependencies |
-| `trackgentic blockages resolve <blockedId> --by <id1> <id2> ...` | Resolve blockage dependencies |
-| `trackgentic blockages delete <blockedId> --by <id1> <id2> ...` | Delete blockage dependencies |
-| `trackgentic blockages list <issueId>` | List blockage info for an issue |
+| `agt blockages add <blockedId> --by <id1> <id2> ...` | Add blocker dependencies |
+| `agt blockages resolve <blockedId> --by <id1> <id2> ...` | Resolve blockage dependencies |
+| `agt blockages delete <blockedId> --by <id1> <id2> ...` | Delete blockage dependencies |
+| `agt blockages list <issueId>` | List blockage info for an issue |
 
 ### Users
 
@@ -118,10 +118,10 @@ Manage registered users and their tokens.
 
 | Command | Description |
 |---------|-------------|
-| `trackgentic users register <name>` | Register a new user (returns a token) |
-| `trackgentic users list` | List all registered users |
-| `trackgentic users revoke <name>` | Revoke (remove) a user |
-| `trackgentic users regenerate <name>` | Regenerate a user's token |
+| `agt users register <name>` | Register a new user (returns a token) |
+| `agt users list` | List all registered users |
+| `agt users revoke <name>` | Revoke (remove) a user |
+| `agt users regenerate <name>` | Regenerate a user's token |
 
 ## Workflow Guidelines
 
@@ -129,13 +129,13 @@ The whole project work needs to be tracked in issues. Use the CLI to manage your
 
 ### Before starting work
 
-1. List open issues assigned to you: `trackgentic list --assignee "<your-name>" --status open`
-2. Check for blockages on your issues: `trackgentic blockages list <issueId>`
+1. List open issues assigned to you: `agt list --assignee "<your-name>" --status open`
+2. Check for blockages on your issues: `agt blockages list <issueId>`
 3. Pick the highest-priority unblocked issue to work on
 
 ### When starting an issue
 
-1. View the issue details: `trackgentic view <issueId>`
+1. View the issue details: `agt view <issueId>`
 2. If the issue is not assigned to you, stop and report it
 3. If the issue is blocked by other issues, stop and report the blockers
 4. If the issue is done or closed, stop and report it
@@ -146,11 +146,11 @@ The whole project work needs to be tracked in issues. Use the CLI to manage your
 ### While working
 
 1. Add comments to document decisions, findings, or questions
-2. If blocked by another issue, add a blockage: `trackgentic blockages add <your-issue> --by <blocker-issue>`
+2. If blocked by another issue, add a blockage: `agt blockages add <your-issue> --by <blocker-issue>`
 3. Update issue status as you progress (e.g., `idea` → `in-progress` → `review` → `done`)
 
 ### After completing work
 
 1. If the issue is fully resolved: mark it as `done` and add a comment summarizing what you did
 2. If partially resolved or blocked: add a comment describing the current state, blockers, and remaining work. Mark as `todo` and reassign if needed.
-3. Resolve any blockages you were causing for other issues: `trackgentic blockages resolve <your-issue> --by <was-blocking>`
+3. Resolve any blockages you were causing for other issues: `agt blockages resolve <your-issue> --by <was-blocking>`

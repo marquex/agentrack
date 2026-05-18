@@ -1,19 +1,19 @@
 ---
-name: trackgentic-implement
-description: "Pick up an assigned issue, implement it, and hand it back via trackgentic status transitions. Receives issue ID from prompt argument."
+name: agentrack-implement
+description: "Pick up an assigned issue, implement it, and hand it back via agentrack status transitions. Receives issue ID from prompt argument."
 argument-hint: "<issue-id>"
 ---
 
-# Trackgentic Implement
+# Agentrack Implement
 
-This skill defines how an agent picks up, executes, and hands back an issue using trackgentic.
+This skill defines how an agent picks up, executes, and hands back an issue using agentrack.
 
 ## Issue ID Resolution
 
 The issue ID is resolved in this order:
 
-1. Prompt argument: `/trackgentic-implement <issue-id>`
-2. Environment variable: `$TRACKGENTIC_ISSUE_ID`
+1. Prompt argument: `/agentrack-implement <issue-id>`
+2. Environment variable: `$AGENTACK_ISSUE_ID`
 
 If neither is available, stop and report the error.
 
@@ -29,7 +29,7 @@ The `/issue` skill creates all subtasks (reviews, implementation, quality valida
 
 If the issue already has children and is unblocked (children completed), review the results:
 - Read comments on child issues
-- If work is satisfactory, close the parent: `trackgentic update <issue-id> --status "done"`
+- If work is satisfactory, close the parent: `agt update <issue-id> --status "done"`
 - If work needs changes, create new child issues as needed
 
 ## Workers: Implementation Flow
@@ -37,9 +37,9 @@ If the issue already has children and is unblocked (children completed), review 
 ### 1. Retrieve Context
 
 ```bash
-trackgentic view <issue-id>
-trackgentic comments list <issue-id>
-trackgentic blockages list <issue-id>
+agt view <issue-id>
+agt comments list <issue-id>
+agt blockages list <issue-id>
 ```
 
 ### 2. Validate Before Starting
@@ -58,7 +58,7 @@ Check each condition — stop if any applies:
 Move to `in-progress`:
 
 ```bash
-trackgentic update <issue-id> --status "in-progress"
+agt update <issue-id> --status "in-progress"
 ```
 
 Read the issue description and comments carefully. If the issue references a spec, read it. If the issue references review issues, read their comments too — they contain critical feedback. Understand acceptance criteria before writing code.
@@ -68,7 +68,7 @@ Read the issue description and comments carefully. If the issue references a spe
 Add comments for non-trivial decisions or progress:
 
 ```bash
-trackgentic comments add <issue-id> --content "<update>"
+agt comments add <issue-id> --content "<update>"
 ```
 
 ### 5. Finish — Success
@@ -76,9 +76,9 @@ trackgentic comments add <issue-id> --content "<update>"
 When the work is complete and verified:
 
 ```bash
-trackgentic comments add <issue-id> \
+agt comments add <issue-id> \
   --content "Done. <summary of what was delivered, how it was tested, caveats>"
-trackgentic update <issue-id> --status "done" --assignee "<manager>"
+agt update <issue-id> --status "done" --assignee "<manager>"
 ```
 
 **`done` means the work SUCCEEDED.** The manager will review and close.
@@ -88,9 +88,9 @@ trackgentic update <issue-id> --status "done" --assignee "<manager>"
 When you cannot continue because something external is needed:
 
 ```bash
-trackgentic comments add <issue-id> \
+agt comments add <issue-id> \
   --content "Blocked: <what you need, from whom, and why>"
-trackgentic update <issue-id> --assignee "<manager>"
+agt update <issue-id> --assignee "<manager>"
 ```
 
 Status stays `in-progress`. The manager will resolve the blocker and reassign back to you.
@@ -98,7 +98,7 @@ Status stays `in-progress`. The manager will resolve the blocker and reassign ba
 If the blocker is a concrete task that doesn't exist yet, create it:
 
 ```bash
-trackgentic create "<blocker title>" \
+agt create "<blocker title>" \
   --description "<what needs to happen>" \
   --assignee "<manager>" \
   --status "todo" \
@@ -108,7 +108,7 @@ trackgentic create "<blocker title>" \
 Then add the blockage:
 
 ```bash
-trackgentic blockages add <issue-id> --by <new-blocker-id>
+agt blockages add <issue-id> --by <new-blocker-id>
 ```
 
 Finally comment on the original issue explaining you created the blocker and what needs to happen to unblock you.
@@ -118,9 +118,9 @@ Finally comment on the original issue explaining you created the blocker and wha
 When the task cannot be completed (wrong approach, out of scope, fundamentally broken):
 
 ```bash
-trackgentic comments add <issue-id> \
+agt comments add <issue-id> \
   --content "Cannot complete: <what was tried, why it failed, what remains>"
-trackgentic update <issue-id> --status "todo" --assignee "<manager>"
+agt update <issue-id> --status "todo" --assignee "<manager>"
 ```
 
 Status reverts to `todo` — the manager will re-plan.

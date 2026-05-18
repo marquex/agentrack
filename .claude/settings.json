@@ -9,8 +9,8 @@
         "matcher": "Bash",
         "hooks": [
           {
-            "if": "Bash(trackgentic *)",
-            "command": "bun .claude/hooks/enforce-trackgentic-token.ts",
+            "if": "Bash(agt *)",
+            "command": "bun .claude/hooks/enforce-agentrack-token.ts",
             "type": "command"
           }
         ]
@@ -44,8 +44,8 @@
       "Write(.claude/**)",
       "Edit(.claude/**)",
       "MultiEdit(.claude/**)",
-      "Bash(trackgentic *)",
-      "Bash(TRACKGENTIC_USER_TOKEN=* trackgentic *)",
+      "Bash(agt *)",
+      "Bash(AGENTACK_USER_TOKEN=* agt *)",
       "Bash(cd packages/library && bun run *)",
       "Bash(cd packages/library && bun test *)"
     ]

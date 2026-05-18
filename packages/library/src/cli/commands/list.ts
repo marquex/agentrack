@@ -1,4 +1,4 @@
-import { TrackgenticError } from "../../core/errors";
+import { AgentrackError } from "../../core/errors";
 import { Tracker } from "../../core/tracker";
 import type { IssueStatus, ListParams } from "../../types";
 import { writeStderr, writeStdout } from "../output";
@@ -11,7 +11,7 @@ interface ListOptions {
 }
 
 /**
- * Handler for the `trackgentic list` command.
+ * Handler for the `agt list` command.
  */
 export async function listAction(options: ListOptions): Promise<void> {
   try {
@@ -33,7 +33,7 @@ export async function listAction(options: ListOptions): Promise<void> {
     writeStdout(result);
     process.exit(0);
   } catch (err) {
-    if (err instanceof TrackgenticError) {
+    if (err instanceof AgentrackError) {
       writeStderr({ result: err.result, message: err.message });
       process.exit(err.exitCode);
     }

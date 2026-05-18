@@ -1,9 +1,9 @@
-import { TrackgenticError } from "../../core/errors";
+import { AgentrackError } from "../../core/errors";
 import { Tracker } from "../../core/tracker";
 import { writeStderr, writeStdout } from "../output";
 
 /**
- * Handler for the `trackgentic users register <name>` command.
+ * Handler for the `agt users register <name>` command.
  */
 export async function usersRegisterAction(name: string): Promise<void> {
   try {
@@ -12,7 +12,7 @@ export async function usersRegisterAction(name: string): Promise<void> {
     writeStdout(result);
     process.exit(0);
   } catch (err) {
-    if (err instanceof TrackgenticError) {
+    if (err instanceof AgentrackError) {
       writeStderr({ result: err.result, message: err.message });
       process.exit(err.exitCode);
     }
@@ -22,7 +22,7 @@ export async function usersRegisterAction(name: string): Promise<void> {
 }
 
 /**
- * Handler for the `trackgentic users list` command.
+ * Handler for the `agt users list` command.
  */
 export async function usersListAction(): Promise<void> {
   try {
@@ -31,7 +31,7 @@ export async function usersListAction(): Promise<void> {
     writeStdout(result);
     process.exit(0);
   } catch (err) {
-    if (err instanceof TrackgenticError) {
+    if (err instanceof AgentrackError) {
       writeStderr({ result: err.result, message: err.message });
       process.exit(err.exitCode);
     }
@@ -41,13 +41,13 @@ export async function usersListAction(): Promise<void> {
 }
 
 /**
- * Handler for the `trackgentic users revoke <name>` command.
+ * Handler for the `agt users revoke <name>` command.
  */
 export async function usersRevokeAction(name: string): Promise<void> {
   try {
     const tracker = new Tracker();
     const result = await tracker.usersRevoke(name);
-    if (result instanceof TrackgenticError) {
+    if (result instanceof AgentrackError) {
       writeStderr({ result: result.result, message: result.message });
       process.exit(result.exitCode);
     }
@@ -58,7 +58,7 @@ export async function usersRevokeAction(name: string): Promise<void> {
     writeStdout(result);
     process.exit(0);
   } catch (err) {
-    if (err instanceof TrackgenticError) {
+    if (err instanceof AgentrackError) {
       writeStderr({ result: err.result, message: err.message });
       process.exit(err.exitCode);
     }
@@ -68,13 +68,13 @@ export async function usersRevokeAction(name: string): Promise<void> {
 }
 
 /**
- * Handler for the `trackgentic users regenerate <name>` command.
+ * Handler for the `agt users regenerate <name>` command.
  */
 export async function usersRegenerateAction(name: string): Promise<void> {
   try {
     const tracker = new Tracker();
     const result = await tracker.usersRegenerate(name);
-    if (result instanceof TrackgenticError) {
+    if (result instanceof AgentrackError) {
       writeStderr({ result: result.result, message: result.message });
       process.exit(result.exitCode);
     }
@@ -87,7 +87,7 @@ export async function usersRegenerateAction(name: string): Promise<void> {
     writeStdout(result);
     process.exit(0);
   } catch (err) {
-    if (err instanceof TrackgenticError) {
+    if (err instanceof AgentrackError) {
       writeStderr({ result: err.result, message: err.message });
       process.exit(err.exitCode);
     }

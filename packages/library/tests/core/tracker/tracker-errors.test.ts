@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { mkdirSync, rmSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../../src/core/errors";
+import { AgentrackError } from "../../../src/core/errors";
 import { Tracker } from "../../../src/core/tracker";
 
 describe("Tracker", () => {
@@ -11,7 +11,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -28,8 +28,8 @@ describe("Tracker", () => {
         await tracker.view("missing12345");
         expect(true).toBe(false);
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
         expect(e.exitCode).toBe(5);
       }
@@ -41,15 +41,15 @@ describe("Tracker", () => {
 
       const created = await tracker.create({ title: "Delete Me" });
       if ("id" in created) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
         unlinkSync(issuePath);
 
         try {
           await tracker.view(created.id);
           expect(true).toBe(false);
         } catch (err) {
-          expect(err).toBeInstanceOf(TrackgenticError);
-          const e = err as TrackgenticError;
+          expect(err).toBeInstanceOf(AgentrackError);
+          const e = err as AgentrackError;
           expect(e.result).toBe("ISSUE_MISSING");
           expect(e.exitCode).toBe(6);
         }
@@ -66,8 +66,8 @@ describe("Tracker", () => {
           await tracker.update(created.id, {});
           expect(true).toBe(false);
         } catch (err) {
-          expect(err).toBeInstanceOf(TrackgenticError);
-          const e = err as TrackgenticError;
+          expect(err).toBeInstanceOf(AgentrackError);
+          const e = err as AgentrackError;
           expect(e.result).toBe("INVALID_PARAMS");
           expect(e.exitCode).toBe(10);
         }
@@ -77,7 +77,7 @@ describe("Tracker", () => {
     test("NOT_INITIALIZED has exitCode 1", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-errcode-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-errcode-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const tracker = new Tracker(uninitDir);
@@ -86,8 +86,8 @@ describe("Tracker", () => {
         await tracker.create({ title: "Test" });
         expect(true).toBe(false);
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
         expect(e.exitCode).toBe(1);
       }
@@ -101,15 +101,15 @@ describe("Tracker", () => {
 
       const created = await tracker.create({ title: "Will Be Deleted" });
       if ("id" in created) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
         unlinkSync(issuePath);
 
         try {
           await tracker.update(created.id, { title: "New Title" });
           expect(true).toBe(false);
         } catch (err) {
-          expect(err).toBeInstanceOf(TrackgenticError);
-          const e = err as TrackgenticError;
+          expect(err).toBeInstanceOf(AgentrackError);
+          const e = err as AgentrackError;
           expect(e.result).toBe("ISSUE_MISSING");
           expect(e.exitCode).toBe(6);
         }
@@ -128,8 +128,8 @@ describe("Tracker", () => {
         await tracker.update(parent.id, { status: "done" });
         expect(true).toBe(false);
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("HIERARCHY_CONSTRAINT");
         expect(e.exitCode).toBe(12);
       }

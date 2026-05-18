@@ -14,7 +14,7 @@ Every exported function, method, class, interface, and type alias must have a JS
 
 1. **`src/core/tracker.ts`** — The `Tracker` class and its 16 public methods:
    - `constructor(cwd?: string)` — Explain cwd defaults to `process.cwd()`
-   - `init()` — Creates `.trackgentic/` directory with all initial files
+   - `init()` — Creates `.agentrack/` directory with all initial files
    - `create(params)` — Creates a new issue; describes all params with defaults
    - `list(params?)` — Lists issues from index with optional filters; describes sort order
    - `view(id)` — Returns full computed state by replaying events
@@ -71,7 +71,7 @@ Every exported function, method, class, interface, and type alias must have a JS
 
 8. **`src/types/api.ts`** — All request/response types (params interfaces and result types)
 
-9. **`src/core/errors.ts`** — `TrackgenticError` class and `ErrorCodes` constant
+9. **`src/core/errors.ts`** — `AgentrackError` class and `ErrorCodes` constant
 
 ### JSDoc style guide
 
@@ -100,10 +100,10 @@ Every exported function, method, class, interface, and type alias must have a JS
  * @param params.tags - Optional tags, defaults to []
  * @param params.parentId - Optional parent issue ID for hierarchy
  * @param params.author - Override author (resolved by auth layer if not provided)
- * @returns `{ id }` on success, or a TrackgenticError on auth failure
- * @throws {TrackgenticError} NOT_INITIALIZED if no .trackgentic/ directory
- * @throws {TrackgenticError} NOT_FOUND if parentId doesn't exist in index
- * @throws {TrackgenticError} HIERARCHY_CONSTRAINT if parent is closed
+ * @returns `{ id }` on success, or a AgentrackError on auth failure
+ * @throws {AgentrackError} NOT_INITIALIZED if no .agentrack/ directory
+ * @throws {AgentrackError} NOT_FOUND if parentId doesn't exist in index
+ * @throws {AgentrackError} HIERARCHY_CONSTRAINT if parent is closed
  */
 ```
 
@@ -128,8 +128,8 @@ Error messages are functional but inconsistent. Some use periods, some don't. So
    - Use backticks around IDs: `` `abc123` ``
    - Include the operation context when possible
 
-2. **Review and fix all `throw new TrackgenticError(...)` calls in `tracker.ts`**:
-   - NOT_INITIALIZED: `"No .trackgentic/ directory found. Run \`trackgentic init\` first."` (already good — verify consistency)
+2. **Review and fix all `throw new AgentrackError(...)` calls in `tracker.ts`**:
+   - NOT_INITIALIZED: `"No .agentrack/ directory found. Run \`agt init\` first."` (already good — verify consistency)
    - NOT_FOUND: `"Issue \`${id}\` not found in index."` (add backticks)
    - ISSUE_MISSING: `"Issue file for \`${id}\` is missing."` (add backticks)
    - COMMENT_NOT_FOUND: `"Comment \`${commentId}\` not found."` (add backticks)
@@ -212,19 +212,19 @@ Create integration-level tests that verify system resilience. These tests should
 ### Requirements
 
 1. **Verify `package.json` fields**:
-   - `name`: `"trackgentic"` ✓
+   - `name`: `"agentrack"` ✓
    - `version`: `"0.1.0"` ✓
    - `type`: `"module"` ✓
    - `main`: Should be `"src/index.ts"` for Bun compatibility ✓
    - `types`: Should be `"src/index.ts"` ✓
    - `exports`: `{ ".": "./src/index.ts" }` ✓
-   - `bin`: `{ "trackgentic": "./src/bin.ts" }` ✓
+   - `bin`: `{ "agentrack": "./src/bin.ts" }` ✓
    - `files`: `["src/"]` ✓
    - Verify `description` field exists and is accurate
 
 2. **Verify CLI entry point works**:
    - Test that `bun run src/bin.ts --help` prints help text
-   - Test that `bun run src/bin.ts init` creates `.trackgentic/` in cwd
+   - Test that `bun run src/bin.ts init` creates `.agentrack/` in cwd
    - Test that `bun run src/bin.ts create --title "Test"` creates an issue
 
 3. **Add a `prepublishOnly` script** to prevent broken publishes:

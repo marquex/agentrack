@@ -15,7 +15,7 @@ access:
     permissions: [read, write, delete]
   - path: scripts/**
     permissions: [read, write]
-  - path: .trackgentic/**
+  - path: .agentrack/**
     permissions: [read]
   - path: .agentic/sessions/**
     permissions: [read]
@@ -49,7 +49,7 @@ Design, build, and maintain all Claude Code extensions: expert agents, skills wi
 
 Analyze the task and compare it against your expertise. To check what's about. You can read extra expertise files if they are related to the task.
 
-After have an idea use the `claude-developing` skill to find documentation about the claude extension points are involved in the task and read the docs to deepen your understanding. 
+After have an idea use the `claude-developing` skill to find documentation about the claude extension points are involved in the task and read the docs to deepen your understanding.
 
 Then, design a solution and implement it by creating or modifying the necessary agent, skill, or hook files in the `.claude` directory.
 

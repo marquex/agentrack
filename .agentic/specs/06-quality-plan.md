@@ -1,6 +1,6 @@
-# Trackgentic Library — Quality Plan
+# Agentrack Library — Quality Plan
 
-This document defines the quality standards, tooling, processes, and organizational patterns for the trackgentic library. Every change to the library code must pass through these gates before being considered complete.
+This document defines the quality standards, tooling, processes, and organizational patterns for the agentrack library. Every change to the library code must pass through these gates before being considered complete.
 
 ## 1. Linting
 
@@ -235,7 +235,7 @@ describe("EventEngine", () => {
   let testDir: string;
 
   beforeEach(() => {
-    testDir = mkdtempSync(join(tmpdir(), "trackgentic-test-"));
+    testDir = mkdtempSync(join(tmpdir(), "agentrack-test-"));
   });
 
   afterEach(() => {
@@ -267,7 +267,7 @@ describe("Full issue lifecycle", () => {
   let tracker: Tracker;
 
   beforeEach(async () => {
-    testDir = mkdtempSync(join(tmpdir(), "trackgentic-test-"));
+    testDir = mkdtempSync(join(tmpdir(), "agentrack-test-"));
     tracker = new Tracker(testDir);
     await tracker.init();
   });
@@ -297,7 +297,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 export function createTestDir(): string {
-  return mkdtempSync(join(tmpdir(), "trackgentic-test-"));
+  return mkdtempSync(join(tmpdir(), "agentrack-test-"));
 }
 
 export function cleanupTestDir(dir: string): void {
@@ -368,7 +368,7 @@ Every change to `packages/library/src/` must pass this checklist before acceptan
 - [ ] `bun run typecheck` passes with zero errors
 - [ ] New types follow patterns established in `02-data-model.md`
 - [ ] Return types are explicitly declared on all public methods
-- [ ] Error types use `TrackgenticError` class
+- [ ] Error types use `AgentrackError` class
 
 #### Testing
 - [ ] All new functions/methods have corresponding tests
@@ -448,8 +448,8 @@ Every exported function, class, interface, and type alias must have JSDoc:
  * @param params.tags - Array of string tags
  * @param params.parentId - Parent issue ID for hierarchy
  * @returns The created issue ID and metadata
- * @throws {TrackgenticError} NOT_INITIALIZED if tracker not initialized
- * @throws {TrackgenticError} HIERARCHY_CONSTRAINT if parent is closed
+ * @throws {AgentrackError} NOT_INITIALIZED if tracker not initialized
+ * @throws {AgentrackError} HIERARCHY_CONSTRAINT if parent is closed
  *
  * @example
  * ```typescript

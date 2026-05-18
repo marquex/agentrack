@@ -1,5 +1,5 @@
 {
-  "name": "trackgentic",
+  "name": "agentrack",
   "private": true,
   "workspaces": ["packages/*"],
   "dependencies": {

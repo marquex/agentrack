@@ -1,34 +1,34 @@
 import type { ConfigFile, UsersFile } from "../types";
-import { ErrorCodes, TrackgenticError } from "./errors";
+import { ErrorCodes, AgentrackError } from "./errors";
 
 /**
  * Resolve the author for an operation based on auth configuration.
  *
  * Synchronous — only does in-memory lookups.
- * Reads `TRACKGENTIC_USER_TOKEN` from env if no explicit token is provided.
+ * Reads `AGENTACK_USER_TOKEN` from env if no explicit token is provided.
  *
  * @param options - Auth resolution options
  * @param options.token - Explicit token to validate (overrides env var)
  * @param options.config - The current config file contents
  * @param options.users - The current users file contents
  * @param options.requiresWrite - Whether the operation requires write permissions
- * @returns `{ author }` on success, or a TrackgenticError on auth failure
+ * @returns `{ author }` on success, or a AgentrackError on auth failure
  */
 export function resolveAuthor(options: {
   token?: string;
   config: ConfigFile;
   users: UsersFile;
   requiresWrite: boolean;
-}): { author: string } | TrackgenticError {
+}): { author: string } | AgentrackError {
   const { config, users, requiresWrite } = options;
   // noPropertyAccessFromIndexSignature requires bracket notation for dynamic keys
-  const token = options.token ?? process.env["TRACKGENTIC_USER_TOKEN"];
+  const token = options.token ?? process.env["AGENTACK_USER_TOKEN"];
 
   // If token is provided, validate it regardless of mode
   if (token) {
     const user = users.users.find((u) => u.token === token);
     if (!user) {
-      return new TrackgenticError(
+      return new AgentrackError(
         ErrorCodes.INVALID_TOKEN.result,
         "Invalid authentication token.",
         ErrorCodes.INVALID_TOKEN.exitCode,
@@ -40,17 +40,17 @@ export function resolveAuthor(options: {
   // No token provided — check mode
   switch (config.auth.mode) {
     case "strict":
-      return new TrackgenticError(
+      return new AgentrackError(
         ErrorCodes.TOKEN_REQUIRED.result,
-        "Authentication required. Set TRACKGENTIC_USER_TOKEN environment variable.",
+        "Authentication required. Set AGENTACK_USER_TOKEN environment variable.",
         ErrorCodes.TOKEN_REQUIRED.exitCode,
       );
 
     case "read-only":
       if (requiresWrite) {
-        return new TrackgenticError(
+        return new AgentrackError(
           ErrorCodes.TOKEN_REQUIRED.result,
-          "Authentication required for write operations. Set TRACKGENTIC_USER_TOKEN environment variable.",
+          "Authentication required for write operations. Set AGENTACK_USER_TOKEN environment variable.",
           ErrorCodes.TOKEN_REQUIRED.exitCode,
         );
       }
@@ -65,7 +65,7 @@ export function resolveAuthor(options: {
   // Use default user for unauthenticated access
   const defaultUser = config.auth.defaultUser;
   if (!defaultUser) {
-    return new TrackgenticError(
+    return new AgentrackError(
       ErrorCodes.DEFAULT_USER_MISSING.result,
       "No default user configured.",
       ErrorCodes.DEFAULT_USER_MISSING.exitCode,

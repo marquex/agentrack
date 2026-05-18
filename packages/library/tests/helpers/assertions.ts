@@ -1,12 +1,12 @@
 import { expect } from "bun:test";
-import type { TrackgenticError } from "../../src/core/errors";
+import type { AgentrackError } from "../../src/core/errors";
 
 /**
- * Assert that a result is a TrackgenticError with the expected result code.
+ * Assert that a result is a AgentrackError with the expected result code.
  */
 export function expectError(result: unknown, expectedCode: string): void {
   expect(result).toBeDefined();
-  const err = result as TrackgenticError;
+  const err = result as AgentrackError;
   expect(err.result).toBe(expectedCode);
 }
 

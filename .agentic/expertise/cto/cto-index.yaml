@@ -10,14 +10,15 @@ hierarchy:
       - library-quality (testing, quality gates — documentation removed)
       - library-release (release prep, documentation, build, version management, publishing)
 
-expertise_status: "Dogfooding active. All previous implementation work complete. Onboarding library-release (parent mpa5yz3kei, in-progress): library-quality task mpa60qg5ai done (docs removed from responsibilities), library-release task mpa60i4skg todo (awaiting agent runner to initialize expertise). Org change: documentation moved from library-quality to library-release. Pending issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+expertise_status: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ directory renamed to .agentrack/. CLI command is `agt` (was `tg`). npm link needs to be re-run from packages/library/ to restore global agt command. All implementation complete. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
 
 project_overview:
-  name: trackgentic
+  name: agentrack
+  previous_name: trackgentic (renamed 2026-05-18)
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
-  distribution: npm package with CLI entry point (`trackgentic` command)
-  stage: "Dogfooding active. All previous implementation work complete. Agent runner live. Onboarding library-release: mpa60qg5ai done (library-quality updated), mpa60i4skg todo (awaiting library-release expertise init). Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+  distribution: npm package with CLI entry point (`agt` command)
+  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
   docs_tool: TypeDoc HTML output (configured, generates to docs-html/)
@@ -213,10 +214,10 @@ session_log:
     summary: "Created README.md at project root: introduction, install, quick start (CLI + programmatic API), how it works (file structure, event sourcing), status flow, hierarchy constraints, auth configuration, license link. Created LICENSE file (MIT, 2026)."
   - session: 38
     date: "2026-05-12"
-    summary: "Started dogfooding — trackgentic now tracks its own development. Linked CLI globally via `npm link` from packages/library/ (symlinks trackgentic → packages/library/dist/bin.js). Initialized .trackgentic/ at repo root (NOT inside packages/library/ — that was accidental first run, user cleaned it up). Created test issue mp27msuvaj ('Test: verify dogfooding setup works'). Workflow: rebuild with `bun run build` in packages/library/, then `trackgentic` picks up fresh build via symlink. Issues committed to git via .trackgentic/ at repo root."
+    summary: "Started dogfooding — agentrack now tracks its own development. Linked CLI globally via `npm link` from packages/library/ (symlinks agt → packages/library/dist/bin.js). Initialized .agentrack/ at repo root (NOT inside packages/library/ — that was accidental first run, user cleaned it up). Created test issue mp27msuvaj ('Test: verify dogfooding setup works'). Workflow: rebuild with `bun run build` in packages/library/, then `agt` picks up fresh build via symlink. Issues committed to git via .agentrack/ at repo root."
   - session: 39
     date: "2026-05-13"
-    summary: "Organized all pending work from status.yaml into trackgentic issues. Closed test issue mp27msuvaj (dogfooding confirmed working). Created 7 issues: mp3pe95w9e (P1, defensive index validation), mp3pe9lvdq (P2, typedoc-plugin-markdown cleanup), mp3peanz8b (P2, v0.1.0 release milestone), mp3peac1qo (P2, NPM_TOKEN config — child of release), mp3peawcgs (P2, GitHub Pages config — child of release), mp3pe96e9f (P3, concurrent file access decision), mp3pe9urb9 (P4, CLAUDE.md decision). trackgentic is now the single source of truth for all pending work."
+    summary: "Organized all pending work from status.yaml into agentrack issues. Closed test issue mp27msuvaj (dogfooding confirmed working). Created 7 issues: mp3pe95w9e (P1, defensive index validation), mp3pe9lvdq (P2, typedoc-plugin-markdown cleanup), mp3peanz8b (P2, v0.1.0 release milestone), mp3peac1qo (P2, NPM_TOKEN config — child of release), mp3peawcgs (P2, GitHub Pages config — child of release), mp3pe96e9f (P3, concurrent file access decision), mp3pe9urb9 (P4, CLAUDE.md decision). agentrack is now the single source of truth for all pending work."
   - session: 40
     date: "2026-05-13"
     summary: "User requested `next <user-name>` subcommand. Designed spec (.agentic/specs/next-command-spec.md): returns single best issue to work on for a given user. Filters open index to assignee match + actionable statuses (idea/todo/in-progress), excludes actively blocked issues, sorts by priority ASC → impact DESC → id ASC, returns full ComputedIssue or NO_ISSUES_AVAILABLE. Delegated to library-developer — implemented in 6 files (NextResult type, Tracker.next() method, CLI command handler, runner registration, type exports). Delegated to library-quality — validated spec compliance, added 20 tests (14 unit + 6 CLI). Final: 569 tests, 1997 assertions, 100% tracker.ts line coverage. Issue mp3rc7femf."
@@ -237,16 +238,19 @@ session_log:
     summary: "User requested change to auto-promotion mechanism: parents should NOT auto-promote to done when all children finish. Drafted spec (.agentic/specs/cap-upward-promotion-spec.md). Created issue chain: parent mp9xefucmo (in-progress), reviews mp9xemq9mv (dev) + mp9xemy1j3 (quality), implement mp9xevrbwj (blocked by reviews), validate mp9xev4b6c (blocked by implementation). Key insight: computeUpwardPromotions in hierarchy.ts walks parent chain promoting to child's status — needs to cap promoted status at in-progress."
   - session: 46
     date: "2026-05-17"
-    summary: "Picked up mp9xefucmo via /trackgentic-implement. Both reviews had completed: quality review (mp9xemy1j3) raised 3 critical ambiguities (reason strings, multi-level propagation semantics, no-promotion edge case). Updated spec from DRAFT to REVIEWED with new 'Clarifications' section addressing all concerns: (1) reason format auto-promoted to TARGET: child advanced to CHILD, (2) no promotion when capped status equals parent, (3) each level applies cap independently, (4) 7 required new test cases in table. Developer review (mp9xemq9mv) confirmed viable, ~5 LOC change, 7 tests to update. Implementation (mp9xevrbwj) unblocked — awaiting runner."
+    summary: "Picked up mp9xefucmo via /agentrack-implement. Both reviews had completed: quality review (mp9xemy1j3) raised 3 critical ambiguities (reason strings, multi-level propagation semantics, no-promotion edge case). Updated spec from DRAFT to REVIEWED with new 'Clarifications' section addressing all concerns: (1) reason format auto-promoted to TARGET: child advanced to CHILD, (2) no promotion when capped status equals parent, (3) each level applies cap independently, (4) 7 required new test cases in table. Developer review (mp9xemq9mv) confirmed viable, ~5 LOC change, 7 tests to update. Implementation (mp9xevrbwj) unblocked — awaiting runner."
   - session: 47
     date: "2026-05-17"
     summary: "User re-requested `next` todo-only change. Previous issue (mp9kuwi7dt) no longer exists. Reused existing spec (.agentic/specs/next-todo-only-spec.md), updated to REVIEWED, skipped review phase (trivially scoped single-line filter change). Created new issue chain: parent mp9zd202cl, implement mp9zda04cp → library-developer (unblocked), validate mp9zda5d9n → library-quality (blocked by implementation). Updated expertise."
   - session: 48
     date: "2026-05-17"
-    summary: "Picked up mp9zd202cl via /trackgentic-implement. Verified issue chain is properly set up: parent in-progress, implementation mp9zda04cp unblocked for library-developer, validation mp9zda5d9n blocked by implementation. No action needed — awaiting agent runner to execute children. Updated expertise."
+    summary: "Picked up mp9zd202cl via /agentrack-implement. Verified issue chain is properly set up: parent in-progress, implementation mp9zda04cp unblocked for library-developer, validation mp9zda5d9n blocked by implementation. No action needed — awaiting agent runner to execute children. Updated expertise."
   - session: 49
     date: "2026-05-17"
     summary: "Onboarded new subordinate library-release (release engineer). Org change: documentation responsibility transferred from library-quality to library-release. Created parent issue mpa5yz3kei with two child tasks: mpa60i4skg (library-release expertise init) and mpa60qg5ai (library-quality remove docs). Updated CTO expertise: hierarchy, delegation_workflow docs_ownership, library-quality and library-release focus areas. No code changes."
   - session: 50
     date: "2026-05-17"
-    summary: "Revisited mpa5yz3kei via /trackgentic-implement. Previous session had already completed CTO expertise update and library-quality child task. Accidentally created duplicate child issues (mpa63iwwhf, mpa63qxqpr — closed them). Verified remaining blocker: mpa60i4skg (library-release expertise init, todo, awaiting agent runner). Parent stays in-progress until library-release completes onboarding. No expertise changes needed — already accurate."
+    summary: "Revisited mpa5yz3kei via /agentrack-implement. Previous session had already completed CTO expertise update and library-quality child task. Accidentally created duplicate child issues (mpa63iwwhf, mpa63qxqpr — closed them). Verified remaining blocker: mpa60i4skg (library-release expertise init, todo, awaiting agent runner). Parent stays in-progress until library-release completes onboarding. No expertise changes needed — already accurate."
+  - session: 51
+    date: "2026-05-18"
+    summary: "User reported `agt` not available on command line after rename from trackgentic to agentrack. Diagnosed: package.json correctly has bin.agt → dist/bin.js and dist exists, but global npm link was stale/broken after rename. Fix: re-run `npm link` from packages/library/. Updated expertise: expertise_status and project_overview updated with rename context, status.yaml dogfooding notes updated with rename_note and symlink warning."

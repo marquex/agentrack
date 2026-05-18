@@ -2,13 +2,14 @@
 # Current state, roadmap, open questions, and risks.
 
 current_state:
-  phase: Dogfooding phase — using trackgentic to track its own development
+  phase: Dogfooding phase — using agentrack to track its own development
   dogfooding:
     status: active
-    setup: "CLI linked globally via npm link from packages/library/. Issues stored in .trackgentic/ at repo root."
-    workflow: "After code changes, run `bun run build` in packages/library/. Then `trackgentic` uses the fresh build via symlink."
+    rename_note: "Project renamed from trackgentic to agentrack (2026-05-18). .trackgentic/ → .agentrack/, CLI command tg → agt."
+    setup: "CLI linked globally via npm link from packages/library/. Issues stored in .agentrack/ at repo root. MUST re-run npm link after rename — old symlink is stale."
+    workflow: "After code changes, run `bun run build` in packages/library/. Then `agt` uses the fresh build via symlink."
     test_issue: mp27msuvaj ("Test: verify dogfooding setup works" — closed, confirmed working)
-    issue_tracker: "All pending work now tracked as trackgentic issues. See `trackgentic list` for current backlog."
+    issue_tracker: "All pending work now tracked as agentrack issues. See `agt list` for current backlog."
     open_issues:
       mp3pe95w9e: "P1 — Add defensive index validation on read (addresses RSK-002)"
       mp3pe9lvdq: "P2 — Remove unused typedoc-plugin-markdown from devDependencies"
@@ -83,7 +84,7 @@ current_state:
       - Updated scripts: quality = typecheck + lint + test:coverage
     design_decisions:
       - Default auth mode changed from "read-only" to "open" for development ergonomics (users can switch to read-only/strict in production)
-      - resolveAuthor reads token from process.env.TRACKGENTIC_USER_TOKEN
+      - resolveAuthor reads token from process.env.AGENTACK_USER_TOKEN
       - Auth resolution is synchronous (in-memory lookup only)
       - Token format: tk_ + 8 random alphanumeric chars
       - User names stored lowercase, "anonymous" reserved
@@ -184,9 +185,9 @@ current_state:
   phase_7_complete_date: "2026-05-11"
   blockers: []
   dogfooding_notes:
-    - "Always run `trackgentic` commands from the repo root (not packages/library/) so .trackgentic/ resolves to root"
+    - "Always run `agt` commands from the repo root (not packages/library/) so .agentrack/ resolves to root"
     - "The symlink via npm link means any `bun run build` in packages/library/ immediately updates the global command"
-    - ".trackgentic/ is NOT in .gitignore — issues are tracked in git alongside code"
+    - ".agentrack/ is NOT in .gitignore — issues are tracked in git alongside code"
   next_phase:
     phase: 8
     name: "Build, Documentation & npm Distribution"
@@ -205,7 +206,7 @@ current_state:
       results: "569 tests, 1997 assertions, 100% tracker.ts line coverage. 20 new tests (14 unit + 6 CLI) added by library-quality."
     agent_runner:
       status: live
-      description: "CTO and subordinates receive issues via /trackgentic-implement skill. Status-based workflow enforced."
+      description: "CTO and subordinates receive issues via /agentrack-implement skill. Status-based workflow enforced."
       tested: "CTO processed mp9xefucmo — spec update, review coordination, delegation to subordinates."
     current_work:
       cap_upward_promotion:
@@ -226,7 +227,7 @@ current_state:
       release_workflow: complete — .github/workflows/release.yml (npm publish + docs deploy on v* tag)
       gitignore_update: complete — docs-html/ added
     remaining:
-      - "All tracked as trackgentic issues — see `trackgentic list` and open_issues above"
+      - "All tracked as agentrack issues — see `agt list` and open_issues above"
       - "NPM_TOKEN secret: issue mp3peac1qo"
       - "GitHub Pages source: issue mp3peawcgs"
       - "First release v0.1.0: issue mp3peanz8b"
@@ -237,7 +238,7 @@ implementation_roadmap:
   phases:
     phase_1_foundation:
       description: "Project setup, types, ID generation, directory resolution, file I/O, init command, CLI runner"
-      exit_criteria: "trackgentic init creates .trackgentic/ with correct files, idempotent on re-run"
+      exit_criteria: "agt init creates .agentrack/ with correct files, idempotent on re-run"
       status: complete
     phase_2_event_engine_and_crud:
       description: "Event append/replay engine, index manager with binary search, create/update/list/view/history"

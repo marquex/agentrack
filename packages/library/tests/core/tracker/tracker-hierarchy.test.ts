@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../../src/core/errors";
+import { AgentrackError } from "../../../src/core/errors";
 import { Tracker } from "../../../src/core/tracker";
 
 describe("Tracker", () => {
@@ -11,7 +11,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -37,7 +37,7 @@ describe("Tracker", () => {
       if (!("id" in child)) throw new Error("Child create failed");
 
       // Verify childrenOf in index
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.childrenOf[parent.id]).toEqual([child.id]);
 
       // Verify child's parentId
@@ -52,8 +52,8 @@ describe("Tracker", () => {
         await tracker.create({ title: "Child", parentId: "missing12345" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
         expect(e.message).toBe("Parent issue `missing12345` not found in index.");
         expect(e.exitCode).toBe(5);
@@ -68,8 +68,8 @@ describe("Tracker", () => {
         await tracker.create({ title: "Child", parentId: parent.id });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("HIERARCHY_CONSTRAINT");
         expect(e.exitCode).toBe(12);
       }
@@ -83,7 +83,7 @@ describe("Tracker", () => {
       if (!("id" in child)) throw new Error("Child create failed");
 
       // Verify child was created successfully
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.childrenOf[parent.id]).toEqual([child.id]);
     });
   });
@@ -105,8 +105,8 @@ describe("Tracker", () => {
         await tracker.update(parent.id, { status: "done" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("HIERARCHY_CONSTRAINT");
         expect(e.exitCode).toBe(12);
       }
@@ -149,7 +149,7 @@ describe("Tracker", () => {
       }
 
       // Verify index reflects child in closed array
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.open).toHaveLength(0);
       expect(index.closed).toHaveLength(2);
     });
@@ -163,8 +163,8 @@ describe("Tracker", () => {
         await tracker.update(parent.id, { status: "closed" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("HIERARCHY_CONSTRAINT");
         expect(e.exitCode).toBe(12);
       }
@@ -255,7 +255,7 @@ describe("Tracker", () => {
       }
 
       // Verify all in closed array
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.open).toHaveLength(0);
       expect(index.closed).toHaveLength(3);
     });
@@ -411,7 +411,7 @@ describe("Tracker", () => {
       await tracker.update(child.id, { parentId: newParent.id });
 
       // Verify childrenOf updated
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.childrenOf[oldParent.id]).toBeUndefined();
       expect(index.childrenOf[newParent.id]).toEqual([child.id]);
 
@@ -434,8 +434,8 @@ describe("Tracker", () => {
         await tracker.update(child.id, { parentId: newParent.id });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("HIERARCHY_CONSTRAINT");
         expect(e.exitCode).toBe(12);
       }
@@ -449,8 +449,8 @@ describe("Tracker", () => {
         await tracker.update(child.id, { parentId: "missing12345" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
         expect(e.exitCode).toBe(5);
       }
@@ -465,7 +465,7 @@ describe("Tracker", () => {
       await tracker.update(child.id, { parentId: null });
 
       // Verify childrenOf updated
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.childrenOf[parent.id]).toBeUndefined();
 
       // Verify child's parentId is null
@@ -522,7 +522,7 @@ describe("Tracker", () => {
       await tracker.update(child.id, { parentId: parent.id });
 
       // Verify childrenOf updated
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.childrenOf[parent.id]).toEqual([child.id]);
 
       // Verify child's parentId
@@ -553,7 +553,7 @@ describe("Tracker", () => {
       }
 
       // childrenOf should still have exactly one child
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.childrenOf[parent.id]).toEqual([child.id]);
     });
   });

@@ -6,7 +6,7 @@ import { join } from "node:path";
  * Create a temporary directory for test isolation.
  * Each test gets its own unique directory under the system temp dir.
  */
-export function createTestDir(prefix = "trackgentic-test"): string {
+export function createTestDir(prefix = "agentrack-test"): string {
   return mkdtempSync(join(tmpdir(), `${prefix}-`));
 }
 

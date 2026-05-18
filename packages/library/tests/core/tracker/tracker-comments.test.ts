@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { mkdirSync, rmSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../../src/core/errors";
+import { AgentrackError } from "../../../src/core/errors";
 import { Tracker } from "../../../src/core/tracker";
 
 describe("Tracker", () => {
@@ -11,7 +11,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -46,8 +46,8 @@ describe("Tracker", () => {
         await tracker.commentsAdd("missing12345", { content: "Hello" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
         expect(e.exitCode).toBe(5);
       }
@@ -96,8 +96,8 @@ describe("Tracker", () => {
         await tracker.commentsUpdate(created.id, "fake000000", { content: "Nope" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("COMMENT_NOT_FOUND");
         expect(e.exitCode).toBe(7);
       }
@@ -116,8 +116,8 @@ describe("Tracker", () => {
         await tracker.commentsUpdate(created.id, addResult.commentId, { content: "Nope" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("COMMENT_NOT_FOUND");
       }
     });
@@ -146,8 +146,8 @@ describe("Tracker", () => {
         await tracker.commentsDelete(created.id, "fake000000");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("COMMENT_NOT_FOUND");
         expect(e.exitCode).toBe(7);
       }
@@ -166,8 +166,8 @@ describe("Tracker", () => {
         await tracker.commentsDelete(created.id, addResult.commentId);
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("COMMENT_NOT_FOUND");
       }
     });
@@ -221,8 +221,8 @@ describe("Tracker", () => {
         await tracker.commentsList("missing12345");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
         expect(e.exitCode).toBe(5);
       }
@@ -232,15 +232,15 @@ describe("Tracker", () => {
       const created = await tracker.create({ title: "Comment Test" });
       if (!("id" in created)) throw new Error("Create failed");
 
-      const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+      const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
       unlinkSync(issuePath);
 
       try {
         await tracker.commentsList(created.id);
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("ISSUE_MISSING");
         expect(e.exitCode).toBe(6);
       }
@@ -254,8 +254,8 @@ describe("Tracker", () => {
         await tracker.commentsUpdate(created.id, "fake000000", { content: "Nope" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("COMMENT_NOT_FOUND");
         expect(e.exitCode).toBe(7);
       }
@@ -300,10 +300,10 @@ describe("Tracker", () => {
       expect(deleteResult).toEqual({ result: "OK" });
     });
 
-    test("commentsAdd throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("commentsAdd throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -311,18 +311,18 @@ describe("Tracker", () => {
         await uninitTracker.commentsAdd("missing12345", { content: "Hello" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
         expect(e.exitCode).toBe(1);
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });
 
-    test("commentsUpdate throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("commentsUpdate throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -330,17 +330,17 @@ describe("Tracker", () => {
         await uninitTracker.commentsUpdate("missing12345", "fake000000", { content: "Hello" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });
 
-    test("commentsDelete throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("commentsDelete throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -348,17 +348,17 @@ describe("Tracker", () => {
         await uninitTracker.commentsDelete("missing12345", "fake000000");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });
 
-    test("commentsList throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("commentsList throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -366,8 +366,8 @@ describe("Tracker", () => {
         await uninitTracker.commentsList("missing12345");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
       }
       rmSync(uninitDir, { recursive: true, force: true });
@@ -381,15 +381,15 @@ describe("Tracker", () => {
       if (addResult.result !== "OK") throw new Error("Add failed");
 
       // Delete the issue file
-      const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+      const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
       unlinkSync(issuePath);
 
       try {
         await tracker.commentsUpdate(created.id, addResult.commentId, { content: "Updated" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("ISSUE_MISSING");
         expect(e.exitCode).toBe(6);
       }
@@ -403,15 +403,15 @@ describe("Tracker", () => {
       if (addResult.result !== "OK") throw new Error("Add failed");
 
       // Delete the issue file
-      const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+      const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
       unlinkSync(issuePath);
 
       try {
         await tracker.commentsDelete(created.id, addResult.commentId);
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("ISSUE_MISSING");
         expect(e.exitCode).toBe(6);
       }
@@ -423,8 +423,8 @@ describe("Tracker", () => {
         await tracker.commentsAdd("missing12345", { content: "Hello" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
       }
     });
@@ -434,8 +434,8 @@ describe("Tracker", () => {
         await tracker.commentsDelete("missing12345", "fake000000");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
       }
     });
@@ -445,8 +445,8 @@ describe("Tracker", () => {
         await tracker.commentsUpdate("missing12345", "fake000000", { content: "Hello" });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
       }
     });

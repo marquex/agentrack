@@ -32,14 +32,14 @@ export function createProgram(): Command {
   const program = new Command();
 
   program
-    .name("trackgentic")
+    .name("agt")
     .description("Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly")
     .version("0.1.0");
 
   // ─── init ─────────────────────────────────────────────────────────
   program
     .command("init")
-    .description("Initialize a new .trackgentic/ directory")
+    .description("Initialize a new .agentrack/ directory")
     .action(initAction);
 
   // ─── create ───────────────────────────────────────────────────────

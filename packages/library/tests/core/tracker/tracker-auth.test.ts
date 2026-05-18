@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../../src/core/errors";
+import { AgentrackError } from "../../../src/core/errors";
 import { Tracker } from "../../../src/core/tracker";
 
 describe("Tracker", () => {
@@ -11,7 +11,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -26,29 +26,29 @@ describe("Tracker", () => {
     let savedToken: string | undefined;
 
     beforeEach(async () => {
-      savedToken = process.env.TRACKGENTIC_USER_TOKEN;
-      delete process.env.TRACKGENTIC_USER_TOKEN;
+      savedToken = process.env.AGENTACK_USER_TOKEN;
+      delete process.env.AGENTACK_USER_TOKEN;
       tracker = new Tracker(testDir);
       await tracker.init();
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.TRACKGENTIC_USER_TOKEN = savedToken;
+        process.env.AGENTACK_USER_TOKEN = savedToken;
       } else {
-        delete process.env.TRACKGENTIC_USER_TOKEN;
+        delete process.env.AGENTACK_USER_TOKEN;
       }
     });
 
     function setAuthMode(mode: "open" | "read-only" | "strict", defaultUser = "anonymous") {
-      const configPath = join(testDir, ".trackgentic", "config.json");
+      const configPath = join(testDir, ".agentrack", "config.json");
       writeFileSync(configPath, JSON.stringify({ auth: { mode, defaultUser } }));
     }
 
     test("open mode: create without token uses defaultUser as author", async () => {
       const result = await tracker.create({ title: "Open Mode Test" });
       if ("id" in result) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${result.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${result.id}.json`);
         const events = JSON.parse(readFileSync(issuePath, "utf-8"));
         expect(events[0].author).toBe("anonymous");
       }
@@ -58,8 +58,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.create({ title: "Should Fail" });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -80,8 +80,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.update(created.id, { title: "Should Fail" });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -92,8 +92,8 @@ describe("Tracker", () => {
         await tracker.list();
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("TOKEN_REQUIRED");
         expect(e.exitCode).toBe(2);
       }
@@ -105,8 +105,8 @@ describe("Tracker", () => {
         await tracker.view("any1234567");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -114,11 +114,11 @@ describe("Tracker", () => {
     test("with valid token: create uses author from token", async () => {
       const regResult = await tracker.usersRegister("alice");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.TRACKGENTIC_USER_TOKEN = regResult.token;
+      process.env.AGENTACK_USER_TOKEN = regResult.token;
 
       const result = await tracker.create({ title: "Auth Test" });
       if ("id" in result) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${result.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${result.id}.json`);
         const events = JSON.parse(readFileSync(issuePath, "utf-8"));
         expect(events[0].author).toBe("alice");
         expect(events[1].author).toBe("alice");
@@ -126,11 +126,11 @@ describe("Tracker", () => {
     });
 
     test("with invalid token: create returns INVALID_TOKEN", async () => {
-      process.env.TRACKGENTIC_USER_TOKEN = "tk_fake0000";
+      process.env.AGENTACK_USER_TOKEN = "tk_fake0000";
       const result = await tracker.create({ title: "Bad Token" });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("INVALID_TOKEN");
         expect(result.exitCode).toBe(3);
       }
@@ -139,7 +139,7 @@ describe("Tracker", () => {
     test("events contain resolved author when token is used", async () => {
       const regResult = await tracker.usersRegister("bob");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.TRACKGENTIC_USER_TOKEN = regResult.token;
+      process.env.AGENTACK_USER_TOKEN = regResult.token;
 
       const created = await tracker.create({ title: "Authored Issue" });
       if ("id" in created) {
@@ -157,12 +157,12 @@ describe("Tracker", () => {
     test("author param overrides resolved author when provided", async () => {
       const regResult = await tracker.usersRegister("alice");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.TRACKGENTIC_USER_TOKEN = regResult.token;
+      process.env.AGENTACK_USER_TOKEN = regResult.token;
 
       // Pass explicit author param — should take precedence over auth
       const result = await tracker.create({ title: "Override", author: "custom" });
       if ("id" in result) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${result.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${result.id}.json`);
         const events = JSON.parse(readFileSync(issuePath, "utf-8"));
         expect(events[0].author).toBe("custom");
       }
@@ -176,22 +176,22 @@ describe("Tracker", () => {
     let savedToken: string | undefined;
 
     beforeEach(async () => {
-      savedToken = process.env.TRACKGENTIC_USER_TOKEN;
-      delete process.env.TRACKGENTIC_USER_TOKEN;
+      savedToken = process.env.AGENTACK_USER_TOKEN;
+      delete process.env.AGENTACK_USER_TOKEN;
       tracker = new Tracker(testDir);
       await tracker.init();
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.TRACKGENTIC_USER_TOKEN = savedToken;
+        process.env.AGENTACK_USER_TOKEN = savedToken;
       } else {
-        delete process.env.TRACKGENTIC_USER_TOKEN;
+        delete process.env.AGENTACK_USER_TOKEN;
       }
     });
 
     function setAuthMode(mode: "open" | "read-only" | "strict", defaultUser = "anonymous") {
-      const configPath = join(testDir, ".trackgentic", "config.json");
+      const configPath = join(testDir, ".agentrack", "config.json");
       writeFileSync(configPath, JSON.stringify({ auth: { mode, defaultUser } }));
     }
 
@@ -202,8 +202,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.commentsAdd(created.id, { content: "Hello" });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -221,8 +221,8 @@ describe("Tracker", () => {
         content: "Updated",
       });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -237,8 +237,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.commentsDelete(created.id, addResult.commentId);
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -266,8 +266,8 @@ describe("Tracker", () => {
         await tracker.commentsList(created.id);
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -275,7 +275,7 @@ describe("Tracker", () => {
     test("with valid token: commentsAdd uses author from token", async () => {
       const regResult = await tracker.usersRegister("alice");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.TRACKGENTIC_USER_TOKEN = regResult.token;
+      process.env.AGENTACK_USER_TOKEN = regResult.token;
 
       const created = await tracker.create({ title: "Auth Test" });
       if (!("id" in created)) throw new Error("Create failed");
@@ -296,22 +296,22 @@ describe("Tracker", () => {
     let savedToken: string | undefined;
 
     beforeEach(async () => {
-      savedToken = process.env.TRACKGENTIC_USER_TOKEN;
-      delete process.env.TRACKGENTIC_USER_TOKEN;
+      savedToken = process.env.AGENTACK_USER_TOKEN;
+      delete process.env.AGENTACK_USER_TOKEN;
       tracker = new Tracker(testDir);
       await tracker.init();
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.TRACKGENTIC_USER_TOKEN = savedToken;
+        process.env.AGENTACK_USER_TOKEN = savedToken;
       } else {
-        delete process.env.TRACKGENTIC_USER_TOKEN;
+        delete process.env.AGENTACK_USER_TOKEN;
       }
     });
 
     function setAuthMode(mode: "open" | "read-only" | "strict", defaultUser = "anonymous") {
-      const configPath = join(testDir, ".trackgentic", "config.json");
+      const configPath = join(testDir, ".agentrack", "config.json");
       writeFileSync(configPath, JSON.stringify({ auth: { mode, defaultUser } }));
     }
 
@@ -322,8 +322,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.create({ title: "Child", parentId: parent.id });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -338,8 +338,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.update(parent.id, { status: "closed" });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -354,8 +354,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.update(child.id, { parentId: parent.id });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }

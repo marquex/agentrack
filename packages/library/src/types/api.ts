@@ -1,4 +1,4 @@
-import type { TrackgenticError } from "../core/errors";
+import type { AgentrackError } from "../core/errors";
 import type {
   BlockageInfo,
   CommentId,
@@ -42,7 +42,7 @@ export interface CreateParams {
 }
 
 /** Result of creating a new issue. */
-export type CreateResult = { id: IssueId } | TrackgenticError;
+export type CreateResult = { id: IssueId } | AgentrackError;
 
 // ─── Update ─────────────────────────────────────────────────────────
 
@@ -67,7 +67,7 @@ export interface UpdateParams {
 }
 
 /** Result of updating an issue. */
-export type UpdateResult = { result: "OK" } | TrackgenticError;
+export type UpdateResult = { result: "OK" } | AgentrackError;
 
 // ─── List ───────────────────────────────────────────────────────────
 
@@ -89,7 +89,7 @@ export type ListResult = IndexEntry[];
 // ─── View ───────────────────────────────────────────────────────────
 
 /** Result of viewing an issue's full computed state. */
-export type ViewResult = ComputedIssue | TrackgenticError;
+export type ViewResult = ComputedIssue | AgentrackError;
 
 // ─── Next ───────────────────────────────────────────────────────────
 
@@ -103,7 +103,7 @@ import type { Event } from "./event";
 export type { Event };
 
 /** Result of retrieving an issue's raw event history. */
-export type HistoryResult = Event[] | TrackgenticError;
+export type HistoryResult = Event[] | AgentrackError;
 
 // ─── Comments ───────────────────────────────────────────────────────
 
@@ -116,7 +116,7 @@ export interface CommentAddParams {
 }
 
 /** Result of adding a comment. */
-export type CommentAddResult = { result: "OK"; commentId: CommentId } | TrackgenticError;
+export type CommentAddResult = { result: "OK"; commentId: CommentId } | AgentrackError;
 
 /** Parameters for updating an existing comment. */
 export interface CommentUpdateParams {
@@ -127,7 +127,7 @@ export interface CommentUpdateParams {
 }
 
 /** Result of updating a comment. */
-export type CommentUpdateResult = { result: "OK" } | TrackgenticError;
+export type CommentUpdateResult = { result: "OK" } | AgentrackError;
 
 /** Parameters for deleting a comment. */
 export interface CommentDeleteParams {
@@ -136,10 +136,10 @@ export interface CommentDeleteParams {
 }
 
 /** Result of deleting a comment. */
-export type CommentDeleteResult = { result: "OK" } | TrackgenticError;
+export type CommentDeleteResult = { result: "OK" } | AgentrackError;
 
 /** Result of listing comments for an issue. */
-export type CommentsListResult = ComputedComment[] | TrackgenticError;
+export type CommentsListResult = ComputedComment[] | AgentrackError;
 
 // ─── Blockages ──────────────────────────────────────────────────────
 
@@ -152,7 +152,7 @@ export interface BlockagesAddParams {
 }
 
 /** Result of adding blockages. */
-export type BlockagesAddResult = { result: "OK" } | TrackgenticError;
+export type BlockagesAddResult = { result: "OK" } | AgentrackError;
 
 /** Parameters for resolving blockage dependencies. */
 export interface BlockagesResolveParams {
@@ -163,7 +163,7 @@ export interface BlockagesResolveParams {
 }
 
 /** Result of resolving blockages. */
-export type BlockagesResolveResult = { result: "OK" } | TrackgenticError;
+export type BlockagesResolveResult = { result: "OK" } | AgentrackError;
 
 /** Parameters for deleting blockage dependencies. */
 export interface BlockagesDeleteParams {
@@ -174,10 +174,10 @@ export interface BlockagesDeleteParams {
 }
 
 /** Result of deleting blockages. */
-export type BlockagesDeleteResult = { result: "OK" } | TrackgenticError;
+export type BlockagesDeleteResult = { result: "OK" } | AgentrackError;
 
 /** Result of listing blockage info for an issue. */
-export type BlockagesListResult = BlockageInfo | TrackgenticError;
+export type BlockagesListResult = BlockageInfo | AgentrackError;
 
 // ─── Users ──────────────────────────────────────────────────────────
 

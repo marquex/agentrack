@@ -1,4 +1,4 @@
-# Trackgentic Library — CLI Specification
+# Agentrack Library — CLI Specification
 
 The CLI is a thin wrapper over the `Tracker` class. Every command parses arguments, calls the corresponding Tracker method, and prints the result.
 
@@ -24,13 +24,13 @@ Error format:
 
 ## 3. Global Behavior
 
-- All commands except `init` and `users register` first resolve the `.trackgentic/` directory by walking up from `cwd`.
+- All commands except `init` and `users register` first resolve the `.agentrack/` directory by walking up from `cwd`.
 - If not found → `NOT_INITIALIZED` error to stderr, exit 1.
-- Auth token is read from `TRACKGENTIC_USER_TOKEN` env var and passed to Tracker methods.
+- Auth token is read from `AGENTACK_USER_TOKEN` env var and passed to Tracker methods.
 
 ## 4. Command Reference
 
-### `trackgentic init`
+### `agt init`
 
 | | |
 |---|---|
@@ -38,10 +38,10 @@ Error format:
 | **Flags** | None |
 | **Auth** | None |
 | **Calls** | `tracker.init()` |
-| **Output** | `{ "result": "OK", "path": "/abs/path/to/.trackgentic" }` |
-| **Error** | `{ "result": "ALREADY_INITIALIZED", "path": "/abs/path/to/.trackgentic" }` |
+| **Output** | `{ "result": "OK", "path": "/abs/path/to/.agentrack" }` |
+| **Error** | `{ "result": "ALREADY_INITIALIZED", "path": "/abs/path/to/.agentrack" }` |
 
-### `trackgentic create <title>`
+### `agt create <title>`
 
 | | |
 |---|---|
@@ -57,7 +57,7 @@ Error format:
 | **Calls** | `tracker.create({ title, ...flags, author })` |
 | **Output** | `{ "id": "l0j3k2a9b7" }` |
 
-### `trackgentic update <issueId>`
+### `agt update <issueId>`
 
 | | |
 |---|---|
@@ -74,7 +74,7 @@ Error format:
 | **Output** | `{ "result": "OK" }` |
 | **Validates** | At least one flag must be provided → `INVALID_PARAMS` |
 
-### `trackgentic list`
+### `agt list`
 
 | | |
 |---|---|
@@ -87,7 +87,7 @@ Error format:
 | **Calls** | `tracker.list({ ...flags })` |
 | **Output** | `[{ "id": "...", "title": "...", "status": "...", "assignee": "...", "tags": [...], "parentId": "...", "priority": 3 }, ...]` |
 
-### `trackgentic view <issueId>`
+### `agt view <issueId>`
 
 | | |
 |---|---|
@@ -97,7 +97,7 @@ Error format:
 | **Calls** | `tracker.view(issueId)` |
 | **Output** | `{ "id": "...", "title": "...", "description": "...", "status": "...", "assignee": "...", "tags": [...], "parentId": null, "priority": 3, "createdAt": "...", "createdBy": "...", "updatedAt": "..." }` |
 
-### `trackgentic history <issueId>`
+### `agt history <issueId>`
 
 | | |
 |---|---|
@@ -107,7 +107,7 @@ Error format:
 | **Calls** | `tracker.history(issueId)` |
 | **Output** | `[{ "timestamp": "...", "type": "creation", "author": "..." }, ...]` |
 
-### `trackgentic comments add <issueId> --content <content>`
+### `agt comments add <issueId> --content <content>`
 
 | | |
 |---|---|
@@ -117,7 +117,7 @@ Error format:
 | **Calls** | `tracker.commentsAdd(issueId, { content, author })` |
 | **Output** | `{ "result": "OK", "commentId": "..." }` |
 
-### `trackgentic comments update <issueId> <commentId> --content <content>`
+### `agt comments update <issueId> <commentId> --content <content>`
 
 | | |
 |---|---|
@@ -127,7 +127,7 @@ Error format:
 | **Calls** | `tracker.commentsUpdate(issueId, commentId, { content, author })` |
 | **Output** | `{ "result": "OK" }` |
 
-### `trackgentic comments delete <issueId> <commentId>`
+### `agt comments delete <issueId> <commentId>`
 
 | | |
 |---|---|
@@ -137,7 +137,7 @@ Error format:
 | **Calls** | `tracker.commentsDelete(issueId, commentId, { author })` |
 | **Output** | `{ "result": "OK" }` |
 
-### `trackgentic comments list <issueId>`
+### `agt comments list <issueId>`
 
 | | |
 |---|---|
@@ -147,7 +147,7 @@ Error format:
 | **Calls** | `tracker.commentsList(issueId)` |
 | **Output** | `[{ "id": "...", "author": "...", "content": "...", "timestamp": "...", "editedAt": null }, ...]` |
 
-### `trackgentic blockages add <blockedId> --by <blockerId...>`
+### `agt blockages add <blockedId> --by <blockerId...>`
 
 | | |
 |---|---|
@@ -157,7 +157,7 @@ Error format:
 | **Calls** | `tracker.blockagesAdd(blockedId, { blockerIds, author })` |
 | **Output** | `{ "result": "OK" }` |
 
-### `trackgentic blockages resolve <blockedId> --by <blockerId...>`
+### `agt blockages resolve <blockedId> --by <blockerId...>`
 
 | | |
 |---|---|
@@ -167,7 +167,7 @@ Error format:
 | **Calls** | `tracker.blockagesResolve(blockedId, { blockerIds, author })` |
 | **Output** | `{ "result": "OK" }` |
 
-### `trackgentic blockages delete <blockedId> --by <blockerId...>`
+### `agt blockages delete <blockedId> --by <blockerId...>`
 
 | | |
 |---|---|
@@ -177,7 +177,7 @@ Error format:
 | **Calls** | `tracker.blockagesDelete(blockedId, { blockerIds, author })` |
 | **Output** | `{ "result": "OK" }` |
 
-### `trackgentic blockages list <issueId>`
+### `agt blockages list <issueId>`
 
 | | |
 |---|---|
@@ -187,7 +187,7 @@ Error format:
 | **Calls** | `tracker.blockagesList(issueId)` |
 | **Output** | `{ "issueId": "...", "blockedBy": [...], "blocks": [...] }` |
 
-### `trackgentic users register <name>`
+### `agt users register <name>`
 
 | | |
 |---|---|
@@ -197,7 +197,7 @@ Error format:
 | **Calls** | `tracker.usersRegister(name)` |
 | **Output** | `{ "result": "OK", "name": "alice", "token": "tk_k7x2m9p4" }` |
 
-### `trackgentic users list`
+### `agt users list`
 
 | | |
 |---|---|
@@ -207,7 +207,7 @@ Error format:
 | **Calls** | `tracker.usersList()` |
 | **Output** | `[{ "name": "alice", "registeredAt": "..." }, ...]` |
 
-### `trackgentic users revoke <name>`
+### `agt users revoke <name>`
 
 | | |
 |---|---|
@@ -217,7 +217,7 @@ Error format:
 | **Calls** | `tracker.usersRevoke(name, token)` |
 | **Output** | `{ "result": "OK" }` |
 
-### `trackgentic users regenerate <name>`
+### `agt users regenerate <name>`
 
 | | |
 |---|---|
@@ -236,7 +236,7 @@ try {
   console.log(JSON.stringify(result, null, 2));
   process.exit(0);
 } catch (err) {
-  if (err instanceof TrackgenticError) {
+  if (err instanceof AgentrackError) {
     process.stderr.write(JSON.stringify({ result: err.result, message: err.message }) + "\n");
     process.exit(err.exitCode);
   }

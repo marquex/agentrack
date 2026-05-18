@@ -102,7 +102,7 @@ Update these fields:
     }
   },
   "bin": {
-    "trackgentic": "./dist/bin.js"
+    "agentrack": "./dist/bin.js"
   },
   "files": [
     "dist/"
@@ -160,8 +160,8 @@ Should print valid JSON output.
 ```bash
 cd /tmp && mkdir test-import && cd test-import
 npm init -y
-npm install /path/to/trackgentic/packages/library
-node -e "const { Tracker } = require('trackgentic'); console.log(typeof Tracker);"
+npm install /path/to/agentrack/packages/library
+node -e "const { Tracker } = require('agentrack'); console.log(typeof Tracker);"
 ```
 Should print `function`.
 

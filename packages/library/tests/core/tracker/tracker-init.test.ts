@@ -10,7 +10,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -19,22 +19,22 @@ describe("Tracker", () => {
   });
 
   describe("init()", () => {
-    test("creates .trackgentic/ with all files and correct contents", async () => {
+    test("creates .agentrack/ with all files and correct contents", async () => {
       const tracker = new Tracker(testDir);
       const result = await tracker.init();
 
       expect(result.result).toBe("OK");
-      expect(result.path).toBe(resolve(join(testDir, ".trackgentic")));
+      expect(result.path).toBe(resolve(join(testDir, ".agentrack")));
 
       // Verify directory exists
-      expect(existsSync(join(testDir, ".trackgentic"))).toBe(true);
+      expect(existsSync(join(testDir, ".agentrack"))).toBe(true);
 
       // Verify issues directory exists
-      expect(existsSync(join(testDir, ".trackgentic", "issues"))).toBe(true);
+      expect(existsSync(join(testDir, ".agentrack", "issues"))).toBe(true);
 
       // Verify config.json
       const config = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "config.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "config.json"), "utf-8"),
       );
       expect(config).toEqual({
         auth: {
@@ -44,7 +44,7 @@ describe("Tracker", () => {
       });
 
       // Verify index.json
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index).toEqual({
         open: [],
         closed: [],
@@ -53,7 +53,7 @@ describe("Tracker", () => {
 
       // Verify dependencies.json
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps).toEqual({
         blockedBy: {},
@@ -61,7 +61,7 @@ describe("Tracker", () => {
       });
 
       // Verify users.json
-      const users = JSON.parse(readFileSync(join(testDir, ".trackgentic", "users.json"), "utf-8"));
+      const users = JSON.parse(readFileSync(join(testDir, ".agentrack", "users.json"), "utf-8"));
       expect(users).toEqual({
         users: [],
       });
@@ -75,7 +75,7 @@ describe("Tracker", () => {
 
       const second = await tracker.init();
       expect(second.result).toBe("ALREADY_INITIALIZED");
-      expect(second.path).toBe(resolve(join(testDir, ".trackgentic")));
+      expect(second.path).toBe(resolve(join(testDir, ".agentrack")));
     });
 
     test("does not overwrite existing files", async () => {
@@ -84,7 +84,7 @@ describe("Tracker", () => {
       await tracker.init();
 
       // Read config to get original content
-      const configPath = join(testDir, ".trackgentic", "config.json");
+      const configPath = join(testDir, ".agentrack", "config.json");
       const originalContent = readFileSync(configPath, "utf-8");
 
       // Call init again
@@ -100,7 +100,7 @@ describe("Tracker", () => {
       await tracker.init();
 
       const config = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "config.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "config.json"), "utf-8"),
       );
       expect(config.auth.mode).toBe("open");
       expect(config.auth.defaultUser).toBe("anonymous");
@@ -110,7 +110,7 @@ describe("Tracker", () => {
       const tracker = new Tracker(testDir);
       await tracker.init();
 
-      const index = JSON.parse(readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"));
+      const index = JSON.parse(readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"));
       expect(index.open).toEqual([]);
       expect(index.closed).toEqual([]);
       expect(index.childrenOf).toEqual({});
@@ -120,7 +120,7 @@ describe("Tracker", () => {
       const tracker = new Tracker(testDir);
       await tracker.init();
 
-      expect(existsSync(join(testDir, ".trackgentic", "issues"))).toBe(true);
+      expect(existsSync(join(testDir, ".agentrack", "issues"))).toBe(true);
     });
   });
 });

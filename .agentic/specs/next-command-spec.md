@@ -2,7 +2,7 @@
 
 ## Summary
 
-Add a new `trackgentic next <user-name>` CLI subcommand that returns the single best issue to work on next for a given user. This is a read-only operation (no mutation).
+Add a new `agt next <user-name>` CLI subcommand that returns the single best issue to work on next for a given user. This is a read-only operation (no mutation).
 
 ## Requirements
 
@@ -39,7 +39,7 @@ export type NextResult = ComputedIssue | { result: "NO_ISSUES_AVAILABLE"; messag
 #### CLI command
 
 ```
-trackgentic next <user-name>
+agt next <user-name>
 ```
 
 - `<user-name>` is a required positional argument (the assignee name to filter by)
@@ -48,7 +48,7 @@ trackgentic next <user-name>
 
 ### Error handling
 
-- `NOT_INITIALIZED` — no `.trackgentic/` directory found
+- `NOT_INITIALIZED` — no `.agentrack/` directory found
 - `TOKEN_REQUIRED` — in strict auth mode with no token
 - `NO_ISSUES_AVAILABLE` — no matching issues (not an error per se, but a result indicating emptiness)
 
@@ -89,7 +89,7 @@ Follow the exact pattern of `view.ts`:
 - Create Tracker instance
 - Call `tracker.next(userName)`
 - Write result to stdout via `writeStdout`
-- Catch TrackgenticError → writeStderr, process.exit(err.exitCode)
+- Catch AgentrackError → writeStderr, process.exit(err.exitCode)
 
 ### Runner registration (`src/cli/runner.ts`)
 

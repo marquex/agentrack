@@ -10,7 +10,7 @@
  * Decision logic:
  *   1. No agent_type → main agent, allow (exit 0)
  *   2. No agent file or no token found → allow (exit 0, fail open)
- *   3. List open issues assigned to the agent via trackgentic
+ *   3. List open issues assigned to the agent via agt
  *   4. Filter for "todo" and "in-progress" status
  *   5. For each, check if blocked (blockages list returns non-empty blockedBy)
  *   6. If any unblocked issues in todo/in-progress remain → block the stop
@@ -32,7 +32,7 @@ interface HookInput {
   stop_hook_active?: boolean;
 }
 
-interface TrackgenticIssue {
+interface AgentrackIssue {
   id: string;
   title: string;
   status: string;
@@ -69,11 +69,11 @@ function findAgentFile(agentType: string, cwd: string): string | null {
 }
 
 /**
- * Extract the trackgentic token from the agent file content.
- * Matches patterns like: trackgentic token is `tk_xxxx`
+ * Extract the agentrack token from the agent file content.
+ * Matches patterns like: agentrack token is `tk_xxxx`
  */
 function extractToken(agentContent: string): string | null {
-  const match = agentContent.match(/trackgentic token is `(tk_\w+)`/);
+  const match = agentContent.match(/agentrack token is `(tk_\w+)`/);
   return match ? match[1]! : null;
 }
 
@@ -99,7 +99,7 @@ async function main(): Promise<never> {
 
   const cwd = input.cwd || process.cwd();
 
-  // Locate the agent file and extract the trackgentic token
+  // Locate the agent file and extract the agentrack token
   const agentFile = findAgentFile(agentType, cwd);
   if (!agentFile) process.exit(0);
 
@@ -117,15 +117,15 @@ async function main(): Promise<never> {
   let issuesJson: string;
   try {
     issuesJson = execSync(
-      `TRACKGENTIC_TOKEN="${token}" trackgentic list --status "open" --assignee "${agentType}"`,
+      `AGENTACK_TOKEN="${token}" agt list --status "open" --assignee "${agentType}"`,
       { encoding: 'utf8', cwd, timeout: 10000 },
     );
   } catch {
-    // trackgentic command failed — fail open
+    // agt command failed — fail open
     process.exit(0);
   }
 
-  let issues: TrackgenticIssue[];
+  let issues: AgentrackIssue[];
   try {
     issues = JSON.parse(issuesJson);
     if (!Array.isArray(issues)) process.exit(0);
@@ -141,12 +141,12 @@ async function main(): Promise<never> {
   if (activeIssues.length === 0) process.exit(0);
 
   // Check blockages for each active issue — only block stop for unblocked ones
-  const unblockedIssues: TrackgenticIssue[] = [];
+  const unblockedIssues: AgentrackIssue[] = [];
 
   for (const issue of activeIssues) {
     try {
       const blockagesJson = execSync(
-        `TRACKGENTIC_TOKEN="${token}" trackgentic blockages list ${issue.id}`,
+        `AGENTACK_TOKEN="${token}" agt blockages list ${issue.id}`,
         { encoding: 'utf8', cwd, timeout: 10000 },
       );
       const blockages: BlockagesInfo = JSON.parse(blockagesJson);
@@ -175,9 +175,9 @@ async function main(): Promise<never> {
     `IMPORTANT: You cannot stop yet. You have issues assigned to you that are still in 'todo' or 'in-progress' status ` +
     `with no blockages. The runner will immediately re-assign these to you on the next cycle.\n\n` +
     `Resolve each issue by doing one of:\n` +
-    `1. Mark completed issues as 'done': trackgentic update <issue-id> --status "done"\n` +
-    `2. Reassign issues you can't complete: trackgentic update <issue-id> --assignee <other-agent>\n` +
-    `3. Add blockages if blocked: trackgentic blockages add <issue-id> --by <blocker-id>\n\n` +
+    `1. Mark completed issues as 'done': agt update <issue-id> --status "done"\n` +
+    `2. Reassign issues you can't complete: agt update <issue-id> --assignee <other-agent>\n` +
+    `3. Add blockages if blocked: agt blockages add <issue-id> --by <blocker-id>\n\n` +
     `Issues to resolve:\n${issueList}`;
 
   return emit({

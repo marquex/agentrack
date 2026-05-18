@@ -1,10 +1,10 @@
-import { TrackgenticError } from "../../core/errors";
+import { AgentrackError } from "../../core/errors";
 import { Tracker } from "../../core/tracker";
 import { writeStderr, writeStdout } from "../output";
 
 /**
- * Handler for the `trackgentic init` command.
- * Creates a `.trackgentic/` directory in the current working directory.
+ * Handler for the `agt init` command.
+ * Creates a `.agentrack/` directory in the current working directory.
  */
 export async function initAction(): Promise<void> {
   try {
@@ -13,7 +13,7 @@ export async function initAction(): Promise<void> {
     writeStdout(result);
     process.exit(0);
   } catch (err) {
-    if (err instanceof TrackgenticError) {
+    if (err instanceof AgentrackError) {
       writeStderr({ result: err.result, message: err.message });
       process.exit(err.exitCode);
     }

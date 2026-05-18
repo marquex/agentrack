@@ -14,7 +14,7 @@ A blockage is `active` when the blocking issue has not been completed yet. Once 
 
 ## Dependency index file
 
-Blockages are stored in a separate index file: `.trackgentic/dependencies.json`. This keeps dependency data out of the main index and avoids git conflicts when agents modify blockages and issue metadata concurrently.
+Blockages are stored in a separate index file: `.agentrack/dependencies.json`. This keeps dependency data out of the main index and avoids git conflicts when agents modify blockages and issue metadata concurrently.
 
 The file contains two bidirectional maps for fast lookups in both directions:
 
@@ -118,7 +118,7 @@ This ensures that completing an issue automatically unblocks its dependents with
 ## Folder structure
 
 ```
-.trackgentic/
+.agentrack/
   config.json
   index.json
   dependencies.json
@@ -129,41 +129,41 @@ This ensures that completing an issue automatically unblocks its dependents with
 
 ## CLI commands
 
-See [commands.md](commands.md) for the full CLI reference. Blockages are managed through subcommands under `trackgentic blockages`:
+See [commands.md](commands.md) for the full CLI reference. Blockages are managed through subcommands under `agt blockages`:
 
-### `trackgentic blockages add [blocked_id] --by [blocker_id...]`
+### `agt blockages add [blocked_id] --by [blocker_id...]`
 
 Add one or more blockages indicating that `blocked_id` is blocked by the given blocker ids. Multiple blocker ids can be passed to `--by` to create several blockages in a single atomic operation.
 
 Examples:
 ```
-trackgentic blockages add issue-A --by issue-B
-trackgentic blockages add issue-A --by issue-B issue-C issue-D
+agt blockages add issue-A --by issue-B
+agt blockages add issue-A --by issue-B issue-C issue-D
 ```
 
 The operation is atomic: all cycle checks are validated against the projected state first, and if any would introduce a cycle the entire command is rejected with no side effects.
 
-### `trackgentic blockages resolve [blocked_id] --by [blocker_id...]`
+### `agt blockages resolve [blocked_id] --by [blocker_id...]`
 
 Resolve one or more blockages, marking them as `resolved`. The entries remain in the index for historical visibility.
 
 Examples:
 ```
-trackgentic blockages resolve issue-A --by issue-B
-trackgentic blockages resolve issue-A --by issue-B issue-C
+agt blockages resolve issue-A --by issue-B
+agt blockages resolve issue-A --by issue-B issue-C
 ```
 
-### `trackgentic blockages delete [blocked_id] --by [blocker_id...]`
+### `agt blockages delete [blocked_id] --by [blocker_id...]`
 
 Delete one or more blockages entirely from the dependency index. Use this when a blockage was added by mistake. A `blockage-deleted` event is appended to the blocked issue's event file for auditability.
 
 Examples:
 ```
-trackgentic blockages delete issue-A --by issue-B
-trackgentic blockages delete issue-A --by issue-B issue-C
+agt blockages delete issue-A --by issue-B
+agt blockages delete issue-A --by issue-B issue-C
 ```
 
-### `trackgentic blockages list [issue_id]`
+### `agt blockages list [issue_id]`
 
 List the blockages for a given issue — both what blocks it and what it blocks, including resolved entries.
 

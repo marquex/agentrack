@@ -1,5 +1,5 @@
 /**
- * Configuration file stored at `.trackgentic/config.json`.
+ * Configuration file stored at `.agentrack/config.json`.
  * Controls authentication behavior for all operations.
  */
 export interface ConfigFile {

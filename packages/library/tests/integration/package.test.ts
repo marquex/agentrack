@@ -7,7 +7,7 @@ const pkg = JSON.parse(readFileSync(join(__dirname, "../../package.json"), "utf-
 
 describe("Package Configuration", () => {
   test("package.json has all required fields", () => {
-    expect(pkg.name).toBe("trackgentic");
+    expect(pkg.name).toBe("agentrack");
     expect(pkg.version).toBe("0.1.0");
     expect(pkg.type).toBe("module");
     expect(pkg.main).toBe("./dist/index.cjs");
@@ -25,7 +25,7 @@ describe("Package Configuration", () => {
         },
       },
     });
-    expect(pkg.bin).toEqual({ trackgentic: "./dist/bin.js" });
+    expect(pkg.bin).toEqual({ agt: "./dist/bin.js" });
     expect(pkg.files).toEqual(["dist/"]);
     expect(pkg.engines).toEqual({ node: ">=20.0.0" });
     expect(pkg.description).toBeString();
@@ -45,12 +45,12 @@ describe("Package Configuration", () => {
     });
 
     try {
-      await program.parseAsync(["node", "trackgentic", "--help"]);
+      await program.parseAsync(["node", "agt", "--help"]);
     } catch {
       // Commander throws after printing help — expected
     }
 
-    expect(helpOutput).toContain("trackgentic");
+    expect(helpOutput).toContain("agt");
     expect(helpOutput).toContain("init");
     expect(helpOutput).toContain("create");
     expect(helpOutput).toContain("list");
@@ -68,7 +68,7 @@ describe("Package Configuration", () => {
     });
 
     try {
-      await program.parseAsync(["node", "trackgentic", "--version"]);
+      await program.parseAsync(["node", "agt", "--version"]);
     } catch {
       // Commander throws after printing version — expected
     }

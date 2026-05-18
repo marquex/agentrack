@@ -12,7 +12,7 @@ describe("CLI commands", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-cli-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-cli-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
     mkdirSync(testDir, { recursive: true });
   });
@@ -47,7 +47,7 @@ describe("CLI commands", () => {
   }
 
   describe("init", () => {
-    test("trackgentic init prints correct JSON to stdout", async () => {
+    test("agt init prints correct JSON to stdout", async () => {
       const { stdout, stderr, exitCode } = await runCLI("init");
 
       expect(exitCode).toBe(0);
@@ -55,10 +55,10 @@ describe("CLI commands", () => {
 
       const result = JSON.parse(stdout.trim());
       expect(result.result).toBe("OK");
-      expect(result.path).toContain(".trackgentic");
+      expect(result.path).toContain(".agentrack");
     });
 
-    test("trackgentic init when already initialized prints ALREADY_INITIALIZED", async () => {
+    test("agt init when already initialized prints ALREADY_INITIALIZED", async () => {
       await runCLI("init");
       const { stdout, exitCode } = await runCLI("init");
 
@@ -66,7 +66,7 @@ describe("CLI commands", () => {
 
       const result = JSON.parse(stdout.trim());
       expect(result.result).toBe("ALREADY_INITIALIZED");
-      expect(result.path).toContain(".trackgentic");
+      expect(result.path).toContain(".agentrack");
     });
   });
 
@@ -191,7 +191,7 @@ describe("CLI commands", () => {
       expect(result[0].title).toBe("Open Issue");
     });
 
-    test("prints NOT_INITIALIZED error when no .trackgentic/ exists", async () => {
+    test("prints NOT_INITIALIZED error when no .agentrack/ exists", async () => {
       const { stderr, exitCode } = await runCLI("list");
 
       expect(exitCode).toBe(1);
@@ -239,7 +239,7 @@ describe("CLI commands", () => {
       const issueId = createResult.id;
 
       // Delete the issue file to trigger ISSUE_MISSING
-      const issuePath = join(testDir, ".trackgentic", "issues", `${issueId}.json`);
+      const issuePath = join(testDir, ".agentrack", "issues", `${issueId}.json`);
       unlinkSync(issuePath);
 
       const { stderr, exitCode } = await runCLI("view", issueId);
@@ -379,7 +379,7 @@ describe("CLI commands", () => {
       const createResult = JSON.parse((await runCLI("create", "History Gone")).stdout.trim());
       const issueId = createResult.id;
 
-      const issuePath = join(testDir, ".trackgentic", "issues", `${issueId}.json`);
+      const issuePath = join(testDir, ".agentrack", "issues", `${issueId}.json`);
       unlinkSync(issuePath);
 
       const { stderr, exitCode } = await runCLI("history", issueId);
@@ -489,7 +489,7 @@ describe("CLI commands", () => {
       const oldToken = regOutput.token;
 
       const { stdout, stderr, exitCode } = await runCLIWithEnv(
-        { TRACKGENTIC_USER_TOKEN: oldToken },
+        { AGENTACK_USER_TOKEN: oldToken },
         "users",
         "regenerate",
         "alice",
@@ -511,7 +511,7 @@ describe("CLI commands", () => {
       const bobOutput = JSON.parse((await runCLI("users", "register", "bob")).stdout.trim());
 
       const { stderr, exitCode } = await runCLIWithEnv(
-        { TRACKGENTIC_USER_TOKEN: bobOutput.token },
+        { AGENTACK_USER_TOKEN: bobOutput.token },
         "users",
         "regenerate",
         "alice",
@@ -934,7 +934,7 @@ describe("CLI commands", () => {
       expect(result.message).toContain("alice");
     });
 
-    test("prints NOT_INITIALIZED error when no .trackgentic/ exists", async () => {
+    test("prints NOT_INITIALIZED error when no .agentrack/ exists", async () => {
       const { stderr, exitCode } = await runCLI("next", "alice");
 
       expect(exitCode).toBe(1);

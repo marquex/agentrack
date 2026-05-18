@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../../src/core/errors";
+import { AgentrackError } from "../../../src/core/errors";
 import { Tracker } from "../../../src/core/tracker";
 
 describe("Tracker", () => {
@@ -11,7 +11,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -39,7 +39,7 @@ describe("Tracker", () => {
 
       // Verify dependencies file
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[blocked.id]).toHaveLength(1);
       expect(deps.blockedBy[blocked.id][0].blockerId).toBe(blocker.id);
@@ -49,7 +49,7 @@ describe("Tracker", () => {
 
       // Verify event appended
       const events = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked.id}.json`), "utf-8"),
       );
       const blockageEvent = events[events.length - 1];
       expect(blockageEvent.type).toBe("blockage-added");
@@ -69,7 +69,7 @@ describe("Tracker", () => {
       expect(result).toEqual({ result: "OK" });
 
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[blocked.id]).toHaveLength(2);
     });
@@ -87,15 +87,15 @@ describe("Tracker", () => {
         await tracker.blockagesAdd(issueB.id, { blockerIds: [issueA.id] });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("BLOCKAGE_CYCLE");
         expect(e.exitCode).toBe(11);
       }
 
       // Verify no side effects: B should NOT be in blockedBy for A
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[issueB.id]).toBeUndefined();
     });
@@ -116,14 +116,14 @@ describe("Tracker", () => {
         await tracker.blockagesAdd(issueC.id, { blockerIds: [issueA.id] });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("BLOCKAGE_CYCLE");
       }
 
       // Verify C has no blockages
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[issueC.id]).toBeUndefined();
     });
@@ -136,8 +136,8 @@ describe("Tracker", () => {
         await tracker.blockagesAdd("missing12345", { blockerIds: [blocker.id] });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
         expect(e.exitCode).toBe(5);
       }
@@ -151,8 +151,8 @@ describe("Tracker", () => {
         await tracker.blockagesAdd(blocked.id, { blockerIds: ["missing12345"] });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
         expect(e.exitCode).toBe(5);
       }
@@ -168,14 +168,14 @@ describe("Tracker", () => {
       expect(result).toEqual({ result: "OK" });
 
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[blocked.id][0].status).toBe("resolved");
       expect(deps.blocks[blocker.id][0].status).toBe("resolved");
 
       // Verify event
       const events = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked.id}.json`), "utf-8"),
       );
       const resolveEvent = events[events.length - 1];
       expect(resolveEvent.type).toBe("blockage-resolved");
@@ -198,8 +198,8 @@ describe("Tracker", () => {
         await tracker.blockagesResolve("missing12345", { blockerIds: ["blocker123"] });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
       }
     });
@@ -214,14 +214,14 @@ describe("Tracker", () => {
       expect(result).toEqual({ result: "OK" });
 
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[blocked.id]).toBeUndefined();
       expect(deps.blocks[blocker.id]).toBeUndefined();
 
       // Verify event
       const events = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked.id}.json`), "utf-8"),
       );
       const deleteEvent = events[events.length - 1];
       expect(deleteEvent.type).toBe("blockage-deleted");
@@ -233,8 +233,8 @@ describe("Tracker", () => {
         await tracker.blockagesDelete("missing12345", { blockerIds: ["blocker123"] });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
       }
     });
@@ -287,8 +287,8 @@ describe("Tracker", () => {
         await tracker.blockagesList("missing12345");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_FOUND");
       }
     });
@@ -305,14 +305,14 @@ describe("Tracker", () => {
 
       // Verify deps are resolved
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[blocked.id][0].status).toBe("resolved");
       expect(deps.blocks[blocker.id][0].status).toBe("resolved");
 
       // Verify system event in blocked issue
       const blockedEvents = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked.id}.json`), "utf-8"),
       );
       const autoEvent = blockedEvents[blockedEvents.length - 1];
       expect(autoEvent.type).toBe("blockage-resolved");
@@ -331,12 +331,12 @@ describe("Tracker", () => {
       await tracker.update(blocker.id, { status: "closed" });
 
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(deps.blockedBy[blocked.id][0].status).toBe("resolved");
 
       const blockedEvents = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked.id}.json`), "utf-8"),
       );
       const autoEvent = blockedEvents[blockedEvents.length - 1];
       expect(autoEvent.type).toBe("blockage-resolved");
@@ -352,7 +352,7 @@ describe("Tracker", () => {
 
       // No blockages existed, so no auto-resolution events
       const deps = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "dependencies.json"), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "dependencies.json"), "utf-8"),
       );
       expect(Object.keys(deps.blockedBy)).toHaveLength(0);
       expect(Object.keys(deps.blocks)).toHaveLength(0);
@@ -373,7 +373,7 @@ describe("Tracker", () => {
 
       // Record blocked1's event count before auto-resolution
       const blocked1Events = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked1.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked1.id}.json`), "utf-8"),
       );
       const blocked1EventCount = blocked1Events.length;
 
@@ -382,13 +382,13 @@ describe("Tracker", () => {
 
       // blocked1 should not get an extra auto-resolve event (was already resolved)
       const blocked1EventsAfter = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked1.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked1.id}.json`), "utf-8"),
       );
       expect(blocked1EventsAfter).toHaveLength(blocked1EventCount);
 
       // blocked2 should have auto-resolve event
       const blocked2Events = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked2.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked2.id}.json`), "utf-8"),
       );
       const autoEvent = blocked2Events[blocked2Events.length - 1];
       expect(autoEvent.type).toBe("blockage-resolved");
@@ -422,10 +422,10 @@ describe("Tracker", () => {
       expect(highIdx).toBeLessThan(lowIdx);
     });
 
-    test("blockagesAdd throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("blockagesAdd throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -433,17 +433,17 @@ describe("Tracker", () => {
         await uninitTracker.blockagesAdd("missing12345", { blockerIds: ["blocker123"] });
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });
 
-    test("blockagesList throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("blockagesList throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -451,8 +451,8 @@ describe("Tracker", () => {
         await uninitTracker.blockagesList("missing12345");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
       }
       rmSync(uninitDir, { recursive: true, force: true });
@@ -468,25 +468,25 @@ describe("Tracker", () => {
     beforeEach(async () => {
       testDir = join(
         tmpdir(),
-        `trackgentic-test-blockage-auth-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-test-blockage-auth-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(testDir, { recursive: true });
       tracker = new Tracker(testDir);
       await tracker.init();
-      savedToken = process.env.TRACKGENTIC_USER_TOKEN;
-      delete process.env.TRACKGENTIC_USER_TOKEN;
+      savedToken = process.env.AGENTACK_USER_TOKEN;
+      delete process.env.AGENTACK_USER_TOKEN;
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.TRACKGENTIC_USER_TOKEN = savedToken;
+        process.env.AGENTACK_USER_TOKEN = savedToken;
       } else {
-        delete process.env.TRACKGENTIC_USER_TOKEN;
+        delete process.env.AGENTACK_USER_TOKEN;
       }
     });
 
     function setAuthMode(mode: "open" | "read-only" | "strict", defaultUser = "anonymous") {
-      const configPath = join(testDir, ".trackgentic", "config.json");
+      const configPath = join(testDir, ".agentrack", "config.json");
       writeFileSync(configPath, JSON.stringify({ auth: { mode, defaultUser } }));
     }
 
@@ -498,8 +498,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.blockagesAdd(blocked.id, { blockerIds: [blocker.id] });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -515,8 +515,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.blockagesResolve(blocked.id, { blockerIds: [blocker.id] });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -531,8 +531,8 @@ describe("Tracker", () => {
       setAuthMode("read-only");
       const result = await tracker.blockagesDelete(blocked.id, { blockerIds: [blocker.id] });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -562,8 +562,8 @@ describe("Tracker", () => {
         await tracker.blockagesList(issue.id);
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("TOKEN_REQUIRED");
         expect(e.exitCode).toBe(2);
       }
@@ -577,8 +577,8 @@ describe("Tracker", () => {
       setAuthMode("strict");
       const result = await tracker.blockagesAdd(blocked.id, { blockerIds: [blocker.id] });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
       }
     });
@@ -586,7 +586,7 @@ describe("Tracker", () => {
     test("with valid token: blockagesAdd uses author from token", async () => {
       const regResult = await tracker.usersRegister("charlie");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.TRACKGENTIC_USER_TOKEN = regResult.token;
+      process.env.AGENTACK_USER_TOKEN = regResult.token;
 
       const blocked = await tracker.create({ title: "Blocked" });
       const blocker = await tracker.create({ title: "Blocker" });
@@ -597,7 +597,7 @@ describe("Tracker", () => {
 
       // Verify event has correct author
       const events = JSON.parse(
-        readFileSync(join(testDir, ".trackgentic", "issues", `${blocked.id}.json`), "utf-8"),
+        readFileSync(join(testDir, ".agentrack", "issues", `${blocked.id}.json`), "utf-8"),
       );
       const blockageEvent = events[events.length - 1];
       expect(blockageEvent.author).toBe("charlie");
@@ -609,12 +609,12 @@ describe("Tracker", () => {
       const blocker = await tracker.create({ title: "Blocker" });
       if (!("id" in blocked) || !("id" in blocker)) throw new Error("Create failed");
 
-      process.env.TRACKGENTIC_USER_TOKEN = "tk_fake0000";
+      process.env.AGENTACK_USER_TOKEN = "tk_fake0000";
 
       const result = await tracker.blockagesAdd(blocked.id, { blockerIds: [blocker.id] });
 
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("INVALID_TOKEN");
         expect(result.exitCode).toBe(3);
       }

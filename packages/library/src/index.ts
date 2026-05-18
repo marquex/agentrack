@@ -1,7 +1,7 @@
 // Main API
 
 // Error class
-export { TrackgenticError } from "./core/errors";
+export { AgentrackError } from "./core/errors";
 export { Tracker } from "./core/tracker";
 // All data types
 export type {

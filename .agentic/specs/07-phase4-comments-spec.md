@@ -46,7 +46,7 @@ All four methods follow the same patterns as existing methods:
 - Call `resolveAuthor()` for mutations (add/update/delete)
 - Validate issue exists via index lookup
 - Validate issue file exists via file-io
-- Return results or throw `TrackgenticError`
+- Return results or throw `AgentrackError`
 
 #### `commentsAdd(id: IssueId, params: CommentAddParams): Promise<CommentAddResult>`
 
@@ -117,25 +117,25 @@ All four methods follow the same patterns as existing methods:
 
 Create a new file following the pattern of existing command files (e.g., `users.ts`). Register a `comments` subcommand with four sub-subcommands:
 
-#### `trackgentic comments add <issueId> --content <content>`
+#### `agt comments add <issueId> --content <content>`
 - Positional: `issueId`
 - Required flag: `--content`
 - Calls: `tracker.commentsAdd(issueId, { content, author })`
 - Output: `{ "result": "OK", "commentId": "..." }`
 
-#### `trackgentic comments update <issueId> <commentId> --content <content>`
+#### `agt comments update <issueId> <commentId> --content <content>`
 - Positional: `issueId`, `commentId`
 - Required flag: `--content`
 - Calls: `tracker.commentsUpdate(issueId, commentId, { content, author })`
 - Output: `{ "result": "OK" }`
 
-#### `trackgentic comments delete <issueId> <commentId>`
+#### `agt comments delete <issueId> <commentId>`
 - Positional: `issueId`, `commentId`
 - No flags
 - Calls: `tracker.commentsDelete(issueId, commentId, { author })`
 - Output: `{ "result": "OK" }`
 
-#### `trackgentic comments list <issueId>`
+#### `agt comments list <issueId>`
 - Positional: `issueId`
 - No flags
 - Calls: `tracker.commentsList(issueId)`
@@ -180,10 +180,10 @@ Add tests to `tests/core/tracker.test.ts` for Tracker comment methods, and `test
 
 #### CLI tests to add:
 
-20. `trackgentic comments add <id> --content "text"` — returns OK with commentId
-21. `trackgentic comments update <id> <cid> --content "new"` — returns OK
-22. `trackgentic comments delete <id> <cid>` — returns OK
-23. `trackgentic comments list <id>` — returns comment array
+20. `agt comments add <id> --content "text"` — returns OK with commentId
+21. `agt comments update <id> <cid> --content "new"` — returns OK
+22. `agt comments delete <id> <cid>` — returns OK
+23. `agt comments list <id>` — returns comment array
 
 ## Quality Gates
 

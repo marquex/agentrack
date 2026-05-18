@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { existsSync, mkdirSync, readFileSync, rmSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../../src/core/errors";
+import { AgentrackError } from "../../../src/core/errors";
 import { Tracker } from "../../../src/core/tracker";
 
 describe("Tracker", () => {
@@ -11,7 +11,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -40,7 +40,7 @@ describe("Tracker", () => {
       const result = await tracker.create({ title: "Test Issue" });
 
       if ("id" in result) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${result.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${result.id}.json`);
         expect(existsSync(issuePath)).toBe(true);
 
         const events = JSON.parse(readFileSync(issuePath, "utf-8"));
@@ -56,7 +56,7 @@ describe("Tracker", () => {
 
       if ("id" in result) {
         const index = JSON.parse(
-          readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"),
+          readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"),
         );
         expect(index.open).toHaveLength(1);
         expect(index.open[0].id).toBe(result.id);
@@ -82,7 +82,7 @@ describe("Tracker", () => {
 
       if ("id" in result) {
         const index = JSON.parse(
-          readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"),
+          readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"),
         );
         const entry = index.open.find((e: { id: string }) => e.id === result.id);
         expect(entry.title).toBe("Full Issue");
@@ -102,7 +102,7 @@ describe("Tracker", () => {
 
       if ("id" in result) {
         const index = JSON.parse(
-          readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"),
+          readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"),
         );
         expect(index.open).toHaveLength(0);
         expect(index.closed).toHaveLength(1);
@@ -110,10 +110,10 @@ describe("Tracker", () => {
       }
     });
 
-    test("throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -121,7 +121,7 @@ describe("Tracker", () => {
         await uninitTracker.create({ title: "Test" });
         expect(true).toBe(false); // Should not reach here
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
+        expect(err).toBeInstanceOf(AgentrackError);
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });
@@ -130,7 +130,7 @@ describe("Tracker", () => {
       const result = await tracker.create({ title: "Authored", author: "alice" });
 
       if ("id" in result) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${result.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${result.id}.json`);
         const events = JSON.parse(readFileSync(issuePath, "utf-8"));
         expect(events[0].author).toBe("alice");
         expect(events[1].author).toBe("alice");
@@ -141,7 +141,7 @@ describe("Tracker", () => {
       const result = await tracker.create({ title: "Default Authored" });
 
       if ("id" in result) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${result.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${result.id}.json`);
         const events = JSON.parse(readFileSync(issuePath, "utf-8"));
         expect(events[0].author).toBe("anonymous");
       }
@@ -251,10 +251,10 @@ describe("Tracker", () => {
       expect(result[2].title).toBe("Low P");
     });
 
-    test("throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
+    test("throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -262,7 +262,7 @@ describe("Tracker", () => {
         await uninitTracker.list();
         expect(true).toBe(false); // Should not reach here
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
+        expect(err).toBeInstanceOf(AgentrackError);
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });
@@ -299,7 +299,7 @@ describe("Tracker", () => {
     });
 
     test("throws NOT_FOUND for non-existent id", async () => {
-      expect(tracker.view("missing12345")).rejects.toThrow(TrackgenticError);
+      expect(tracker.view("missing12345")).rejects.toThrow(AgentrackError);
     });
 
     test("throws ISSUE_MISSING when file is deleted", async () => {
@@ -307,22 +307,22 @@ describe("Tracker", () => {
 
       if ("id" in created) {
         // Manually delete the issue file
-        const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
         unlinkSync(issuePath);
 
-        expect(tracker.view(created.id)).rejects.toThrow(TrackgenticError);
+        expect(tracker.view(created.id)).rejects.toThrow(AgentrackError);
       }
     });
 
-    test("throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
-      const uninitDir = join(tmpdir(), `no-trackgentic-${Date.now()}`);
+    test("throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
+      const uninitDir = join(tmpdir(), `no-agentrack-${Date.now()}`);
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
       try {
         await uninitTracker.view("abc1234567");
         expect(true).toBe(false);
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
+        expect(err).toBeInstanceOf(AgentrackError);
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });
@@ -380,7 +380,7 @@ describe("Tracker", () => {
       if ("id" in created) {
         await tracker.update(created.id, { title: "Updated" });
 
-        const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
         const events = JSON.parse(readFileSync(issuePath, "utf-8"));
         // creation + initial update + our update = 3 events
         expect(events).toHaveLength(3);
@@ -396,7 +396,7 @@ describe("Tracker", () => {
         await tracker.update(created.id, { status: "closed" });
 
         const index = JSON.parse(
-          readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"),
+          readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"),
         );
         expect(index.open).toHaveLength(0);
         expect(index.closed).toHaveLength(1);
@@ -411,7 +411,7 @@ describe("Tracker", () => {
         await tracker.update(created.id, { status: "todo" });
 
         const index = JSON.parse(
-          readFileSync(join(testDir, ".trackgentic", "index.json"), "utf-8"),
+          readFileSync(join(testDir, ".agentrack", "index.json"), "utf-8"),
         );
         expect(index.open).toHaveLength(1);
         expect(index.closed).toHaveLength(0);
@@ -423,22 +423,22 @@ describe("Tracker", () => {
       const created = await tracker.create({ title: "Test" });
 
       if ("id" in created) {
-        expect(tracker.update(created.id, {})).rejects.toThrow(TrackgenticError);
+        expect(tracker.update(created.id, {})).rejects.toThrow(AgentrackError);
       }
     });
 
     test("throws NOT_FOUND for non-existent id", async () => {
-      expect(tracker.update("missing12345", { title: "Test" })).rejects.toThrow(TrackgenticError);
+      expect(tracker.update("missing12345", { title: "Test" })).rejects.toThrow(AgentrackError);
     });
 
     test("throws ISSUE_MISSING when file is deleted", async () => {
       const created = await tracker.create({ title: "Will be deleted" });
 
       if ("id" in created) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
         unlinkSync(issuePath);
 
-        expect(tracker.update(created.id, { title: "Updated" })).rejects.toThrow(TrackgenticError);
+        expect(tracker.update(created.id, { title: "Updated" })).rejects.toThrow(AgentrackError);
       }
     });
 
@@ -512,29 +512,29 @@ describe("Tracker", () => {
     });
 
     test("throws NOT_FOUND for non-existent id", async () => {
-      expect(tracker.history("missing12345")).rejects.toThrow(TrackgenticError);
+      expect(tracker.history("missing12345")).rejects.toThrow(AgentrackError);
     });
 
     test("throws ISSUE_MISSING when file is deleted", async () => {
       const created = await tracker.create({ title: "Test" });
 
       if ("id" in created) {
-        const issuePath = join(testDir, ".trackgentic", "issues", `${created.id}.json`);
+        const issuePath = join(testDir, ".agentrack", "issues", `${created.id}.json`);
         unlinkSync(issuePath);
 
-        expect(tracker.history(created.id)).rejects.toThrow(TrackgenticError);
+        expect(tracker.history(created.id)).rejects.toThrow(AgentrackError);
       }
     });
 
-    test("throws NOT_INITIALIZED when no .trackgentic/ exists", async () => {
-      const uninitDir = join(tmpdir(), `no-trackgentic-${Date.now()}`);
+    test("throws NOT_INITIALIZED when no .agentrack/ exists", async () => {
+      const uninitDir = join(tmpdir(), `no-agentrack-${Date.now()}`);
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
       try {
         await uninitTracker.history("abc1234567");
         expect(true).toBe(false);
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
+        expect(err).toBeInstanceOf(AgentrackError);
       }
       rmSync(uninitDir, { recursive: true, force: true });
     });

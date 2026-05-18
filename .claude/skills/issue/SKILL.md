@@ -15,7 +15,7 @@ This skill is invoked when a manager receives a request to plan and delegate wor
 Read the prompt argument carefully. Before creating anything, check for overlaps:
 
 ```bash
-trackgentic list --status open
+agt list --status open
 ```
 
 You do NOT read source code — you are an expert who knows the project's architecture, patterns, and conventions from your own expertise. Use that knowledge to reason about:
@@ -47,7 +47,7 @@ This is your best architectural sketch. It may have gaps or assumptions about cu
 ### 3. Create the Parent Issue
 
 ```bash
-trackgentic create "<concise title>" \
+agt create "<concise title>" \
   --description "Spec: .agentic/specs/<slug>-spec.md\n\n<brief summary of the goal>" \
   --status "todo" \
   --priority <1-5> \
@@ -62,7 +62,7 @@ The parent issue represents the overall goal. It stays assigned to the CTO throu
 Create child issues for subordinates to **review the draft spec**:
 
 ```bash
-trackgentic create "Review spec: <slug>" \
+agt create "Review spec: <slug>" \
   --description "Review the draft spec at .agentic/specs/<slug>-spec.md\n\nAnalyze viability against the actual codebase. Comment with:\n- Feasibility issues\n- Missing edge cases\n- Suggested API changes\n- Implementation concerns\n\nDo NOT implement — only analyze and comment." \
   --parentId <parent-id> \
   --status "todo" \
@@ -70,7 +70,7 @@ trackgentic create "Review spec: <slug>" \
   --priority <same-as-parent> \
   --tags "review,spec"
 
-trackgentic create "Review spec: <slug> (quality perspective)" \
+agt create "Review spec: <slug> (quality perspective)" \
   --description "Review the draft spec at .agentic/specs/<slug>-spec.md\n\nAnalyze from a testability and quality perspective. Comment with:\n- Testability concerns\n- Missing acceptance criteria\n- Documentation requirements\n- Edge cases that need coverage\n\nDo NOT implement — only analyze and comment." \
   --parentId <parent-id> \
   --status "todo" \
@@ -86,7 +86,7 @@ Now create the actual work items. These are blocked by the review tasks, so they
 **IMPORTANT:** Implementation agents will read both the spec AND the review comments. Review comments contain the key feedback that improves the implementation. The spec stays as DRAFT — the combined spec + review comments give workers everything they need.
 
 ```bash
-trackgentic create "Implement: <title>" \
+agt create "Implement: <title>" \
   --description "Spec: .agentic/specs/<slug>-spec.md\n\nRead the spec AND the review comments on issues <dev-review-id> and <quality-review-id> before starting. The reviews contain critical feedback about feasibility, edge cases, and test impact.\n\n<what to implement>" \
   --parentId <parent-id> \
   --status "todo" \
@@ -96,7 +96,7 @@ trackgentic create "Implement: <title>" \
 ```
 
 ```bash
-trackgentic create "Validate: <title>" \
+agt create "Validate: <title>" \
   --description "Spec: .agentic/specs/<slug>-spec.md\n\nValidate the implementation done by library-developer. Run quality gates, check test coverage on changed code, verify spec compliance.\n\n<what to validate>" \
   --parentId <parent-id> \
   --status "todo" \
@@ -110,8 +110,8 @@ trackgentic create "Validate: <title>" \
 Reviews block implementation. Implementation blocks quality validation:
 
 ```bash
-trackgentic blockages add <implementation-id> --by <dev-review-id> <quality-review-id>
-trackgentic blockages add <validation-id> --by <implementation-id>
+agt blockages add <implementation-id> --by <dev-review-id> <quality-review-id>
+agt blockages add <validation-id> --by <implementation-id>
 ```
 
 ### 7. Add Context Comments
@@ -119,7 +119,7 @@ trackgentic blockages add <validation-id> --by <implementation-id>
 For each implementation issue, add a comment with context beyond what's in the spec:
 
 ```bash
-trackgentic comments add <implementation-id> \
+agt comments add <implementation-id> \
   --content "<context, links to relevant code areas, acceptance criteria summary, gotchas from reviews>"
 ```
 
@@ -128,7 +128,7 @@ trackgentic comments add <implementation-id> \
 Once all tasks are created and blockages set:
 
 ```bash
-trackgentic update <parent-id> --status "in-progress"
+agt update <parent-id> --status "in-progress"
 ```
 
 The parent stays `in-progress` (assigned to CTO) until all children complete.

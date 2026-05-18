@@ -1,4 +1,4 @@
-# Trackgentic
+# Agentrack
 
 We want to create a typescript library that is an issue tracker easy to use for agents. It should be based on events and backed only by files, so it can be commited to git without generating conflicts.
 
@@ -54,7 +54,7 @@ The issue will have the following properties:
 
 ## CLI commands
 
-The way of interacting with the issue tracker will be through a CLI command that will allow agents quickly query and update issues. The main command will be `trackgentic` and it will have the following subcommands:
+The way of interacting with the issue tracker will be through a CLI command that will allow agents quickly query and update issues. The main command will be `agt` and it will have the following subcommands:
 
 * `init`: to initialize the issue tracker in a repository, creating the necessary folders and files.
 * `create`: to create a new issue
@@ -69,20 +69,20 @@ See the [commands documentation](commands.md) for more details on the available 
 
 ## Configuration
 
-The library needs to locate the index file to work. That file will live in `./trackgentic/index.json` inside of the repository so it can be tracked.
+The library needs to locate the index file to work. That file will live in `./agentrack/index.json` inside of the repository so it can be tracked.
 
 The resolution of the index file depends on where the command is executed from. The library will look for the index file in the current working directory and if it doesn't find it, it will look in the parent directory, and so on until it reaches the root of the filesystem.
 
-If the index file is not found, any command will return an error indicating that the index file is missing and that the user needs to initialize it by running `trackgentic init` where the `.trackgentic` folder with the index file will be created.
+If the index file is not found, any command will return an error indicating that the index file is missing and that the user needs to initialize it by running `agt init` where the `.agentrack` folder with the index file will be created.
 
-It's possible to have multiple `.trackgentic` folders in different parts of the repository, allowing to have different issue trackers for different subdirectories. This can be useful for monorepos or projects with different components that want to have their own issue tracker.
+It's possible to have multiple `.agentrack` folders in different parts of the repository, allowing to have different issue trackers for different subdirectories. This can be useful for monorepos or projects with different components that want to have their own issue tracker.
 
-The `.trackgentic` folder will also contain the default folder for the issues. If when creating an issue the path is not specified, the issue file will be created in the resolved `.trackgentic` folder, inside of the issues directory.
+The `.agentrack` folder will also contain the default folder for the issues. If when creating an issue the path is not specified, the issue file will be created in the resolved `.agentrack` folder, inside of the issues directory.
 
-The structure of the `.trackgentic` folder will be as follows:
+The structure of the `.agentrack` folder will be as follows:
 
 ```
-.trackgentic/
+.agentrack/
   config.json
   index.json
   dependencies.json
@@ -110,4 +110,4 @@ Issues can be blocked by other issues, creating dependencies that affect priorit
 
 ## User authentication
 
-Trackgentic is designed to be used by multiple actors — AI agents, humans, or automated systems. To attribute actions to the correct user, a lightweight token-based authentication system is used. Users register themselves to obtain a token, and provide that token when executing commands. The auth mode is configurable: the system can require tokens for all commands, only for writes, or allow unauthenticated access with a default user. See the [user authentication documentation](user-auth.md) for full details.
+Agentrack is designed to be used by multiple actors — AI agents, humans, or automated systems. To attribute actions to the correct user, a lightweight token-based authentication system is used. Users register themselves to obtain a token, and provide that token when executing commands. The auth mode is configurable: the system can require tokens for all commands, only for writes, or allow unauthenticated access with a default user. See the [user authentication documentation](user-auth.md) for full details.

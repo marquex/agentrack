@@ -1,5 +1,5 @@
 {
-  "name": "trackgentic",
+  "name": "agentrack",
   "version": "0.1.0",
   "description": "Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly",
   "type": "module",
@@ -19,7 +19,7 @@
     }
   },
   "bin": {
-    "trackgentic": "./dist/bin.js"
+    "agt": "./dist/bin.js"
   },
   "scripts": {
     "test": "bun test",

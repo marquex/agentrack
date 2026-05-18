@@ -1,13 +1,13 @@
-# Trackgentic Library — Architecture Overview
+# Agentrack Library — Architecture Overview
 
 ## 1. Monorepo Structure
 
 The project is a monorepo with two packages. The library is the first to be implemented; the UI will follow later.
 
 ```
-trackgentic/
+agentrack/
 ├── packages/
-│   ├── library/            # The core trackgentic library (this spec)
+│   ├── library/            # The core agentrack library (this spec)
 │   └── ui/                 # Future: web-based UI (not in scope yet)
 ├── docs/                   # Project documentation
 ├── .agentic/               # Agentic infrastructure (specs, expertise, etc.)
@@ -22,7 +22,7 @@ The root `package.json` uses Bun workspaces:
 
 ```json
 {
-  "name": "trackgentic",
+  "name": "agentrack",
   "private": true,
   "workspaces": ["packages/*"]
 }
@@ -55,7 +55,7 @@ packages/library/
 │   │       └── users.ts          # register, list, revoke, regenerate subcommands
 │   ├── core/
 │   │   ├── tracker.ts            # Main Tracker class — programmatic API
-│   │   ├── resolution.ts         # .trackgentic/ directory resolution (walk-up)
+│   │   ├── resolution.ts         # .agentrack/ directory resolution (walk-up)
 │   │   ├── events.ts             # Event append + replay engine
 │   │   ├── index-manager.ts      # Sorted index management (insert, update, binary search)
 │   │   ├── dependency-manager.ts # Bidirectional dependency map management
@@ -87,11 +87,11 @@ packages/library/
 
 1. **CLI and programmatic API are interchangeable.** Every CLI command calls a method on the `Tracker` class. The `Tracker` method returns the exact same JSON object that the CLI prints. The CLI is a thin wrapper that parses args, calls the method, and prints the result.
 
-2. **All output is JSON.** Successful results go to stdout as JSON. Errors go to stderr as JSON with a non-zero exit code. The programmatic API returns typed objects and throws `TrackgenticError` instances.
+2. **All output is JSON.** Successful results go to stdout as JSON. Errors go to stderr as JSON with a non-zero exit code. The programmatic API returns typed objects and throws `AgentrackError` instances.
 
 3. **No side effects in the API layer.** The `Tracker` class contains all business logic. CLI commands only handle arg parsing, output formatting, and process exit codes.
 
-4. **File-backed, event-sourced.** All state lives in JSON files under `.trackgentic/`. Issues are append-only event logs. State is computed by replaying events.
+4. **File-backed, event-sourced.** All state lives in JSON files under `.agentrack/`. Issues are append-only event logs. State is computed by replaying events.
 
 5. **Atomic writes.** All file writes use write-to-temp-then-rename to prevent corruption.
 
@@ -121,7 +121,7 @@ No other runtime dependencies. All file I/O uses Bun/Node built-ins. All JSON pa
 
 ```json
 {
-  "name": "trackgentic",
+  "name": "agentrack",
   "version": "0.1.0",
   "description": "Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly",
   "type": "module",
@@ -131,7 +131,7 @@ No other runtime dependencies. All file I/O uses Bun/Node built-ins. All JSON pa
     ".": "./src/index.ts"
   },
   "bin": {
-    "trackgentic": "./src/bin.ts"
+    "agentrack": "./src/bin.ts"
   },
   "scripts": {
     "test": "bun test",
@@ -191,10 +191,10 @@ No other runtime dependencies. All file I/O uses Bun/Node built-ins. All JSON pa
 │              Tracker Class (core/tracker.ts)      │
 │  - All business logic                            │
 │  - Returns typed API response objects            │
-│  - Throws TrackgenticError on failures           │
+│  - Throws AgentrackError on failures           │
 │                                                  │
 │  Uses:                                           │
-│  - resolution.ts (find .trackgentic/)            │
+│  - resolution.ts (find .agentrack/)            │
 │  - events.ts (append + replay)                   │
 │  - index-manager.ts (sorted index)               │
 │  - dependency-manager.ts (blockage maps)         │
@@ -206,6 +206,6 @@ The `Tracker` class is the single source of truth for all operations. The CLI ne
 
 ## 7. Future: UI Integration
 
-The UI package will import `trackgentic` as a dependency and call the programmatic API directly. Because the API returns the same JSON structures as the CLI outputs, the UI can also shell out to the CLI if needed (e.g., in a different process). This dual-path design is intentional.
+The UI package will import `agentrack` as a dependency and call the programmatic API directly. Because the API returns the same JSON structures as the CLI outputs, the UI can also shell out to the CLI if needed (e.g., in a different process). This dual-path design is intentional.
 
 The UI is not in scope for this specification.

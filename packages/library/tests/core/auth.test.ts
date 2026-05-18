@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { resolveAuthor } from "../../src/core/auth";
-import { TrackgenticError } from "../../src/core/errors";
+import { AgentrackError } from "../../src/core/errors";
 import type { ConfigFile, UsersFile } from "../../src/types";
 
 const openConfig: ConfigFile = {
@@ -44,8 +44,8 @@ describe("resolveAuthor", () => {
         users: emptyUsers,
         requiresWrite: false,
       });
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("DEFAULT_USER_MISSING");
         expect(result.exitCode).toBe(4);
       }
@@ -68,8 +68,8 @@ describe("resolveAuthor", () => {
         users: usersWithAlice,
         requiresWrite: false,
       });
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("INVALID_TOKEN");
         expect(result.exitCode).toBe(3);
       }
@@ -92,8 +92,8 @@ describe("resolveAuthor", () => {
         users: emptyUsers,
         requiresWrite: true,
       });
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -117,8 +117,8 @@ describe("resolveAuthor", () => {
         users: emptyUsers,
         requiresWrite: false,
       });
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -130,8 +130,8 @@ describe("resolveAuthor", () => {
         users: emptyUsers,
         requiresWrite: true,
       });
-      expect(result).toBeInstanceOf(TrackgenticError);
-      if (result instanceof TrackgenticError) {
+      expect(result).toBeInstanceOf(AgentrackError);
+      if (result instanceof AgentrackError) {
         expect(result.result).toBe("TOKEN_REQUIRED");
         expect(result.exitCode).toBe(2);
       }
@@ -159,9 +159,9 @@ describe("resolveAuthor", () => {
   });
 
   describe("env var fallback", () => {
-    test("reads token from TRACKGENTIC_USER_TOKEN env when not passed explicitly", () => {
-      const original = process.env.TRACKGENTIC_USER_TOKEN;
-      process.env.TRACKGENTIC_USER_TOKEN = "tk_abc12345";
+    test("reads token from AGENTACK_USER_TOKEN env when not passed explicitly", () => {
+      const original = process.env.AGENTACK_USER_TOKEN;
+      process.env.AGENTACK_USER_TOKEN = "tk_abc12345";
       try {
         const result = resolveAuthor({
           config: strictConfig,
@@ -171,16 +171,16 @@ describe("resolveAuthor", () => {
         expect(result).toEqual({ author: "alice" });
       } finally {
         if (original !== undefined) {
-          process.env.TRACKGENTIC_USER_TOKEN = original;
+          process.env.AGENTACK_USER_TOKEN = original;
         } else {
-          delete process.env.TRACKGENTIC_USER_TOKEN;
+          delete process.env.AGENTACK_USER_TOKEN;
         }
       }
     });
 
     test("explicit token takes precedence over env var", () => {
-      const original = process.env.TRACKGENTIC_USER_TOKEN;
-      process.env.TRACKGENTIC_USER_TOKEN = "tk_envbad00";
+      const original = process.env.AGENTACK_USER_TOKEN;
+      process.env.AGENTACK_USER_TOKEN = "tk_envbad00";
       try {
         // Env var is invalid but explicit token is valid — should use explicit
         const result = resolveAuthor({
@@ -192,9 +192,9 @@ describe("resolveAuthor", () => {
         expect(result).toEqual({ author: "alice" });
       } finally {
         if (original !== undefined) {
-          process.env.TRACKGENTIC_USER_TOKEN = original;
+          process.env.AGENTACK_USER_TOKEN = original;
         } else {
-          delete process.env.TRACKGENTIC_USER_TOKEN;
+          delete process.env.AGENTACK_USER_TOKEN;
         }
       }
     });

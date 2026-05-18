@@ -33,12 +33,12 @@ export function resolveAuthor(options: {
   config: ConfigFile;
   users: UsersFile;
   requiresWrite: boolean;
-}): { author: string } | TrackgenticError;
+}): { author: string } | AgentrackError;
 ```
 
 **Logic (synchronous — no need for async):**
 
-1. Resolve `token` from `process.env.TRACKGENTIC_USER_TOKEN` if `options.token` is not provided.
+1. Resolve `token` from `process.env.AGENTACK_USER_TOKEN` if `options.token` is not provided.
 2. Check `config.auth.mode`:
    - **`strict`**: all operations require token. No token → `TOKEN_REQUIRED` (exit code 2).
    - **`read-only`**: if `requiresWrite === true` and no token → `TOKEN_REQUIRED` (exit code 2).
@@ -148,13 +148,13 @@ This is the most critical task. Every mutating Tracker method must call `resolve
 async create(params: CreateParams): Promise<CreateResult> {
   const trackerDir = resolveTrackerDir(this.cwd);
   if (!trackerDir) {
-    return new TrackgenticError("NOT_INITIALIZED", "...", 1);
+    return new AgentrackError("NOT_INITIALIZED", "...", 1);
   }
 
   const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
   const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
   const authResult = resolveAuthor({ config, users, requiresWrite: true });
-  if (authResult instanceof TrackgenticError) return authResult;
+  if (authResult instanceof AgentrackError) return authResult;
   const author = authResult.author;
 
   // ... rest of existing create logic, using `author` in events
@@ -167,13 +167,13 @@ async create(params: CreateParams): Promise<CreateResult> {
 async list(params?: ListParams): Promise<ListResult> {
   const trackerDir = resolveTrackerDir(this.cwd);
   if (!trackerDir) {
-    return new TrackgenticError("NOT_INITIALIZED", "...", 1);
+    return new AgentrackError("NOT_INITIALIZED", "...", 1);
   }
 
   const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
   const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
   const authResult = resolveAuthor({ config, users, requiresWrite: false });
-  if (authResult instanceof TrackgenticError) return authResult;
+  if (authResult instanceof AgentrackError) return authResult;
 
   // ... rest of existing list logic
 }
@@ -190,15 +190,15 @@ async list(params?: ListParams): Promise<ListResult> {
 Create `src/cli/commands/users.ts` with four subcommands:
 
 ```
-trackgentic users register <name>
-trackgentic users list
-trackgentic users revoke <name>
-trackgentic users regenerate <name>
+agt users register <name>
+agt users list
+agt users revoke <name>
+agt users regenerate <name>
 ```
 
 Follow the same pattern as existing commands (see `create.ts`, `list.ts`, etc.). Each command:
-1. Resolves `.trackgentic/` directory
-2. Reads `TRACKGENTIC_USER_TOKEN` from env
+1. Resolves `.agentrack/` directory
+2. Reads `AGENTACK_USER_TOKEN` from env
 3. Calls the corresponding Tracker method
 4. Prints result to stdout (JSON) or error to stderr
 
@@ -211,7 +211,7 @@ Register the `users` command with subcommands in `src/cli/runner.ts`.
 In each existing CLI command file (`create.ts`, `update.ts`, `list.ts`, `view.ts`, `history.ts`), add token reading:
 
 ```typescript
-const token = process.env.TRACKGENTIC_USER_TOKEN;
+const token = process.env.AGENTACK_USER_TOKEN;
 ```
 
 Pass this token to the Tracker method. The Tracker method will use it for auth resolution.
@@ -231,11 +231,11 @@ async history(id: IssueId, authToken?: string): Promise<HistoryResult>
 
 The `resolveAuthor` function receives `token: authToken` (or reads from env if not provided).
 
-Actually — simpler approach that's more aligned with the architecture spec: `resolveAuthor` reads from `process.env.TRACKGENTIC_USER_TOKEN` automatically. The CLI sets this env var. The programmatic API can also set it. No need to pass tokens through method signatures.
+Actually — simpler approach that's more aligned with the architecture spec: `resolveAuthor` reads from `process.env.AGENTACK_USER_TOKEN` automatically. The CLI sets this env var. The programmatic API can also set it. No need to pass tokens through method signatures.
 
-**Final decision:** `resolveAuthor` reads `process.env.TRACKGENTIC_USER_TOKEN` if no token is explicitly passed. CLI commands don't need to change — the env var is already set by the user's shell. Tracker methods don't need a token parameter.
+**Final decision:** `resolveAuthor` reads `process.env.AGENTACK_USER_TOKEN` if no token is explicitly passed. CLI commands don't need to change — the env var is already set by the user's shell. Tracker methods don't need a token parameter.
 
-This means: `resolveAuthor` is called inside Tracker methods with `token: process.env.TRACKGENTIC_USER_TOKEN`. The `options.token` parameter in `resolveAuthor` is optional — if not provided, it reads from env.
+This means: `resolveAuthor` is called inside Tracker methods with `token: process.env.AGENTACK_USER_TOKEN`. The `options.token` parameter in `resolveAuthor` is optional — if not provided, it reads from env.
 
 **No changes needed to CLI command files for auth token passing.** The env var is read by `resolveAuthor` internally. But the CLI commands DO need to be updated if the Tracker method signatures changed. Since we're not changing signatures, they stay the same.
 
@@ -305,10 +305,10 @@ Add tests verifying auth enforcement on existing methods:
 
 Add tests for users CLI commands:
 
-1. `trackgentic users register alice` → returns token
-2. `trackgentic users list` → shows alice without token
-3. `trackgentic users revoke alice` with token → OK
-4. `trackgentic users regenerate alice` with alice's token → new token
+1. `agt users register alice` → returns token
+2. `agt users list` → shows alice without token
+3. `agt users revoke alice` with token → OK
+4. `agt users regenerate alice` with alice's token → new token
 
 ## Quality Gates
 
@@ -323,10 +323,10 @@ Before marking Phase 3 complete, all quality gates must pass:
 
 ## Exit Criteria
 
-1. `trackgentic users register alice` creates a user and returns a token
-2. `trackgentic users list` shows registered users (no tokens)
-3. `trackgentic users revoke alice` (with token) removes the user
-4. `trackgentic users regenerate alice` (with own token) issues new token
+1. `agt users register alice` creates a user and returns a token
+2. `agt users list` shows registered users (no tokens)
+3. `agt users revoke alice` (with token) removes the user
+4. `agt users regenerate alice` (with own token) issues new token
 5. All mutating commands respect auth mode (read-only by default)
 6. Read commands respect strict mode
 7. All events contain the resolved author (not "anonymous" when auth is configured)

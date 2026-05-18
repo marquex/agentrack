@@ -2,10 +2,10 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../src/core/errors";
+import { AgentrackError } from "../../src/core/errors";
 import { Tracker } from "../../src/core/tracker";
 
-// NOTE: Concurrent writes are NOT safe in trackgentic. This is a known limitation
+// NOTE: Concurrent writes are NOT safe in agentrack. This is a known limitation
 // documented in the architecture — the file-backed, event-sourced design assumes
 // single-writer access. Concurrent writes can corrupt files or lose events.
 
@@ -16,7 +16,7 @@ describe("Edge Cases — Empty Tracker Operations", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
     tracker = new Tracker(testDir);
   });
@@ -37,8 +37,8 @@ describe("Edge Cases — Empty Tracker Operations", () => {
       await tracker.view("nonexistent");
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("NOT_FOUND");
     }
   });
@@ -49,8 +49,8 @@ describe("Edge Cases — Empty Tracker Operations", () => {
       await tracker.history("nonexistent");
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("NOT_FOUND");
     }
   });
@@ -61,8 +61,8 @@ describe("Edge Cases — Empty Tracker Operations", () => {
       await tracker.commentsList("nonexistent");
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("NOT_FOUND");
     }
   });
@@ -73,8 +73,8 @@ describe("Edge Cases — Empty Tracker Operations", () => {
       await tracker.blockagesList("nonexistent");
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("NOT_FOUND");
     }
   });
@@ -94,11 +94,11 @@ describe("Edge Cases — Invalid JSON in Files", () => {
   beforeEach(async () => {
     testDir = join(
       tmpdir(),
-      `trackgentic-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
     tracker = new Tracker(testDir);
     await tracker.init();
-    trackerDir = join(testDir, ".trackgentic");
+    trackerDir = join(testDir, ".agentrack");
   });
 
   afterEach(() => {
@@ -154,11 +154,11 @@ describe("Edge Cases — Missing Files During Operations", () => {
   beforeEach(async () => {
     testDir = join(
       tmpdir(),
-      `trackgentic-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
     tracker = new Tracker(testDir);
     await tracker.init();
-    trackerDir = join(testDir, ".trackgentic");
+    trackerDir = join(testDir, ".agentrack");
   });
 
   afterEach(() => {
@@ -174,8 +174,8 @@ describe("Edge Cases — Missing Files During Operations", () => {
       await tracker.view(id);
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("ISSUE_MISSING");
     }
   });
@@ -189,8 +189,8 @@ describe("Edge Cases — Missing Files During Operations", () => {
       await tracker.update(id, { title: "Updated" });
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("ISSUE_MISSING");
     }
   });
@@ -204,8 +204,8 @@ describe("Edge Cases — Missing Files During Operations", () => {
       await tracker.commentsAdd(id, { content: "Hello" });
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("ISSUE_MISSING");
     }
   });
@@ -218,7 +218,7 @@ describe("Edge Cases — Large Number of Events", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
     tracker = new Tracker(testDir);
   });
@@ -288,7 +288,7 @@ describe("Edge Cases — Self-referencing and No-op Updates", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-edge-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
     tracker = new Tracker(testDir);
   });
@@ -305,8 +305,8 @@ describe("Edge Cases — Self-referencing and No-op Updates", () => {
       await tracker.blockagesAdd(id, { blockerIds: [id] });
       expect.unreachable("Should have thrown");
     } catch (err) {
-      expect(err).toBeInstanceOf(TrackgenticError);
-      const e = err as TrackgenticError;
+      expect(err).toBeInstanceOf(AgentrackError);
+      const e = err as AgentrackError;
       expect(e.result).toBe("BLOCKAGE_CYCLE");
     }
   });

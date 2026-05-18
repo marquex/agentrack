@@ -1,5 +1,5 @@
 # Architecture Knowledge
-# The complete technical architecture of trackgentic as designed in the docs.
+# The complete technical architecture of agt as designed in the docs.
 
 repo_structure:
   type: "Bun workspaces monorepo"
@@ -20,13 +20,13 @@ library_package:
       commands: "one file per CLI command (init, create, update, list, view, history, comments, blockages, users)"
     core:
       tracker: "main Tracker class — all public methods, delegates to core modules"
-      resolution: ".trackgentic/ directory walk-up resolution"
+      resolution: ".agentrack/ directory walk-up resolution"
       events: "event append + replay engine"
       index_manager: "sorted index management (insert, update, binary search, childrenOf)"
       dependency_manager: "bidirectional dependency map management"
       auth: "token resolution, mode enforcement"
       id: "ID generation (timestamp + random base36)"
-      errors: "typed TrackgenticError class with error codes and exit codes"
+      errors: "typed AgentrackError class with error codes and exit codes"
     types:
       issue: "IssueProperties, ComputedIssue, IssueId, IssueStatus"
       event: "all 8 event type interfaces"
@@ -39,18 +39,18 @@ library_package:
 
 storage_model:
   type: file-backed JSON (no database)
-  location: .trackgentic/ directory, discovered by walking up from cwd
+  location: .agentrack/ directory, discovered by walking up from cwd
   rationale: git-commitable, merge-friendly, zero infrastructure, monorepo-compatible
 
 file_layout:
   config_json:
-    path: .trackgentic/config.json
+    path: .agentrack/config.json
     contents: auth mode (open/read-only/strict), defaultUser setting
     created_by: init command
     mutable: true (manual edit)
 
   index_json:
-    path: .trackgentic/index.json
+    path: .agentrack/index.json
     structure:
       open: "sorted array of issue summaries (by id, which is time-sortable)"
       closed: "sorted array of issue summaries (by id)"
@@ -68,12 +68,12 @@ file_layout:
     maintained_by: create, update, delete commands
 
   issues_directory:
-    path: .trackgentic/issues/
+    path: .agentrack/issues/
     pattern: one JSON file per issue named [issue_id].json
     contents: append-only array of events
 
   dependencies_json:
-    path: .trackgentic/dependencies.json
+    path: .agentrack/dependencies.json
     structure:
       blockedBy: "map of issueId -> [{blockerId, status}]"
       blocks: "map of issueId -> [{blockedId, status}]"
@@ -81,7 +81,7 @@ file_layout:
     blockage_statuses: [active, resolved]
 
   users_json:
-    path: .trackgentic/users.json
+    path: .agentrack/users.json
     structure: "array of {name, token, registeredAt}"
     token_format: "tk_ prefix + 8 random alphanumeric chars"
 
@@ -146,17 +146,17 @@ sort_order:
   list_default: "priority ASC (1 first) -> impact score DESC (most unblocking) -> createdAt ASC (oldest)"
 
 resolution_algorithm:
-  description: "walk up from cwd looking for .trackgentic/ directory"
+  description: "walk up from cwd looking for .agentrack/ directory"
   supports: "multiple trackers in same repo (monorepo support)"
-  fallback: "error NOT_INITIALIZED if not found, suggest running trackgentic init"
+  fallback: "error NOT_INITIALIZED if not found, suggest running agt init"
 
 cli_interface:
-  format: "trackgentic [subcommand] [args] [flags]"
+  format: "agt [subcommand] [args] [flags]"
   output: "JSON to stdout, errors to stderr with non-zero exit code"
-  auth: "token via TRACKGENTIC_USER_TOKEN env var"
+  auth: "token via AGENTACK_USER_TOKEN env var"
 
   commands:
-    init: "create .trackgentic/ with config.json, index.json, dependencies.json, users.json, issues/"
+    init: "create .agentrack/ with config.json, index.json, dependencies.json, users.json, issues/"
     create: "new issue with title + flags (description, assignee, tags, status, priority, parentId, path)"
     update: "modify issue by id + flags (title, description, status, assignee, tags, priority, parentId)"
     list: "filter by status/assignee/tags/parentId from index (no issue file reads)"
@@ -181,7 +181,7 @@ auth_system:
     open: "no token required, unauthenticated writes attributed to defaultUser"
     read_only: "reads free, writes require token (default mode)"
     strict: "all commands require token"
-  token_passing: TRACKGENTIC_USER_TOKEN environment variable
+  token_passing: AGENTACK_USER_TOKEN environment variable
   author_in_events: "every mutating event includes author from resolved token"
 
 error_codes:

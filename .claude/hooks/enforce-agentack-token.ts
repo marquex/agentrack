@@ -1,24 +1,24 @@
 #!/usr/bin/env bun
 /**
- * enforce-trackgentic-token.ts
+ * enforce-agentrack-token.ts
  *
- * PreToolUse hook that ensures agents use their own trackgentic token
- * when calling the trackgentic CLI.
+ * PreToolUse hook that ensures agents use their own agentrack token
+ * when calling the agt CLI.
  *
  * Token resolution:
- *   - Looks up the agent's token from .trackgentic/users.json by matching
+ *   - Looks up the agent's token from .agentrack/users.json by matching
  *     the agent_type against the user name.
  *   - Strips any token the agent may have manually put in the command and
  *     injects the correct one from users.json.
- *   - Injects the token as TRACKGENTIC_USER_TOKEN=xxx prefix.
+ *   - Injects the token as AGENTACK_USER_TOKEN=xxx prefix.
  *
  * Decision logic:
  *   1. No agent_type → main agent, allow
  *   2. Not a Bash command → allow
- *   3. Command doesn't contain "trackgentic" → allow (safety net)
- *   4. Look up agent's token from .trackgentic/users.json
- *   5. If not found → deny (agent is not registered as a trackgentic user)
- *   6. Strip any existing TRACKGENTIC_TOKEN / TRACKGENTIC_USER_TOKEN from command
+ *   3. Command doesn't contain "agt" → allow (safety net)
+ *   4. Look up agent's token from .agentrack/users.json
+ *   5. If not found → deny (agent is not registered as an agentrack user)
+ *   6. Strip any existing AGENTACK_TOKEN / AGENTACK_USER_TOKEN from command
  *   7. Inject the resolved token via updatedInput → allow
  *
  * Run with Bun (https://bun.sh). Uses only Node-compatible APIs.
@@ -89,22 +89,22 @@ function readStdin(): Promise<string> {
 // ---------- helpers ----------
 
 /**
- * Strip any existing TRACKGENTIC_TOKEN or TRACKGENTIC_USER_TOKEN assignment
+ * Strip any existing AGENTACK_TOKEN or AGENTACK_USER_TOKEN assignment
  * from a command string, so we can inject the correct one.
  */
 function stripExistingTokenEnv(cmd: string): string {
   return cmd
-    .replace(/\bTRACKGENTIC_USER_TOKEN=\S+\s*/g, '')
-    .replace(/\bTRACKGENTIC_TOKEN=\S+\s*/g, '')
+    .replace(/\bAGENTACK_USER_TOKEN=\S+\s*/g, '')
+    .replace(/\bAGENTACK_TOKEN=\S+\s*/g, '')
     .trimStart();
 }
 
 /**
- * Look up an agent's trackgentic token from the users file by matching
+ * Look up an agent's agentrack token from the users file by matching
  * the agent_type against the registered user name.
  */
 function lookupToken(agentType: string, cwd: string): string | undefined {
-  const usersPath = join(cwd, '.trackgentic', 'users.json');
+  const usersPath = join(cwd, '.agentrack', 'users.json');
   try {
     const raw = readFileSync(usersPath, 'utf-8');
     const data = JSON.parse(raw) as UsersFile;
@@ -134,8 +134,8 @@ async function main(): Promise<never> {
   const toolInput = event.tool_input ?? {};
   const cmd = (toolInput.command as string | undefined) ?? '';
 
-  // Only enforce for trackgentic commands
-  if (!cmd.includes('trackgentic')) return allow('not a trackgentic command');
+  // Only enforce for agt commands
+  if (!cmd.includes('agt')) return allow('not an agt command');
 
   // Look up the agent's token from users.json
   const cwd = event.cwd ?? process.cwd();
@@ -143,19 +143,19 @@ async function main(): Promise<never> {
 
   if (!token) {
     return deny(
-      `enforce-trackgentic-token: agent '${agentType}' is not registered as a trackgentic user. ` +
-      `Ask your manager to register you with: trackgentic users register "${agentType}"`
+      `enforce-agentrack-token: agent '${agentType}' is not registered as an agentrack user. ` +
+      `Ask your manager to register you with: agt users register "${agentType}"`
     );
   }
 
   // Strip any existing token env var the agent might have set, then inject the correct one
   const cleanCmd = stripExistingTokenEnv(cmd);
-  const injectedCmd = `TRACKGENTIC_USER_TOKEN="${token}" ${cleanCmd}`;
+  const injectedCmd = `AGENTACK_USER_TOKEN="${token}" ${cleanCmd}`;
 
   const updatedInput: Record<string, unknown> = { ...toolInput, command: injectedCmd };
 
   return allow(
-    `enforce-trackgentic-token: injected token for agent '${agentType}'`,
+    `enforce-agentrack-token: injected token for agent '${agentType}'`,
     updatedInput,
   );
 }

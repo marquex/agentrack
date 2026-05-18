@@ -1,8 +1,8 @@
 /**
- * Typed error class for all trackgentic operations.
+ * Typed error class for all agentrack operations.
  * Each error has a result code, human-readable message, and CLI exit code.
  */
-export class TrackgenticError extends Error {
+export class AgentrackError extends Error {
   /**
    * @param result - Machine-readable error code (e.g. "NOT_FOUND")
    * @param message - Human-readable error description
@@ -14,7 +14,7 @@ export class TrackgenticError extends Error {
     public readonly exitCode: number,
   ) {
     super(message);
-    this.name = "TrackgenticError";
+    this.name = "AgentrackError";
   }
 }
 
@@ -23,9 +23,9 @@ export class TrackgenticError extends Error {
  * Each code maps to a unique exit code for programmatic error handling.
  */
 export const ErrorCodes = {
-  /** No `.trackgentic/` directory found in cwd. */
+  /** No `.agentrack/` directory found in cwd. */
   NOT_INITIALIZED: { result: "NOT_INITIALIZED", exitCode: 1 },
-  /** `.trackgentic/` directory already exists. */
+  /** `.agentrack/` directory already exists. */
   ALREADY_INITIALIZED: { result: "ALREADY_INITIALIZED", exitCode: 0 },
   /** Authentication token is required but not provided. */
   TOKEN_REQUIRED: { result: "TOKEN_REQUIRED", exitCode: 2 },

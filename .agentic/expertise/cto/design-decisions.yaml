@@ -4,7 +4,7 @@
 decisions:
   - id: DD-001
     title: "File-backed storage instead of database"
-    choice: "All data stored as JSON files in .trackgentic/ directory"
+    choice: "All data stored as JSON files in .agentrack/ directory"
     rationale:
       - "Zero infrastructure — no database to install, run, or maintain"
       - "Git-native — entire tracker state is version-controlled alongside code"
@@ -64,8 +64,8 @@ decisions:
     status: decided
 
   - id: DD-006
-    title: "Directory-walking resolution for .trackgentic/"
-    choice: "Walk up from cwd to find .trackgentic/ folder"
+    title: "Directory-walking resolution for .agentrack/"
+    choice: "Walk up from cwd to find .agentrack/ folder"
     rationale:
       - "Monorepo support — different subdirectories can have independent trackers"
       - "Familiar pattern (like .git, .eslintrc, tsconfig.json resolution)"
@@ -210,17 +210,17 @@ decisions:
     decided_date: "2026-05-11"
 
   - id: DD-017
-    title: "Dogfooding: trackgentic tracks its own development"
-    choice: "Use trackgentic as the issue tracker for developing trackgentic itself"
+    title: "Dogfooding: agentrack tracks its own development"
+    choice: "Use agentrack as the issue tracker for developing agentrack itself"
     rationale:
       - "Real-world validation — every feature is tested by actual usage, not just unit tests"
       - "Dogfooding surfaces UX issues early — if the tool is annoying to use, we feel it immediately"
-      - "Living documentation — the .trackgentic/ directory in the repo serves as a real example"
+      - "Living documentation — the .agentrack/ directory in the repo serves as a real example"
       - "No external dependency — we don't need GitHub Issues or Jira to track our own work"
     implementation:
-      - "CLI linked globally via `npm link` from packages/library/ — trackgentic command resolves to local build"
-      - "Issues stored in .trackgentic/ at repo root (not inside packages/library/)"
-      - "Workflow: make code changes → `bun run build` in packages/library/ → `trackgentic` picks up fresh build"
+      - "CLI linked globally via `npm link` from packages/library/ — agt command resolves to local build"
+      - "Issues stored in .agentrack/ at repo root (not inside packages/library/)"
+      - "Workflow: make code changes → `bun run build` in packages/library/ → `agt` picks up fresh build"
     tradeoffs:
       - "Bootstrap paradox — need a working version to track work on making it work (mitigated: Phase 7 is already complete)"
       - "Build step required between code changes and CLI usage (acceptable — fast build with tsup)"

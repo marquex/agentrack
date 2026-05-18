@@ -126,7 +126,7 @@ interface BlockagesAddParams {
 ```
 
 **Behavior:**
-1. Resolve `.trackgentic/` directory. If not found → `NOT_INITIALIZED`.
+1. Resolve `.agentrack/` directory. If not found → `NOT_INITIALIZED`.
 2. Resolve author via auth.
 3. Validate `blockedId` exists in index. If not → `NOT_FOUND`.
 4. Validate all `blockerIds` exist in index. If any not found → `NOT_FOUND`.
@@ -189,7 +189,7 @@ interface BlockagesDeleteParams {
 ```typescript
 type BlockagesListResult =
   | BlockageInfo
-  | TrackgenticError;
+  | AgentrackError;
 
 interface BlockageInfo {
   issueId: IssueId;
@@ -241,24 +241,24 @@ entries.sort((a, b) => {
 
 Four subcommands under `blockages`:
 
-### `trackgentic blockages add <blockedId> --by <blockerId...>`
+### `agt blockages add <blockedId> --by <blockerId...>`
 
 - `blockedId` is a required positional arg.
 - `--by` accepts one or more blocker IDs (comma-separated or repeated flag).
 - Calls `tracker.blockagesAdd(blockedId, { blockerIds, author })`.
 - Outputs `{ "result": "OK" }` on success.
 
-### `trackgentic blockages resolve <blockedId> --by <blockerId...>`
+### `agt blockages resolve <blockedId> --by <blockerId...>`
 
 - Same arg pattern as add.
 - Calls `tracker.blockagesResolve(blockedId, { blockerIds, author })`.
 
-### `trackgentic blockages delete <blockedId> --by <blockerId...>`
+### `agt blockages delete <blockedId> --by <blockerId...>`
 
 - Same arg pattern.
 - Calls `tracker.blockagesDelete(blockedId, { blockerIds, author })`.
 
-### `trackgentic blockages list <issueId>`
+### `agt blockages list <issueId>`
 
 - `issueId` is a required positional arg.
 - Calls `tracker.blockagesList(issueId)`.

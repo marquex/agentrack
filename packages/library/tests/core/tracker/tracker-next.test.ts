@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { mkdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { TrackgenticError } from "../../../src/core/errors";
+import { AgentrackError } from "../../../src/core/errors";
 import { Tracker } from "../../../src/core/tracker";
 
 describe("Tracker", () => {
@@ -11,7 +11,7 @@ describe("Tracker", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
   });
 
@@ -112,10 +112,10 @@ describe("Tracker", () => {
       });
     });
 
-    test("throws NOT_INITIALIZED when no .trackgentic/ directory exists", async () => {
+    test("throws NOT_INITIALIZED when no .agentrack/ directory exists", async () => {
       const uninitDir = join(
         tmpdir(),
-        `trackgentic-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        `agentrack-uninit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       );
       mkdirSync(uninitDir, { recursive: true });
       const uninitTracker = new Tracker(uninitDir);
@@ -124,8 +124,8 @@ describe("Tracker", () => {
         await uninitTracker.next("alice");
         expect.unreachable("Should have thrown");
       } catch (err) {
-        expect(err).toBeInstanceOf(TrackgenticError);
-        const e = err as TrackgenticError;
+        expect(err).toBeInstanceOf(AgentrackError);
+        const e = err as AgentrackError;
         expect(e.result).toBe("NOT_INITIALIZED");
         expect(e.exitCode).toBe(1);
       }

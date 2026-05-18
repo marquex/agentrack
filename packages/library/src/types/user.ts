@@ -12,7 +12,7 @@ export interface UserEntry {
 
 /**
  * Users file — list of registered users.
- * Stored at `.trackgentic/users.json`.
+ * Stored at `.agentrack/users.json`.
  */
 export interface UsersFile {
   users: UserEntry[];

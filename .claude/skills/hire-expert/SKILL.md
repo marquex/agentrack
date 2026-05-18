@@ -10,10 +10,10 @@ Use this skill to create a new expert agent for the project. The skill guides yo
 
 ## Agent Hierarchy
 
-Agents are organized in a manager-subordinate hierarchy. Task assignment flows through trackgentic issues — managers create and assign issues, subordinates pick them up and work on them.
+Agents are organized in a manager-subordinate hierarchy. Task assignment flows through agentrack issues — managers create and assign issues, subordinates pick them up and work on them.
 
-- Every agent can have a **manager** (an agent that assigns work to it via trackgentic issues).
-- Every agent can have **subordinates** (agents it can assign work to via trackgentic issues).
+- Every agent can have a **manager** (an agent that assigns work to it via agentrack issues).
+- Every agent can have **subordinates** (agents it can assign work to via agentrack issues).
 - An agent at the top of the hierarchy has no manager.
 - A leaf agent has no subordinates.
 - The hierarchy can have many levels.
@@ -26,7 +26,7 @@ Before creating the agent, you need to gather the following:
 2. **Role description** — a clear description of the agent's purpose, what domain it specializes in, and when to use it. This becomes the `description` field in the frontmatter and the core of the system prompt.
 3. **Folder access** — the folders the agent needs to access (read-only or read-write). These become `access` rules. The agent's own expertise folder (`.agentic/expertise/{name}/**`) is always included with read/write/delete.
 4. **Manager** — which existing agent is this agent's manager. If specified, the manager agent will be updated to include this new agent as a subordinate. If not specified, this agent is a top-level agent.
-5. **Subordinates** — which existing agents this agent can assign work to. If specified, the agent's system prompt will include a "Coordinating Work" section with instructions for creating trackgentic issues for subordinates. If not specified, this is a leaf agent.
+5. **Subordinates** — which existing agents this agent can assign work to. If specified, the agent's system prompt will include a "Coordinating Work" section with instructions for creating agentrack issues for subordinates. If not specified, this is a leaf agent.
 6. **Model** (optional) — the model for the agent. Defaults to `sonnet` if not specified.
 
 ## Steps
@@ -76,8 +76,8 @@ tools: Read, Grep, Glob
 model: {model — defaults to sonnet}
 skills:
   - agent-expertise
-  - trackgentic
-  - trackgentic-implement
+  - agentrack
+  - agentrack-implement
 subordinates: {list of subordinate agent names, or omit if none}
 access:
   - path: .agentic/expertise/{name}/**
@@ -111,22 +111,22 @@ hooks:
 
 ## Coordinating Work
 
-You coordinate work by creating trackgentic issues and assigning them to your subordinate agents. The agent runner will automatically pick up the issues and launch the agents.
+You coordinate work by creating agentrack issues and assigning them to your subordinate agents. The agent runner will automatically pick up the issues and launch the agents.
 
 To assign work to a subordinate:
 ```bash
-TRACKGENTIC_TOKEN="$TOKEN" trackgentic create "Task description" --assignee <agent-name> --status todo --priority 2
+AGENTACK_TOKEN="$TOKEN" agt create "Task description" --assignee <agent-name> --status todo --priority 2
 ```
 
 {if has a manager, add:}
 
 Your manager is `{manager-name}` — you receive assigned tasks from it.
 
-## Using trackgentic as the issue tracker
+## Using agentrack as the issue tracker
 
-You manage your work through trackgentic issues. Use the `trackgentic` skill to create, update, and monitor issues. Follow the issue flow outlined in the `trackgentic-implement` skill for best practices on how to pick up, execute, report, and hand back issues effectively.
+You manage your work through agentrack issues. Use the `agentrack` skill to create, update, and monitor issues. Follow the issue flow outlined in the `agentrack-implement` skill for best practices on how to pick up, execute, report, and hand back issues effectively.
 
-IMPORTANT: Your trackgentic token is `<token-here>`.
+IMPORTANT: Your agentrack token is `<token-here>`.
 
 ## Restricted domain
 
@@ -137,26 +137,26 @@ You have access to the following folders:
 
 Key rules for the agent file:
 - The system prompt should be directional, not prescriptive. Let the agent build expertise on how to achieve its goals.
-- Always include the `agent-expertise`, `trackgentic`, and `trackgentic-implement` skills. Manager agents should also include `issue`.
+- Always include the `agent-expertise`, `agentrack`, and `agentrack-implement` skills. Manager agents should also include `issue`.
 - Only include `Write` and `Edit` in the `tools` list if the agent needs to write to files outside its expertise folder. Most expert agents only need read access to their domain files.
 - Always include the `PreToolUse` hook for `enforce-agent-access.ts`.
 - Always include the `SessionStart`, `UserPromptSubmit`, and `Stop` hooks for `expertise.hook.ts`. These handle expertise injection at session start and expertise update reminders at session end. The hook uses flag-based dedup so double-firing is safe.
 - Always include the `<!-- ACCESS_RULES -->` marker in the Restricted domain section. The PostToolUse hook `inject-agent-markers.ts` expands it at runtime when the file is read — the marker stays in the file on disk and is never replaced with hardcoded content. The frontmatter `access` block is the single source of truth.
 - NEVER hardcode the access rules in the system prompt. Always use the marker. The frontmatter is the single source of truth.
-- The token enforcement hook (`enforce-trackgentic-token.ts`) and issue cleanup hook (`enforce-issue-cleanup.ts`) are registered project-wide in `.claude/settings.json`, so they don't need to be added to individual agent frontmatter.
+- The token enforcement hook (`enforce-agentrack-token.ts`) and issue cleanup hook (`enforce-issue-cleanup.ts`) are registered project-wide in `.claude/settings.json`, so they don't need to be added to individual agent frontmatter.
 
-### Step 5: Register the agent in trackgentic
+### Step 5: Register the agent in agentrack
 
-After creating the agent file, register the agent as a trackgentic user:
+After creating the agent file, register the agent as a agentrack user:
 
 ```bash
-trackgentic users register {name}
+agt users register {name}
 ```
 
 This returns a token. Add it to the agent file's system prompt in the format:
 
 ```
-IMPORTANT: Your trackgentic token is `<token>`.
+IMPORTANT: Your agentrack token is `<token>`.
 ```
 
 ### Step 6: Update the manager agent (if a manager was specified)
@@ -168,7 +168,7 @@ If the new agent has a manager, you must update the manager's agent file to incl
    - Add the new agent to the `subordinates` list (create the list if it doesn't exist).
 3. In the system prompt:
    - If there is already a `## Coordinating Work` section, no change needed — the agent already knows how to assign issues.
-   - If there is no `## Coordinating Work` section, add one before the `## Restricted domain` section with instructions for creating trackgentic issues for subordinates.
+   - If there is no `## Coordinating Work` section, add one before the `## Restricted domain` section with instructions for creating agentrack issues for subordinates.
 4. Write the updated manager file.
 
 ### Step 7: Update the subordinates' manager reference (if subordinates were specified)
@@ -197,4 +197,4 @@ After creating the agent and updating any related agents:
 1. Read back all modified files to confirm the content is correct and well-formed.
 2. Verify the YAML frontmatter is valid in each modified agent file.
 3. Verify the hierarchy is consistent — if A is B's manager, then B should appear in A's subordinates list, and A should be mentioned as B's manager.
-4. Test the new hook scripts execute without errors: `echo '{}' | bun .claude/hooks/enforce-trackgentic-token.ts`
+4. Test the new hook scripts execute without errors: `echo '{}' | bun .claude/hooks/enforce-agentrack-token.ts`

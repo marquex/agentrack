@@ -1,4 +1,4 @@
-import { TrackgenticError } from "../../core/errors";
+import { AgentrackError } from "../../core/errors";
 import { Tracker } from "../../core/tracker";
 import type { CreateParams, IssueStatus } from "../../types";
 import { writeStderr, writeStdout } from "../output";
@@ -14,7 +14,7 @@ interface CreateOptions {
 }
 
 /**
- * Handler for the `trackgentic create <title>` command.
+ * Handler for the `agt create <title>` command.
  */
 export async function createAction(title: string, options: CreateOptions): Promise<void> {
   try {
@@ -34,14 +34,14 @@ export async function createAction(title: string, options: CreateOptions): Promi
     if (options.path !== undefined) params.path = options.path;
 
     const result = await tracker.create(params);
-    if (result instanceof TrackgenticError) {
+    if (result instanceof AgentrackError) {
       writeStderr({ result: result.result, message: result.message });
       process.exit(result.exitCode);
     }
     writeStdout(result);
     process.exit(0);
   } catch (err) {
-    if (err instanceof TrackgenticError) {
+    if (err instanceof AgentrackError) {
       writeStderr({ result: err.result, message: err.message });
       process.exit(err.exitCode);
     }

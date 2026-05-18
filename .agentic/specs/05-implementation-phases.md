@@ -1,4 +1,4 @@
-# Trackgentic Library — Implementation Phases
+# Agentrack Library — Implementation Phases
 
 This document defines the implementation order, dependencies between phases, and what must be complete before moving to the next phase.
 
@@ -25,7 +25,7 @@ This document defines the implementation order, dependencies between phases, and
 
 4. **Implement directory resolution** (`src/core/resolution.ts`)
    - `resolveTrackerDir(cwd: string): string | null`
-   - Walk up from `cwd` looking for `.trackgentic/` directory.
+   - Walk up from `cwd` looking for `.agentrack/` directory.
    - Return absolute path or `null`.
 
 5. **Implement file I/O utilities** (internal)
@@ -35,8 +35,8 @@ This document defines the implementation order, dependencies between phases, and
 
 6. **Implement init command**
    - `Tracker.init()` method.
-   - CLI `trackgentic init` command.
-   - Creates `.trackgentic/` with all initial files.
+   - CLI `agt init` command.
+   - Creates `.agentrack/` with all initial files.
 
 7. **Implement CLI runner** (`src/cli/runner.ts`)
    - Commander-based argument parsing.
@@ -51,13 +51,13 @@ This document defines the implementation order, dependencies between phases, and
 ### Tests
 
 - ID generation: uniqueness, length, format.
-- Directory resolution: finds `.trackgentic/`, handles missing, handles nested.
+- Directory resolution: finds `.agentrack/`, handles missing, handles nested.
 - `init`: creates all files, rejects if already initialized.
-- CLI: `trackgentic init` prints correct JSON.
+- CLI: `agt init` prints correct JSON.
 
 ### Exit Criteria
 
-- `bun run src/bin.ts init` creates `.trackgentic/` with correct files.
+- `bun run src/bin.ts init` creates `.agentrack/` with correct files.
 - `bun run src/bin.ts init` returns `ALREADY_INITIALIZED` when run again.
 - All tests pass.
 
@@ -134,7 +134,7 @@ This document defines the implementation order, dependencies between phases, and
 ### Tasks
 
 1. **Implement auth module** (`src/core/auth.ts`)
-   - `resolveAuthor(options): Promise<{ author: string } | TrackgenticError>`
+   - `resolveAuthor(options): Promise<{ author: string } | AgentrackError>`
    - Token lookup from env var.
    - Mode enforcement (open/read-only/strict).
    - Default user fallback.
@@ -150,7 +150,7 @@ This document defines the implementation order, dependencies between phases, and
 3. **Integrate auth into existing commands**
    - All mutating Tracker methods call `resolveAuthor` first.
    - Author is included in all events.
-   - CLI reads `TRACKGENTIC_USER_TOKEN` from env.
+   - CLI reads `AGENTACK_USER_TOKEN` from env.
 
 4. **Wire CLI commands** for users register, list, revoke, regenerate.
 
@@ -340,7 +340,7 @@ This document defines the implementation order, dependencies between phases, and
 2. **Package configuration**
    - Verify `package.json` exports, bin, files fields.
    - Test installation via `npm link` or workspace reference.
-   - Test `trackgentic` command works after install.
+   - Test `agt` command works after install.
 
 3. **Error messages**
    - All error messages are clear and actionable.

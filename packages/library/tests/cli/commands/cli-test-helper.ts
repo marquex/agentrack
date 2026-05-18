@@ -5,7 +5,7 @@ import { spawn } from "bun";
 
 export const BIN_PATH = join(import.meta.dir, "..", "..", "..", "src", "bin.ts");
 
-export function createTestDir(prefix = "trackgentic-cli-test"): string {
+export function createTestDir(prefix = "agentrack-cli-test"): string {
   return mkdirSync(
     join(tmpdir(), `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`),
     { recursive: true },

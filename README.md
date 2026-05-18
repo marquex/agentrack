@@ -1,12 +1,12 @@
-# trackgentic
+# agentrack
 
 Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly.
 
-Every issue is an append-only event log stored as JSON. State is computed by replaying events, so the full history of every issue is always preserved. All data lives in a `.trackgentic/` directory inside your project, making it easy to version-control alongside your code.
+Every issue is an append-only event log stored as JSON. State is computed by replaying events, so the full history of every issue is always preserved. All data lives in a `.agentrack/` directory inside your project, making it easy to version-control alongside your code.
 
 ## Features
 
-- **File-backed** — all state is JSON in `.trackgentic/`, ready for `git add`
+- **File-backed** — all state is JSON in `.agentrack/`, ready for `git add`
 - **Event-sourced** — every change is an immutable event; full history is always available
 - **CLI + Programmatic API** — use from the shell or import as a library, same JSON output
 - **Issue hierarchy** — parent/child relationships with automatic status propagation
@@ -18,7 +18,7 @@ Every issue is an append-only event log stored as JSON. State is computed by rep
 ## Install
 
 ```bash
-npm install trackgentic
+npm install agentrack
 ```
 
 Requires Node.js >= 20 or Bun >= 1.0.
@@ -29,74 +29,74 @@ Requires Node.js >= 20 or Bun >= 1.0.
 
 ```bash
 # Initialize a tracker in the current directory
-npx trackgentic init
+npx agentrack init
 
 # Create an issue
-npx trackgentic create "Fix login bug" --priority 2 --tags bug,auth
+npx agentrack create "Fix login bug" --priority 2 --tags bug,auth
 
 # List open issues
-npx trackgentic list
+npx agentrack list
 
 # Get the recommended next issue to work on for a user
-npx trackgentic next alice
+npx agentrack next alice
 
 # View an issue
-npx trackgentic view <issueId>
+npx agentrack view <issueId>
 
 # Update an issue
-npx trackgentic update <issueId> --status in-progress --assignee alice
+npx agentrack update <issueId> --status in-progress --assignee alice
 
 # View full event history
-npx trackgentic history <issueId>
+npx agentrack history <issueId>
 ```
 
 ### Comments
 
 ```bash
-npx trackgentic comments add <issueId> --content "Reproduced on staging"
-npx trackgentic comments list <issueId>
-npx trackgentic comments update <issueId> <commentId> --content "Updated note"
-npx trackgentic comments delete <issueId> <commentId>
+npx agentrack comments add <issueId> --content "Reproduced on staging"
+npx agentrack comments list <issueId>
+npx agentrack comments update <issueId> <commentId> --content "Updated note"
+npx agentrack comments delete <issueId> <commentId>
 ```
 
 ### Blockages
 
 ```bash
 # Mark issue A as blocked by issue B
-npx trackgentic blockages add <blockedId> --by <blockerId>
+npx agentrack blockages add <blockedId> --by <blockerId>
 
 # View what blocks / is blocked by an issue
-npx trackgentic blockages list <issueId>
+npx agentrack blockages list <issueId>
 
 # Resolve a blockage (also happens automatically when blocker is done/closed)
-npx trackgentic blockages resolve <blockedId> --by <blockerId>
+npx agentrack blockages resolve <blockedId> --by <blockerId>
 
 # Remove a blockage entirely
-npx trackgentic blockages delete <blockedId> --by <blockerId>
+npx agentrack blockages delete <blockedId> --by <blockerId>
 ```
 
 ### Users & Auth
 
 ```bash
 # Register a user and get a token
-npx trackgentic users register alice
+npx agentrack users register alice
 
 # List registered users
-npx trackgentic users list
+npx agentrack users list
 
 # Revoke a user
-npx trackgentic users revoke alice
+npx agentrack users revoke alice
 
 # Regenerate token (self-service, requires your own token)
-TRACKGENTIC_USER_TOKEN=tk_xxxxxxxx npx trackgentic users regenerate alice
+AGENTACK_USER_TOKEN=tk_xxxxxxxx npx agentrack users regenerate alice
 ```
 
 ### Programmatic API
 
 ```typescript
-import { Tracker } from "trackgentic";
+import { Tracker } from "agentrack";
 
-const tracker = new Tracker(); // resolves .trackgentic/ from cwd
+const tracker = new Tracker(); // resolves .agentrack/ from cwd
 
 // Initialize
 await tracker.init();
@@ -127,10 +127,10 @@ const events = await tracker.history(id);
 
 ## How It Works
 
-Running `trackgentic init` creates a `.trackgentic/` directory in your project:
+Running `agt init` creates a `.agentrack/` directory in your project:
 
 ```
-.trackgentic/
+.agentrack/
 ├── config.json         # Auth mode and defaults
 ├── index.json          # Sorted index of all issues (open + closed)
 ├── dependencies.json   # Blockage graph (blockedBy + blocks)
@@ -168,7 +168,7 @@ Blockages are auto-resolved when the blocking issue moves to `done` or `closed`.
 
 ## Configuration
 
-Auth mode is set in `.trackgentic/config.json`:
+Auth mode is set in `.agentrack/config.json`:
 
 | Mode | Behavior |
 |------|----------|
@@ -178,9 +178,9 @@ Auth mode is set in `.trackgentic/config.json`:
 
 Default on `init` is `open` with `defaultUser: "anonymous"`.
 
-## Developing trackgentic
+## Developing agentrack
 
-If you're contributing to trackgentic itself, you can link the local build so the `trackgentic` CLI points to your working copy:
+If you're contributing to agentrack itself, you can link the local build so the `agt` CLI points to your working copy:
 
 ```bash
 # From the repo root
@@ -189,19 +189,19 @@ npm link            # creates a global symlink to packages/library/dist/bin.js
 cd ../..
 
 # Verify it works
-trackgentic --version   # → 0.1.0
+agt --version   # → 0.1.0
 
 # Initialize dogfooding (issues tracked in this repo)
-trackgentic init
+agt init
 
 # After making code changes, rebuild to pick them up
 cd packages/library && bun run build && cd ../..
 
 # Create issues to track development work
-trackgentic create "Add feature X" --priority 2 --tags enhancement
+agt create "Add feature X" --priority 2 --tags enhancement
 ```
 
-The `.trackgentic/` directory at the repo root is committed to git — issues live alongside the code they describe.
+The `.agentrack/` directory at the repo root is committed to git — issues live alongside the code they describe.
 
 ## License
 

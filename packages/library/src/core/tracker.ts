@@ -41,7 +41,7 @@ import type {
   ViewResult,
 } from "../types";
 import { resolveAuthor } from "./auth";
-import { ErrorCodes, TrackgenticError } from "./errors";
+import { ErrorCodes, AgentrackError } from "./errors";
 import { appendEvent, computeComments, computeState, replayEvents } from "./events";
 import { atomicWriteJSON, readJSON } from "./file-io";
 import { generateCommentId, generateId } from "./id";
@@ -72,7 +72,7 @@ import {
   validateParentStatusChange,
 } from "./hierarchy";
 
-const TRACKGENTIC_DIR = ".trackgentic";
+const AGENTACK_DIR = ".agentrack";
 
 /**
  * Read dependencies.json synchronously (used inside sort comparator).
@@ -164,16 +164,16 @@ async function cascadeClose(
 }
 
 /**
- * Tracker — the main programmatic API for trackgentic.
+ * Tracker — the main programmatic API for agentrack.
  *
  * Provides methods for issue CRUD, comments, blockages, user management,
  * and event history. The constructor accepts a `cwd` parameter that defaults
- * to `process.cwd()`. It does NOT validate that `.trackgentic/` exists at
+ * to `process.cwd()`. It does NOT validate that `.agentrack/` exists at
  * construction time — resolution happens on each method call.
  *
  * @example
  * ```typescript
- * import { Tracker } from "trackgentic";
+ * import { Tracker } from "agentrack";
  *
  * const tracker = new Tracker("/path/to/project");
  * await tracker.init();
@@ -186,14 +186,14 @@ export class Tracker {
   /**
    * Create a new Tracker instance.
    *
-   * @param cwd - Working directory to resolve `.trackgentic/` from. Defaults to `process.cwd()`.
+   * @param cwd - Working directory to resolve `.agentrack/` from. Defaults to `process.cwd()`.
    */
   constructor(cwd?: string) {
     this.cwd = cwd ?? process.cwd();
   }
 
   /**
-   * Initialize a new `.trackgentic/` directory in `cwd`.
+   * Initialize a new `.agentrack/` directory in `cwd`.
    *
    * Creates the directory structure with all initial files:
    * `config.json`, `index.json`, `dependencies.json`, `users.json`,
@@ -208,7 +208,7 @@ export class Tracker {
    * ```
    */
   async init(): Promise<InitResult> {
-    const trackerDir = join(this.cwd, TRACKGENTIC_DIR);
+    const trackerDir = join(this.cwd, AGENTACK_DIR);
 
     if (existsSync(trackerDir)) {
       return { result: "ALREADY_INITIALIZED", path: resolve(trackerDir) };
@@ -241,10 +241,10 @@ export class Tracker {
    * @param params.tags - Optional tags, defaults to []
    * @param params.parentId - Optional parent issue ID for hierarchy
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ id }` on success, or a TrackgenticError on auth failure
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if parentId doesn't exist in index
-   * @throws {TrackgenticError} HIERARCHY_CONSTRAINT if parent is closed
+   * @returns `{ id }` on success, or a AgentrackError on auth failure
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if parentId doesn't exist in index
+   * @throws {AgentrackError} HIERARCHY_CONSTRAINT if parent is closed
    *
    * @example
    * ```typescript
@@ -258,9 +258,9 @@ export class Tracker {
   async create(params: CreateParams): Promise<CreateResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -268,7 +268,7 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params.author ?? authResult.author;
 
     const id = generateId();
@@ -290,7 +290,7 @@ export class Tracker {
     if (parentId) {
       const parentEntry = findEntry(index, parentId);
       if (!parentEntry) {
-        throw new TrackgenticError(
+        throw new AgentrackError(
           ErrorCodes.NOT_FOUND.result,
           `Parent issue \`${parentId}\` not found in index.`,
           ErrorCodes.NOT_FOUND.exitCode,
@@ -298,7 +298,7 @@ export class Tracker {
       }
       const validationError = validateNewChild(parentEntry);
       if (validationError) {
-        throw new TrackgenticError(
+        throw new AgentrackError(
           ErrorCodes.HIERARCHY_CONSTRAINT.result,
           validationError,
           ErrorCodes.HIERARCHY_CONSTRAINT.exitCode,
@@ -362,8 +362,8 @@ export class Tracker {
    * @param params.tags - AND filter — issue must have ALL specified tags
    * @param params.parentId - Filter by parent ID; null = top-level issues only
    * @returns Array of index entries matching the filters
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} TOKEN_REQUIRED if auth mode is strict and no token provided
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} TOKEN_REQUIRED if auth mode is strict and no token provided
    *
    * @example
    * ```typescript
@@ -377,9 +377,9 @@ export class Tracker {
   async list(params?: ListParams): Promise<ListResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -387,7 +387,7 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: false });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
@@ -454,10 +454,10 @@ export class Tracker {
    * including all property values and timestamps.
    *
    * @param id - The issue ID to look up
-   * @returns The full computed issue state, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
-   * @throws {TrackgenticError} ISSUE_MISSING if index entry exists but file is missing
+   * @returns The full computed issue state, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
    *
    * @example
    * ```typescript
@@ -468,9 +468,9 @@ export class Tracker {
   async view(id: IssueId): Promise<ViewResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -478,14 +478,14 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: false });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
     const index = await readIndex(trackerDir);
     const entry = findEntry(index, id);
     if (!entry) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -494,7 +494,7 @@ export class Tracker {
 
     const issueFilePath = join(trackerDir, entry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -513,8 +513,8 @@ export class Tracker {
    *
    * @param assignee - The assignee name to filter by (case-sensitive)
    * @returns The recommended ComputedIssue, or `{ result: "NO_ISSUES_AVAILABLE" }`
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} TOKEN_REQUIRED if auth mode is strict and no token provided
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} TOKEN_REQUIRED if auth mode is strict and no token provided
    *
    * @example
    * ```typescript
@@ -526,9 +526,9 @@ export class Tracker {
   async next(assignee: string): Promise<NextResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -536,7 +536,7 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: false });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
@@ -577,7 +577,7 @@ export class Tracker {
     const topEntry = candidates[0]!;
     const issueFilePath = join(trackerDir, topEntry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${topEntry.id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -606,12 +606,12 @@ export class Tracker {
    * @param params.priority - New priority (1-5)
    * @param params.parentId - New parent ID, or null to detach
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ result: "OK" }` on success, or a TrackgenticError on auth failure
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} INVALID_PARAMS if no fields provided besides author
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
-   * @throws {TrackgenticError} ISSUE_MISSING if index entry exists but file is missing
-   * @throws {TrackgenticError} HIERARCHY_CONSTRAINT if status change violates parent/child rules
+   * @returns `{ result: "OK" }` on success, or a AgentrackError on auth failure
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} INVALID_PARAMS if no fields provided besides author
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
+   * @throws {AgentrackError} HIERARCHY_CONSTRAINT if status change violates parent/child rules
    *
    * @example
    * ```typescript
@@ -621,9 +621,9 @@ export class Tracker {
   async update(id: IssueId, params: UpdateParams): Promise<UpdateResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -639,7 +639,7 @@ export class Tracker {
       params.parentId !== undefined;
 
     if (!hasField) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.INVALID_PARAMS.result,
         "At least one field must be provided for update.",
         ErrorCodes.INVALID_PARAMS.exitCode,
@@ -649,13 +649,13 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params.author ?? authResult.author;
 
     const index = await readIndex(trackerDir);
     const entry = findEntry(index, id);
     if (!entry) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -664,7 +664,7 @@ export class Tracker {
 
     const issueFilePath = join(trackerDir, entry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -686,7 +686,7 @@ export class Tracker {
           .filter((e): e is IndexEntry => e !== null);
         const validationError = validateParentStatusChange(index, childEntries, params.status);
         if (validationError) {
-          throw new TrackgenticError(
+          throw new AgentrackError(
             ErrorCodes.HIERARCHY_CONSTRAINT.result,
             validationError,
             ErrorCodes.HIERARCHY_CONSTRAINT.exitCode,
@@ -700,7 +700,7 @@ export class Tracker {
       if (params.parentId !== null) {
         const newParentEntry = findEntry(index, params.parentId);
         if (!newParentEntry) {
-          throw new TrackgenticError(
+          throw new AgentrackError(
             ErrorCodes.NOT_FOUND.result,
             `Parent issue \`${params.parentId}\` not found in index.`,
             ErrorCodes.NOT_FOUND.exitCode,
@@ -708,7 +708,7 @@ export class Tracker {
         }
         const validationError = validateNewChild(newParentEntry);
         if (validationError) {
-          throw new TrackgenticError(
+          throw new AgentrackError(
             ErrorCodes.HIERARCHY_CONSTRAINT.result,
             validationError,
             ErrorCodes.HIERARCHY_CONSTRAINT.exitCode,
@@ -868,10 +868,10 @@ export class Tracker {
    * in chronological order from creation to latest.
    *
    * @param id - The issue ID to look up
-   * @returns Array of events, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
-   * @throws {TrackgenticError} ISSUE_MISSING if index entry exists but file is missing
+   * @returns Array of events, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
    *
    * @example
    * ```typescript
@@ -884,9 +884,9 @@ export class Tracker {
   async history(id: IssueId): Promise<HistoryResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -894,14 +894,14 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: false });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
     const index = await readIndex(trackerDir);
     const entry = findEntry(index, id);
     if (!entry) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -910,7 +910,7 @@ export class Tracker {
 
     const issueFilePath = join(trackerDir, entry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -931,10 +931,10 @@ export class Tracker {
    * @param params - Comment parameters
    * @param params.content - The comment content
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ result: "OK", commentId }` on success, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
-   * @throws {TrackgenticError} ISSUE_MISSING if index entry exists but file is missing
+   * @returns `{ result: "OK", commentId }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
    *
    * @example
    * ```typescript
@@ -946,9 +946,9 @@ export class Tracker {
   async commentsAdd(id: IssueId, params: CommentAddParams): Promise<CommentAddResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -956,13 +956,13 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params.author ?? authResult.author;
 
     const index = await readIndex(trackerDir);
     const entry = findEntry(index, id);
     if (!entry) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -971,7 +971,7 @@ export class Tracker {
 
     const issueFilePath = join(trackerDir, entry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -1004,11 +1004,11 @@ export class Tracker {
    * @param params - Update parameters
    * @param params.content - The new comment content
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ result: "OK" }` on success, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
-   * @throws {TrackgenticError} ISSUE_MISSING if index entry exists but file is missing
-   * @throws {TrackgenticError} COMMENT_NOT_FOUND if comment ID is not found
+   * @returns `{ result: "OK" }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
+   * @throws {AgentrackError} COMMENT_NOT_FOUND if comment ID is not found
    */
   async commentsUpdate(
     id: IssueId,
@@ -1017,9 +1017,9 @@ export class Tracker {
   ): Promise<CommentUpdateResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1027,13 +1027,13 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params.author ?? authResult.author;
 
     const index = await readIndex(trackerDir);
     const entry = findEntry(index, id);
     if (!entry) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -1042,7 +1042,7 @@ export class Tracker {
 
     const issueFilePath = join(trackerDir, entry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -1052,7 +1052,7 @@ export class Tracker {
     const events = await replayEvents(issueFilePath);
     const comments = computeComments(events);
     if (!comments.find((c) => c.id === commentId)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.COMMENT_NOT_FOUND.result,
         `Comment \`${commentId}\` not found.`,
         ErrorCodes.COMMENT_NOT_FOUND.exitCode,
@@ -1084,11 +1084,11 @@ export class Tracker {
    * @param commentId - The comment ID to delete
    * @param params - Optional parameters
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ result: "OK" }` on success, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
-   * @throws {TrackgenticError} ISSUE_MISSING if index entry exists but file is missing
-   * @throws {TrackgenticError} COMMENT_NOT_FOUND if comment ID is not found or already deleted
+   * @returns `{ result: "OK" }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
+   * @throws {AgentrackError} COMMENT_NOT_FOUND if comment ID is not found or already deleted
    */
   async commentsDelete(
     id: IssueId,
@@ -1097,9 +1097,9 @@ export class Tracker {
   ): Promise<CommentDeleteResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1107,13 +1107,13 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params?.author ?? authResult.author;
 
     const index = await readIndex(trackerDir);
     const entry = findEntry(index, id);
     if (!entry) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -1122,7 +1122,7 @@ export class Tracker {
 
     const issueFilePath = join(trackerDir, entry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -1132,7 +1132,7 @@ export class Tracker {
     const events = await replayEvents(issueFilePath);
     const comments = computeComments(events);
     if (!comments.find((c) => c.id === commentId)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.COMMENT_NOT_FOUND.result,
         `Comment \`${commentId}\` not found.`,
         ErrorCodes.COMMENT_NOT_FOUND.exitCode,
@@ -1160,10 +1160,10 @@ export class Tracker {
    * comment list, excluding soft-deleted comments.
    *
    * @param id - The issue ID to list comments for
-   * @returns Array of computed comments, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
-   * @throws {TrackgenticError} ISSUE_MISSING if index entry exists but file is missing
+   * @returns Array of computed comments, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
    *
    * @example
    * ```typescript
@@ -1176,9 +1176,9 @@ export class Tracker {
   async commentsList(id: IssueId): Promise<CommentsListResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1186,14 +1186,14 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: false });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
     const index = await readIndex(trackerDir);
     const entry = findEntry(index, id);
     if (!entry) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -1202,7 +1202,7 @@ export class Tracker {
 
     const issueFilePath = join(trackerDir, entry.path);
     if (!existsSync(issueFilePath)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.ISSUE_MISSING.result,
         `Issue file for \`${id}\` is missing.`,
         ErrorCodes.ISSUE_MISSING.exitCode,
@@ -1226,10 +1226,10 @@ export class Tracker {
    * @param params - Blockage parameters
    * @param params.blockerIds - Array of blocker issue IDs
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ result: "OK" }` on success, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if blockedId or any blockerId is not in the index
-   * @throws {TrackgenticError} BLOCKAGE_CYCLE if adding the blockage would create a cycle
+   * @returns `{ result: "OK" }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if blockedId or any blockerId is not in the index
+   * @throws {AgentrackError} BLOCKAGE_CYCLE if adding the blockage would create a cycle
    *
    * @example
    * ```typescript
@@ -1241,9 +1241,9 @@ export class Tracker {
   async blockagesAdd(blockedId: IssueId, params: BlockagesAddParams): Promise<BlockagesAddResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1251,14 +1251,14 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params.author ?? authResult.author;
 
     const index = await readIndex(trackerDir);
 
     // Validate blockedId exists
     if (!findEntry(index, blockedId)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${blockedId}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -1268,7 +1268,7 @@ export class Tracker {
     // Validate all blockerIds exist
     for (const blockerId of params.blockerIds) {
       if (!findEntry(index, blockerId)) {
-        throw new TrackgenticError(
+        throw new AgentrackError(
           ErrorCodes.NOT_FOUND.result,
           `Issue \`${blockerId}\` not found in index.`,
           ErrorCodes.NOT_FOUND.exitCode,
@@ -1287,7 +1287,7 @@ export class Tracker {
     for (const blockerId of params.blockerIds) {
       projected = addBlockage(projected, blockedId, blockerId);
       if (detectCycle(projected, blockedId, blockerId)) {
-        throw new TrackgenticError(
+        throw new AgentrackError(
           ErrorCodes.BLOCKAGE_CYCLE.result,
           `Blockage would create a cycle: \`${blockedId}\` → ... → \`${blockerId}\`.`,
           ErrorCodes.BLOCKAGE_CYCLE.exitCode,
@@ -1326,9 +1326,9 @@ export class Tracker {
    * @param params - Resolve parameters
    * @param params.blockerIds - Array of blocker issue IDs to resolve
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ result: "OK" }` on success, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if blockedId is not in the index
+   * @returns `{ result: "OK" }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if blockedId is not in the index
    *
    * @example
    * ```typescript
@@ -1341,9 +1341,9 @@ export class Tracker {
   ): Promise<BlockagesResolveResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1351,13 +1351,13 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params.author ?? authResult.author;
 
     const index = await readIndex(trackerDir);
 
     if (!findEntry(index, blockedId)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${blockedId}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -1401,9 +1401,9 @@ export class Tracker {
    * @param params - Delete parameters
    * @param params.blockerIds - Array of blocker issue IDs to delete
    * @param params.author - Override author (resolved by auth layer if not provided)
-   * @returns `{ result: "OK" }` on success, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if blockedId is not in the index
+   * @returns `{ result: "OK" }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if blockedId is not in the index
    *
    * @example
    * ```typescript
@@ -1416,9 +1416,9 @@ export class Tracker {
   ): Promise<BlockagesDeleteResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1426,13 +1426,13 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) return authResult;
+    if (authResult instanceof AgentrackError) return authResult;
     const author = params.author ?? authResult.author;
 
     const index = await readIndex(trackerDir);
 
     if (!findEntry(index, blockedId)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${blockedId}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -1472,9 +1472,9 @@ export class Tracker {
    * what this issue blocks (`blocks`).
    *
    * @param id - The issue ID to look up blockages for
-   * @returns Blockage info with `blockedBy` and `blocks` arrays, or a TrackgenticError
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} NOT_FOUND if issue ID is not in the index
+   * @returns Blockage info with `blockedBy` and `blocks` arrays, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
    *
    * @example
    * ```typescript
@@ -1488,9 +1488,9 @@ export class Tracker {
   async blockagesList(id: IssueId): Promise<BlockagesListResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1498,14 +1498,14 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: false });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
     const index = await readIndex(trackerDir);
 
     if (!findEntry(index, id)) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_FOUND.result,
         `Issue \`${id}\` not found in index.`,
         ErrorCodes.NOT_FOUND.exitCode,
@@ -1532,7 +1532,7 @@ export class Tracker {
    *
    * @param name - The user name to register (stored lowercase)
    * @returns `{ result: "OK", name, token }` on success, or `{ result: "USER_ALREADY_EXISTS", message }`
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
    *
    * @example
    * ```typescript
@@ -1543,9 +1543,9 @@ export class Tracker {
   async usersRegister(name: string): Promise<UsersRegisterResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1590,8 +1590,8 @@ export class Tracker {
    * Auth requirements depend on the configured mode (read operation).
    *
    * @returns Array of user info objects (no tokens)
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} TOKEN_REQUIRED if auth mode is strict and no token provided
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} TOKEN_REQUIRED if auth mode is strict and no token provided
    *
    * @example
    * ```typescript
@@ -1602,9 +1602,9 @@ export class Tracker {
   async usersList(): Promise<UsersListResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1612,7 +1612,7 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: false });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
@@ -1630,8 +1630,8 @@ export class Tracker {
    *
    * @param name - The user name to revoke (case-insensitive)
    * @returns `{ result: "OK" }` on success, or `{ result: "USER_NOT_FOUND", message }`
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} TOKEN_REQUIRED if no token provided in auth-required mode
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} TOKEN_REQUIRED if no token provided in auth-required mode
    *
    * @example
    * ```typescript
@@ -1642,9 +1642,9 @@ export class Tracker {
   async usersRevoke(name: string): Promise<UsersRevokeResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1652,7 +1652,7 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 
@@ -1679,8 +1679,8 @@ export class Tracker {
    *
    * @param name - The user name whose token to regenerate (case-insensitive)
    * @returns `{ result: "OK", name, token }` with the new token, or an error result
-   * @throws {TrackgenticError} NOT_INITIALIZED if no `.trackgentic/` directory
-   * @throws {TrackgenticError} TOKEN_REQUIRED if no token provided
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} TOKEN_REQUIRED if no token provided
    *
    * @example
    * ```typescript
@@ -1691,9 +1691,9 @@ export class Tracker {
   async usersRegenerate(name: string): Promise<UsersRegenerateResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
-      throw new TrackgenticError(
+      throw new AgentrackError(
         ErrorCodes.NOT_INITIALIZED.result,
-        "No .trackgentic/ directory found. Run `trackgentic init` first.",
+        "No .agentrack/ directory found. Run `agt init` first.",
         ErrorCodes.NOT_INITIALIZED.exitCode,
       );
     }
@@ -1701,7 +1701,7 @@ export class Tracker {
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
     const authResult = resolveAuthor({ config, users, requiresWrite: true });
-    if (authResult instanceof TrackgenticError) {
+    if (authResult instanceof AgentrackError) {
       throw authResult;
     }
 

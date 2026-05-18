@@ -11,7 +11,7 @@ describe("Event Engine", () => {
   beforeEach(() => {
     testDir = join(
       tmpdir(),
-      `trackgentic-events-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      `agentrack-events-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     );
     mkdirSync(testDir, { recursive: true });
   });

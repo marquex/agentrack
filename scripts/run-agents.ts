@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 /**
- * Agent runner — manages a team of Claude agents pulling issues from trackgentic.
+ * Agent runner — manages a team of Claude agents pulling issues from agentrack.
  *
- * Reads agent names from .trackgentic/users.json, polls every 60s for available work,
- * and spawns `claude --agent <name> -p "/trackgentic-implement <issueId>"` child processes.
+ * Reads agent names from .agentrack/users.json, polls every 60s for available work,
+ * and spawns `claude --agent <name> -p "/agentrack-implement <issueId>"` child processes.
  *
  * Displays a live TUI showing each agent's status.
  */
@@ -42,7 +42,7 @@ interface AgentState {
 
 const POLL_INTERVAL_MS = 60_000; // 1 minute
 const ROOT = resolve(import.meta.dir, "..");
-const USERS_PATH = resolve(ROOT, ".trackgentic/users.json");
+const USERS_PATH = resolve(ROOT, ".agentrack/users.json");
 const SESSIONS_DIR = resolve(ROOT, ".agentic/session");
 
 // Ensure sessions directory exists
@@ -63,9 +63,9 @@ function loadUsers(): UserEntry[] {
 // ---------------------------------------------------------------------------
 
 async function getNextIssue(agentName: string, token: string): Promise<string | null> {
-  const proc = spawn(["trackgentic", "next", agentName], {
+  const proc = spawn(["agt", "next", agentName], {
     cwd: ROOT,
-    env: { ...process.env, TRACKGENTIC_TOKEN: token },
+    env: { ...process.env, AGENTACK_TOKEN: token },
     stdout: "pipe",
     stderr: "pipe",
   });
@@ -108,7 +108,7 @@ function launchAgent(agent: AgentState, issueId: string): void {
     [
       "claude",
       "--agent", agent.name,
-      "-p", `/trackgentic-implement ${issueId}`,
+      "-p", `/agentrack-implement ${issueId}`,
       "--output-format", "stream-json",
       "--verbose",
     ],
@@ -163,7 +163,7 @@ function render(): void {
   process.stdout.write("\x1b[2J\x1b[H");
 
   const now = Date.now();
-  const header = "  TRACKGENTIC AGENT RUNNER";
+  const header = "  AGENTRACK AGENT RUNNER";
   const sep = "  " + "─".repeat(60);
 
   const lines: string[] = [
@@ -219,7 +219,7 @@ async function poll(): Promise<void> {
 
 const users = loadUsers();
 if (users.length === 0) {
-  console.error("No users found in .trackgentic/users.json");
+  console.error("No users found in .agentrack/users.json");
   process.exit(1);
 }
 

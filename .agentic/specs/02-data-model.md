@@ -1,4 +1,4 @@
-# Trackgentic Library — Data Model & Types
+# Agentrack Library — Data Model & Types
 
 All types are defined in `src/types/`. This document specifies every type, interface, and file format.
 

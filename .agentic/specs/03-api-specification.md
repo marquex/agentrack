@@ -1,4 +1,4 @@
-# Trackgentic Library — Programmatic API Specification
+# Agentrack Library — Programmatic API Specification
 
 The `Tracker` class is the single entry point for the programmatic API. It is exported from `src/index.ts` alongside all response types.
 
@@ -10,8 +10,8 @@ class Tracker {
 }
 ```
 
-- `cwd` is the starting directory for `.trackgentic/` resolution. Defaults to `process.cwd()`.
-- The constructor does **not** validate that `.trackgentic/` exists. Resolution happens on each method call.
+- `cwd` is the starting directory for `.agentrack/` resolution. Defaults to `process.cwd()`.
+- The constructor does **not** validate that `.agentrack/` exists. Resolution happens on each method call.
 
 ## 2. Initialization
 
@@ -23,8 +23,8 @@ type InitResult =
   | { result: "ALREADY_INITIALIZED"; path: string };
 ```
 
-- Creates `.trackgentic/` directory with `config.json`, `index.json`, `dependencies.json`, `users.json`, and `issues/` subdirectory.
-- Idempotent: if already initialized (`.trackgentic/` exists in cwd), returns `ALREADY_INITIALIZED` with the existing path. Does **not** overwrite existing files.
+- Creates `.agentrack/` directory with `config.json`, `index.json`, `dependencies.json`, `users.json`, and `issues/` subdirectory.
+- Idempotent: if already initialized (`.agentrack/` exists in cwd), returns `ALREADY_INITIALIZED` with the existing path. Does **not** overwrite existing files.
 
 ## 3. Issue CRUD
 
@@ -45,7 +45,7 @@ interface CreateParams {
 
 type CreateResult =
   | { id: IssueId }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Behavior:**
@@ -73,7 +73,7 @@ interface UpdateParams {
 
 type UpdateResult =
   | { result: "OK" }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Behavior:**
@@ -125,7 +125,7 @@ type ListResult = IndexEntry[];  // From index file, no issue file reads
 ```typescript
 type ViewResult =
   | ComputedIssue
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Behavior:**
@@ -139,7 +139,7 @@ type ViewResult =
 ```typescript
 type HistoryResult =
   | Event[]
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Behavior:**
@@ -159,7 +159,7 @@ interface CommentAddParams {
 
 type CommentAddResult =
   | { result: "OK"; commentId: CommentId }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 ### `commentsUpdate(id: IssueId, commentId: CommentId, params: CommentUpdateParams): Promise<CommentUpdateResult>`
@@ -172,7 +172,7 @@ interface CommentUpdateParams {
 
 type CommentUpdateResult =
   | { result: "OK" }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Validates:** Comment exists and is not deleted. Returns `COMMENT_NOT_FOUND` otherwise.
@@ -186,7 +186,7 @@ interface CommentDeleteParams {
 
 type CommentDeleteResult =
   | { result: "OK" }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Validates:** Comment exists and is not already deleted. Returns `COMMENT_NOT_FOUND` otherwise.
@@ -196,7 +196,7 @@ type CommentDeleteResult =
 ```typescript
 type CommentsListResult =
   | ComputedComment[]
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Behavior:** Replay all comment events. `comment` creates, `comment-update` overrides content, `comment-delete` excludes. Returned in creation order.
@@ -213,7 +213,7 @@ interface BlockagesAddParams {
 
 type BlockagesAddResult =
   | { result: "OK" }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Behavior:**
@@ -236,7 +236,7 @@ interface BlockagesResolveParams {
 
 type BlockagesResolveResult =
   | { result: "OK" }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 ### `blockagesDelete(blockedId: IssueId, params: BlockagesDeleteParams): Promise<BlockagesDeleteResult>`
@@ -249,7 +249,7 @@ interface BlockagesDeleteParams {
 
 type BlockagesDeleteResult =
   | { result: "OK" }
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 **Behavior:** Remove entries from both `blockedBy` and `blocks` maps. Append `blockage-deleted` event.
@@ -259,7 +259,7 @@ type BlockagesDeleteResult =
 ```typescript
 type BlockagesListResult =
   | BlockageInfo
-  | TrackgenticError;
+  | AgentrackError;
 ```
 
 ## 6. Users
@@ -311,16 +311,16 @@ The auth layer is internal — it is not called directly by consumers. It is inv
 
 ```typescript
 function resolveAuthor(options: {
-  token?: string;         // from TRACKGENTIC_USER_TOKEN env var
+  token?: string;         // from AGENTACK_USER_TOKEN env var
   config: ConfigFile;
   users: UsersFile;
   requiresWrite: boolean; // true for mutations, false for reads
-}): Promise<{ author: string } | TrackgenticError>;
+}): Promise<{ author: string } | AgentrackError>;
 ```
 
 **Logic:**
 
-1. Resolve `token` from `process.env.TRACKGENTIC_USER_TOKEN`.
+1. Resolve `token` from `process.env.AGENTACK_USER_TOKEN`.
 2. Check `config.auth.mode`:
    - `strict`: all commands require token. No token → `TOKEN_REQUIRED`.
    - `read-only`: if `requiresWrite` and no token → `TOKEN_REQUIRED`.
@@ -330,10 +330,10 @@ function resolveAuthor(options: {
 
 ## 8. Error Types
 
-All errors are instances of `TrackgenticError`, which extends `Error`.
+All errors are instances of `AgentrackError`, which extends `Error`.
 
 ```typescript
-class TrackgenticError extends Error {
+class AgentrackError extends Error {
   constructor(
     public readonly result: string,   // error code
     public readonly message: string,  // human-readable
@@ -346,7 +346,7 @@ class TrackgenticError extends Error {
 
 | Code | Exit Code | When |
 |------|-----------|------|
-| `NOT_INITIALIZED` | 1 | `.trackgentic/` not found |
+| `NOT_INITIALIZED` | 1 | `.agentrack/` not found |
 | `ALREADY_INITIALIZED` | 0 | `init` when already exists (not really an error) |
 | `TOKEN_REQUIRED` | 2 | Auth mode requires token but none provided |
 | `INVALID_TOKEN` | 3 | Token doesn't match any user |
@@ -405,5 +405,5 @@ export type {
 } from "./types";
 
 // Error class
-export { TrackgenticError } from "./core/errors";
+export { AgentrackError } from "./core/errors";
 ```
