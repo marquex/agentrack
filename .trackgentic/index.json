@@ -119,9 +119,69 @@
       "parentId": "mp9zd202cl",
       "tags": [],
       "priority": 3
+    },
+    {
+      "id": "mpa5yz3kei",
+      "title": "Onboard library-release agent and restructure responsibilities",
+      "path": "issues/mpa5yz3kei.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "onboarding",
+        "organizational"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpa60i4skg",
+      "title": "Initialize library-release expertise",
+      "path": "issues/mpa60i4skg.json",
+      "status": "todo",
+      "assignee": "library-release",
+      "parentId": "mpa5yz3kei",
+      "tags": [
+        "onboarding",
+        "expertise"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpa60qg5ai",
+      "title": "Update library-quality expertise - remove documentation responsibilities",
+      "path": "issues/mpa60qg5ai.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpa5yz3kei",
+      "tags": [
+        "onboarding",
+        "expertise"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpa63qxqpr",
+      "title": "Update expertise: remove documentation responsibilities",
+      "path": "issues/mpa63qxqpr.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [],
+      "priority": 2
     }
   ],
-  "closed": [],
+  "closed": [
+    {
+      "id": "mpa63iwwhf",
+      "title": "Self-onboard: initialize expertise with full project context",
+      "path": "issues/mpa63iwwhf.json",
+      "status": "closed",
+      "assignee": "library-release",
+      "parentId": null,
+      "tags": [],
+      "priority": 2
+    }
+  ],
   "childrenOf": {
     "mp9xefucmo": [
       "mp9xemq9mv",
@@ -133,6 +193,10 @@
       "mp9zda04cp",
       "mp9zda5d9n",
       "mp9zu2ey0g"
+    ],
+    "mpa5yz3kei": [
+      "mpa60i4skg",
+      "mpa60qg5ai"
     ]
   }
 }

@@ -22,7 +22,7 @@ architecture:
         model: opus
         description: Chief Technology Officer — designs architecture, generates specs, tracks development alignment
         access: [.agentic/expertise/cto/**, ./**]
-        subordinates: [library-developer, library-quality]
+        subordinates: [library-developer, library-quality, library-release]
         skills: [agent-expertise, trackgentic, trackgentic-implement, issue]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
       - name: library-developer
@@ -35,8 +35,16 @@ architecture:
         manager: cto
       - name: library-quality
         model: opus
-        description: Library quality engineer — generates tests, verifies code quality, produces documentation for the library
+        description: Library quality engineer — generates tests, verifies code quality (documentation responsibility moved to library-release)
         access: [.agentic/expertise/library-quality/**, packages/library/**, .agentic/specs/**]
+        subordinates: none
+        skills: [agent-expertise, trackgentic, trackgentic-implement]
+        hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
+        manager: cto
+      - name: library-release
+        model: opus
+        description: Library release engineer — prepares builds and publishes new releases (tests, docs, build, version bump, publish)
+        access: [.agentic/expertise/library-release/**, packages/library/**]
         subordinates: none
         skills: [agent-expertise, trackgentic, trackgentic-implement]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
@@ -45,7 +53,8 @@ architecture:
       hire-expert skill tested — workflow is: parse → ask → confirm → create → validate. Step-by-step approach works well.
       Second hire (library-developer) went smoothly — user provided complete info upfront, only changed model from sonnet to opus.
       Third hire (library-quality) — user again provided complete info upfront, changed model from sonnet to opus. This agent needs Write/Edit tools (creates test files and docs).
-      CTO now has two subordinates — adding the second was simple since trackgentic-based task assignment and Coordinating Work section already existed, just needed subordinates list update in frontmatter.
+      CTO now has three subordinates — adding subsequent ones is simple since trackgentic-based task assignment and Coordinating Work section already existed, just needed subordinates list update in frontmatter.
+      Fourth hire (library-release) — release engineer agent. Needs Bash (test/build/publish commands) + Write/Edit (version bumps, generated docs). User provided complete info upfront again.
 
   skills:
     path: .claude/skills/
@@ -66,7 +75,10 @@ architecture:
       - name: hire-expert
         purpose: Create new expert agents with proper hierarchy, access rules, and expertise setup
         has_scripts: false
-        notes: Template-based agent creation with hierarchy integration
+        notes: |
+          Template-based agent creation with hierarchy integration.
+          Limitation: trackgentic users register must be run from the main session — agents can't register other agents because the token hook blocks unregistered callers.
+          When run from an agent, use a placeholder token in the agent file and ask the user to register manually.
       - name: trackgentic-implement
         purpose: Pick up an assigned issue, implement it, and hand it back via trackgentic status transitions
         has_scripts: false
@@ -175,6 +187,7 @@ patterns:
   - When adding first subordinate to a manager: add the `issue` skill to the manager, add subordinates list, add Coordinating Work section before Restricted domain section
   - When adding subsequent subordinates to a manager that already has the `issue` skill and Coordinating Work section: just add to subordinates list in frontmatter — no structural changes needed
   - Agents that create files (tests, docs) need Write/Edit in their tools list — most expert agents are read-only but quality/doc agents are exceptions
+  - Release engineer agents (build, test, publish) always need Bash tool for running CLI commands (npm test, npm run build, npm publish, etc.) and Write/Edit for version bumps and generated artifacts. They also need write access to the package directory since builds generate dist files and version bumps modify package.json.
   - Reference-only skills (no scripts): SKILL.md frontmatter just needs `name` and `description`, no `allowed-tools` or `argument-hint` needed. The body is purely instructional — teaches the agent how to use an external CLI tool, API, or convention. The trackgentic skill is the first example of this pattern.
   - PreToolUse updatedInput is powerful for transparent command modification: the hook can modify tool_input (e.g. inject env vars into Bash commands) without the agent needing to know. Combined with permissionDecision: "allow", the tool call proceeds with the modified input seamlessly. This is better than requiring agents to manually include the right values.
   - Token injection pattern: the hook reads .trackgentic/users.json (not env var) to find the agent's token by name, strips any manual token from the command, and injects the correct one via updatedInput. The agent system files have $TRACKGENTIC_TOKEN as an informational-only constant. The SKILL.md tells agents "just call trackgentic directly" and explains the hook handles auth transparently.
@@ -206,6 +219,7 @@ gotchas:
   - "Auto-promotion is dangerous for multi-phase flows: trackgentic auto-promotes parent status when children advance. This caused parent to go done before implementation tasks were created. The /issue skill now creates all tasks upfront to avoid needing re-engagement, but auto-promotion still causes cosmetic issues (parent marked done early). Library code should be updated to not auto-promote parent to done when children complete."
   - "Issue assignment is critical for agent runner dispatch: the runner only dispatches agents for issues assigned to them. If the parent issue is assigned to the user instead of the CTO, the CTO never gets dispatched and the flow stops. The /issue skill now always assigns the parent to cto."
   - "Deleted skills with dangling references are silently ignored — Claude Code doesn't error when a skill name in frontmatter doesn't match any SKILL.md. This means broken skill references go undetected. Always verify agent skill lists match existing skill directories after renames or deletions."
+  - "trackgentic users register is blocked for unregistered agents — enforce-trackgentic-token.ts denies the command if the calling agent isn't in users.json. claude-developer can't register new agents itself. The user must run `trackgentic users register <name>` from the main session. After registration, update the token in the agent file if a placeholder was used."
 
 open_questions: []
 

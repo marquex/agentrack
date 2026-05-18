@@ -7,16 +7,17 @@ hierarchy:
   subordinates:
     active:
       - library-developer (implementation)
-      - library-quality (testing, documentation, quality gates)
+      - library-quality (testing, quality gates — documentation removed)
+      - library-release (release prep, documentation, build, version management, publishing)
 
-expertise_status: "Dogfooding active. Cap upward auto-promotion complete (mp9xefucmo, done). Active work: restrict `next` command to todo-only status filter (parent mp9zd202cl, in-progress). Reviews skipped — trivially scoped single-line change. Implementation mp9zda04cp → library-developer (unblocked). Validation mp9zda5d9n → library-quality (blocked by implementation). Pending issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+expertise_status: "Dogfooding active. All previous implementation work complete. Onboarding library-release (parent mpa5yz3kei, in-progress): library-quality task mpa60qg5ai done (docs removed from responsibilities), library-release task mpa60i4skg todo (awaiting agent runner to initialize expertise). Org change: documentation moved from library-quality to library-release. Pending issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
 
 project_overview:
   name: trackgentic
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
   distribution: npm package with CLI entry point (`trackgentic` command)
-  stage: "Dogfooding active. Cap upward auto-promotion complete (mp9xefucmo). Agent runner live. Current work: restrict `next` to todo-only (parent mp9zd202cl, in-progress). Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+  stage: "Dogfooding active. All previous implementation work complete. Agent runner live. Onboarding library-release: mpa60qg5ai done (library-quality updated), mpa60i4skg todo (awaiting library-release expertise init). Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
   docs_tool: TypeDoc HTML output (configured, generates to docs-html/)
@@ -77,8 +78,9 @@ delegation_workflow:
     Split strategy for Phase 3: (A) auth.ts + errors.ts, (B) user methods in tracker.ts, (C) auth integration into existing methods + CLI commands, (D) library-quality validation).
     Each sub-task should be scoped to a few files to stay within timeout.
   docs_ownership: |
-    library-quality owns documentation tasks: TypeDoc configuration, doc generation, docs scripts.
-    When docs need updating or generating, delegate directly to library-quality (not library-developer).
+    library-release owns documentation tasks: TypeDoc configuration, doc generation, docs scripts.
+    When docs need updating or generating for a release, delegate to library-release.
+    library-quality no longer handles documentation — only testing and quality gates.
   access_gaps: |
     Resolved: user granted CTO access to .github/ folder. CTO now owns workflow files.
     Root .gitignore is also writable by CTO.
@@ -86,7 +88,9 @@ delegation_workflow:
   library-developer:
     focus: "Focus delegation messages on the implementation task itself. The agent self-checks typecheck+lint+test before completion."
   library-quality:
-    focus: "Always pass the same spec file used for implementation so quality can validate alignment with specs, not just code quality. Include the spec path, what changed, and what behaviors to validate. Also handles documentation tasks (TypeDoc, docs generation)."
+    focus: "Always pass the same spec file used for implementation so quality can validate alignment with specs, not just code quality. Include the spec path, what changed, and what behaviors to validate. Handles testing and quality gates only (documentation moved to library-release)."
+  library-release:
+    focus: "Delegate release tasks: verify quality gates pass, generate documentation, build artifacts, bump version, publish to npm. Provide version bump guidance (patch/minor/major) based on changes since last release. The agent owns the full release lifecycle end-to-end."
 
 docs_absorbed:
   - docs/introduction.md — project vision, file structure, issue properties, CLI overview, config
@@ -240,3 +244,9 @@ session_log:
   - session: 48
     date: "2026-05-17"
     summary: "Picked up mp9zd202cl via /trackgentic-implement. Verified issue chain is properly set up: parent in-progress, implementation mp9zda04cp unblocked for library-developer, validation mp9zda5d9n blocked by implementation. No action needed — awaiting agent runner to execute children. Updated expertise."
+  - session: 49
+    date: "2026-05-17"
+    summary: "Onboarded new subordinate library-release (release engineer). Org change: documentation responsibility transferred from library-quality to library-release. Created parent issue mpa5yz3kei with two child tasks: mpa60i4skg (library-release expertise init) and mpa60qg5ai (library-quality remove docs). Updated CTO expertise: hierarchy, delegation_workflow docs_ownership, library-quality and library-release focus areas. No code changes."
+  - session: 50
+    date: "2026-05-17"
+    summary: "Revisited mpa5yz3kei via /trackgentic-implement. Previous session had already completed CTO expertise update and library-quality child task. Accidentally created duplicate child issues (mpa63iwwhf, mpa63qxqpr — closed them). Verified remaining blocker: mpa60i4skg (library-release expertise init, todo, awaiting agent runner). Parent stays in-progress until library-release completes onboarding. No expertise changes needed — already accurate."

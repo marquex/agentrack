@@ -1,0 +1,59 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-17T19:25:41.861Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:25:41.861Z",
+    "author": "javi",
+    "content": {
+      "title": "Update library-quality expertise - remove documentation responsibilities",
+      "description": "Documentation responsibilities have been transferred to library-release. Update your expertise index to reflect this change:\n\n1. Remove documentation from your listed responsibilities\n2. Your responsibilities are now: testing, quality gates (typecheck, lint, format, coverage)\n3. Update any references to documentation ownership in your expertise\n4. library-release now owns: TypeDoc generation, docs-html output, documentation verification\n\nYou remain responsible for:\n- Running quality gates (typecheck, lint, test coverage)\n- Writing and maintaining tests\n- Validating implementations against specs\n- Test infrastructure and test helpers\n\nNo code changes needed - only expertise file updates.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-quality",
+      "parentId": "mpa5yz3kei",
+      "tags": [
+        "onboarding",
+        "expertise"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-17T19:25:53.239Z",
+    "author": "javi",
+    "content": {
+      "id": "mpa60yj574",
+      "content": "Straightforward expertise update. Just remove documentation from your listed responsibilities and add a note that library-release now owns documentation (TypeDoc, docs-html, docs generation)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:26:43.256Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-17T19:27:33.408Z",
+    "author": "javi",
+    "content": {
+      "id": "mpa634gfrh",
+      "content": "Done. Updated library-quality-index.yaml with 4 changes: (1) Domain line changed from 'documentation for the library' to 'quality gates for the library', (2) tooling.docs entry annotated as TRANSFERRED to library-release, (3) added docs_note under quality_gate clarifying library-release owns docs, (4) learnings.typedoc section marked TRANSFERRED with explicit note. No code changes — expertise file only."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:27:40.541Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

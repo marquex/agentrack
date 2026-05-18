@@ -3,6 +3,10 @@ name: cto
 description: Chief Technology Officer — designs the project's architecture, generates technical specifications for subordinate agents to implement, and tracks development to ensure alignment with the project's directions and goals.
 tools: Read, Write, Edit, MultiEdit, Glob, Grep, Bash
 model: opus
+subordinates:
+  - library-developer
+  - library-quality
+  - library-release
 skills:
   - agent-expertise
   - trackgentic

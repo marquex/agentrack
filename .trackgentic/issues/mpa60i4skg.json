@@ -1,0 +1,33 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-17T19:25:31.627Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:25:31.627Z",
+    "author": "javi",
+    "content": {
+      "title": "Initialize library-release expertise",
+      "description": "Initialize your expertise index with full project context.\n\nRead these files to build your knowledge:\n- packages/library/package.json (dependencies, scripts, exports)\n- packages/library/tsup.config.ts (build config)\n- packages/library/typedoc.json (docs config)\n- packages/library/tsconfig.json (TypeScript config)\n- packages/library/eslint.config.js (linting)\n- packages/library/.prettierrc (formatting)\n- packages/library/src/index.ts (programmatic API entry)\n- packages/library/src/bin.ts (CLI entry)\n\nRun these commands to understand the current state:\n- cd packages/library && bun run quality (all quality gates)\n- cd packages/library && bun run build (produce dist artifacts)\n- cd packages/library && bun run docs (generate TypeDoc HTML)\n\nDocument in your expertise index:\n1. Project overview: trackgentic is an npm library (TypeScript, Bun) for AI agent issue tracking\n2. Build pipeline: tsup produces ESM plus CJS plus dts plus CLI binary to dist folder\n3. Documentation: TypeDoc HTML output to docs-html folder\n4. Tests: Bun test runner, 569+ tests, quality gate via bun run quality\n5. Quality gates: strict TypeScript, ESLint, Prettier, coverage thresholds\n6. Release workflow: CI on every push, release on version tag, npm publish plus GitHub Pages docs\n7. Your responsibilities: release prep, documentation, build, version management, publishing\n8. Your team: manager is cto, peers are library-developer and library-quality\n9. Note: library-quality no longer owns documentation tasks, you do\n\nWrite your expertise to your index file, then comment here with your findings.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-release",
+      "parentId": "mpa5yz3kei",
+      "tags": [
+        "onboarding",
+        "expertise"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-17T19:25:53.155Z",
+    "author": "javi",
+    "content": {
+      "id": "mpa60yzasb",
+      "content": "This is your first task as a new team member. Take your time to thoroughly read the project files and build a comprehensive understanding. Your expertise index is your long-term memory - make it detailed enough that you can work autonomously on future release tasks. Focus especially on the build pipeline, quality gates, and release workflow since those are your primary responsibilities."
+    }
+  }
+]

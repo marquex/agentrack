@@ -1,12 +1,12 @@
 # Library Quality Expertise Index
 # Agent: library-quality
-# Domain: Testing, code quality verification, and documentation for the library
+# Domain: Testing, code quality verification, and quality gates for the library
 
 hierarchy:
   manager: cto
   subordinates: [none — leaf agent]
 
-expertise_status: "Active — Phases 1-7 in progress. 569 tests, 1997 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). Spec review: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities found, 9+ tests to update, 7+ new tests needed."
+expertise_status: "Active — Phases 1-7 in progress. 569 tests, 1997 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). Spec review: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities found, 9+ tests to update, 7+ new tests needed. Documentation responsibilities transferred to library-release agent."
 
 project_phases:
   phase_1_foundation:
@@ -169,7 +169,6 @@ tooling:
   test_runner: bun test (v1.3.11)
   coverage: "bun test --coverage with coverageThreshold=0 in bunfig.toml (report only, no per-file gate)"
   typechecker: "tsc --noEmit with strict + 4 extra flags (noUncheckedIndexedAccess, exactOptionalPropertyTypes, noImplicitOverride, noPropertyAccessFromIndexSignature)"
-  docs: "typedoc v0.28 with typedoc-plugin-markdown, validated via typedoc --emit none"
   quality_gate: "bun run quality = typecheck + lint + test:coverage (all must pass)"
 
 learnings:
@@ -187,10 +186,7 @@ learnings:
     - "4 extra strict flags (noUncheckedIndexedAccess, exactOptionalPropertyTypes, noImplicitOverride, noPropertyAccessFromIndexSignature) are enabled and pass clean."
     - "noPropertyAccessFromIndexSignature requires bracket notation for dynamic keys (e.g. process.env['TRACKGENTIC_USER_TOKEN'])."
     - "exactOptionalPropertyTypes means `undefined` cannot be assigned to optional properties explicitly."
-  typedoc:
-    - "TypeDoc with typedoc-plugin-markdown parses all source files without errors."
-    - "The --emit none flag is useful for CI validation without generating files."
-    - "Config: excludePrivate=true, excludeInternal=true, categorizeByGroup=true, categoryOrder=[Core, Types, Errors, *]"
+  typedoc: "REMOVED — Documentation ownership transferred to library-release agent. TypeDoc and docs generation are no longer library-quality responsibilities."
   testing_patterns:
     - "Test helpers: createTestDir/cleanupTestDir for fs isolation, createIssueParams/updateIssueParams factory functions, expectError/expectOk assertions."
     - "Tracker tests use real filesystem (tmpdir) — no mocks. This gives integration-level confidence."
@@ -277,4 +273,5 @@ learnings:
     documentation_needs:
       - "JSDoc on computeUpwardPromotions needs cap mention"
       - "Event reason field format needs specification (user-visible via history command)"
+      - "Note: TypeDoc and general docs generation are now owned by library-release. JSDoc content quality remains relevant for code quality."
     key_pattern: "When capping a propagated value, always clarify what propagates FURTHER up the chain — the original or the capped value. This is a common source of bugs in recursive systems."

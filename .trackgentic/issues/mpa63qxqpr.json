@@ -1,0 +1,53 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-17T19:28:02.565Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:28:02.565Z",
+    "author": "javi",
+    "content": {
+      "title": "Update expertise: remove documentation responsibilities",
+      "description": "Organizational restructuring: documentation responsibilities have been transferred from library-quality to library-release. Your expertise file needs updating.\n\n## Changes needed\n\n1. Remove all references to documentation tasks from your expertise file. This includes:\n   - TypeDoc configuration tasks\n   - Documentation generation tasks  \n   - Docs scripts ownership\n   - Any references to owning docs generation or docs:check\n\n2. Your responsibilities are now focused on:\n   - Testing (unit tests, integration tests, edge cases)\n   - Code quality (review, lint, typecheck, format verification)\n   - Quality gates validation\n   - Spec alignment verification\n\n3. Update your expertise_status to reflect this change.\n\nRead your current expertise file, make the updates, verify the YAML is valid. Comment when done with a summary of what changed.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-quality"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:28:43.834Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:29:03.223Z",
+    "author": "javi",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-17T19:29:55.495Z",
+    "author": "javi",
+    "content": {
+      "id": "mpa665xmog",
+      "content": "Done. Updated expertise file to remove documentation responsibilities. Changes made:\n\n1. **Removed** `docs` and `docs_note` entries from tooling section — these claimed TypeDoc configuration and docs generation as library-quality tools.\n2. **Replaced** typedoc learnings block (4 items about TypeDoc config/validation) with a single note marking it as REMOVED and transferred to library-release.\n3. **Updated** expertise_status to note documentation transfer.\n4. **Added** clarification in spec_review's documentation_needs that TypeDoc generation is library-release owned (JSDoc content quality remains relevant for code quality).\n\nNo references remain claiming library-quality owns docs generation, TypeDoc config, docs-html, or docs:check."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-17T19:30:00.733Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]
