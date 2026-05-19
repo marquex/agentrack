@@ -111,6 +111,7 @@ function launchAgent(agent: AgentState, issueId: string): void {
       "-p", `/agentrack-implement ${issueId}`,
       "--output-format", "stream-json",
       "--verbose",
+      "--permission-mode", "auto"
     ],
     {
       cwd: ROOT,

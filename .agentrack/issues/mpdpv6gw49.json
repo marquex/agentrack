@@ -1,0 +1,40 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T07:04:34.294Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T07:04:34.294Z",
+    "author": "javi",
+    "content": {
+      "title": "Validate: user-friendly documentation overhaul",
+      "description": "Spec: .agentic/specs/user-docs-spec.md\n\nValidate the implementation done by library-developer (mpdpu00ksc) and library-release (mpdpuhd0r5). Check:\n\n1. TypeDoc fully removed: no typedoc deps, no typedoc.json, no docs-related scripts in package.json\n2. Quality gates pass: bun run quality (typecheck, lint, tests) all green\n3. Build works: bun run build produces dist/ successfully\n4. Old docs gone: no generated TypeDoc output, no old markdown files remaining\n5. New docs exist: all 8 markdown files present with non-trivial content (over 100 lines each)\n6. Content quality: accurate API signatures, complete CLI command coverage, working code examples\n7. No internal implementation details exposed to users\n8. Cross-references between doc files work\n9. No broken references in package.json scripts\n\nRun quality gates and report results.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-quality",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "validation",
+        "documentation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T07:04:55.186Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpdpu00ksc"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T07:04:55.186Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpdpuhd0r5"
+    }
+  }
+]

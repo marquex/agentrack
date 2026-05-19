@@ -1,0 +1,95 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-19T17:18:58.923Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:18:58.923Z",
+    "author": "javi",
+    "content": {
+      "title": "Implement: independent git branch worktree support",
+      "description": "Spec: .agentic/specs/independent-git-spec.md\n\nRead the spec AND the review comments on issues mpcwd1suxc and mpcwd7ued6 before starting. The reviews contain critical feedback about feasibility, edge cases, and test impact.\n\nImplement:\n1. New module src/worktree.ts — git worktree operations (detectInitScenario, initFreshWorktree, initJoinWorktree, isWorktreeInitialized, pushWorktree, pullWorktree)\n2. New CLI commands: src/cli/push.ts and src/cli/pull.ts\n3. Modified src/cli/init.ts — enhanced to call worktree setup before tracker.init(), then auto-commit initial files\n4. Modified src/runner.ts — register push and pull commands\n5. Modified src/errors.ts — add new error codes (NOT_A_GIT_REPO, MIGRATION_REQUIRED, INVALID_STATE, PUSH_FAILED, PULL_FAILED)\n6. Tests for worktree module and new CLI commands",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-developer",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "git-worktree",
+        "init",
+        "sync",
+        "implementation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-19T17:19:17.089Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpcwd1suxc"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-19T17:19:17.090Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpcwd7ued6"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-19T17:19:32.613Z",
+    "author": "javi",
+    "content": {
+      "id": "mpcwe7ql8n",
+      "content": "Key architecture decisions from CTO:\n\n1. **Git plumbing for Scenario A** — use hash-object/mktree/commit-tree to create the orphan branch WITHOUT modifying the working tree. Never checkout the orphan branch. This avoids corrupting the user's working tree state.\n\n2. **execFileSync over execSync** — use array-based argument passing (child_process.execFileSync('git', [...args])) to avoid shell injection. Never interpolate user input into command strings.\n\n3. **No Tracker changes** — the existing file-io layer reads/writes .agentrack/ files identically whether it's a worktree or plain directory. Only the init/push/pull commands need new git logic.\n\n4. **Existing init.ts flow** — the current init command finds/walks-to .agentrack/ and calls tracker.init(). The enhanced version adds worktree setup BEFORE tracker.init(), then auto-commits the initial data. The tracker.init() call itself is unchanged.\n\n5. **Branch name _agentrack is hardcoded** — not configurable. Same for remote name 'origin'.\n\n6. **Test strategy** — worktree tests will need real git operations. Use temporary git repos (git init) in test setup/teardown. Cannot mock git effectively for this feature.\n\n7. **Synchronous git calls** — match the codebase pattern (sync file-io). Use execFileSync, not spawn/async."
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-19T17:21:31.523Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpcwd1suxc",
+      "reason": "Blocker issue mpcwd1suxc transitioned to done"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-19T17:22:10.534Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpcwd7ued6",
+      "reason": "Blocker issue mpcwd7ued6 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:26:52.466Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-19T17:56:37.933Z",
+    "author": "javi",
+    "content": {
+      "id": "mpcxpwoxzq",
+      "content": "Done. Implemented independent git branch worktree support for agentrack. Files created: src/core/worktree.ts (git worktree operations), src/cli/commands/push.ts (agt push handler), src/cli/commands/pull.ts (agt pull handler). Files modified: src/core/errors.ts (5 new error codes 13-17), src/cli/commands/init.ts (worktree-aware with fallback to classic init when not in git repo), src/cli/runner.ts (registered push/pull commands), src/types/api.ts (WorktreeInitResult, WorktreeSyncResult, WorktreePullResult types), src/types/index.ts and src/index.ts (barrel exports). Key decisions: backward compatible (classic init in non-git repos), orphan branch via git plumbing commands, synchronous execFileSync with stdio pipe to prevent stderr leaking, race condition fallback from fresh to join, gitignore appended but not staged/committed. Quality: typecheck clean, lint clean, 573 tests pass 0 fail."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:56:43.795Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

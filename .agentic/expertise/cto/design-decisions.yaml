@@ -191,23 +191,26 @@ decisions:
     decided_date: "2026-05-11"
 
   - id: DD-016
-    title: "TypeDoc HTML for API documentation"
-    choice: "Use TypeDoc's default HTML output for publishable API docs, keep markdown plugin as secondary output"
+    title: "Hand-written user-friendly documentation (supersedes TypeDoc)"
+    choice: "Replace TypeDoc auto-generated API docs with hand-written markdown documentation in docs/markdown/. Future Docusaurus site to serve the markdown files."
     rationale:
-      - "Already installed and configured — typedoc.json exists, docs:check passes"
-      - "All public exports already have comprehensive JSDoc (Phase 7)"
-      - "Default HTML theme is clean, searchable, and standard for TS libraries"
-      - "Can publish directly to GitHub Pages"
-      - "Keep typedoc-plugin-markdown for embedding in VitePress or other doc sites later"
+      - "TypeDoc exposes internal implementation details that aren't useful to users"
+      - "No user onboarding — no getting started guide, no conceptual explanations"
+      - "Wrong audience — TypeDoc serves library developers, not users"
+      - "Hand-written docs allow curated examples, clear explanations, and user-focused structure"
+      - "Markdown files can be served by Docusaurus (or similar) for a proper docs site"
     tradeoffs:
-      - "Default theme is functional but not highly styled (acceptable — can upgrade theme later)"
-      - "API docs only — guides/tutorials would need a separate tool (VitePress) in the future"
+      - "Manual effort to keep docs in sync with API changes (acceptable — API is stable)"
+      - "No auto-generation from source (acceptable — public API surface is small)"
     alternatives_considered:
-      - "typedoc-plugin-markdown only — no standalone HTML site, harder to publish"
-      - "VitePress — great for guides but doesn't auto-generate from JSDoc"
-      - "Docusaurus — same limitation, heavier setup"
-    status: decided
-    decided_date: "2026-05-11"
+      - "TypeDoc HTML only — internals exposed, no guides, not user-friendly"
+      - "TypeDoc with custom filters — complex config, still no guides"
+      - "VitePress — good for guides but no auto-gen; markdown files work with both VitePress and Docusaurus"
+    spec: .agentic/specs/user-docs-spec.md
+    issue: mpdpt4rego
+    status: in-progress
+    decided_date: "2026-05-20"
+    supersedes: "DD-016 originally chose TypeDoc HTML (decided 2026-05-11). Replaced because auto-generated docs don't serve the user audience."
 
   - id: DD-017
     title: "Dogfooding: agentrack tracks its own development"
@@ -226,3 +229,32 @@ decisions:
       - "Build step required between code changes and CLI usage (acceptable — fast build with tsup)"
     status: decided
     decided_date: "2026-05-12"
+
+  - id: DD-018
+    title: "Independent git branch for issue storage"
+    choice: "Store .agentrack/ data on a dedicated orphan branch (_agentrack) mounted as a git worktree"
+    rationale:
+      - "Branch-independent issues — everyone sees the same issues regardless of code branch (main, feature-x, etc.)"
+      - "No merge conflicts — issue data is completely separate from code commits"
+      - "Git-native — leverages git worktrees, a well-established mechanism for co-located branches"
+      - "Explicit sync model — agt push/pull gives users control over when issue state is shared"
+      - "Transparent to existing code — worktree appears as a regular directory, no changes to Tracker/file-io layer"
+    implementation:
+      - "Orphan branch created via git plumbing (hash-object, mktree, commit-tree) — no branch switching, no working tree mutation"
+      - "Worktree mounted at .agentrack/ — appears as regular directory"
+      - "Three commands: agt init (worktree setup + data init), agt push (auto-commit + sync), agt pull (sync from remote)"
+      - ".agentrack/ added to .gitignore on code branch"
+    tradeoffs:
+      - "Requires git worktree support (available since git 2.5, 2015)"
+      - "Adds complexity to init flow (mitigated by well-tested worktree module)"
+      - "No auto-commit on every write — explicit push/pull model (intentional: reduces noise)"
+    alternatives_considered:
+      - "Separate repo for issues — too heavy, loses the git-native simplicity"
+      - "Shared branch with code — issues mixed with code, merge conflicts"
+      - "Submodule — complex lifecycle, detached HEAD issues"
+      - "No change (status quo) — issues locked to code branch, conflicts in busy repos"
+    spec: .agentic/specs/independent-git-spec.md
+    issue: mpcwcufhzk
+    status: in-progress
+    decided_date: "2026-05-19"
+    current_phase: "Implementation complete, validation found 3 spec deviations. Fix chain: mpd4hktoxq → mpd4hs14zp → mpd4i06wz6"

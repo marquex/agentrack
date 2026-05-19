@@ -197,3 +197,23 @@ export type UsersRegenerateResult =
   | { result: "OK"; name: string; token: string }
   | { result: "USER_NOT_FOUND"; message: string }
   | { result: "INVALID_TOKEN"; message: string };
+
+// ─── Worktree ────────────────────────────────────────────────────────
+
+/** Result of initializing a git worktree for agentrack data. */
+export interface WorktreeInitResult {
+  scenario: "fresh" | "join" | "already_initialized";
+  path: string;
+}
+
+/** Result of pushing agentrack data to remote. */
+export interface WorktreeSyncResult {
+  synced: boolean;
+  commitCount?: number;
+  message?: string;
+}
+
+/** Result of pulling agentrack data from remote. */
+export interface WorktreePullResult {
+  updated: boolean;
+}

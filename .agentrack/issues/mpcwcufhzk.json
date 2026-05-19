@@ -1,0 +1,67 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-19T17:18:30.252Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:18:30.252Z",
+    "author": "javi",
+    "content": {
+      "title": "Independent git branch for issue storage",
+      "description": "Spec: .agentic/specs/independent-git-spec.md\n\nStore .agentrack/ issue data on a dedicated orphan branch (_agentrack) mounted as a git worktree. Makes issue pool independent of code branch. Three new/modified CLI commands: agt init (worktree setup), agt push (commit + sync), agt pull (sync from remote).",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "cto",
+      "tags": [
+        "architecture",
+        "git-worktree",
+        "init",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:18:56.778Z",
+    "author": "system",
+    "content": {
+      "status": "in-progress",
+      "reason": "auto-promoted to 'in-progress': child advanced to 'in-progress'"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:19:38.708Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:19:58.555Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-19T17:21:21.618Z",
+    "author": "javi",
+    "content": {
+      "id": "mpcwgjk85d",
+      "content": "Planning complete. Issue chain created:\n\n1. **Dev review** (mpcwf2gt23) — library-developer reviews spec feasibility\n2. **Quality review** (mpcwf20ucn) — library-quality reviews spec testability  \n3. **Implementation** (mpcwg66ygs) — library-developer implements worktree module + CLI commands (blocked by both reviews)\n4. **Quality validation** (mpcwg61w9c) — library-quality validates against spec (blocked by implementation)\n\nSpec: .agentic/specs/independent-git-spec.md (REVIEWED — extensively evolved in session 52)\n\nKey design decisions:\n- Orphan branch via git plumbing (no branch switching, no working tree modification)\n- Three init scenarios: fresh (create branch), join (fetch existing), already-initialized\n- Existing Tracker/file-io layer unchanged (AC7)\n- Explicit agt push/pull sync model (no auto-commits on every write)"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T21:07:22.572Z",
+    "author": "javi",
+    "content": {
+      "description": "Spec: .agentic/specs/independent-git-spec.md\n\nStore .agentrack/ issue data on a dedicated orphan branch (_agentrack) mounted as a git worktree. Makes issue pool independent of code branch. Three new/modified CLI commands: agt init (worktree setup), agt push (commit + sync), agt pull (sync from remote).\n\nSTATUS: Implementation complete. Validation found 3 spec deviations (2 medium, 1 low). Fix phase in progress.\n- Fix: mpd4hktoxq (library-developer, in-progress)\n- Validate: mpd4hs14zp (library-quality, blocked by fix)\n- Document+build: mpd4i06wz6 (library-release, blocked by validation)"
+    }
+  }
+]

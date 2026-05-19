@@ -187,7 +187,7 @@ current_state:
   dogfooding_notes:
     - "Always run `agt` commands from the repo root (not packages/library/) so .agentrack/ resolves to root"
     - "The symlink via npm link means any `bun run build` in packages/library/ immediately updates the global command"
-    - ".agentrack/ is NOT in .gitignore — issues are tracked in git alongside code"
+    - ".agentrack/ is NOT in .gitignore yet — issues are tracked in git alongside code. Will change when independent git branch feature completes (mpcwcufhzk)."
   next_phase:
     phase: 8
     name: "Build, Documentation & npm Distribution"
@@ -209,17 +209,44 @@ current_state:
       description: "CTO and subordinates receive issues via /agentrack-implement skill. Status-based workflow enforced."
       tested: "CTO processed mp9xefucmo — spec update, review coordination, delegation to subordinates."
     current_work:
+      independent_git_branch:
+        issue: mpcwcufhzk
+        status: in-progress
+        spec: .agentic/specs/independent-git-spec.md
+        description: "Store .agentrack/ on orphan branch _agentrack via git worktree. Branch-independent issue access."
+        implementation_complete: true
+        validation_results:
+          tests: 573 pass, 0 fail, 2009 assertions
+          spec_deviations:
+            - "MEDIUM: Missing .gitignore commit in fresh scenario (AC1 step 3)"
+            - "MEDIUM: Missing auto-commit after tracker.init() (AC1 step 6)"
+            - "LOW: initWorktree returns 'fresh' when already initialized (AC3)"
+          test_coverage_gap: "src/core/worktree.ts at 4.75% line coverage"
+        fix_chain:
+          fix_deviations: mpd4hktoxq
+          validate_and_test: mpd4hs14zp
+          document_and_build: mpd4i06wz6
       docs_cleanup:
         issue: mpcvqqdhc5
         status: todo
         assignee: library-release
         description: "Clean up stale packages/library/docs-html/ directory (leftover from pre-migration). Verify docs/html/ and docs/md/ at repo root."
+      user_friendly_docs:
+        issue: mpdpt4rego
+        status: in-progress
+        spec: .agentic/specs/user-docs-spec.md
+        description: "Replace TypeDoc auto-generated docs with hand-written user-friendly markdown in docs/markdown/. Remove typedoc tooling entirely. 8 sections."
+        chain:
+          reviews: [mpdptgq69t, mpdpthrliu]
+          implementations: [mpdpu00ksc, mpdpuhd0r5]
+          validation: mpdpv6gw49
+          config: mpdpvfn3yb
       cap_upward_promotion:
         issue: mp9xefucmo
         status: done
         spec: .agentic/specs/cap-upward-promotion-spec.md
         description: "Cap upward auto-promotion at in-progress — parents never auto-promote to done/closed"
-    docs_status: "Dual-format docs configured and working. Scripts: docs:html (→docs/html/), docs:md (→docs/md/), docs, docs:check. Both formats generate at repo root. typedoc-plugin-markdown actively used for markdown output. Setup issue mpctz79p1k done. Stale packages/library/docs-html/ cleanup: mpcvqqdhc5."
+    docs_status: "TRANSITIONING from TypeDoc auto-generated docs to hand-written user-friendly markdown. TypeDoc being removed (mpdpt4rego). New docs will live in docs/markdown/ with 8 sections. Docusaurus site generation is future work."
     publish_pipeline:
       typedoc_html: complete
       ci_workflow: complete — .github/workflows/ci.yml (quality + build on push/PR to main)
@@ -227,6 +254,7 @@ current_state:
       gitignore_update: complete — docs-html/ added
     remaining:
       - "All tracked as agentrack issues — see `agt list` and open_issues above"
+      - "Independent git branch: issue mpcwcufhzk (in-progress, fix phase — 3 spec deviations found in validation)"
       - "NPM_TOKEN secret: issue mp3peac1qo"
       - "GitHub Pages source: issue mp3peawcgs"
       - "First release v0.1.0: issue mp3peanz8b"

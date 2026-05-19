@@ -221,6 +221,263 @@
         "cleanup"
       ],
       "priority": 2
+    },
+    {
+      "id": "mpcwcufhzk",
+      "title": "Independent git branch for issue storage",
+      "path": "issues/mpcwcufhzk.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "architecture",
+        "git-worktree",
+        "init",
+        "sync"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwd1suxc",
+      "title": "Review spec: independent-git",
+      "path": "issues/mpcwd1suxc.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwd7ued6",
+      "title": "Review spec: independent-git (quality perspective)",
+      "path": "issues/mpcwd7ued6.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwdh89sp",
+      "title": "Implement: independent git branch worktree support",
+      "path": "issues/mpcwdh89sp.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "git-worktree",
+        "init",
+        "sync",
+        "implementation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwdqz3kc",
+      "title": "Validate: independent git branch worktree support",
+      "path": "issues/mpcwdqz3kc.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "validation",
+        "git-worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwf20ucn",
+      "title": "Review independent-git-spec.md — quality and testability",
+      "path": "issues/mpcwf20ucn.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "review",
+        "spec",
+        "quality"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwf2gt23",
+      "title": "Review independent-git-spec.md — developer feasibility",
+      "path": "issues/mpcwf2gt23.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "review",
+        "spec",
+        "architecture"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwg61w9c",
+      "title": "Validate git worktree implementation against spec",
+      "path": "issues/mpcwg61w9c.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "validation",
+        "worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcwg66ygs",
+      "title": "Implement git worktree module + init/push/pull commands",
+      "path": "issues/mpcwg66ygs.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "implementation",
+        "worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpd4hktoxq",
+      "title": "Fix spec deviations: independent git worktree",
+      "path": "issues/mpd4hktoxq.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "bug",
+        "spec-deviation",
+        "git-worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpd4hs14zp",
+      "title": "Validate: fix spec deviations + write worktree tests",
+      "path": "issues/mpd4hs14zp.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "validation",
+        "testing",
+        "git-worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpd4i06wz6",
+      "title": "Document and build: independent git worktree",
+      "path": "issues/mpd4i06wz6.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpcwcufhzk",
+      "tags": [
+        "documentation",
+        "build",
+        "release",
+        "git-worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdpt4rego",
+      "title": "User-friendly documentation overhaul",
+      "path": "issues/mpdpt4rego.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "documentation",
+        "breaking-change"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdptgq69t",
+      "title": "Review spec: user-docs",
+      "path": "issues/mpdptgq69t.json",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdpthrliu",
+      "title": "Review spec: user-docs (quality perspective)",
+      "path": "issues/mpdpthrliu.json",
+      "status": "todo",
+      "assignee": "library-quality",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdpu00ksc",
+      "title": "Implement: remove TypeDoc tooling from packages/library",
+      "path": "issues/mpdpu00ksc.json",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "cleanup",
+        "tooling"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdpuhd0r5",
+      "title": "Implement: write user-friendly markdown documentation",
+      "path": "issues/mpdpuhd0r5.json",
+      "status": "todo",
+      "assignee": "library-release",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "documentation",
+        "content"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdpv6gw49",
+      "title": "Validate: user-friendly documentation overhaul",
+      "path": "issues/mpdpv6gw49.json",
+      "status": "todo",
+      "assignee": "library-quality",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "validation",
+        "documentation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdpvfn3yb",
+      "title": "Update release workflow and gitignore for docs overhaul",
+      "path": "issues/mpdpvfn3yb.json",
+      "status": "todo",
+      "assignee": "cto",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "configuration",
+        "ci"
+      ],
+      "priority": 2
     }
   ],
   "closed": [
@@ -280,6 +537,23 @@
     "mpctz79p1k": [
       "mpctzf23nq",
       "mpctzodobf"
+    ],
+    "mpcwcufhzk": [
+      "mpcwd1suxc",
+      "mpcwd7ued6",
+      "mpcwdh89sp",
+      "mpcwdqz3kc",
+      "mpd4hktoxq",
+      "mpd4hs14zp",
+      "mpd4i06wz6"
+    ],
+    "mpdpt4rego": [
+      "mpdptgq69t",
+      "mpdpthrliu",
+      "mpdpu00ksc",
+      "mpdpuhd0r5",
+      "mpdpv6gw49",
+      "mpdpvfn3yb"
     ]
   }
 }

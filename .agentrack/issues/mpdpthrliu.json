@@ -1,0 +1,24 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T07:03:14.338Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T07:03:14.338Z",
+    "author": "javi",
+    "content": {
+      "title": "Review spec: user-docs (quality perspective)",
+      "description": "Review the draft spec at .agentic/specs/user-docs-spec.md\n\nAnalyze from a documentation quality and testability perspective. Comment with:\n- Completeness of the 8 proposed sections — any gaps?\n- Are the acceptance criteria testable and complete?\n- Documentation quality: is the writing guidelines section sufficient?\n- Edge cases: any features not covered? Any CLI commands missing?\n- Consistency: do the proposed sections cover the full feature set?\n\nDo NOT implement — only analyze and comment.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-quality",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "review",
+        "spec"
+      ]
+    }
+  }
+]

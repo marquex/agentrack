@@ -49,4 +49,14 @@ export const ErrorCodes = {
   BLOCKAGE_CYCLE: { result: "BLOCKAGE_CYCLE", exitCode: 11 },
   /** Hierarchy constraint violated (e.g. adding child to closed parent). */
   HIERARCHY_CONSTRAINT: { result: "HIERARCHY_CONSTRAINT", exitCode: 12 },
+  /** Not inside a git repository. */
+  NOT_A_GIT_REPO: { result: "NOT_A_GIT_REPO", exitCode: 13 },
+  /** .agentrack/ exists but is not a git worktree (legacy directory). */
+  MIGRATION_REQUIRED: { result: "MIGRATION_REQUIRED", exitCode: 14 },
+  /** Invalid state for the requested operation. */
+  INVALID_STATE: { result: "INVALID_STATE", exitCode: 15 },
+  /** git push failed. */
+  PUSH_FAILED: { result: "PUSH_FAILED", exitCode: 16 },
+  /** git pull failed. */
+  PULL_FAILED: { result: "PULL_FAILED", exitCode: 17 },
 } as const;

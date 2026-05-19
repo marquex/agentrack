@@ -1,0 +1,49 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T07:04:01.320Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T07:04:01.320Z",
+    "author": "javi",
+    "content": {
+      "title": "Implement: write user-friendly markdown documentation",
+      "description": "Spec: .agentic/specs/user-docs-spec.md\n\nRead the spec AND the review comments on issues mpdptgq69t and mpdpthrliu before starting.\n\nYour task (AC2 + AC3 from the spec):\n\nPart 1 - Remove old docs:\nDelete the generated TypeDoc output directories and the existing hand-written markdown files in the docs directory. See spec for the full list of files to delete.\n\nPart 2 - Write 8 new markdown files in docs/markdown/:\n1. overview.md - introduction, key features, quick example\n2. getting-started.md - install, init, first session (CLI + JS)\n3. authentication.md - auth modes, tokens, user management\n4. issue-object.md - properties, computed fields, status lifecycle, event sourcing\n5. hierarchy-and-blockages.md - parent-child, status constraints, auto-promotion, blockages, cycle detection\n6. storing-issues-in-git.md - .agentrack/ structure, orphan branch, push/pull\n7. cli-reference.md - all agt commands with syntax, flags, examples\n8. javascript-reference.md - Tracker class methods, exported types, examples\n\nWriting guidelines:\n- Audience: developers and AI agent operators, NOT library contributors\n- Tone: clear, concise, practical\n- Always show both CLI and JavaScript examples where applicable\n- Cross-reference between doc files using relative links\n- Standard markdown, no Docusaurus-specific syntax\n- Each file should be over 100 lines with non-trivial content\n- The CLI reference must document ALL commands listed in the spec\n- The JS reference must document ONLY public exports, NOT internal modules\n\nThe spec contains detailed content outlines for each section.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-release",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "documentation",
+        "content"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T07:04:55.149Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpdptgq69t"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T07:04:55.150Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpdpthrliu"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T07:05:28.690Z",
+    "author": "javi",
+    "content": {
+      "id": "mpdpwcgp63",
+      "content": "Context for content writing: The library exports a Tracker class with methods: init, create, update, list, view, history, next, addComment, updateComment, deleteComment, listComments, addBlockage, resolveBlockage, deleteBlockage, listBlockages, registerUser, listUsers, revokeUser, regenerateToken, push, pull. Exported types include IssueProperties, ComputedIssue, IssueStatus, CreateIssueOptions, UpdateIssueOptions, ListFilters, NextResult, AgentrackError, and various event and blockage and user types. CLI command is agt. Status flow: idea then todo then in-progress then done then closed. Auth modes: open, read-only, strict. Issues stored on orphan git branch _agentrack via worktree. The existing docs in the docs directory (introduction.md, hierarchy.md, commands.md, issue-blockages.md, user-auth.md) contain accurate reference content that can be restructured into the new format - read them for factual accuracy before deleting."
+    }
+  }
+]

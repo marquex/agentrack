@@ -17,7 +17,7 @@ library_package:
     cli:
       runner: "commander-based arg parsing and command dispatch"
       output: "JSON formatting to stdout/stderr"
-      commands: "one file per CLI command (init, create, update, list, view, history, comments, blockages, users)"
+      commands: "one file per CLI command (init, push, pull, create, update, list, view, history, comments, blockages, users)"
     core:
       tracker: "main Tracker class — all public methods, delegates to core modules"
       resolution: ".agentrack/ directory walk-up resolution"
@@ -25,6 +25,7 @@ library_package:
       index_manager: "sorted index management (insert, update, binary search, childrenOf)"
       dependency_manager: "bidirectional dependency map management"
       auth: "token resolution, mode enforcement"
+      worktree: "IN PROGRESS — git worktree operations (init, push, pull, scenario detection) for orphan branch _agentrack"
       id: "ID generation (timestamp + random base36)"
       errors: "typed AgentrackError class with error codes and exit codes"
     types:
@@ -40,6 +41,7 @@ library_package:
 storage_model:
   type: file-backed JSON (no database)
   location: .agentrack/ directory, discovered by walking up from cwd
+  git_storage: "IN PROGRESS — migrating to orphan branch _agentrack via git worktree (issue mpcwcufhzk). Currently stored directly in repo."
   rationale: git-commitable, merge-friendly, zero infrastructure, monorepo-compatible
 
 file_layout:
@@ -156,7 +158,9 @@ cli_interface:
   auth: "token via AGENTACK_USER_TOKEN env var"
 
   commands:
-    init: "create .agentrack/ with config.json, index.json, dependencies.json, users.json, issues/"
+    init: "create .agentrack/ with config.json, index.json, dependencies.json, users.json, issues/. IN PROGRESS: enhanced to set up git worktree on orphan branch _agentrack (issue mpcwcufhzk)"
+    push: "IN PROGRESS — auto-commit and sync .agentrack/ changes to remote _agentrack branch (issue mpcwcufhzk)"
+    pull: "IN PROGRESS — sync .agentrack/ from remote _agentrack branch (issue mpcwcufhzk)"
     create: "new issue with title + flags (description, assignee, tags, status, priority, parentId, path)"
     update: "modify issue by id + flags (title, description, status, assignee, tags, priority, parentId)"
     list: "filter by status/assignee/tags/parentId from index (no issue file reads)"
@@ -190,3 +194,4 @@ error_codes:
   comment: [COMMENT_NOT_FOUND]
   auth: [USER_ALREADY_EXISTS, USER_NOT_FOUND]
   next: [NO_ISSUES_AVAILABLE]
+  worktree: [NOT_A_GIT_REPO, MIGRATION_REQUIRED, INVALID_STATE, PUSH_FAILED, PULL_FAILED]

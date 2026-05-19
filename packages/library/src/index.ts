@@ -3,6 +3,18 @@
 // Error class
 export { AgentrackError } from "./core/errors";
 export { Tracker } from "./core/tracker";
+// Worktree operations
+export {
+  WORKTREE_BRANCH,
+  WORKTREE_DIR,
+  detectInitScenario,
+  initFreshWorktree,
+  initJoinWorktree,
+  initWorktree,
+  isWorktreeInitialized,
+  pullWorktree,
+  pushWorktree,
+} from "./core/worktree";
 // All data types
 export type {
   BlockageAddedEvent,
@@ -60,4 +72,7 @@ export type {
   UsersRegisterResult,
   UsersRevokeResult,
   ViewResult,
+  WorktreeInitResult,
+  WorktreePullResult,
+  WorktreeSyncResult,
 } from "./types/api";

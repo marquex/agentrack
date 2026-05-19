@@ -10,7 +10,7 @@ hierarchy:
       - library-quality (testing, quality gates — documentation removed)
       - library-release (release prep, documentation, build, version management, publishing)
 
-expertise_status: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ directory renamed to .agentrack/. CLI command is `agt` (was `tg`). npm link needs to be re-run from packages/library/ to restore global agt command. All implementation complete. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+expertise_status: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ directory renamed to .agentrack/. CLI command is `agt` (was `tg`). npm link needs to be re-run from packages/library/ to restore global agt command. Active feature: user-friendly documentation overhaul (mpdpt4rego, in-progress) — replace TypeDoc auto-generated docs with hand-written markdown in docs/markdown/. Remove typedoc tooling, write 8 user-facing doc sections. Standing issues: independent git branch (mpcwcufhzk, in-progress), defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
 
 project_overview:
   name: agentrack
@@ -18,7 +18,7 @@ project_overview:
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
   distribution: npm package with CLI entry point (`agt` command)
-  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Active feature: independent git branch (mpcwcufhzk, in-progress) — worktree-based issue storage on orphan branch _agentrack. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
   docs_tool: "TypeDoc dual-format: HTML (docs/html/) + Markdown (docs/md/) at repo root. Spec: .agentic/specs/docs-generation.md. Setup complete (mpctz79p1k done). Scripts: docs:html, docs:md, docs, docs:check. Pending: stale packages/library/docs-html/ cleanup (mpcvqqdhc5)."
@@ -62,11 +62,13 @@ specifications:
       description: "Amends next-command-spec: restrict status filter from [idea, todo, in-progress] to [todo] only. Single-line change in Tracker.next(). REVIEWED — reviews skipped (trivially scoped). Implementation mp9zda04cp in-progress with library-developer."
     - path: cap-upward-promotion-spec.md
       description: "Cap upward auto-promotion at in-progress. Parents never auto-promote to done/closed via computeUpwardPromotions. Spec status: REVIEWED. Reason format: auto-promoted to TARGET: child advanced to CHILD. 7 new test cases required."
-    - path: independent-git.md
-      description: "Proposal for storing issues on a separate orphan branch (`_agentrack`) via git worktree mounted at `.agentrack/`. Branch-independent issue access across code branches. Two init scenarios: A (fresh — create orphan branch) and B (join existing — fetch + mount). `agt init`/`agt push`/`agt pull` handle branch management. Status: proposal (not yet decided)."
+    - path: independent-git-spec.md
+      description: "Store .agentrack/ on orphan branch _agentrack via git worktree. Branch-independent issue access. Two init scenarios (fresh/join). Three commands: agt init (worktree setup), agt push (auto-commit + sync), agt pull (sync from remote). New module src/worktree.ts + 2 new CLI commands. Status: IMPLEMENTED with 3 spec deviations found in validation. Fix phase: mpd4hktoxq (fix deviations) → mpd4hs14zp (validate + tests) → mpd4i06wz6 (document + build). Parent: mpcwcufhzk."
       naming_conventions: "Branch = `_agentrack`, directory = `.agentrack`, tool = `agentrack`, data inside branch = `issues/`"
     - path: docs-generation.md
-      description: "Dual-format documentation generation: TypeDoc HTML (docs/html/ for users/GitHub Pages) + TypeDoc Markdown via typedoc-plugin-markdown (docs/md/ for AI agents). Owned by library-release. Setup complete (mpctz79p1k done). Stale directory cleanup: mpcvqqdhc5."
+      description: "Dual-format documentation generation (SUPERSEDED by user-docs-spec.md — TypeDoc being removed in favor of hand-written markdown docs). Original setup: TypeDoc HTML + Markdown via typedoc-plugin-markdown."
+    - path: user-docs-spec.md
+      description: "User-friendly documentation overhaul. Replace TypeDoc auto-generated docs with hand-written markdown in docs/markdown/. 8 sections: overview, getting started, authentication, issue object, hierarchy & blockages, storing in git, CLI reference, JS reference. Removes typedoc tooling entirely. Parent: mpdpt4rego. Status: DRAFT, awaiting reviews."
 
 access_boundaries:
   rule: "CTO must NOT read or modify files under packages/library/. All code changes go through subordinates."
@@ -268,3 +270,15 @@ session_log:
   - session: 54
     date: "2026-05-19"
     summary: "User reported docs generating to wrong location (packages/library/docs-html/). Diagnosed: configuration is correct (scripts output to ../../docs/html and ../../docs/md), but stale packages/library/docs-html/ was never cleaned up — library-release was blocked by sandbox permissions. Validation report (mpctzodobf) had flagged this as AC9 FAIL. Created cleanup task mpcvqqdhc5 → library-release. Closed parent mpctz79p1k (all children done). Issue mp3pe9lvdq (typedoc-plugin-markdown cleanup) can be closed — plugin is now actively used for docs:md generation."
+  - session: 55
+    date: "2026-05-19"
+    summary: "Planned independent git branch feature (worktree-based issue storage). Evolved old proposal (independent-git.md) into formal spec (.agentic/specs/independent-git-spec.md). Key architecture: orphan branch _agentrack created via git plumbing (hash-object/mktree/commit-tree) to avoid working tree mutation, mounted as worktree at .agentrack/. Three commands: enhanced agt init (worktree setup + data init), new agt push (auto-commit + sync), new agt pull (sync from remote). No changes to Tracker/file-io layer. Created issue chain: parent mpcwcufhzk, reviews mpcwd1suxc (dev) + mpcwd7ued6 (quality), implement mpcwdh89sp (blocked by reviews), validate mpcwdqz3kc (blocked by implementation). Replaced old independent-git.md with formal spec."
+  - session: 56
+    date: "2026-05-19"
+    summary: "Picked up mpcwcufhzk via /agentrack-implement. Created full implementation chain for independent git branch feature. Spec already written and reviewed in session 52/55. Created 4 child issues: dev review (mpcwf2gt23), quality review (mpcwf20ucn), implementation (mpcwg66ygs, blocked by both reviews), quality validation (mpcwg61w9c, blocked by implementation). Updated expertise index. Awaiting agent runner to execute review tasks."
+  - session: 57
+    date: "2026-05-19"
+    summary: "Reviewed validation results for independent git branch feature. All 4 original child issues were done but validation (comment mpcyjanw93 on mpcwdqz3kc) found 3 spec deviations: (1) MEDIUM: missing .gitignore commit in fresh scenario, (2) MEDIUM: missing auto-commit after tracker.init(), (3) LOW: initWorktree returns fresh when already initialized. Worktree.ts had only 4.75% test coverage. Created 3 new child issues under mpcwcufhzk: mpd4hktoxq (library-developer, fix deviations, in-progress), mpd4hs14zp (library-quality, validate + write tests, blocked by fix), mpd4i06wz6 (library-release, document + build, blocked by validation). Updated expertise."
+  - session: 58
+    date: "2026-05-20"
+    summary: "Planned user-friendly documentation overhaul. User requested replacing auto-generated TypeDoc docs with hand-written markdown. Drafted spec (.agentic/specs/user-docs-spec.md): remove typedoc tooling entirely, write 8 markdown files in docs/markdown/ (overview, getting started, authentication, issue object, hierarchy & blockages, storing in git, CLI reference, JS reference). Supersedes DD-016. Created issue chain: parent mpdpt4rego (in-progress), reviews mpdptgq69t (library-developer) + mpdpthrliu (library-quality), implementations mpdpu00ksc (library-developer, typedoc cleanup) + mpdpuhd0r5 (library-release, write docs, both blocked by reviews), validation mpdpv6gw49 (library-quality, blocked by implementations), config mpdpvfn3yb (CTO, blocked by typedoc removal). Docusaurus setup explicitly out of scope."

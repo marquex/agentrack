@@ -6,7 +6,7 @@ hierarchy:
   manager: cto
   subordinates: [none — leaf agent]
 
-expertise_status: "Active — Phases 1-7 in progress. 569 tests, 1997 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). Spec review: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities found, 9+ tests to update, 7+ new tests needed. Documentation responsibilities transferred to library-release agent."
+expertise_status: "Active — Phases 1-7 in progress. 569 tests, 1997 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). Spec reviews completed: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities; independent-git (mpcwd7ued6) — 2 critical testability concerns, 2 high issues, 5 missing ACs, ~50-60 tests estimated. Independent-git implementation: 3 spec deviations found during initial validation (mpcwdqz3kc), fixes assigned as mpd4hktoxq, validation+tests blocked as mpd4hs14zp. Documentation responsibilities transferred to library-release agent."
 
 project_phases:
   phase_1_foundation:
@@ -275,3 +275,53 @@ learnings:
       - "Event reason field format needs specification (user-visible via history command)"
       - "Note: TypeDoc and general docs generation are now owned by library-release. JSDoc content quality remains relevant for code quality."
     key_pattern: "When capping a propagated value, always clarify what propagates FURTHER up the chain — the original or the capped value. This is a common source of bugs in recursive systems."
+  spec_review_independent_git:
+    issue: "mpcwd7ued6 (parent: mpcwcufhzk)"
+    change: "Store .agentrack/ on a dedicated orphan git branch (_agentrack) mounted as a worktree. Three new commands: agt init (worktree setup), agt push (commit+sync), agt pull (sync from remote)."
+    new_module: "src/worktree.ts"
+    modified_modules: ["src/cli/init.ts", "src/runner.ts", "src/errors.ts"]
+    new_cli_commands: ["src/cli/push.ts", "src/cli/pull.ts"]
+    critical_findings:
+      - "execFileSync + async mismatch: spec declares async functions but uses synchronous git calls — no testability seam for mocking"
+      - "No test strategy for git-dependent operations: worktree tests need initialized git repos with remotes, but no test infrastructure guidance provided"
+    high_findings:
+      - "detectInitScenario uses ls-remote (network required) — falls to 'fresh' when offline, potentially creating conflicting orphan branches"
+      - "5 new error codes (NOT_A_GIT_REPO, MIGRATION_REQUIRED, INVALID_STATE, PUSH_FAILED, PULL_FAILED) defined without exit codes — need 13-17 assigned"
+    spec_ambiguities:
+      - "commitCount semantics: only the new commit (0 or 1) or total commits being pushed?"
+      - "gitignore handling when file doesn't exist at all (AC2)"
+    missing_acceptance_criteria:
+      - ".agentrack/ as a file (not directory)"
+      - "Push when remote has diverged (conflict resolution strategy)"
+      - "Pull with local uncommitted changes"
+      - "Init when current branch has uncommitted changes"
+      - "Detached HEAD state"
+    test_estimates:
+      unit_tests: "25-30 tests for worktree.ts (detectInitScenario, isWorktreeInitialized, initFresh, initJoin, push, pull, gitignore)"
+      integration_tests: "15-20 tests for CLI (init fresh/join/already, push changes/no-changes, pull updates/uptodate)"
+      edge_case_tests: "10 tests (concurrent init, remote divergence, pull with changes, detached HEAD, Windows paths, corrupted worktree)"
+    key_patterns:
+      - "Git-dependent features need a mockable adapter interface from the start — real git calls in unit tests are slow and fragile"
+      - "Worktree tests require temp git repos with initial commits and optional remotes — need a createTestGitRepo() helper"
+      - "Specs touching git should always address: offline behavior, concurrent access, and platform path differences"
+  independent_git_deviation_validation:
+    parent_issue: "mpcwcufhzk (Independent git: store .agentrack/ on orphan branch)"
+    initial_validation: "mpcwdqz3kc — found 3 spec deviations during review"
+    fix_issue: "mpd4hktoxq — library-developer assigned to fix deviations"
+    validation_issue: "mpd4hs14zp — validate fixes + write worktree tests (BLOCKED on mpd4hktoxq)"
+    spec_deviations_found:
+      - "Fix 1 (MEDIUM): ensureGitignoreEntry() only writes .gitignore but spec says 'commits the change' — needs stage+commit after write"
+      - "Fix 2 (MEDIUM): initAction() never commits after tracker.init() but spec says 'auto-commits initialized data to _agentrack branch'"
+      - "Fix 3 (LOW): initWorktree() returns scenario 'fresh' when already initialized — should return already_initialized indicator (AC3)"
+    worktree_coverage_gap: "src/core/worktree.ts has only 4.75% line coverage — comprehensive tests needed"
+    planned_test_file: "tests/core/worktree.test.ts"
+    planned_test_scopes:
+      - "detectInitScenario (fresh vs join)"
+      - "initFreshWorktree (orphan branch, worktree mount, gitignore commit, auto-commit)"
+      - "initJoinWorktree (fetch, track, mount)"
+      - "isWorktreeInitialized (true/false/legacy directory)"
+      - "pushWorktree (staged changes, nothing to commit, push failure)"
+      - "pullWorktree (updates received, already up to date, pull failure)"
+      - "Error codes: NOT_A_GIT_REPO, MIGRATION_REQUIRED, INVALID_STATE, PUSH_FAILED, PULL_FAILED"
+    test_strategy: "Use temporary git repos (git init) in test setup/teardown — cannot mock git effectively"
+    key_pattern: "When validating spec implementations, check every step of every AC against actual code behavior — deviations often hide in 'obvious' steps like committing a file change"

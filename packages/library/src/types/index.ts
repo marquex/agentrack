@@ -30,6 +30,9 @@ export type {
   UsersRegisterResult,
   UsersRevokeResult,
   ViewResult,
+  WorktreeInitResult,
+  WorktreePullResult,
+  WorktreeSyncResult,
 } from "./api";
 // Config types
 export type { ConfigFile } from "./config";

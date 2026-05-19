@@ -16,6 +16,8 @@ import { historyAction } from "./commands/history";
 import { initAction } from "./commands/init";
 import { listAction } from "./commands/list";
 import { nextAction } from "./commands/next";
+import { pullAction } from "./commands/pull";
+import { pushAction } from "./commands/push";
 import { updateAction } from "./commands/update";
 import {
   usersListAction,
@@ -73,6 +75,19 @@ export function createProgram(): Command {
     .command("next <userName>")
     .description("Get the recommended next issue to work on for a user")
     .action(nextAction);
+
+  // ─── push ──────────────────────────────────────────────────────────
+  program
+    .command("push")
+    .description("Sync agentrack data to remote")
+    .option("--message <string>", "Override auto-generated commit message")
+    .action(pushAction);
+
+  // ─── pull ──────────────────────────────────────────────────────────
+  program
+    .command("pull")
+    .description("Sync agentrack data from remote")
+    .action(pullAction);
 
   // ─── view ─────────────────────────────────────────────────────────
   program

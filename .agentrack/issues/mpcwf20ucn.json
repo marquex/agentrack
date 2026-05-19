@@ -1,0 +1,59 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-19T17:20:13.987Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:20:13.987Z",
+    "author": "javi",
+    "content": {
+      "title": "Review independent-git-spec.md — quality and testability",
+      "description": "Review .agentic/specs/independent-git-spec.md for testability and quality coverage.\n\nFocus areas:\n1. Test strategy — what needs mocking (git commands, filesystem), what can be tested with real git operations?\n2. Integration test coverage — init fresh vs join vs already-initialized scenarios\n3. Error path coverage — all error codes in AC4, AC5, AC6 need test cases\n4. Edge cases — concurrent init, partial worktree state, stale worktree refs\n5. Coverage expectations — new module (worktree.ts) should target high coverage\n6. Existing tests — verify no regressions in current test suite (AC7: no changes to Tracker/file-io)\n\nParent: mpcwcufhzk",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-quality",
+      "tags": [
+        "review",
+        "spec",
+        "quality"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:23:59.672Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-19T17:25:34.683Z",
+    "author": "javi",
+    "content": {
+      "id": "mpcwlyucqv",
+      "content": "## Spec Review: independent-git-spec.md — Testability & Quality Analysis\n\n### Summary\nThe spec is well-structured and comprehensive. The git worktree approach is sound and the AC structure maps cleanly to test scenarios. However, I've identified **2 critical testability concerns, 2 high-priority issues, 5 missing ACs/gaps, and several testability notes** that should be addressed before implementation begins.\n\n---\n\n### CRITICAL: Testability Concerns\n\n#### C1. `execFileSync` is synchronous — functions declared `async` but aren't truly async\n\nThe spec declares all `worktree.ts` functions as `async` but the implementation notes prescribe `execFileSync` (synchronous). This creates a testing challenge:\n\n- Functions are `async` but internally synchronous → mocking via module injection is harder because the sync call blocks the event loop\n- Recommendation: Either (a) declare them as synchronous (matching codebase pattern for file-io) or (b) use a thin wrapper around `child_process` that can be injected/mocked\n\n**The codebase already uses sync patterns** — `file-io.ts` uses `existsSync`, `mkdirSync`. The spec even notes \"matching the codebase's sync patterns for file-io.\" If the functions are sync, drop the `async` keyword for consistency.\n\n**Impact on testing:** If functions stay `async`, tests need async mocking. If they become sync (preferred), tests can mock `execFileSync` directly via `bun:test`'s `mock.module()`.\n\n#### C2. No dependency injection strategy for git commands\n\nAll git operations use bare `execFileSync('git', ...)`. For testing we need to either:\n\n1. **Mock `child_process.execFileSync`** via `bun:test`'s `mock.module()` — this is the recommended approach for unit tests\n2. **Create a thin git-shell wrapper** (`executeGit(args, cwd)`) that can be mocked — cleaner but more code\n3. **Use real git in integration tests** — create temp git repos with `git init`, test against real git — this is essential for integration coverage\n\nThe spec should explicitly state the testing strategy. Without it, the implementer may write untestable code.\n\n---\n\n### HIGH: Spec Gaps\n\n#### H1. Missing AC: `detectInitScenario` doesn't handle the \"already initialized\" case\n\nThe spec lists `detectInitScenario` returning `'fresh' | 'join'` but the AC3 (already initialized) case is handled by a separate `isWorktreeInitialized` check. The question is: **which function is called first in `agt init`?** The flow should be explicitly:\n\n```\nisWorktreeInitialized() → true → return ALREADY_INITIALIZED\n                       → false → check .agentrack/ exists as regular dir → MIGRATION_REQUIRED\n                                → check current branch === _agentrack → INVALID_STATE\n                                → detectInitScenario() → 'fresh' | 'join'\n```\n\nThis validation order matters for test design — each path needs its own test case.\n\n#### H2. Missing error code for `.agentrack/` exists as regular directory\n\nAC4 mentions `MIGRATION_REQUIRED` but this error code is **not listed** in the `errors.ts` modifications table. It should be added with an exit code. Same for `NOT_A_GIT_REPO` and `INVALID_STATE` — they're in the AC4 table but need explicit exit codes in `ErrorCodes`.\n\n---\n\n### MEDIUM: Missing Coverage Areas\n\n#### M1. No AC for `agt push` when there's no remote\n\nAC5 says push fails with `PUSH_FAILED` when no remote, but AC1 (fresh init) says \"Warn but proceed\" when no remote. What happens when you `agt push` after a local-only init? This is a distinct scenario that needs explicit test expectations.\n\n#### M2. `agt pull` when no remote — same concern as M1\n\nAC6 lists `PULL_FAILED` for \"no remote\" but doesn't distinguish between \"never had remote\" vs \"remote became unreachable.\" The test cases need to cover both.\n\n#### M3. Concurrent worktree operations not addressed\n\nThe spec mentions \"concurrent init\" as an edge case to review but provides no guidance. Two agents running `agt init` simultaneously could:\n- Both detect \"fresh\" scenario → both try to create orphan branch → second push fails\n- Both detect \"join\" → both try `git worktree add` → second one fails\n\nShould there be a lock file? Or should the second one just error? This affects test design.\n\n#### M4. `execFileSync` buffer limits and large output\n\n`execFileSync` has a `maxBuffer` option (default 1MB). `git worktree list --porcelain` could theoretically exceed this in repos with many worktrees. Not critical but worth noting for robustness.\n\n#### M5. `isWorktreeInitialized` check is fragile\n\nThe spec uses string matching on `git worktree list --porcelain` output:\n```typescript\nreturn worktreeList.includes(`worktree ${cwd}/.agentrack`);\n```\nThis assumes `cwd` has no trailing slash and matches git's path formatting exactly. On macOS, path canonicalization could differ. Should use `path.resolve()` and handle both trailing-slash and no-trailing-slash cases.\n\n---\n\n### LOW: Minor Testability Notes\n\n#### L1. `gitignoreHasEntry` doesn't handle comments\n\nThe function checks for literal matches but doesn't account for `.gitignore` lines like `# /.agentrack/` (commented out). This is an edge case but could cause false positives.\n\n#### L2. Auto-commit message format\n\n`sync: <ISO-8601-timestamp>` — the spec should specify whether this is UTC or local time, and the exact format (e.g., `sync: 2026-05-19T17:20:13.987Z`).\n\n#### L3. `initFreshWorktree` modifies `.gitignore` on current branch\n\nThis is a side effect that commits to the user's branch. The spec should clarify: what if `.gitignore` has uncommitted changes? Should it abort, stash, or commit alongside the existing changes?\n\n---\n\n### Test Strategy Recommendation\n\nBased on the spec, I recommend a **two-tier test approach**:\n\n**Tier 1: Unit tests (worktree.ts) — mock `child_process`**\n- Test each function with mocked git command output\n- Test all error paths (NOT_A_GIT_REPO, MIGRATION_REQUIRED, etc.)\n- Test `detectInitScenario` with mocked `ls-remote` output\n- Test `isWorktreeInitialized` with mocked `worktree list` output\n- Test `gitignoreHasEntry` with various `.gitignore` content\n- Estimated: ~40-50 tests\n\n**Tier 2: Integration tests (real git)**\n- Create temp directory, `git init`, test `initFreshWorktree` end-to-end\n- Create temp directory with remote (bare repo), test init + push + pull cycle\n- Test \"join\" scenario: init on machine A, join on machine B (simulated with two worktrees)\n- Test AC3: already-initialized detection\n- Test AC4 error paths with real git state\n- Test AC7: existing commands still work after worktree init\n- Estimated: ~15-20 tests\n\n**Total estimated: ~55-70 tests for the worktree module**\n\n### Coverage Expectations\n\n- `worktree.ts`: Target **≥95% line coverage**\n- `cli/push.ts`, `cli/pull.ts`: Target **≥90% line coverage** (mostly delegation)\n- `cli/init.ts` modifications: All new branches covered\n- `errors.ts`: New error codes covered by worktree tests\n- Existing tests: **Zero regressions** — AC7 mandates no changes to Tracker/file-io\n\n### AC7 Verification Strategy\n\nThe spec says \"no changes to Tracker or file-io.\" I will verify this by:\n1. Running the full existing test suite after implementation\n2. Confirming no test modifications were needed\n3. Running `tracker.init()` inside a worktree-mounted `.agentrack/` and confirming identical behavior"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-19T17:25:56.690Z",
+    "author": "javi",
+    "content": {
+      "id": "mpcwmf9bsl",
+      "content": "Done. Spec review complete. Key findings:\n\n**2 Critical testability concerns:**\n- C1: Functions declared `async` but use `execFileSync` (sync) — should be consistent with codebase's sync pattern\n- C2: No dependency injection strategy for git commands — need explicit mocking approach\n\n**2 High-priority gaps:**\n- H1: Missing explicit validation order flow for `agt init` (which check runs first?)\n- H2: Error codes `NOT_A_GIT_REPO`, `MIGRATION_REQUIRED`, `INVALID_STATE` need explicit exit codes in `ErrorCodes`\n\n**5 Medium gaps:** missing no-remote push/pull behavior, concurrent init safety, path canonicalization fragility, and more (see full review comment).\n\n**Test estimate:** ~55-70 tests (40-50 unit tests mocking child_process, 15-20 integration tests with real git). Target ≥95% coverage on `worktree.ts`.\n\n**Quality gate:** 573 tests pass, 0 failures, 2009 assertions. No regressions."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:26:02.028Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

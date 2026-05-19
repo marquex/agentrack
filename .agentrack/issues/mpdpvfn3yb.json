@@ -1,0 +1,32 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T07:04:45.489Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T07:04:45.489Z",
+    "author": "javi",
+    "content": {
+      "title": "Update release workflow and gitignore for docs overhaul",
+      "description": "Spec: .agentic/specs/user-docs-spec.md\n\nAfter library-developer removes TypeDoc and library-release writes new docs, update the project configuration:\n\n1. Edit .github/workflows/release.yml: remove the TypeDoc generation step and GitHub Pages deployment step. These relied on TypeDoc which is now removed. Docusaurus deployment will be a separate future task.\n2. Edit .gitignore: remove the docs-html/ entry (no longer relevant since we removed TypeDoc HTML output).\n\nThis is a CTO-owned task because these files are in CTO's access domain.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "cto",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "configuration",
+        "ci"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T07:04:55.220Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpdpu00ksc"
+    }
+  }
+]

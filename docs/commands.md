@@ -289,6 +289,62 @@ agt comments list 123456a2es
 # ]
 ``` 
 
+
+### `agt push [flags]`
+
+Stage all changes in the `.agentrack/` worktree, auto-commit, and push to the remote `_agentrack` branch.
+
+**Flags:**
+* `--message [string]`: override the auto-generated commit message (default: `sync: <ISO-8601-timestamp>`)
+
+**Returns (changes synced):**
+```json
+{ "result": "OK", "synced": true, "commitCount": 1 }
+```
+
+**Returns (nothing to sync):**
+```json
+{ "result": "OK", "synced": false, "message": "No changes to sync" }
+```
+
+**Example:**
+```bash
+agt push
+# returns {"result": "OK", "synced": true, "commitCount": 1}
+
+agt push --message "reviewed all open issues"
+# returns {"result": "OK", "synced": true, "commitCount": 1}
+```
+
+**Notes:**
+* Requires `agt init` to have been run first (worktree must exist).
+* If there are no staged changes and nothing to push, returns `synced: false`.
+* No authentication required — this operates on git directly.
+
+### `agt pull`
+
+Pull the latest changes from the remote `_agentrack` branch into the local worktree.
+
+**Returns (updates received):**
+```json
+{ "result": "OK", "updated": true }
+```
+
+**Returns (already up to date):**
+```json
+{ "result": "OK", "updated": false }
+```
+
+**Example:**
+```bash
+agt pull
+# returns {"result": "OK", "updated": true}
+```
+
+**Notes:**
+* Requires `agt init` to have been run first (worktree must exist).
+* No authentication required — this operates on git directly.
+
 ## Errors
 
 When an error occurs, the command will print an object with the following properties to stderr and exit with a non-zero exit code.
@@ -306,6 +362,11 @@ The message is optional and humar readable, while the error code is a fixed stri
 ### Global errors
 
 * `NOT_INITIALIZED`: The index file is missing, the user needs to initialize it by running `agt init`
+* `NOT_A_GIT_REPO`: The current directory is not inside a git repository (returned by `agt init`)
+* `MIGRATION_REQUIRED`: `.agentrack/` exists but is not a git worktree — remove it manually and re-run `agt init`
+* `INVALID_STATE`: Invalid state for the requested operation (e.g., currently on the `_agentrack` branch)
+* `PUSH_FAILED`: `agt push` failed — the error message includes the git output
+* `PULL_FAILED`: `agt pull` failed — the error message includes the git output
 * `TOKEN_REQUIRED`: A command was called without a token and the auth mode requires one.
 * `INVALID_TOKEN`: The provided token does not match any registered user.
 * `DEFAULT_USER_MISSING`: The authentication system is open for writing but there is no default user defined in config.json to attribute unauthenticated changes.
