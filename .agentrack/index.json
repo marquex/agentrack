@@ -168,6 +168,46 @@
       "parentId": null,
       "tags": [],
       "priority": 2
+    },
+    {
+      "id": "mpctz79p1k",
+      "title": "Set up dual-format documentation generation",
+      "path": "issues/mpctz79p1k.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "documentation",
+        "release"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpctzf23nq",
+      "title": "Configure dual-format TypeDoc generation",
+      "path": "issues/mpctzf23nq.json",
+      "status": "todo",
+      "assignee": "library-release",
+      "parentId": "mpctz79p1k",
+      "tags": [
+        "documentation",
+        "typedoc",
+        "config"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpctzodobf",
+      "title": "Validate dual-format documentation generation",
+      "path": "issues/mpctzodobf.json",
+      "status": "todo",
+      "assignee": "library-quality",
+      "parentId": "mpctz79p1k",
+      "tags": [
+        "documentation",
+        "validation"
+      ],
+      "priority": 2
     }
   ],
   "closed": [
@@ -180,6 +220,32 @@
       "parentId": null,
       "tags": [],
       "priority": 2
+    },
+    {
+      "id": "mpcucu0g96",
+      "title": "Add caching layer to agt CLI for repeated list and view operations",
+      "path": "issues/mpcucu0g96.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "performance",
+        "improvement"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mpcuf0vfi9",
+      "title": "Add stats command to agt showing issue counts, workload, and age",
+      "path": "issues/mpcuf0vfi9.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "feature",
+        "ux"
+      ],
+      "priority": 3
     }
   ],
   "childrenOf": {
@@ -197,6 +263,10 @@
     "mpa5yz3kei": [
       "mpa60i4skg",
       "mpa60qg5ai"
+    ],
+    "mpctz79p1k": [
+      "mpctzf23nq",
+      "mpctzodobf"
     ]
   }
 }

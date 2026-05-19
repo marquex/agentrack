@@ -1,0 +1,32 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-19T16:12:16.135Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T16:12:16.135Z",
+    "author": "javi",
+    "content": {
+      "title": "Validate dual-format documentation generation",
+      "description": "Spec: .agentic/specs/docs-generation.md\n\nValidate the documentation generation setup after library-release completes configuration (issue mpctzf23nq).\n\nCheck:\n1. 'bun run docs:html' generates complete HTML API docs to docs/html/ at repo root\n2. 'bun run docs:md' generates complete Markdown API docs to docs/md/ at repo root\n3. 'bun run docs' generates both formats\n4. 'bun run docs:check' validates without writing files\n5. Both formats include all public API (Tracker methods, types, errors)\n6. Markdown output is concise — no breadcrumbs, no page headers, flat structure\n7. 'bun run quality' still passes (typecheck, lint, test:coverage)\n8. Old docs-html/ inside packages/library/ is removed\n9. Content parity between HTML and Markdown (same API coverage)\n\nReport any issues found. Do not fix — only report.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-quality",
+      "parentId": "mpctz79p1k",
+      "tags": [
+        "documentation",
+        "validation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-19T16:12:22.391Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpctzf23nq"
+    }
+  }
+]

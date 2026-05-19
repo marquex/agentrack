@@ -21,7 +21,7 @@ project_overview:
   stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
-  docs_tool: TypeDoc HTML output (configured, generates to docs-html/)
+  docs_tool: "TypeDoc dual-format: HTML (docs/html/) + Markdown (docs/md/) at repo root. Spec: .agentic/specs/docs-generation.md. Setup in progress (mpctz79p1k)."
 
 detail_files:
   - path: architecture.yaml
@@ -62,6 +62,11 @@ specifications:
       description: "Amends next-command-spec: restrict status filter from [idea, todo, in-progress] to [todo] only. Single-line change in Tracker.next(). REVIEWED — reviews skipped (trivially scoped). Implementation mp9zda04cp in-progress with library-developer."
     - path: cap-upward-promotion-spec.md
       description: "Cap upward auto-promotion at in-progress. Parents never auto-promote to done/closed via computeUpwardPromotions. Spec status: REVIEWED. Reason format: auto-promoted to TARGET: child advanced to CHILD. 7 new test cases required."
+    - path: independent-git.md
+      description: "Proposal for storing issues on a separate orphan branch (`_agentrack`) via git worktree mounted at `.agentrack/`. Branch-independent issue access across code branches. Two init scenarios: A (fresh — create orphan branch) and B (join existing — fetch + mount). `agt init`/`agt push`/`agt pull` handle branch management. Status: proposal (not yet decided)."
+      naming_conventions: "Branch = `_agentrack`, directory = `.agentrack`, tool = `agentrack`, data inside branch = `issues/`"
+    - path: docs-generation.md
+      description: "Dual-format documentation generation: TypeDoc HTML (docs/html/ for users/GitHub Pages) + TypeDoc Markdown via typedoc-plugin-markdown (docs/md/ for AI agents). Owned by library-release. Parent issue: mpctz79p1k."
 
 access_boundaries:
   rule: "CTO must NOT read or modify files under packages/library/. All code changes go through subordinates."
@@ -91,7 +96,7 @@ delegation_workflow:
   library-quality:
     focus: "Always pass the same spec file used for implementation so quality can validate alignment with specs, not just code quality. Include the spec path, what changed, and what behaviors to validate. Handles testing and quality gates only (documentation moved to library-release)."
   library-release:
-    focus: "Delegate release tasks: verify quality gates pass, generate documentation, build artifacts, bump version, publish to npm. Provide version bump guidance (patch/minor/major) based on changes since last release. The agent owns the full release lifecycle end-to-end."
+    focus: "Delegate release tasks: verify quality gates pass, generate documentation (HTML + Markdown), build artifacts, bump version, publish to npm. Provide version bump guidance (patch/minor/major) based on changes since last release. The agent owns the full release lifecycle end-to-end. Docs output: docs/html/ (users) + docs/md/ (agents) at repo root. Agent has docs/** access for writing generated documentation."
 
 docs_absorbed:
   - docs/introduction.md — project vision, file structure, issue properties, CLI overview, config
@@ -254,3 +259,9 @@ session_log:
   - session: 51
     date: "2026-05-18"
     summary: "User reported `agt` not available on command line after rename from trackgentic to agentrack. Diagnosed: package.json correctly has bin.agt → dist/bin.js and dist exists, but global npm link was stale/broken after rename. Fix: re-run `npm link` from packages/library/. Updated expertise: expertise_status and project_overview updated with rename context, status.yaml dogfooding notes updated with rename_note and symlink warning."
+  - session: 52
+    date: "2026-05-19"
+    summary: "Reviewed and evolved independent-git.md spec. Three rounds of corrections: (1) Naming conventions: branch = `_agentrack`, directory = `.agentrack`, tool = `agentrack`, data inside branch = `issues/`. (2) Directory structure: replaced fake layout with real `.agentrack/` contents (config.json, index.json, dependencies.json, users.json, issues/*.json). (3) Added two init scenarios: Scenario A (fresh setup — no remote branch, create orphan) and Scenario B (join existing — remote branch exists, fetch + track + mount). Decision logic: `git ls-remote --heads origin _agentrack`."
+  - session: 53
+    date: "2026-05-19"
+    summary: "Planned documentation generation feature. Created spec (.agentic/specs/docs-generation.md) for dual-format docs: HTML (docs/html/) for users + Markdown (docs/md/) for agents. CTO pre-requisites completed: (1) .gitignore updated (docs/ replaces docs-html/), (2) library-release access expanded to docs/**, (3) release workflow updated to deploy from docs/html/. Created issue chain: parent mpctz79p1k → implement mpctzf23nq (library-release) → validate mpctzodobf (library-quality, blocked by implementation). Restored agt symlink via bun link. Skipped review phase — well-defined config task with clear spec."

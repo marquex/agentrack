@@ -7,7 +7,7 @@ build/
 out/
 
 # Generated docs
-docs-html/
+docs/
 
 # Bun
 *.bun

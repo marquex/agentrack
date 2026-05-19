@@ -47,6 +47,6 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/library/docs-html
+          path: docs/html
 
       - uses: actions/deploy-pages@v4

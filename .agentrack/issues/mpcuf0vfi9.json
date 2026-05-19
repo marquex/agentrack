@@ -1,0 +1,29 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-19T16:24:12.119Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T16:24:12.119Z",
+    "author": "javi",
+    "content": {
+      "title": "Add stats command to agt showing issue counts, workload, and age",
+      "description": "Add a stats command to agt that provides a dashboard-style overview of the issue tracker:\n\n1. Issue counts by status - breakdown of how many issues are in each status (idea, todo, in-progress, review, done)\n2. Assignee workload distribution - how many issues each assignee has, grouped by status, so managers can see who is overloaded or available\n3. Average issue age - mean time from creation to current state per status bucket, giving a sense of throughput and bottlenecks\n\nContext: The current agt list output is flat and requires manual scanning to understand project health. A stats summary would give managers and agents a quick pulse check without parsing full issue lists.\n\nSuggested approach: New CLI subcommand agt stats that aggregates from the existing JSON issue files. Could output as a formatted table. Consider adding --json flag for programmatic consumption.",
+      "assignee": "cto",
+      "tags": [
+        "feature",
+        "ux"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T16:24:32.259Z",
+    "author": "javi",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

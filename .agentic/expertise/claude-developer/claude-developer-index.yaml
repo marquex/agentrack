@@ -23,14 +23,14 @@ architecture:
         description: Chief Technology Officer — designs architecture, generates specs, tracks development alignment
         access: [.agentic/expertise/cto/**, ./**]
         subordinates: [library-developer, library-quality, library-release]
-        skills: [agent-expertise, agentrack, agentrack-implement, issue]
+        skills: [agent-expertise, agentrack, agentrack-implement, idea, issue]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
       - name: library-developer
         model: opus
         description: TypeScript library developer — owns all technical details of the npm-published library
         access: [.agentic/expertise/library-developer/**, packages/library/**, .agentic/specs/**]
         subordinates: none
-        skills: [agent-expertise, agentrack, agentrack-implement]
+        skills: [agent-expertise, agentrack, agentrack-implement, idea]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
         manager: cto
       - name: library-quality
@@ -38,7 +38,7 @@ architecture:
         description: Library quality engineer — generates tests, verifies code quality (documentation responsibility moved to library-release)
         access: [.agentic/expertise/library-quality/**, packages/library/**, .agentic/specs/**]
         subordinates: none
-        skills: [agent-expertise, agentrack, agentrack-implement]
+        skills: [agent-expertise, agentrack, agentrack-implement, idea]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
         manager: cto
       - name: library-release
@@ -46,7 +46,7 @@ architecture:
         description: Library release engineer — prepares builds and publishes new releases (tests, docs, build, version bump, publish)
         access: [.agentic/expertise/library-release/**, packages/library/**]
         subordinates: none
-        skills: [agent-expertise, agentrack, agentrack-implement]
+        skills: [agent-expertise, agentrack, agentrack-implement, idea]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
         manager: cto
     notes: |
@@ -102,6 +102,16 @@ architecture:
           Used by CTO to plan new features. Creates everything upfront: spec, review tasks, implementation tasks,
           quality validation tasks, with proper blockages so the flow runs automatically through the agent runner.
           Creates all tasks in one invocation — no re-engagement needed between phases.
+      - name: idea
+        purpose: Lightweight skill to register ideas (improvements, feature ideas, tech debt, quality gaps) as agentrack issues in 'idea' status for future triage
+        has_scripts: false
+        notes: |
+          Available to ALL agents (not just managers). Workers discover improvements while implementing — this skill
+          lets them capture those observations without stopping their current work.
+          Creates issues in 'idea' status (the agt create default), assigned to the agent's manager for triage.
+          Categorizes via tags: improvement, feature, tech-debt, quality, docs, performance, ux.
+          Overlap check against existing open issues prevents duplicates.
+          The counterpart to /issue: /idea captures opportunities, /issue plans and delegates concrete work.
 
   hooks:
     path: .claude/hooks/
@@ -189,11 +199,13 @@ patterns:
   - Agents that create files (tests, docs) need Write/Edit in their tools list — most expert agents are read-only but quality/doc agents are exceptions
   - Release engineer agents (build, test, publish) always need Bash tool for running CLI commands (npm test, npm run build, npm publish, etc.) and Write/Edit for version bumps and generated artifacts. They also need write access to the package directory since builds generate dist files and version bumps modify package.json.
   - Reference-only skills (no scripts): SKILL.md frontmatter just needs `name` and `description`, no `allowed-tools` or `argument-hint` needed. The body is purely instructional — teaches the agent how to use an external CLI tool, API, or convention. The agentrack skill is the first example of this pattern.
-  - PreToolUse updatedInput is powerful for transparent command modification: the hook can modify tool_input (e.g. inject env vars into Bash commands) without the agent needing to know. Combined with permissionDecision: "allow", the tool call proceeds with the modified input seamlessly. This is better than requiring agents to manually include the right values.
+  - "PreToolUse updatedInput is powerful for transparent command modification: the hook can modify tool_input (e.g. inject env vars into Bash commands) without the agent needing to know. Combined with permissionDecision: 'allow', the tool call proceeds with the modified input seamlessly. This is better than requiring agents to manually include the right values."
   - Token injection pattern: the hook reads .agentrack/users.json (not env var) to find the agent's token by name, strips any manual token from the command, and injects the correct one via updatedInput. The agent system files have $AGENTACK_TOKEN as an informational-only constant. The SKILL.md tells agents "just call agt directly" and explains the hook handles auth transparently.
   - Agent runner lifecycle observed end-to-end: runner polls `agt next <agent>` → dispatches to free agents → agents process (read spec, analyze code, post comments, update expertise) → agents close issues → blockers auto-resolve → parent auto-promotes to done. The entire flow from poll to all-done worked correctly with no manual intervention.
   - Upfront task creation pattern: the /issue skill should create ALL tasks (reviews + implementation + quality) in one invocation with proper blockages, so the runner can process them in sequence without requiring CTO re-engagement between phases. This avoids the "multi-phase re-engagement" failure mode where the CTO never gets re-dispatched.
   - Skill consolidation: replaced worktask + agentrack-manager + agentrack-subordinate (3 skills with broken references) with a single agentrack-implement skill (all agents) + issue skill (CTO only). Fewer skills = fewer broken references.
+  - Idea/Issue split pattern: /idea is for any agent to capture lightweight opportunities (no spec, no subtasks, status=idea, assigned to manager). /issue is for CTO to plan and delegate concrete work (spec, reviews, implementation, blockages). Ideas graduate to issues when the CTO decides to action them — promoting from idea status to todo and using the /issue flow to plan.
+  - Skills available to all agents (not just managers) need to be added to every agent's skill list individually — there's no "global skill" mechanism. When creating a universal skill like /idea, remember to update all agent definitions.
   - When monitoring running agents: check session log line counts for growth, parse tail lines for agent activity (tool calls = working, text output = thinking/reporting, result event = finished). Agent sessions typically take 3-5 min for review tasks, 20-26 turns.
 
 gotchas:

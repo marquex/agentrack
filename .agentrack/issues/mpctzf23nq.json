@@ -1,0 +1,25 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-19T16:12:05.166Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T16:12:05.166Z",
+    "author": "javi",
+    "content": {
+      "title": "Configure dual-format TypeDoc generation",
+      "description": "Spec: .agentic/specs/docs-generation.md\n\nCTO has already updated: .gitignore, library-release access rules, and release workflow paths.\n\nYour task:\n1. Update typedoc.json — remove the 'out' field (output path will be specified per invocation)\n2. Update package.json scripts:\n   - docs:html — TypeDoc HTML output to ../../docs/html\n   - docs:md — TypeDoc Markdown output to ../../docs/md (use typedoc-plugin-markdown with conciseness flags: hideBreadcrumbs, hidePageHeader, etc.)\n   - docs — runs both docs:html and docs:md\n   - docs:check — validates without generating (keep as-is with --emit none)\n3. Verify: run 'bun run docs' and confirm both docs/html/ and docs/md/ are generated at repo root\n4. Verify: run 'bun run quality' — all gates must still pass\n5. Clean up the old packages/library/docs-html/ directory (no longer needed)\n\nRead the spec at .agentic/specs/docs-generation.md for full requirements and acceptance criteria.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-release",
+      "parentId": "mpctz79p1k",
+      "tags": [
+        "documentation",
+        "typedoc",
+        "config"
+      ]
+    }
+  }
+]
