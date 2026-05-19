@@ -27,5 +27,13 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T17:01:41.206Z",
+    "author": "javi",
+    "content": {
+      "status": "done"
+    }
   }
 ]

@@ -21,7 +21,7 @@ project_overview:
   stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
-  docs_tool: "TypeDoc dual-format: HTML (docs/html/) + Markdown (docs/md/) at repo root. Spec: .agentic/specs/docs-generation.md. Setup in progress (mpctz79p1k)."
+  docs_tool: "TypeDoc dual-format: HTML (docs/html/) + Markdown (docs/md/) at repo root. Spec: .agentic/specs/docs-generation.md. Setup complete (mpctz79p1k done). Scripts: docs:html, docs:md, docs, docs:check. Pending: stale packages/library/docs-html/ cleanup (mpcvqqdhc5)."
 
 detail_files:
   - path: architecture.yaml
@@ -66,7 +66,7 @@ specifications:
       description: "Proposal for storing issues on a separate orphan branch (`_agentrack`) via git worktree mounted at `.agentrack/`. Branch-independent issue access across code branches. Two init scenarios: A (fresh — create orphan branch) and B (join existing — fetch + mount). `agt init`/`agt push`/`agt pull` handle branch management. Status: proposal (not yet decided)."
       naming_conventions: "Branch = `_agentrack`, directory = `.agentrack`, tool = `agentrack`, data inside branch = `issues/`"
     - path: docs-generation.md
-      description: "Dual-format documentation generation: TypeDoc HTML (docs/html/ for users/GitHub Pages) + TypeDoc Markdown via typedoc-plugin-markdown (docs/md/ for AI agents). Owned by library-release. Parent issue: mpctz79p1k."
+      description: "Dual-format documentation generation: TypeDoc HTML (docs/html/ for users/GitHub Pages) + TypeDoc Markdown via typedoc-plugin-markdown (docs/md/ for AI agents). Owned by library-release. Setup complete (mpctz79p1k done). Stale directory cleanup: mpcvqqdhc5."
 
 access_boundaries:
   rule: "CTO must NOT read or modify files under packages/library/. All code changes go through subordinates."
@@ -265,3 +265,6 @@ session_log:
   - session: 53
     date: "2026-05-19"
     summary: "Planned documentation generation feature. Created spec (.agentic/specs/docs-generation.md) for dual-format docs: HTML (docs/html/) for users + Markdown (docs/md/) for agents. CTO pre-requisites completed: (1) .gitignore updated (docs/ replaces docs-html/), (2) library-release access expanded to docs/**, (3) release workflow updated to deploy from docs/html/. Created issue chain: parent mpctz79p1k → implement mpctzf23nq (library-release) → validate mpctzodobf (library-quality, blocked by implementation). Restored agt symlink via bun link. Skipped review phase — well-defined config task with clear spec."
+  - session: 54
+    date: "2026-05-19"
+    summary: "User reported docs generating to wrong location (packages/library/docs-html/). Diagnosed: configuration is correct (scripts output to ../../docs/html and ../../docs/md), but stale packages/library/docs-html/ was never cleaned up — library-release was blocked by sandbox permissions. Validation report (mpctzodobf) had flagged this as AC9 FAIL. Created cleanup task mpcvqqdhc5 → library-release. Closed parent mpctz79p1k (all children done). Issue mp3pe9lvdq (typedoc-plugin-markdown cleanup) can be closed — plugin is now actively used for docs:md generation."

@@ -12,7 +12,7 @@ current_state:
     issue_tracker: "All pending work now tracked as agentrack issues. See `agt list` for current backlog."
     open_issues:
       mp3pe95w9e: "P1 — Add defensive index validation on read (addresses RSK-002)"
-      mp3pe9lvdq: "P2 — Remove unused typedoc-plugin-markdown from devDependencies"
+      mp3pe9lvdq: "P2 — typedoc-plugin-markdown cleanup (CAN CLOSE — plugin is now actively used for docs:md generation)"
       mp3peanz8b: "P2 — Cut first v0.1.0 release (milestone, assigned: javi)"
       mp3peac1qo: "P2 — Configure NPM_TOKEN GitHub secret (child of mp3peanz8b, assigned: javi)"
       mp3peawcgs: "P2 — Configure GitHub Pages source (child of mp3peanz8b, assigned: javi)"
@@ -174,7 +174,7 @@ current_state:
       - Impact score counts active blocks entries — used in list sort (priority ASC → impact DESC → id ASC)
       - BLOCKAGE_CYCLE error (exit code 11) prevents operation entirely, no partial state changes
     spec: .agentic/specs/07-phase6-blockages-spec.md
-  last_updated: "2026-05-17"
+  last_updated: "2026-05-19"
   org_change:
     description: "library-release agent onboarded. Documentation responsibility transferred from library-quality to library-release."
     issue: mpa5yz3kei
@@ -209,18 +209,17 @@ current_state:
       description: "CTO and subordinates receive issues via /agentrack-implement skill. Status-based workflow enforced."
       tested: "CTO processed mp9xefucmo — spec update, review coordination, delegation to subordinates."
     current_work:
+      docs_cleanup:
+        issue: mpcvqqdhc5
+        status: todo
+        assignee: library-release
+        description: "Clean up stale packages/library/docs-html/ directory (leftover from pre-migration). Verify docs/html/ and docs/md/ at repo root."
       cap_upward_promotion:
         issue: mp9xefucmo
-        status: in-progress
+        status: done
         spec: .agentic/specs/cap-upward-promotion-spec.md
-        spec_status: REVIEWED
         description: "Cap upward auto-promotion at in-progress — parents never auto-promote to done/closed"
-        children:
-          mp9xemq9mv: "Dev review — done"
-          mp9xemy1j3: "Quality review — done"
-          mp9xevrbwj: "Implementation — todo, unblocked"
-          mp9xev4b6c: "Validation — todo, blocked by implementation"
-    docs_status: "TypeDoc HTML output configured. typedoc-plugin-markdown removed from config (still in devDeps). docs script added. bun run docs generates docs-html/ with full API docs (classes, interfaces, types, search)."
+    docs_status: "Dual-format docs configured and working. Scripts: docs:html (→docs/html/), docs:md (→docs/md/), docs, docs:check. Both formats generate at repo root. typedoc-plugin-markdown actively used for markdown output. Setup issue mpctz79p1k done. Stale packages/library/docs-html/ cleanup: mpcvqqdhc5."
     publish_pipeline:
       typedoc_html: complete
       ci_workflow: complete — .github/workflows/ci.yml (quality + build on push/PR to main)
@@ -231,7 +230,8 @@ current_state:
       - "NPM_TOKEN secret: issue mp3peac1qo"
       - "GitHub Pages source: issue mp3peawcgs"
       - "First release v0.1.0: issue mp3peanz8b"
-      - "typedoc-plugin-markdown cleanup: issue mp3pe9lvdq"
+      - "Stale docs-html cleanup: issue mpcvqqdhc5"
+      - "typedoc-plugin-markdown cleanup (mp3pe9lvdq) — CAN CLOSE, plugin now actively used"
 
 implementation_roadmap:
   source: .agentic/specs/05-implementation-phases.md

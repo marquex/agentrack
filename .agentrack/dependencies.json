@@ -64,7 +64,7 @@
       {
         "blockerId": "mpctzf23nq",
         "blockedId": "mpctzodobf",
-        "status": "active"
+        "status": "resolved"
       }
     ]
   },
@@ -143,7 +143,7 @@
       {
         "blockerId": "mpctzf23nq",
         "blockedId": "mpctzodobf",
-        "status": "active"
+        "status": "resolved"
       }
     ]
   }

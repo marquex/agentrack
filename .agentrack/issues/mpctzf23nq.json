@@ -21,5 +21,31 @@
         "config"
       ]
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T16:46:59.025Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-19T16:48:54.566Z",
+    "author": "javi",
+    "content": {
+      "id": "mpcvasawgg",
+      "content": "Done. Dual-format TypeDoc generation configured:\n\n1. **typedoc.json** — Removed 'out' field (output path now specified per invocation)\n2. **package.json scripts** — Added:\n   - docs:html → TypeDoc HTML output to ../../docs/html\n   - docs:md → TypeDoc Markdown output to ../../docs/md (with typedoc-plugin-markdown, --hideBreadcrumbs --hidePageHeader)\n   - docs → runs both docs:html and docs:md sequentially\n   - docs:check → kept as-is with --emit none\n\n3. **Verified**: 'bun run docs' generates both docs/html/ and docs/md/ at repo root with correct content\n4. **Quality gates**: All 573 tests pass, typecheck and lint clean, 0 failures\n5. **Cleanup needed**: The old packages/library/docs-html/ directory still needs to be deleted — sandbox permissions blocked rm. CTO to run: rm -rf packages/library/docs-html"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-19T16:48:59.924Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
   }
 ]

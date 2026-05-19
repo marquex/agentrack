@@ -137,8 +137,8 @@
       "id": "mpa60i4skg",
       "title": "Initialize library-release expertise",
       "path": "issues/mpa60i4skg.json",
-      "status": "todo",
-      "assignee": "library-release",
+      "status": "in-progress",
+      "assignee": "cto",
       "parentId": "mpa5yz3kei",
       "tags": [
         "onboarding",
@@ -173,7 +173,7 @@
       "id": "mpctz79p1k",
       "title": "Set up dual-format documentation generation",
       "path": "issues/mpctz79p1k.json",
-      "status": "in-progress",
+      "status": "done",
       "assignee": "cto",
       "parentId": null,
       "tags": [
@@ -186,8 +186,8 @@
       "id": "mpctzf23nq",
       "title": "Configure dual-format TypeDoc generation",
       "path": "issues/mpctzf23nq.json",
-      "status": "todo",
-      "assignee": "library-release",
+      "status": "done",
+      "assignee": "cto",
       "parentId": "mpctz79p1k",
       "tags": [
         "documentation",
@@ -200,12 +200,25 @@
       "id": "mpctzodobf",
       "title": "Validate dual-format documentation generation",
       "path": "issues/mpctzodobf.json",
-      "status": "todo",
-      "assignee": "library-quality",
+      "status": "done",
+      "assignee": "cto",
       "parentId": "mpctz79p1k",
       "tags": [
         "documentation",
         "validation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpcvqqdhc5",
+      "title": "Clean up stale docs-html directory and verify dual-format output",
+      "path": "issues/mpcvqqdhc5.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "documentation",
+        "cleanup"
       ],
       "priority": 2
     }
