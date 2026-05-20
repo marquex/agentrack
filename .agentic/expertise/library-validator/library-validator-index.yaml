@@ -1,12 +1,12 @@
-# Library Quality Expertise Index
-# Agent: library-quality
+# Library Validator Expertise Index
+# Agent: library-validator
 # Domain: Testing, code quality verification, and quality gates for the library
 
 hierarchy:
   manager: cto
   subordinates: [none — leaf agent]
 
-expertise_status: "Active — Phases 1-7 in progress. 569 tests, 1997 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). Spec reviews completed: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities; independent-git (mpcwd7ued6) — 2 critical testability concerns, 2 high issues, 5 missing ACs, ~50-60 tests estimated. Independent-git implementation: 3 spec deviations found during initial validation (mpcwdqz3kc), fixes assigned as mpd4hktoxq, validation+tests blocked as mpd4hs14zp. Documentation responsibilities transferred to library-release agent."
+expertise_status: "Active — Phases 1-7 complete. 569 tests, 1997 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). Spec reviews completed: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities; independent-git (mpcwd7ued6) — 2 critical testability concerns, 2 high issues, 5 missing ACs; user-docs (mpdpthrliu) — 2 critical, 2 high, 3 medium, 3 low findings. Independent-git implementation: 3 spec deviations found during initial validation (mpcwdqz3kc), fixes assigned as mpd4hktoxq, validation+tests blocked as mpd4hs14zp. Documentation responsibilities transferred to library-releaser agent."
 
 project_phases:
   phase_1_foundation:
@@ -186,7 +186,7 @@ learnings:
     - "4 extra strict flags (noUncheckedIndexedAccess, exactOptionalPropertyTypes, noImplicitOverride, noPropertyAccessFromIndexSignature) are enabled and pass clean."
     - "noPropertyAccessFromIndexSignature requires bracket notation for dynamic keys (e.g. process.env['AGENTACK_USER_TOKEN'])."
     - "exactOptionalPropertyTypes means `undefined` cannot be assigned to optional properties explicitly."
-  typedoc: "REMOVED — Documentation ownership transferred to library-release agent. TypeDoc and docs generation are no longer library-quality responsibilities."
+  typedoc: "REMOVED — Documentation ownership transferred to library-releaser agent. TypeDoc and docs generation are no longer library-validator responsibilities."
   testing_patterns:
     - "Test helpers: createTestDir/cleanupTestDir for fs isolation, createIssueParams/updateIssueParams factory functions, expectError/expectOk assertions."
     - "Tracker tests use real filesystem (tmpdir) — no mocks. This gives integration-level confidence."
@@ -273,7 +273,7 @@ learnings:
     documentation_needs:
       - "JSDoc on computeUpwardPromotions needs cap mention"
       - "Event reason field format needs specification (user-visible via history command)"
-      - "Note: TypeDoc and general docs generation are now owned by library-release. JSDoc content quality remains relevant for code quality."
+      - "Note: TypeDoc and general docs generation are now owned by library-releaser. JSDoc content quality remains relevant for code quality."
     key_pattern: "When capping a propagated value, always clarify what propagates FURTHER up the chain — the original or the capped value. This is a common source of bugs in recursive systems."
   spec_review_independent_git:
     issue: "mpcwd7ued6 (parent: mpcwcufhzk)"
@@ -325,3 +325,23 @@ learnings:
       - "Error codes: NOT_A_GIT_REPO, MIGRATION_REQUIRED, INVALID_STATE, PUSH_FAILED, PULL_FAILED"
     test_strategy: "Use temporary git repos (git init) in test setup/teardown — cannot mock git effectively"
     key_pattern: "When validating spec implementations, check every step of every AC against actual code behavior — deviations often hide in 'obvious' steps like committing a file change"
+  spec_review_user_docs:
+    issue: "mpdpthrliu (parent: mpdpt4rego)"
+    change: "Replace TypeDoc auto-generated docs with hand-written user-friendly markdown documentation (8 files in docs/markdown/)"
+    review_perspective: "Documentation quality and testability"
+    critical_findings:
+      - "C1: JavaScript API method names in AC3h are wrong — spec proposes user-friendly names (addComment, registerUser) but actual Tracker class uses prefixed names (commentsAdd, usersRegister). 13 methods named incorrectly. Code examples in docs would teach the wrong API."
+      - "C2: push() and pull() listed as Tracker class methods — they are standalone worktree functions (pushWorktree, pullWorktree) exported from index.ts, NOT Tracker methods. Affects AC3h and AC3b."
+    high_findings:
+      - "H1: Blockages CLI --by flag is variadic (accepts multiple IDs), spec documents it as singular"
+      - "H2: Missing CLI flags: --path on agt create, --message on agt push"
+    medium_findings:
+      - "M1: Exported types section has wrong names (CreateIssueOptions vs CreateParams, UpdateIssueOptions vs UpdateParams, ListFilters vs ListParams). Many actual public exports also missing from spec."
+      - "M2: No AC for validating documentation accuracy against actual source code (code examples, API signatures, type names)"
+      - "M3: getting-started.md doesn't explain agt init creates orphan _agentrack branch via git worktree"
+    low_findings:
+      - "L1: Writing guidelines lack accuracy-maintenance guidance (how to keep docs in sync with API changes)"
+      - "L2: 100-line minimum per file is low bar for reference docs"
+      - "L3: AC3d terminology — calling createdAt/createdBy/updatedAt 'computed fields' separately from inherited properties is confusing"
+    completeness_assessment: "8 proposed sections cover full feature set well. No major feature gaps. Natural learning progression."
+    key_pattern: "When reviewing documentation specs, ALWAYS cross-reference every API signature against the actual source. Specs often propose 'cleaner' names that don't match the implementation — documentation must match reality, not aspiration."

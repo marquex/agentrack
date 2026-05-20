@@ -22,7 +22,7 @@ architecture:
         model: opus
         description: Chief Technology Officer — designs architecture, generates specs, tracks development alignment
         access: [.agentic/expertise/cto/**, ./**]
-        subordinates: [library-developer, library-quality, library-release]
+        subordinates: [library-developer, library-validator, library-releaser]
         skills: [agent-expertise, agentrack, agentrack-implement, idea, issue]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
       - name: library-developer
@@ -33,18 +33,18 @@ architecture:
         skills: [agent-expertise, agentrack, agentrack-implement, idea]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
         manager: cto
-      - name: library-quality
+      - name: library-validator
         model: opus
-        description: Library quality engineer — generates tests, verifies code quality (documentation responsibility moved to library-release)
-        access: [.agentic/expertise/library-quality/**, packages/library/**, .agentic/specs/**]
+        description: Library quality engineer — generates tests, verifies code quality (documentation responsibility moved to library-releaser)
+        access: [.agentic/expertise/library-validator/**, packages/library/**, .agentic/specs/**]
         subordinates: none
         skills: [agent-expertise, agentrack, agentrack-implement, idea]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
         manager: cto
-      - name: library-release
+      - name: library-releaser
         model: opus
         description: Library release engineer — prepares builds and publishes new releases (tests, docs, build, version bump, publish)
-        access: [.agentic/expertise/library-release/**, packages/library/**]
+        access: [.agentic/expertise/library-releaser/**, packages/library/**]
         subordinates: none
         skills: [agent-expertise, agentrack, agentrack-implement, idea]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
@@ -52,9 +52,9 @@ architecture:
     notes: |
       hire-expert skill tested — workflow is: parse → ask → confirm → create → validate. Step-by-step approach works well.
       Second hire (library-developer) went smoothly — user provided complete info upfront, only changed model from sonnet to opus.
-      Third hire (library-quality) — user again provided complete info upfront, changed model from sonnet to opus. This agent needs Write/Edit tools (creates test files and docs).
+      Third hire (library-validator) — user again provided complete info upfront, changed model from sonnet to opus. This agent needs Write/Edit tools (creates test files and docs).
       CTO now has three subordinates — adding subsequent ones is simple since agentrack-based task assignment and Coordinating Work section already existed, just needed subordinates list update in frontmatter.
-      Fourth hire (library-release) — release engineer agent. Needs Bash (test/build/publish commands) + Write/Edit (version bumps, generated docs). User provided complete info upfront again.
+      Fourth hire (library-releaser) — release engineer agent. Needs Bash (test/build/publish commands) + Write/Edit (version bumps, generated docs). User provided complete info upfront again.
 
   skills:
     path: .claude/skills/
@@ -208,6 +208,7 @@ patterns:
   - Skills available to all agents (not just managers) need to be added to every agent's skill list individually — there's no "global skill" mechanism. When creating a universal skill like /idea, remember to update all agent definitions.
   - When monitoring running agents: check session log line counts for growth, parse tail lines for agent activity (tool calls = working, text output = thinking/reporting, result event = finished). Agent sessions typically take 3-5 min for review tasks, 20-26 turns.
   - After creating or renaming hook files, run a cross-check: `ls .claude/hooks/*.ts` vs the hook commands in settings.json and all agent frontmatter files. Mismatches are the #1 source of silent hook failures.
+  - Agent rename is a multi-file operation: (1) rename agent .md file, (2) rename expertise folder, (3) rename index yaml inside folder, (4) update name + access path in agent frontmatter, (5) update all references in other agent files (subordinates lists, skill templates), (6) update all references in expertise files across ALL agents. Use `grep -r "old-name" .claude/ .agentic/expertise/` to find every occurrence — references are scattered across cto-index.yaml, claude-developer-index.yaml, status.yaml, skill SKILL.md files, and inside the renamed agent's own expertise index. The `replace_all` flag on Edit is essential for bulk renames within a single file.
 
 gotchas:
   - No package.json in .claude/ directory — yaml-validator.ts imports js-yaml which needs install at runtime
@@ -244,7 +245,7 @@ resolved:
   - "RESOLVED: Bash timeout configurable via env vars — BASH_DEFAULT_TIMEOUT_MS (default 2 min) and BASH_MAX_TIMEOUT_MS (default 10 min, the ceiling). Can be set via the `env` key in settings.json to apply to all sessions, or in shell profile before Claude Code starts. Project currently uses BASH_DEFAULT_TIMEOUT_MS=600000 (10 min) and BASH_MAX_TIMEOUT_MS=1800000 (30 min)."
   - "FIXED: Expertise injection for subagents — expertise.hook.ts now handles SessionStart event (primary injection point). Uses flag-based de-duplication: SessionStart writes flag + injects; UserPromptSubmit checks flag and skips if already injected. This ensures expertise is available from session start in both interactive and -p modes."
   - "FIXED: Stop hook not reliably firing for subagents — all expertise hooks (SessionStart, UserPromptSubmit, Stop) moved from settings.json to agent frontmatter. hire-expert template updated so new agents get hooks automatically."
-  - "FIXED: library-quality agent Stop hook had typo in command path — expertence.hook.ts (missing 'i') → expertise.hook.ts. This caused the Stop hook to fail silently (bun couldn't find the file), so the agent never received expertise update reminders."
+  - "FIXED: library-validator agent Stop hook had typo in command path — expertence.hook.ts (missing 'i') → expertise.hook.ts. This caused the Stop hook to fail silently (bun couldn't find the file), so the agent never received expertise update reminders."
   - "REMOVED: Session/logging infrastructure from old delegate skill — no more _conversation.jsonl, agent_logs, CRYPLATIVE_SESSION_ID, or reference.md."
   - "REMOVED: Direct delegation via delegate skill — replaced by agentrack-based task assignment. Managers create issues and assign them; the agent runner picks up issues and launches agents. Project-wide hooks enforce token usage and issue cleanup."
   - "FIXED: agentrack SKILL.md CLI syntax was out of sync with actual CLI — missing init command, missing users section, missing --path option on create, blockages --by variadic syntax unclear, and workflow guidelines had 3 overlapping contradictory versions. Verified all commands against `--help` output and rewrote to match. Also added explicit note that `create` takes title as positional arg (not --title flag) since agents were hitting errors using --title."

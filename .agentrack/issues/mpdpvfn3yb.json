@@ -28,5 +28,40 @@
     "content": {
       "blockerId": "mpdpu00ksc"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T09:44:46.769Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpdpu00ksc",
+      "reason": "Blocker issue mpdpu00ksc transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:45:05.047Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T09:46:18.332Z",
+    "author": "javi",
+    "content": {
+      "id": "mpdvn6kpnl",
+      "content": "Done. Two configuration changes delivered:\n\n1. **.github/workflows/release.yml**: Removed TypeDoc generation step (`bun run docs`), GitHub Pages artifact upload, and Pages deployment. Removed now-unnecessary permissions (`pages: write`, `id-token: write`), `environment: github-pages`, and the pages concurrency group. Workflow now cleanly runs quality → build → npm publish.\n\n2. **.gitignore**: Replaced broad `docs/` entry with `docs/html/` only. This allows the new `docs/markdown/` hand-written docs to be tracked in git while still ignoring generated Docusaurus output (future)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:46:25.862Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "javi"
+    }
   }
 ]

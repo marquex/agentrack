@@ -119,7 +119,7 @@ current_state:
       - Deleted comments are excluded by removing from the Map, not by soft-delete flag
       - Comments returned in creation order (sorted by timestamp)
     quality_notes:
-      - library-quality identified and covered auth integration gaps for comment methods
+      - library-validator identified and covered auth integration gaps for comment methods
       - All error paths now tested: NOT_FOUND, COMMENT_NOT_FOUND, NOT_INITIALIZED, ISSUE_MISSING, TOKEN_REQUIRED
   phase_5_results:
     tests: 284 passing, 1101 assertions, 99.31% coverage (99.77% functions, 99.31% lines)
@@ -174,9 +174,9 @@ current_state:
       - Impact score counts active blocks entries — used in list sort (priority ASC → impact DESC → id ASC)
       - BLOCKAGE_CYCLE error (exit code 11) prevents operation entirely, no partial state changes
     spec: .agentic/specs/07-phase6-blockages-spec.md
-  last_updated: "2026-05-19"
+  last_updated: "2026-05-20"
   org_change:
-    description: "library-release agent onboarded. Documentation responsibility transferred from library-quality to library-release."
+    description: "library-releaser agent onboarded. Documentation responsibility transferred from library-validator to library-releaser."
     issue: mpa5yz3kei
     library_quality_no_longer_owns: "documentation (TypeDoc, docs-html, docs generation)"
     library_release_now_owns: "release prep, documentation, build, version management, publishing"
@@ -203,50 +203,47 @@ current_state:
       issue: mp3rc7femf
       status: complete
       description: "`next <user-name>` command — returns single best issue to work on for a given user"
-      results: "569 tests, 1997 assertions, 100% tracker.ts line coverage. 20 new tests (14 unit + 6 CLI) added by library-quality."
+      results: "569 tests, 1997 assertions, 100% tracker.ts line coverage. 20 new tests (14 unit + 6 CLI) added by library-validator."
     agent_runner:
       status: live
       description: "CTO and subordinates receive issues via /agentrack-implement skill. Status-based workflow enforced."
       tested: "CTO processed mp9xefucmo — spec update, review coordination, delegation to subordinates."
     current_work:
+      configurable_branch:
+        issue: mpe3pknd9j
+        status: in-progress
+        description: "--branch flag on agt init for custom orphan branch names. Enables multiple instances per repo and test isolation."
+        spec: .agentic/specs/configurable-branch-spec.md
+        chain:
+          reviews: [mpe3pvr2yu (library-developer), mpe3pv74lo (library-validator)]
+          implement: mpe3qrgb9x (library-developer, blocked by reviews)
+          validate: mpe3qr9gle (library-validator, blocked by implementation)
       independent_git_branch:
         issue: mpcwcufhzk
-        status: in-progress
-        spec: .agentic/specs/independent-git-spec.md
-        description: "Store .agentrack/ on orphan branch _agentrack via git worktree. Branch-independent issue access."
-        implementation_complete: true
-        validation_results:
-          tests: 573 pass, 0 fail, 2009 assertions
-          spec_deviations:
-            - "MEDIUM: Missing .gitignore commit in fresh scenario (AC1 step 3)"
-            - "MEDIUM: Missing auto-commit after tracker.init() (AC1 step 6)"
-            - "LOW: initWorktree returns 'fresh' when already initialized (AC3)"
-          test_coverage_gap: "src/core/worktree.ts at 4.75% line coverage"
-        fix_chain:
-          fix_deviations: mpd4hktoxq
-          validate_and_test: mpd4hs14zp
-          document_and_build: mpd4i06wz6
+        status: needs_closure
+        description: "All children done (fix mpd4hktoxq, validate mpd4hs14zp, doc+build mpd4i06wz6). Parent still in-progress — needs status update to done."
       docs_cleanup:
         issue: mpcvqqdhc5
-        status: todo
-        assignee: library-release
-        description: "Clean up stale packages/library/docs-html/ directory (leftover from pre-migration). Verify docs/html/ and docs/md/ at repo root."
+        status: done
+        description: "Cleaned up stale packages/library/docs-html/ directory."
       user_friendly_docs:
         issue: mpdpt4rego
         status: in-progress
         spec: .agentic/specs/user-docs-spec.md
-        description: "Replace TypeDoc auto-generated docs with hand-written user-friendly markdown in docs/markdown/. Remove typedoc tooling entirely. 8 sections."
+        description: "Replace TypeDoc auto-generated docs with hand-written user-friendly markdown in docs/markdown/."
         chain:
-          reviews: [mpdptgq69t, mpdpthrliu]
-          implementations: [mpdpu00ksc, mpdpuhd0r5]
-          validation: mpdpv6gw49
-          config: mpdpvfn3yb
+          reviews: [mpdptgq69t, mpdpthrliu] — done
+          implementations: [mpdpu00ksc done, mpdwq7dvls done]
+          validation: mpdpv6gw49 — todo, assigned library-validator
+          config: mpdpvfn3yb — done
+        stale_issue: mpdpuhd0r5 (in-progress, replaced by mpdwq7dvls — should be closed)
+        future: mpdxdbqwt9 (Docusaurus site setup, idea)
       cap_upward_promotion:
         issue: mp9xefucmo
         status: done
         spec: .agentic/specs/cap-upward-promotion-spec.md
         description: "Cap upward auto-promotion at in-progress — parents never auto-promote to done/closed"
-    docs_status: "TRANSITIONING from TypeDoc auto-generated docs to hand-written user-friendly markdown. TypeDoc being removed (mpdpt4rego). New docs will live in docs/markdown/ with 8 sections. Docusaurus site generation is future work."
+    docs_status: "TRANSITIONING from TypeDoc auto-generated docs to hand-written user-friendly markdown. TypeDoc being removed (mpdpt4rego). New docs will live in docs/markdown/ with 8 sections. Docusaurus site generation tracked as idea mpdxdbqwt9."
     publish_pipeline:
       typedoc_html: complete
       ci_workflow: complete — .github/workflows/ci.yml (quality + build on push/PR to main)
@@ -254,12 +251,14 @@ current_state:
       gitignore_update: complete — docs-html/ added
     remaining:
       - "All tracked as agentrack issues — see `agt list` and open_issues above"
-      - "Independent git branch: issue mpcwcufhzk (in-progress, fix phase — 3 spec deviations found in validation)"
+      - "Independent git branch: issue mpcwcufhzk — all children done, parent needs closure"
+      - "Configurable branch name: issue mpe3pknd9j — in-progress, reviews pending"
+      - "User docs validation: issue mpdpv6gw49 (todo, library-validator)"
+      - "Stale issues to clean up: mpa60i4skg (in-progress), mpdpuhd0r5 (in-progress, replaced)"
       - "NPM_TOKEN secret: issue mp3peac1qo"
       - "GitHub Pages source: issue mp3peawcgs"
       - "First release v0.1.0: issue mp3peanz8b"
-      - "Stale docs-html cleanup: issue mpcvqqdhc5"
-      - "typedoc-plugin-markdown cleanup (mp3pe9lvdq) — CAN CLOSE, plugin now actively used"
+      - "POLICY: any CLI/API change must route to library-releaser for build + docs update"
 
 implementation_roadmap:
   source: .agentic/specs/05-implementation-phases.md

@@ -20,5 +20,31 @@
         "spec"
       ]
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:19:12.859Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T09:22:36.748Z",
+    "author": "javi",
+    "content": {
+      "id": "mpduspb1a5",
+      "content": "## Spec Review: User-Friendly Documentation Overhaul\n\nReviewed from documentation quality and testability perspective. Cross-referenced the spec against the actual codebase (index.ts, tracker.ts, runner.ts, types/api.ts, types/issue.ts, core/errors.ts, core/worktree.ts).\n\n---\n\n### CRITICAL (2 issues)\n\n**C1: JavaScript API method names are WRONG in AC3h**\n\nThe spec proposes user-friendly names that do not match the actual Tracker class API. This would teach users the wrong API:\n\n- create(title, options?) -- Actual: create(params: CreateParams) -- single params object\n- addComment(id, content) -- Actual: commentsAdd(id, {content, author?})\n- updateComment(id, commentId, content) -- Actual: commentsUpdate(id, commentId, {content, author?})\n- deleteComment(id, commentId) -- Actual: commentsDelete(id, commentId, {author?})\n- listComments(id) -- Actual: commentsList(id)\n- addBlockage(id, blockerId) -- Actual: blockagesAdd(blockedId, {blockerIds: IssueId[]})\n- resolveBlockage(id, blockerId) -- Actual: blockagesResolve(blockedId, {blockerIds})\n- deleteBlockage(id, blockerId) -- Actual: blockagesDelete(blockedId, {blockerIds})\n- listBlockages(id) -- Actual: blockagesList(id)\n- registerUser(name) -- Actual: usersRegister(name)\n- listUsers() -- Actual: usersList()\n- revokeUser(name) -- Actual: usersRevoke(name)\n- regenerateToken(name) -- Actual: usersRegenerate(name)\n\n**C2: push() and pull() are NOT Tracker methods**\n\nThe spec lists them under Tracker class Sync section. They are standalone exported functions from worktree.ts, imported as pushWorktree and pullWorktree. The Tracker class has no push or pull methods. This affects both AC3h (JavaScript reference) and AC3b (getting-started JS workflow).\n\n---\n\n### HIGH (2 issues)\n\n**H1: Blockages CLI --by flag accepts multiple IDs, not one**\n\nThe spec shows --by blocker-id (singular). The actual CLI uses Commander variadic syntax --by ids..., accepting multiple IDs at once. Same for resolve and delete. The docs must reflect this or users will not discover the multi-blockage feature.\n\n**H2: Missing CLI flags**\n\n- agt create has a --path flag (runner.ts line 57) not documented in the spec\n- agt push has a --message flag (runner.ts line 83) not documented in the spec\n\n---\n\n### MEDIUM (3 issues)\n\n**M1: Exported types section has wrong names**\n\nAC3h lists types that do not exist: CreateIssueOptions (actual: CreateParams), UpdateIssueOptions (actual: UpdateParams), ListFilters (actual: ListParams). Additionally many actual public exports are missing from the docs: CommentId, ComputedComment, ConfigFile, IndexEntry, UserEntry, all event types, BlockageEntry, DependenciesFile, worktree result types, and worktree constants (WORKTREE_BRANCH, WORKTREE_DIR).\n\n**M2: No AC for documentation accuracy validation**\n\nAC5 checks file existence, line count, and cross-references but has no gate ensuring JavaScript API examples compile against actual TypeScript types, CLI examples match actual command syntax, or exported types list matches index.ts re-exports. Recommend adding an AC requiring verification of code examples against the actual source API.\n\n**M3: agt init creates a git worktree -- getting-started does not mention this**\n\nAC3b getting-started guide says agt init initializes tracker in a repo but does not explain that this creates an orphan _agentrack branch via git worktree. This is a key behavior users need to understand from the start.\n\n---\n\n### LOW (3 issues)\n\n**L1: Writing guidelines lack accuracy-maintenance guidance**\n\nNo guidance on how to keep docs in sync with API changes or verification of TypeScript examples against actual types.\n\n**L2: 100-line minimum is a low bar**\n\nConsider 200+ lines for reference docs like cli-reference.md and javascript-reference.md.\n\n**L3: AC3d computed fields terminology**\n\nCalling createdAt/createdBy/updatedAt computed fields while listing inherited properties separately is confusing. They are all part of the ComputedIssue interface which extends IssueProperties.\n\n---\n\n### Completeness Assessment\n\nThe 8 proposed sections cover the full feature set well. No major feature gaps detected. The structure follows a natural learning progression.\n\n### Summary\n\n2 critical issues (wrong JS API names, push/pull not Tracker methods) must be resolved before implementation begins. 2 high issues (missing multi-ID blockages, missing CLI flags) should also be addressed. The spec is otherwise well-structured and comprehensive."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:22:42.879Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
   }
 ]

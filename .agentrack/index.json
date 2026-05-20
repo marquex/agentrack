@@ -405,8 +405,8 @@
       "id": "mpdptgq69t",
       "title": "Review spec: user-docs",
       "path": "issues/mpdptgq69t.json",
-      "status": "todo",
-      "assignee": "library-developer",
+      "status": "done",
+      "assignee": "cto",
       "parentId": "mpdpt4rego",
       "tags": [
         "review",
@@ -418,8 +418,8 @@
       "id": "mpdpthrliu",
       "title": "Review spec: user-docs (quality perspective)",
       "path": "issues/mpdpthrliu.json",
-      "status": "todo",
-      "assignee": "library-quality",
+      "status": "done",
+      "assignee": "cto",
       "parentId": "mpdpt4rego",
       "tags": [
         "review",
@@ -431,8 +431,8 @@
       "id": "mpdpu00ksc",
       "title": "Implement: remove TypeDoc tooling from packages/library",
       "path": "issues/mpdpu00ksc.json",
-      "status": "todo",
-      "assignee": "library-developer",
+      "status": "done",
+      "assignee": "cto",
       "parentId": "mpdpt4rego",
       "tags": [
         "cleanup",
@@ -444,8 +444,8 @@
       "id": "mpdpuhd0r5",
       "title": "Implement: write user-friendly markdown documentation",
       "path": "issues/mpdpuhd0r5.json",
-      "status": "todo",
-      "assignee": "library-release",
+      "status": "in-progress",
+      "assignee": "cto",
       "parentId": "mpdpt4rego",
       "tags": [
         "documentation",
@@ -470,12 +470,110 @@
       "id": "mpdpvfn3yb",
       "title": "Update release workflow and gitignore for docs overhaul",
       "path": "issues/mpdpvfn3yb.json",
-      "status": "todo",
-      "assignee": "cto",
+      "status": "done",
+      "assignee": "javi",
       "parentId": "mpdpt4rego",
       "tags": [
         "configuration",
         "ci"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdwq7dvls",
+      "title": "Implement: write user-friendly markdown documentation",
+      "path": "issues/mpdwq7dvls.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpdpt4rego",
+      "tags": [
+        "documentation",
+        "content"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpdxdbqwt9",
+      "title": "Set up Docusaurus documentation site",
+      "path": "issues/mpdxdbqwt9.json",
+      "status": "idea",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "documentation",
+        "infrastructure",
+        "future"
+      ],
+      "priority": 4
+    },
+    {
+      "id": "mpe3pknd9j",
+      "title": "Configurable branch name for agt init",
+      "path": "issues/mpe3pknd9j.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "configuration"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpe3pv74lo",
+      "title": "Review spec: configurable-branch (quality perspective)",
+      "path": "issues/mpe3pv74lo.json",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpe3pvr2yu",
+      "title": "Review spec: configurable-branch",
+      "path": "issues/mpe3pvr2yu.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpe3qr9gle",
+      "title": "Validate: configurable branch name for agt init",
+      "path": "issues/mpe3qr9gle.json",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "validation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpe3qrgb9x",
+      "title": "Implement: configurable branch name for agt init",
+      "path": "issues/mpe3qrgb9x.json",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "implementation"
       ],
       "priority": 2
     }
@@ -516,6 +614,26 @@
         "ux"
       ],
       "priority": 3
+    },
+    {
+      "id": "mpe3seanai",
+      "title": "Implement --branch flag for agt init + worktree refactor",
+      "path": "issues/mpe3seanai.json",
+      "status": "closed",
+      "assignee": "library-developer",
+      "parentId": "mpe3pknd9j",
+      "tags": [],
+      "priority": 2
+    },
+    {
+      "id": "mpe3smr0kk",
+      "title": "Validate configurable branch feature",
+      "path": "issues/mpe3smr0kk.json",
+      "status": "closed",
+      "assignee": "library-validator",
+      "parentId": "mpe3pknd9j",
+      "tags": [],
+      "priority": 2
     }
   ],
   "childrenOf": {
@@ -553,7 +671,18 @@
       "mpdpu00ksc",
       "mpdpuhd0r5",
       "mpdpv6gw49",
-      "mpdpvfn3yb"
+      "mpdpvfn3yb",
+      "mpdwq7dvls"
+    ],
+    "mpe3pknd9j": [
+      "mpe3pvr2yu",
+      "mpe3pv74lo",
+      "mpe3qrgb9x",
+      "mpe3qr9gle",
+      "mpe3seanai",
+      "mpe3smr0kk",
+      "mpe3seanai",
+      "mpe3smr0kk"
     ]
   }
 }

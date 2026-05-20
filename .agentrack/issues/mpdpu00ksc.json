@@ -45,5 +45,49 @@
       "id": "mpdpw3o92j",
       "content": "Context: typedoc is listed as devDependency with typedoc-plugin-markdown. There is a typedoc.json config file. Scripts docs:html, docs:md, docs, docs:check all reference typedoc. The quality script (bun run typecheck && bun run lint && bun run test:coverage) does NOT include docs:check, so removing docs scripts won't affect the quality gate. The release workflow (.github/workflows/release.yml) has a TypeDoc step but that's being handled separately by CTO in mpdpvfn3yb."
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T09:22:42.881Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpdpthrliu",
+      "reason": "Blocker issue mpdpthrliu transitioned to done"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T09:23:16.680Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpdptgq69t",
+      "reason": "Blocker issue mpdptgq69t transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:25:09.753Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T09:44:38.427Z",
+    "author": "javi",
+    "content": {
+      "id": "mpdvl1b0q4",
+      "content": "Done. Removed all TypeDoc tooling from packages/library:\n\n**Removed from package.json devDependencies:**\n- typedoc (^0.28.19)\n- typedoc-plugin-markdown (^4.11.0)\n\n**Removed from package.json scripts:**\n- docs:html\n- docs:md\n- docs\n- docs:check\n\n**Deleted files:**\n- typedoc.json\n\n**Verification:**\n- bun install: lockfile updated (1 package removed)\n- bun run typecheck: pass\n- bun run lint: pass\n- bun run test: 648/649 pass (1 pre-existing worktree timeout unrelated to this change)\n- bun run build: pass (dist/ output unchanged)\n- quality script (typecheck && lint && test:coverage): unaffected\n- prepublishOnly script (quality): unaffected"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:44:46.766Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
   }
 ]

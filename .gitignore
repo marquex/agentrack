@@ -6,8 +6,8 @@ dist/
 build/
 out/
 
-# Generated docs
-docs/
+# Generated docs (Docusaurus output)
+docs/html/
 
 # Bun
 *.bun

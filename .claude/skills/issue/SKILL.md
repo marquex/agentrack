@@ -74,7 +74,7 @@ agt create "Review spec: <slug> (quality perspective)" \
   --description "Review the draft spec at .agentic/specs/<slug>-spec.md\n\nAnalyze from a testability and quality perspective. Comment with:\n- Testability concerns\n- Missing acceptance criteria\n- Documentation requirements\n- Edge cases that need coverage\n\nDo NOT implement — only analyze and comment." \
   --parentId <parent-id> \
   --status "todo" \
-  --assignee "library-quality" \
+  --assignee "library-validator" \
   --priority <same-as-parent> \
   --tags "review,spec"
 ```
@@ -100,7 +100,7 @@ agt create "Validate: <title>" \
   --description "Spec: .agentic/specs/<slug>-spec.md\n\nValidate the implementation done by library-developer. Run quality gates, check test coverage on changed code, verify spec compliance.\n\n<what to validate>" \
   --parentId <parent-id> \
   --status "todo" \
-  --assignee "library-quality" \
+  --assignee "library-validator" \
   --priority <same-as-parent> \
   --tags "<relevant,tags>"
 ```
@@ -169,7 +169,7 @@ Created:
   - Spec: .agentic/specs/<slug>-spec.md
   - Parent: <parent-id> "<title>" (assigned to cto)
     - Review: <dev-review-id> "Review spec: <slug>" → library-developer
-    - Review: <quality-review-id> "Review spec: <slug>" → library-quality
+    - Review: <quality-review-id> "Review spec: <slug>" → library-validator
     - Implement: <impl-id> "Implement: <title>" → library-developer (blocked by reviews)
-    - Validate: <val-id> "Validate: <title>" → library-quality (blocked by implementation)
+    - Validate: <val-id> "Validate: <title>" → library-validator (blocked by implementation)
 ```

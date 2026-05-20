@@ -6,7 +6,7 @@ hierarchy:
   manager: cto
   subordinates: [none — leaf agent]
 
-expertise_status: "Phase 1-8 complete + next command + next-todo-only spec review + cap-upward-promotion spec review + independent-git spec review. Build pipeline with tsup producing CJS+ESM+dts output."
+expertise_status: "Phase 1-8 complete + next command + next-todo-only spec review + cap-upward-promotion spec review + independent-git spec review + user-docs spec review + configurable-branch spec review. Build pipeline with tsup producing CJS+ESM+dts output."
 
 knowledge:
   project_structure:
@@ -40,7 +40,7 @@ knowledge:
     - "tsup ^8.5.1 as devDependency — build tool for CJS+ESM+dts bundling"
     - "typescript ^5.7.0 and @types/bun ^1.2.0 as devDependencies"
     - "@eslint/js ^9.28.0, eslint ^9.28.0, typescript-eslint ^8.33.0, prettier ^3.5.3 as devDependencies"
-    - "typedoc ^0.28.19 and typedoc-plugin-markdown ^4.11.0 as devDependencies"
+    - "typedoc ^0.28.19 and typedoc-plugin-markdown ^4.11.0 as devDependencies (planned for removal per user-docs spec)"
     - "No other runtime deps — all file I/O via node:fs/node:path"
 
   architecture:
@@ -51,7 +51,8 @@ knowledge:
     - "Success -> stdout JSON, exit 0; Error -> stderr JSON, exit from error code"
     - "All file writes use atomic write-to-temp-then-rename pattern (file-io.ts)"
     - "ID generation: Date.now().toString(36).slice(0,6) + Math.random().toString(36).slice(-4) — always 10 chars"
-    - "Resolution: walk up from cwd looking for .agentrack/ dir, return abs path or null"
+    - "Resolution: walk up from cwd looking for .agentrack/ dir, return abs path or null (resolution.ts)"
+    - "Three separate hardcoded AGENTACK_DIR/WORKTREE_DIR constants: worktree.ts (WORKTREE_BRANCH='_agentrack', WORKTREE_DIR='.agentrack'), tracker.ts line 75 (AGENTACK_DIR='.agentrack' for non-git init), resolution.ts line 4 (AGENTACK_DIR='.agentrack' for walk-up discovery). All 3 must be updated together for any directory name change."
     - "Tracker.init() creates .agentrack/ with config.json, index.json, dependencies.json, users.json, issues/"
     - "Init is idempotent: returns ALREADY_INITIALIZED if dir exists, does NOT overwrite"
     - "Event-sourced: each issue stored as JSON array of events in issues/[id].json"
@@ -127,6 +128,9 @@ knowledge:
     - "blockages delete <issueId> <blockedById> — deletes a blockage"
     - "blockages list <issueId> — lists all blockages on an issue"
     - "next <userName> — recommends the next issue to work on for a user (no options)"
+    - "push — syncs agentrack data to remote; option: --message <string> to override auto-generated commit message"
+    - "pull — syncs agentrack data from remote"
+    - "push/pull are NOT Tracker methods — they are standalone worktree module functions (pushWorktree/pullWorktree exported from src/core/worktree.ts)"
 
   phase_status:
     phase_1: "COMPLETE — types, core (errors, id, resolution, file-io, tracker.init), CLI (runner, output, init cmd), barrel exports"
@@ -141,3 +145,5 @@ knowledge:
     next_todo_only_spec_review: "REVIEWED — Spec proposes changing Tracker.next() to only consider todo status (removing idea and in-progress). Core change is 1 line (status filter array at tracker.ts:546) + 1 line (NO_ISSUES_AVAILABLE message). Key findings: (1) ~11 tests will break because they create issues without status (defaults to idea), (2) one test explicitly validates 3-status inclusion and needs full rewrite, (3) message should say 'No unblocked todo issues found' to capture both status AND blockage dimensions, (4) behavioral breaking change for users relying on next to surface idea/in-progress items, (5) default create status is idea so newly-created issues won't appear in next until moved to todo."
     cap_upward_promotion_spec_review: "REVIEWED — Spec proposes capping upward auto-promotion at in-progress so parents are never auto-promoted to done/closed. Core change: computeUpwardPromotions in hierarchy.ts (~5 lines), compute a capped status before the while-loop. Key findings: (1) Reparenting code path also affected (same function used) — not explicitly mentioned in spec, (2) reason message format for capped promotions needs spec clarification, (3) when parent is already at in-progress and child goes to done, NO promotion event emitted (capped status equals current, isStatusAfter returns false), (4) 7 tests need updating across hierarchy.test.ts and tracker-hierarchy test files, (5) no changes needed to any other module, risk is low."
     independent_git_spec_review: "REVIEWED — Spec proposes storing .agentrack/ data on a dedicated orphan branch (_agentrack) mounted as git worktree, with agt init/push/pull commands for setup and sync. Critical findings: (1) Git plumbing initial files in spec have WRONG data formats (config has version field + missing defaultUser, index uses issues[] instead of open/closed arrays, deps uses different key names) — will cause all reads to fail. (2) Tracker.init() ordering bug — spec mounts worktree first then calls tracker.init(), but init() has existsSync check that returns ALREADY_INITIALIZED without creating files; AC7 claim 'no changes to Tracker' is inaccurate. (3) Wrong file paths: spec says src/errors.ts (actual: src/core/errors.ts) and src/runner.ts (actual: src/cli/runner.ts). (4) .gitignore auto-commit on user's branch is surprising behavior. (5) Missing: exit codes for 5 new error codes, public API exports for new types. (6) Edge cases: race condition in concurrent init (both detect 'fresh'), pre-existing local _agentrack branch not in error table, gitignore check too strict. Architecture is sound — worktree isolation is the right approach, but critical issues must be fixed before implementation."
+    user_docs_spec_review: "REVIEWED — Spec proposes replacing TypeDoc with hand-written user docs in docs/markdown/ (8 files). Key findings: (1) CRITICAL: Section 3h JavaScript API has ALL method names wrong — spec uses verb-first (addComment, listBlockages) but actual Tracker uses domain-first (commentsAdd, blockagesList). 12 methods affected. (2) CRITICAL: create() signature wrong — spec says create(title, options?) but actual is create(params: CreateParams) single-object pattern. (3) CRITICAL: push()/pull() are NOT Tracker methods — they are standalone worktree module functions (pushWorktree/pullWorktree). (4) Type names wrong: CreateIssueOptions→CreateParams, UpdateIssueOptions→UpdateParams, ListFilters→ListParams. (5) CLI --by flag is variadic (--by <ids...>), not singular. (6) Missing push --message flag in CLI reference. (7) Spec lists 9 types but API exports 40+. Structural plan (TypeDoc removal, 8-section layout, file cleanup) is sound. Auth, issue-object, hierarchy sections are accurate."
+    configurable_branch_spec_review: "REVIEWED — Spec adds --branch flag to agt init for configurable orphan branch names (default _agentrack). Normalization: strip leading underscores, prepend _ for branch and . for dir. Key findings: (1) CRITICAL: Circular config discovery — spec stores branch in config.json inside the worktree, but push/pull need to read config to find the worktree dir. resolveWorktreePaths pseudocode hardcodes cwd/.agentrack/ which defeats the purpose. Needs a pointer file at a fixed location in the main repo. (2) CRITICAL: Three hardcoded locations, not just worktree.ts — tracker.ts line 75 has AGENTACK_DIR='.agentrack' (used by Tracker.init for non-git fallback) and resolution.ts line 4 has same constant (used by resolveTrackerDir, called by 18 Tracker methods). Spec only addresses worktree.ts. (3) MODERATE: resolveTrackerDir cannot discover custom-named directories without a pointer mechanism. Tracker constructor needs to accept worktreeDir option. (4) MODERATE: gitignore handling (ensureGitignoreEntry, gitignoreHasEntry) is hardcoded for .agentrack patterns — must be parameterized. (5) MODERATE: Normalization regex allows slashes in branch names (git supports feature/foo) but dir derivation creates nested dirs (.feature/foo/) which breaks worktree add and resolution walk-up. (6) MINOR: Public API breaking change — WORKTREE_BRANCH/WORKTREE_DIR exported constants renamed. (7) MINOR: checkPreconditions, commit messages, gitignore commit message all hardcode _agentrack. Feature is viable but needs config discovery mechanism redesigned before implementation."

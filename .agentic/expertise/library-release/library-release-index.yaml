@@ -1,9 +1,0 @@
-# Library Release Expertise Index
-# Agent: library-release
-# Domain: Library release engineering — build, test, documentation, version management, and publishing
-
-hierarchy:
-  manager: cto
-  subordinates: none — leaf agent
-
-expertise_status: "Session 1 completed — initialized. No release tasks performed yet. Ready for first release assignment."

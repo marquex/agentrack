@@ -7,17 +7,10 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    environment: github-pages
 
     steps:
       - uses: actions/checkout@v4
@@ -41,12 +34,3 @@ jobs:
       - run: cd packages/library && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # Build and deploy API docs to GitHub Pages
-      - run: cd packages/library && bun run docs
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/html
-
-      - uses: actions/deploy-pages@v4

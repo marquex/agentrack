@@ -1,0 +1,88 @@
+# Library Releaser Expertise Index
+# Agent: library-releaser
+# Domain: Library release engineering — build, test, documentation, version management, and publishing
+
+hierarchy:
+  manager: cto
+  subordinates: none — leaf agent
+
+expertise_status: "Session 2 — completed research for docs task mpdpuhd0r5. Blocked on docs/ access."
+
+learnings:
+  access_restrictions:
+    - "Cannot access the docs/ directory — outside my access domain. Only packages/library/ is accessible."
+    - "If a task requires writing to docs/, I need to escalate to manager (cto) to get access or have it reassigned."
+
+  library_api:
+    tracker_class:
+      location: "packages/library/src/core/tracker.ts"
+      constructor: "new Tracker(cwd?) — cwd defaults to process.cwd()"
+      methods:
+        - "init() → InitResult"
+        - "create(params: CreateParams) → CreateResult"
+        - "update(id, params: UpdateParams) → UpdateResult"
+        - "list(params?: ListParams) → ListResult"
+        - "view(id) → ViewResult"
+        - "next(assignee: string) → NextResult"
+        - "history(id) → HistoryResult"
+        - "commentsAdd(id, params: CommentAddParams) → CommentAddResult"
+        - "commentsUpdate(id, commentId, params: CommentUpdateParams) → CommentUpdateResult"
+        - "commentsDelete(id, commentId, params?: CommentDeleteParams) → CommentDeleteResult"
+        - "commentsList(id) → CommentsListResult"
+        - "blockagesAdd(blockedId, params: BlockagesAddParams) → BlockagesAddResult"
+        - "blockagesResolve(blockedId, params: BlockagesResolveParams) → BlockagesResolveResult"
+        - "blockagesDelete(blockedId, params: BlockagesDeleteParams) → BlockagesDeleteResult"
+        - "blockagesList(id) → BlockagesListResult"
+        - "usersRegister(name: string) → UsersRegisterResult"
+        - "usersList() → UsersListResult"
+        - "usersRevoke(name: string) → UsersRevokeResult"
+        - "usersRegenerate(name: string) → UsersRegenerateResult"
+
+    standalone_exports:
+      - "pushWorktree(cwd, message?) — from core/worktree.ts"
+      - "pullWorktree(cwd) — from core/worktree.ts"
+      - "initWorktree(cwd) — from core/worktree.ts"
+      - "initFreshWorktree(cwd)"
+      - "initJoinWorktree(cwd)"
+      - "detectInitScenario(cwd)"
+      - "isWorktreeInitialized(cwd)"
+      - "WORKTREE_BRANCH = '_agentrack'"
+      - "WORKTREE_DIR = '.agentrack'"
+
+    naming_convention: "domain-first: commentsAdd, blockagesResolve, usersRegister (NOT addComment, resolveBlockage, registerUser)"
+    status_flow: "idea → todo → in-progress → done → closed"
+    auth_modes: "open, read-only, strict"
+    cli_command: "agt"
+    cli_flags:
+      - "agt create has --path flag"
+      - "agt push has --message flag"
+      - "agt blockages add/resolve/delete --by accepts variadic IDs"
+
+  build_pipeline:
+    build_tool: "tsup"
+    build_command: "bun run build (or just tsup)"
+    test_command: "bun test"
+    quality_command: "bun run quality (typecheck + lint + test:coverage)"
+    package_name: "agentrack"
+    current_version: "0.1.0"
+
+  docs_task_mpdpuhd0r5:
+    status: "blocked on docs/ access"
+    research_completed: true
+    files_to_write:
+      - "docs/markdown/overview.md"
+      - "docs/markdown/getting-started.md"
+      - "docs/markdown/authentication.md"
+      - "docs/markdown/issue-object.md"
+      - "docs/markdown/hierarchy-and-blockages.md"
+      - "docs/markdown/storing-issues-in-git.md"
+      - "docs/markdown/cli-reference.md"
+      - "docs/markdown/javascript-reference.md"
+    files_to_delete:
+      - "docs/html/ (TypeDoc HTML output)"
+      - "docs/md/ (TypeDoc markdown output)"
+      - "docs/introduction.md"
+      - "docs/hierarchy.md"
+      - "docs/commands.md"
+      - "docs/issue-blockages.md"
+      - "docs/user-auth.md"

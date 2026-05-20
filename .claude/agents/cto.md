@@ -5,8 +5,8 @@ tools: Read, Write, Edit, MultiEdit, Glob, Grep, Bash
 model: opus
 subordinates:
   - library-developer
-  - library-quality
-  - library-release
+  - library-validator
+  - library-releaser
 skills:
   - agent-expertise
   - agentrack

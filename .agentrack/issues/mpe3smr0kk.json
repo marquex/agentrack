@@ -1,0 +1,54 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T13:34:29.201Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T13:34:29.201Z",
+    "author": "javi",
+    "content": {
+      "title": "Validate configurable branch feature",
+      "description": "Validate the --branch flag implementation for agt init.\n\n## What to test\n1. **Default behavior preserved** — agt init (no --branch) creates _agentrack branch, .agentrack/ dir, config.json with no branch field\n2. **Custom branch** — agt init --branch testing creates _testing branch, .testing/ dir, config.json has branch: _testing\n3. **Normalization** — --branch _ci and --branch ci both produce _ci branch and .ci/ dir\n4. **Push/pull respect config** — After init with --branch, push and pull operate on the correct branch/directory\n5. **Error cases**:\n   - Invalid characters in branch name → INVALID_BRANCH_NAME error\n   - Empty branch name → error\n   - Existing directory conflict → appropriate error\n6. **Backward compatibility** — Existing repos with _agentrack and no branch field in config continue to work\n7. **Multiple instances** — Can init two separate branches in the same repo\n\n## Reference\nSpec: .agentic/specs/configurable-branch-spec.md\nImplementation issue: mpe3seanai",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-validator",
+      "parentId": "mpe3pknd9j"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T13:34:35.690Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpe3seanai"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T13:35:50.099Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpe3seanai",
+      "reason": "Blocker issue mpe3seanai transitioned to closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T13:35:50.178Z",
+    "author": "javi",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T13:36:00.242Z",
+    "author": "javi",
+    "content": {
+      "id": "mpe3ukkokq",
+      "content": "Closed: duplicate of mpe3qr9gle (already created in session 64 with proper review chain)."
+    }
+  }
+]

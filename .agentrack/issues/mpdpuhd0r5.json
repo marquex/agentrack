@@ -45,5 +45,57 @@
       "id": "mpdpwcgp63",
       "content": "Context for content writing: The library exports a Tracker class with methods: init, create, update, list, view, history, next, addComment, updateComment, deleteComment, listComments, addBlockage, resolveBlockage, deleteBlockage, listBlockages, registerUser, listUsers, revokeUser, regenerateToken, push, pull. Exported types include IssueProperties, ComputedIssue, IssueStatus, CreateIssueOptions, UpdateIssueOptions, ListFilters, NextResult, AgentrackError, and various event and blockage and user types. CLI command is agt. Status flow: idea then todo then in-progress then done then closed. Auth modes: open, read-only, strict. Issues stored on orphan git branch _agentrack via worktree. The existing docs in the docs directory (introduction.md, hierarchy.md, commands.md, issue-blockages.md, user-auth.md) contain accurate reference content that can be restructured into the new format - read them for factual accuracy before deleting."
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T09:22:42.881Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpdpthrliu",
+      "reason": "Blocker issue mpdpthrliu transitioned to done"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T09:23:16.680Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpdptgq69t",
+      "reason": "Blocker issue mpdptgq69t transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:24:37.078Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T09:44:31.206Z",
+    "author": "javi",
+    "content": {
+      "id": "mpdvkvyker",
+      "content": "Blocked: I cannot access the docs/ directory due to access restrictions. I need write access to docs/ to delete old documentation files (html/, md/, introduction.md, hierarchy.md, commands.md, issue-blockages.md, user-auth.md) and create the new docs/markdown/ directory with 8 new markdown files. My access domain only covers packages/library/."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T09:44:40.366Z",
+    "author": "javi",
+    "content": {
+      "assignee": "cto"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T09:44:56.256Z",
+    "author": "javi",
+    "content": {
+      "id": "mpdvlf11ft",
+      "content": "Waiting for manager to either: (1) grant write access to docs/ directory, or (2) reassign this task to an agent that has docs/ access. I have completed the research phase — I've read all source files (index.ts, tracker.ts, runner.ts, worktree.ts, all types, errors.ts, auth.ts, api.ts) and have full understanding of the actual API. Ready to write the 8 docs as soon as access is granted."
+    }
   }
 ]

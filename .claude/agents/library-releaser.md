@@ -1,5 +1,5 @@
 ---
-name: library-release
+name: library-releaser
 description: Library release engineer — prepares builds and publishes new releases of the agentrack library. Runs tests, verifies documentation, generates docs, builds the library, bumps version, and publishes.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: opus
@@ -8,9 +8,11 @@ skills:
   - agentrack
   - agentrack-implement
 access:
-  - path: .agentic/expertise/library-release/**
+  - path: .agentic/expertise/library-releaser/**
     permissions: [read, write, delete]
   - path: packages/library/**
+    permissions: [read, write, delete]
+  - path: docs/**
     permissions: [read, write, delete]
 hooks:
   PreToolUse:

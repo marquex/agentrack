@@ -1,0 +1,60 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T13:33:02.189Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T13:33:02.189Z",
+    "author": "javi",
+    "content": {
+      "title": "Implement: configurable branch name for agt init",
+      "description": "Spec: .agentic/specs/configurable-branch-spec.md\n\nRead the spec AND the review comments on issues mpe3pvr2yu and mpe3pv74lo before starting. The reviews contain critical feedback about feasibility, edge cases, and test impact.\n\nImplement the --branch flag for agt init:\n1. Add normalizeBranchName() to worktree.ts (strip leading _, prepend _ and .)\n2. Parameterize all worktree functions to accept branch and dir options instead of hardcoded constants\n3. Add --branch flag to the init CLI command\n4. Store branch name in config.json after init\n5. Update push.ts and pull.ts to resolve branch and dir from config\n6. Update gitignore handling to use the correct directory name\n7. Add INVALID_BRANCH_NAME and BRANCH_CONFLICT error codes\n8. Ensure full backward compatibility (no --branch = current behavior)",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-developer",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "implementation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T13:33:07.667Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpe3pvr2yu"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-20T13:33:07.668Z",
+    "author": "javi",
+    "content": {
+      "blockerId": "mpe3pv74lo"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T13:33:19.602Z",
+    "author": "javi",
+    "content": {
+      "id": "mpe3r48ldd",
+      "content": "Key context for implementation:\n\n1. The worktree module currently has WORKTREE_BRANCH and WORKTREE_DIR as exported constants. All worktree functions reference these. This needs to become parameterized.\n\n2. Chicken-and-egg during init: config.json does not exist yet when worktree operations start. The --branch flag value must be passed through explicitly to worktree functions. Config is written AFTER init completes.\n\n3. The gitignore entry is currently hardcoded as /.agentrack/. Must become dynamic based on directory name.\n\n4. Backward compatibility is critical: existing repos must work unchanged. The config.branch field is optional and defaults to _agentrack when absent.\n\n5. The push and pull commands need to resolve the active worktree from config before operating.\n\n6. Consider whether resolveWorktreePaths should try the default .agentrack dir first (for existing installs) before looking at config. This handles the case where config exists but has no branch field."
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T13:36:48.915Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpe3pvr2yu",
+      "reason": "Blocker issue mpe3pvr2yu transitioned to done"
+    }
+  }
+]
