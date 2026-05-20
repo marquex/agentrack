@@ -6,12 +6,12 @@ hierarchy:
   manager: cto
   subordinates: none — leaf agent
 
-expertise_status: "Session 2 — completed research for docs task mpdpuhd0r5. Blocked on docs/ access."
+expertise_status: "Session 3 — docs task mpdpuhd0r5 was completed by someone else (docs/markdown/ now exists). Picked up mpe7hg9ni7 (update docs for --branch flag) but found the feature was never implemented — blocked and escalated to cto."
 
 learnings:
   access_restrictions:
-    - "Cannot access the docs/ directory — outside my access domain. Only packages/library/ is accessible."
-    - "If a task requires writing to docs/, I need to escalate to manager (cto) to get access or have it reassigned."
+    - "CAN access docs/markdown/ — as of session 3, docs/markdown/ is accessible (previously blocked in session 2)."
+    - "packages/library/ is the primary domain for build/test/source code."
 
   library_api:
     tracker_class:
@@ -67,22 +67,27 @@ learnings:
     current_version: "0.1.0"
 
   docs_task_mpdpuhd0r5:
-    status: "blocked on docs/ access"
-    research_completed: true
-    files_to_write:
-      - "docs/markdown/overview.md"
-      - "docs/markdown/getting-started.md"
-      - "docs/markdown/authentication.md"
-      - "docs/markdown/issue-object.md"
-      - "docs/markdown/hierarchy-and-blockages.md"
-      - "docs/markdown/storing-issues-in-git.md"
-      - "docs/markdown/cli-reference.md"
-      - "docs/markdown/javascript-reference.md"
-    files_to_delete:
-      - "docs/html/ (TypeDoc HTML output)"
-      - "docs/md/ (TypeDoc markdown output)"
-      - "docs/introduction.md"
-      - "docs/hierarchy.md"
-      - "docs/commands.md"
-      - "docs/issue-blockages.md"
-      - "docs/user-auth.md"
+    status: "completed by another agent (docs/markdown/ now exists with all 8 files)"
+
+  branch_flag_task_mpe7hg9ni7:
+    status: "blocked — feature not implemented in codebase"
+    finding: "The --branch flag for agt init was never actually implemented despite issues being closed. The worktree.ts still uses hardcoded WORKTREE_BRANCH='_agentrack' and WORKTREE_DIR='.agentrack'. No normalizeBranchName, resolveWorktreePaths, or INVALID_BRANCH_NAME error codes exist."
+    spec_location: ".agentic/specs/configurable-branch-spec.md"
+    what_was_checked:
+      - "packages/library/src/cli/commands/init.ts — initAction() takes no params, no --branch option"
+      - "packages/library/src/cli/runner.ts — init command registered without flags"
+      - "packages/library/src/core/worktree.ts — hardcoded constants, no parameterization"
+      - "Searched for normalizeBranchName, resolveWorktreePaths, INVALID_BRANCH_NAME, BRANCH_CONFLICT — all absent"
+    lesson: "Always verify implementation exists before documenting it. Issue status can be misleading — closed issues don't guarantee code was committed. Check git log for the specific files mentioned in the task."
+
+  docs_structure:
+    location: "docs/markdown/"
+    files:
+      - "overview.md — Project overview, key features, quick example, status lifecycle"
+      - "getting-started.md — Installation, first CLI session, first JS session"
+      - "authentication.md — Auth modes, user management, token usage"
+      - "issue-object.md — Issue properties, status lifecycle, event sourcing model"
+      - "hierarchy-and-blockages.md — Parent-child relationships, dependency tracking"
+      - "storing-issues-in-git.md — Worktree approach, directory structure, sync, init scenarios"
+      - "cli-reference.md — Full command docs with flags, examples, error codes"
+      - "javascript-reference.md — Tracker class methods and exported types"

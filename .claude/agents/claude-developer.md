@@ -19,6 +19,8 @@ access:
     permissions: [read]
   - path: .agentic/sessions/**
     permissions: [read]
+  - path: docs/**
+    permissions: [read]
 hooks:
   PreToolUse:
     - matcher: "Read|Write|Edit|MultiEdit|Bash"

@@ -14,6 +14,8 @@ access:
     permissions: [read, write, delete]
   - path: .agentic/specs/**
     permissions: [read]
+  - path: docs/**
+    permissions: [read]
 hooks:
   PreToolUse:
     - matcher: "Read|Write|Edit|MultiEdit|Bash"

@@ -1,4 +1,4 @@
-The current documentation is not what we need as it's just a list of the interal functions the library has.
+/issue The current documentation is not what we need as it's just a list of the interal functions the library has.
 
 We need to write a documentation that is more user-friendly and explains how to use the library, with examples and explanations of the main features.
 

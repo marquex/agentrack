@@ -533,6 +533,21 @@
         "spec"
       ],
       "priority": 2
+    },
+    {
+      "id": "mpe7hg9ni7",
+      "title": "Update docs for configurable branch feature",
+      "path": "issues/mpe7hg9ni7.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "documentation",
+        "build",
+        "init",
+        "cli"
+      ],
+      "priority": 2
     }
   ],
   "closed": [
@@ -541,7 +556,7 @@
       "title": "Self-onboard: initialize expertise with full project context",
       "path": "issues/mpa63iwwhf.json",
       "status": "closed",
-      "assignee": "library-release",
+      "assignee": "library-releaser",
       "parentId": null,
       "tags": [],
       "priority": 2
@@ -634,6 +649,46 @@
       "parentId": "mpe3pknd9j",
       "tags": [],
       "priority": 2
+    },
+    {
+      "id": "mpe7yb8izb",
+      "title": "New test issue",
+      "path": "issues/mpe7yb8izb.json",
+      "status": "closed",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mpe80bbvxd",
+      "title": "Other test issue",
+      "path": "issues/mpe80bbvxd.json",
+      "status": "closed",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mpeaw657j9",
+      "title": "Custom test issue",
+      "path": "issues/mpeaw657j9.json",
+      "status": "closed",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mpeaytqbv9",
+      "title": "E2E test: author attribution",
+      "path": "issues/mpeaytqbv9.json",
+      "status": "closed",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
     }
   ],
   "childrenOf": {
@@ -685,7 +740,8 @@
       "mpe3smr0kk",
       "mpe3pv74lo",
       "mpe3qrgb9x",
-      "mpe3qr9gle"
+      "mpe3qr9gle",
+      "mpe7hg9ni7"
     ]
   }
 }

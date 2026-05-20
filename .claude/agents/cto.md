@@ -21,6 +21,8 @@ access:
     permissions: [read, write]
   - path: ./*
     permissions: [read, write]
+  - path: docs/**
+    permissions: [read]
 hooks:
   PreToolUse:
     - matcher: "Read|Write|Edit|MultiEdit|Bash"

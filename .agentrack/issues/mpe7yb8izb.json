@@ -1,0 +1,23 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T15:30:54.066Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T15:30:54.066Z",
+    "author": "cto",
+    "content": {
+      "title": "New test issue"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T16:56:13.414Z",
+    "author": "cto",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

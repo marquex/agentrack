@@ -11,12 +11,12 @@
       "registeredAt": "2026-05-13T06:42:12.570Z"
     },
     {
-      "name": "library-quality",
+      "name": "library-validator",
       "token": "tk_cmaub6ek",
       "registeredAt": "2026-05-13T07:00:37.317Z"
     },
     {
-      "name": "library-release",
+      "name": "library-releaser",
       "token": "tk_66d51f89",
       "registeredAt": "2026-05-13T07:00:37.317Z"
     }

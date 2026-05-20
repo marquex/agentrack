@@ -70,19 +70,30 @@ interface RuleMatchResult {
 
 // ---------- decision helpers ----------
 
-function decide(decision: Decision, reason: string): never {
+/**
+ * For deny decisions, output JSON so Claude sees the reason.
+ * For allow decisions, exit silently (no JSON output) so we don't
+ * interfere with other parallel PreToolUse hooks that may return
+ * updatedInput (e.g. the token-injection hook).  Outputting an
+ * allow without updatedInput would overwrite another hook's
+ * updatedInput, effectively dropping it.
+ */
+function deny(reason: string): never {
   process.stdout.write(JSON.stringify({
     hookSpecificOutput: {
       hookEventName: 'PreToolUse',
-      permissionDecision: decision,
+      permissionDecision: 'deny',
       permissionDecisionReason: reason,
     },
   }));
   process.exit(0);
 }
 
-const allow = (reason: string): never => decide('allow', reason);
-const deny  = (reason: string): never => decide('deny',  reason);
+function allow(_reason: string): never {
+  // Silent allow — no JSON output to avoid clobbering other hooks'
+  // updatedInput (e.g. token injection).
+  process.exit(0);
+}
 
 // ---------- read stdin ----------
 

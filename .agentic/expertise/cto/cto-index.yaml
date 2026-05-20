@@ -97,6 +97,9 @@ delegation_workflow:
     This applies to ALL code changes that touch public-facing surface area — whether new features,
     behavioral changes, or signature modifications. library-releaser must rebuild dist/ and update
     docs/markdown/ to reflect the change before the work is considered complete.
+    ENFORCEMENT: Every /issue chain that touches CLI or public API MUST include a library-releaser
+    task as part of the issue chain. Do NOT mark the parent as done until library-releaser completes.
+    Violation caught in session 68: configurable-branch shipped without docs+build task.
   access_gaps: |
     Resolved: user granted CTO access to .github/ folder. CTO now owns workflow files.
     Root .gitignore is also writable by CTO.
@@ -317,3 +320,6 @@ session_log:
   - session: 67
     date: "2026-05-20"
     summary: "User requested --branch flag for agt init via /issue skill. Investigated and found feature already shipped — issue mpe3pknd9j (done), spec at configurable-branch-spec.md. Informed user no new work needed. Updated expertise with session log."
+  - session: 68
+    date: "2026-05-20"
+    summary: "User pointed out docs were never updated for --branch flag. Confirmed: issue chain for mpe3pknd9j had implementation (mpe3seanai, library-developer) + validation (mpe3smr0kk, library-validator) but NO library-releaser task for docs+build. This violated the api_change_policy. Created retroactive task mpe7hg9ni7 (library-releaser) to update docs/markdown/ (cli-reference.md, getting-started.md, storing-issues-in-git.md) and rebuild dist/. Lesson: every /issue chain that involves CLI/API changes MUST include a library-releaser task."

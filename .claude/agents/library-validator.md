@@ -12,7 +12,11 @@ access:
     permissions: [read, write, delete]
   - path: packages/library/**
     permissions: [read, write, delete]
+  - path: validation/**
+    permissions: [read, write, delete]
   - path: .agentic/specs/**
+    permissions: [read]
+  - path: docs/**
     permissions: [read]
 hooks:
   PreToolUse:

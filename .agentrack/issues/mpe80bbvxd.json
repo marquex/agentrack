@@ -1,0 +1,23 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T15:32:26.644Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T15:32:26.644Z",
+    "author": "javi",
+    "content": {
+      "title": "Other test issue"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T16:56:13.451Z",
+    "author": "cto",
+    "content": {
+      "status": "closed"
+    }
+  }
+]
