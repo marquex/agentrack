@@ -63,5 +63,13 @@
     "content": {
       "assignee": "cto"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:42:21.940Z",
+    "author": "javi",
+    "content": {
+      "status": "done"
+    }
   }
 ]

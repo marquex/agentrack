@@ -20,5 +20,13 @@
         "spec"
       ]
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:42:31.361Z",
+    "author": "javi",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

@@ -62,5 +62,40 @@
       "blockerId": "mpdwq7dvls",
       "reason": "Blocker issue mpdwq7dvls transitioned to done"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T14:42:22.024Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpdpuhd0r5",
+      "reason": "Blocker issue mpdpuhd0r5 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:43:00.326Z",
+    "author": "javi",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T14:51:25.787Z",
+    "author": "javi",
+    "content": {
+      "id": "mpe6jkxyw7",
+      "content": "Validation complete. All 9 checks pass:\n\n1. TypeDoc fully removed: no typedoc deps, no typedoc.json, no docs-related scripts in package.json\n2. Quality gates: 649 tests pass, 0 failures. Typecheck and lint clean.\n3. Build: dist/ produced successfully (index.js, index.cjs, bin.js, d.ts files)\n4. Old docs gone: docs/ contains only markdown/ subdir. No html/, md/, or old standalone md files.\n5. New docs: all 8 files present with 116–813 lines each (overview:116, getting-started:229, authentication:228, issue-object:199, hierarchy-and-blockages:343, storing-issues-in-git:238, cli-reference:813, javascript-reference:714)\n6. Content quality: accurate API signatures matching source, complete CLI command coverage with all 21 commands, working code examples\n7. No internal implementation details exposed to users\n8. Cross-references between doc files all valid\n9. No broken references in package.json scripts\n\nMinor note: .gitignore still has docs/html/ entry — this was a CTO-domain task per spec, not a blocker for the library work."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:51:33.625Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "javi"
+    }
   }
 ]

@@ -88,5 +88,14 @@
       "id": "mpa666ns8m",
       "content": "Revisited this issue. Previous session (49) had already: (1) Updated CTO expertise with new org structure (hierarchy, delegation workflow, session log), (2) Created child issues mpa60i4skg (library-release init) and mpa60qg5ai (library-quality update), (3) mpa60qg5ai completed by library-quality. Remaining: mpa60i4skg (library-release expertise init) is still todo — waiting for agent runner to pick it up. Cleaned up two duplicate issues I accidentally created (mpa63iwwhf, mpa63qxqpr). Parent remains blocked by mpa60i4skg."
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T14:42:21.945Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpa60i4skg",
+      "reason": "Blocker issue mpa60i4skg transitioned to done"
+    }
   }
 ]

@@ -137,7 +137,7 @@
       "id": "mpa60i4skg",
       "title": "Initialize library-release expertise",
       "path": "issues/mpa60i4skg.json",
-      "status": "in-progress",
+      "status": "done",
       "assignee": "cto",
       "parentId": "mpa5yz3kei",
       "tags": [
@@ -226,7 +226,7 @@
       "id": "mpcwcufhzk",
       "title": "Independent git branch for issue storage",
       "path": "issues/mpcwcufhzk.json",
-      "status": "in-progress",
+      "status": "done",
       "assignee": "cto",
       "parentId": null,
       "tags": [
@@ -444,7 +444,7 @@
       "id": "mpdpuhd0r5",
       "title": "Implement: write user-friendly markdown documentation",
       "path": "issues/mpdpuhd0r5.json",
-      "status": "in-progress",
+      "status": "done",
       "assignee": "cto",
       "parentId": "mpdpt4rego",
       "tags": [
@@ -457,8 +457,8 @@
       "id": "mpdpv6gw49",
       "title": "Validate: user-friendly documentation overhaul",
       "path": "issues/mpdpv6gw49.json",
-      "status": "todo",
-      "assignee": "library-quality",
+      "status": "done",
+      "assignee": "javi",
       "parentId": "mpdpt4rego",
       "tags": [
         "validation",
@@ -510,7 +510,7 @@
       "id": "mpe3pknd9j",
       "title": "Configurable branch name for agt init",
       "path": "issues/mpe3pknd9j.json",
-      "status": "in-progress",
+      "status": "done",
       "assignee": "cto",
       "parentId": null,
       "tags": [
@@ -518,19 +518,6 @@
         "cli",
         "worktree",
         "configuration"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mpe3pv74lo",
-      "title": "Review spec: configurable-branch (quality perspective)",
-      "path": "issues/mpe3pv74lo.json",
-      "status": "todo",
-      "assignee": "library-validator",
-      "parentId": "mpe3pknd9j",
-      "tags": [
-        "review",
-        "spec"
       ],
       "priority": 2
     },
@@ -544,36 +531,6 @@
       "tags": [
         "review",
         "spec"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mpe3qr9gle",
-      "title": "Validate: configurable branch name for agt init",
-      "path": "issues/mpe3qr9gle.json",
-      "status": "todo",
-      "assignee": "library-validator",
-      "parentId": "mpe3pknd9j",
-      "tags": [
-        "init",
-        "cli",
-        "worktree",
-        "validation"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mpe3qrgb9x",
-      "title": "Implement: configurable branch name for agt init",
-      "path": "issues/mpe3qrgb9x.json",
-      "status": "todo",
-      "assignee": "library-developer",
-      "parentId": "mpe3pknd9j",
-      "tags": [
-        "init",
-        "cli",
-        "worktree",
-        "implementation"
       ],
       "priority": 2
     }
@@ -614,6 +571,49 @@
         "ux"
       ],
       "priority": 3
+    },
+    {
+      "id": "mpe3pv74lo",
+      "title": "Review spec: configurable-branch (quality perspective)",
+      "path": "issues/mpe3pv74lo.json",
+      "status": "closed",
+      "assignee": "library-validator",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpe3qr9gle",
+      "title": "Validate: configurable branch name for agt init",
+      "path": "issues/mpe3qr9gle.json",
+      "status": "closed",
+      "assignee": "library-validator",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "validation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpe3qrgb9x",
+      "title": "Implement: configurable branch name for agt init",
+      "path": "issues/mpe3qrgb9x.json",
+      "status": "closed",
+      "assignee": "library-developer",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "implementation"
+      ],
+      "priority": 2
     },
     {
       "id": "mpe3seanai",
@@ -682,7 +682,10 @@
       "mpe3seanai",
       "mpe3smr0kk",
       "mpe3seanai",
-      "mpe3smr0kk"
+      "mpe3smr0kk",
+      "mpe3pv74lo",
+      "mpe3qrgb9x",
+      "mpe3qr9gle"
     ]
   }
 }

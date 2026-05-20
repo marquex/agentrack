@@ -10,7 +10,7 @@ hierarchy:
       - library-validator (testing, quality gates — documentation removed)
       - library-releaser (release prep, documentation, build, version management, publishing)
 
-expertise_status: "Dogfooding active. Project renamed from trackgentic to agentrack. CLI command is `agt`. New policy: any CLI/API change must route to library-releaser for build + docs update. Configurable branch name for agt init (mpe3pknd9j, in-progress) — spec drafted, dev review mpe3pvr2yu in-progress, quality review mpe3pv74lo todo, implementation mpe3qrgb9x blocked by reviews, validation mpe3qr9gle blocked by implementation. User docs overhaul (mpdpt4rego) — doc writing done (mpdwq7dvls), validation pending (mpdpv6gw49). Independent git branch (mpcwcufhzk) — all children done, parent needs closure. Stale issues: mpa60i4skg (in-progress, should be done/closed), mpdpuhd0r5 (in-progress, replaced by mpdwq7dvls which is done). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9). Future: Docusaurus site (mpdxdbqwt9, idea)."
+expertise_status: "Dogfooding active. Project renamed from trackgentic to agentrack. CLI command is `agt`. New policy: any CLI/API change must route to library-releaser for build + docs update. Board cleaned up (session 66): mpa60i4skg, mpdpuhd0r5, mpcwcufhzk, mpe3pknd9j → done; mpe3pv74lo, mpe3qrgb9x, mpe3qr9gle → closed (work shipped via mpe3seanai/mpe3smr0kk). Active work: user docs overhaul (mpdpt4rego, in-progress) — docs written (mpdwq7dvls, done), validation unblocked (mpdpv6gw49, todo). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9). Future: Docusaurus site (mpdxdbqwt9, idea)."
 
 project_overview:
   name: agentrack
@@ -18,10 +18,10 @@ project_overview:
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
   distribution: npm package with CLI entry point (`agt` command)
-  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Active feature: independent git branch (mpcwcufhzk, in-progress) — worktree-based issue storage on orphan branch _agentrack. Standing issues: v0.1.0 release (mp3peanz8b), defensive index validation (mp3pe95w9e), typedoc-plugin-markdown cleanup (mp3pe9lvdq), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Shipped features: independent git branch (worktree-based storage on orphan _agentrack branch), configurable branch name (--branch flag on agt init). Active: user docs overhaul (mpdpt4rego, awaiting validation). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
-  docs_tool: "Transitioning: TypeDoc being removed (mpdpu00ksc). Hand-written markdown docs in docs/markdown/ (8 sections). Future: Docusaurus site consuming docs/markdown/. Spec: .agentic/specs/user-docs-spec.md. Parent issue: mpdpt4rego."
+  docs_tool: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed. Docs overhaul in progress (mpdpt4rego), validation pending (mpdpv6gw49). Future: Docusaurus site consuming docs/markdown/ (mpdxdbqwt9, idea). Spec: .agentic/specs/user-docs-spec.md."
 
 detail_files:
   - path: architecture.yaml
@@ -70,7 +70,7 @@ specifications:
     - path: user-docs-spec.md
       description: "User-friendly documentation overhaul. Replace TypeDoc auto-generated docs with hand-written markdown in docs/markdown/. 8 sections: overview, getting started, authentication, issue object, hierarchy & blockages, storing in git, CLI reference, JS reference. Removes typedoc tooling entirely. Parent: mpdpt4rego. CTO config (mpdpvfn3yb) done. TypeDoc deps removed from package.json. Doc writing: mpdwq7dvls (library-releaser, replaces failed mpdpuhd0r5)."
     - path: configurable-branch-spec.md
-      description: "Configurable branch name for agt init. --branch <name> flag allows custom orphan branch per agentrack instance. Normalization: strip leading _, prepend _ for branch, . for dir. Branch stored in config.json. push/pull resolve from config. Enables multiple instances per repo and test isolation. Parent: mpe3pknd9j. Status: DRAFT, awaiting reviews."
+      description: "Configurable branch name for agt init. --branch <name> flag allows custom orphan branch per agentrack instance. Normalization: strip leading _, prepend _ for branch, . for dir. Branch stored in config.json. push/pull resolve from config. Enables multiple instances per repo and test isolation. SHIPPED — implemented via mpe3seanai, validated via mpe3smr0kk. Parent mpe3pknd9j done."
 
 access_boundaries:
   rule: "CTO must NOT read or modify files under packages/library/. All code changes go through subordinates."
@@ -311,3 +311,9 @@ session_log:
   - session: 65
     date: "2026-05-20"
     summary: "Picked up mpe3pknd9j via /agentrack-implement. Initially created duplicate child issues (mpe3seanai, mpe3smr0kk) before discovering session 64 had already created the proper review chain. Closed duplicates. Dev review mpe3pvr2yu is in-progress (library-developer working on it). Quality review mpe3pv74lo still todo. No CTO code action needed — awaiting runner to execute reviews, then implementation and validation will unblock."
+  - session: 66
+    date: "2026-05-20"
+    summary: "Cleaned up agentrack board. Found 5 in-progress and 4 todo issues, many stale. Marked done: mpa60i4skg (stale onboarding), mpdpuhd0r5 (superseded by mpdwq7dvls), mpcwcufhzk (all children done), mpe3pknd9j (configurable branch shipped via mpe3seanai/mpe3smr0kk). Closed stale children: mpe3pv74lo, mpe3qrgb9x, mpe3qr9gle (work done through alternative issues). Result: 1 in-progress (mpdpt4rego — docs overhaul, awaiting validation), 1 todo (mpdpv6gw49 — docs validation, now unblocked), 1 idea (mpdxdbqwt9 — Docusaurus). Updated expertise."
+  - session: 67
+    date: "2026-05-20"
+    summary: "User requested --branch flag for agt init via /issue skill. Investigated and found feature already shipped — issue mpe3pknd9j (done), spec at configurable-branch-spec.md. Informed user no new work needed. Updated expertise with session log."

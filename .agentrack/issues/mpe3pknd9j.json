@@ -55,5 +55,13 @@
       "id": "mpe3sygxfr",
       "content": "Spec already exists at .agentic/specs/configurable-branch-spec.md (was drafted earlier). Created implementation subtasks:\n\n- mpe3seanai: Implementation — assigned to library-developer. Covers worktree.ts refactor, init.ts --branch flag, push/pull config resolution, config type update, error codes, gitignore handling.\n- mpe3smr0kk: Validation — assigned to library-validator. Blocked by mpe3seanai.\n\nWaiting for subordinates to pick up implementation."
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:42:38.026Z",
+    "author": "javi",
+    "content": {
+      "status": "done"
+    }
   }
 ]

@@ -97,5 +97,13 @@
       "id": "mpdvlf11ft",
       "content": "Waiting for manager to either: (1) grant write access to docs/ directory, or (2) reassign this task to an agent that has docs/ access. I have completed the research phase — I've read all source files (index.ts, tracker.ts, runner.ts, worktree.ts, all types, errors.ts, auth.ts, api.ts) and have full understanding of the actual API. Ready to write the 8 docs as soon as access is granted."
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:42:22.022Z",
+    "author": "javi",
+    "content": {
+      "status": "done"
+    }
   }
 ]

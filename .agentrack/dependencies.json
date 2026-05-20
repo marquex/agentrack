@@ -57,7 +57,7 @@
       {
         "blockerId": "mpa60i4skg",
         "blockedId": "mpa5yz3kei",
-        "status": "active"
+        "status": "resolved"
       }
     ],
     "mpctzodobf": [
@@ -152,7 +152,7 @@
       {
         "blockerId": "mpdpuhd0r5",
         "blockedId": "mpdpv6gw49",
-        "status": "active"
+        "status": "resolved"
       },
       {
         "blockerId": "mpdwq7dvls",
@@ -188,14 +188,14 @@
       {
         "blockerId": "mpe3pv74lo",
         "blockedId": "mpe3qrgb9x",
-        "status": "active"
+        "status": "resolved"
       }
     ],
     "mpe3qr9gle": [
       {
         "blockerId": "mpe3qrgb9x",
         "blockedId": "mpe3qr9gle",
-        "status": "active"
+        "status": "resolved"
       }
     ],
     "mpe3smr0kk": [
@@ -274,7 +274,7 @@
       {
         "blockerId": "mpa60i4skg",
         "blockedId": "mpa5yz3kei",
-        "status": "active"
+        "status": "resolved"
       }
     ],
     "mpctzf23nq": [
@@ -390,7 +390,7 @@
       {
         "blockerId": "mpdpuhd0r5",
         "blockedId": "mpdpv6gw49",
-        "status": "active"
+        "status": "resolved"
       }
     ],
     "mpdwq7dvls": [
@@ -411,14 +411,14 @@
       {
         "blockerId": "mpe3pv74lo",
         "blockedId": "mpe3qrgb9x",
-        "status": "active"
+        "status": "resolved"
       }
     ],
     "mpe3qrgb9x": [
       {
         "blockerId": "mpe3qrgb9x",
         "blockedId": "mpe3qr9gle",
-        "status": "active"
+        "status": "resolved"
       }
     ],
     "mpe3seanai": [

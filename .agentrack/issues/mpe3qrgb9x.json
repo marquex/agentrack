@@ -56,5 +56,22 @@
       "blockerId": "mpe3pvr2yu",
       "reason": "Blocker issue mpe3pvr2yu transitioned to done"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T14:42:31.363Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpe3pv74lo",
+      "reason": "Blocker issue mpe3pv74lo transitioned to closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:42:31.446Z",
+    "author": "javi",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

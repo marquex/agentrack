@@ -30,5 +30,22 @@
     "content": {
       "blockerId": "mpe3qrgb9x"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-20T14:42:31.448Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpe3qrgb9x",
+      "reason": "Blocker issue mpe3qrgb9x transitioned to closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T14:42:31.532Z",
+    "author": "javi",
+    "content": {
+      "status": "closed"
+    }
   }
 ]
