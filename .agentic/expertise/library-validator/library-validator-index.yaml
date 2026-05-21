@@ -6,7 +6,7 @@ hierarchy:
   manager: cto
   subordinates: [none — leaf agent]
 
-expertise_status: "Active — Phases 1-7 complete. 840 total tests (733 library + 107 E2E), 2815 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). E2E validation suite implemented (mpebnnq5qq): 107 E2E tests in validation/e2e/ covering init, create, update, list, view, history, next, comments, blockages, users, hierarchy, auth, lifecycle. Spec reviews completed: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities; independent-git (mpcwd7ued6) — 2 critical testability concerns, 2 high issues, 5 missing ACs; user-docs (mpdpthrliu) — 2 critical, 2 high, 3 medium, 3 low findings; e2e-validation-suite (mpebmy32vc) — 2 critical, 3 high, 4 medium, 2 low findings. Independent-git implementation: 3 spec deviations found during initial validation (mpcwdqz3kc), fixes assigned as mpd4hktoxq, validation+tests blocked as mpd4hs14zp. Configurable-branch validation (mpfmfoduo6): COMPLETE — all 12 scenarios validated, 84 new tests, 100% branch-config.ts coverage. Documentation responsibilities transferred to library-releaser agent."
+expertise_status: "Active — Phases 1-7 complete. 802 total tests (733 library + 69 E2E), 2625 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). E2E tests consolidated: old validation/e2e/ (temp-dir-per-test, 107 tests) DELETED — replaced by worktree-based packages/library/tests/e2e/ (69 tests across 15 files, shared worktree approach with Type A/Type B split). validation/ directory is now a runtime workspace only (.agentrack.json pointer, .e2edata/ worktree, .gitignore). Spec reviews completed: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities; independent-git (mpcwd7ued6) — 2 critical testability concerns, 2 high issues, 5 missing ACs; user-docs (mpdpthrliu) — 2 critical, 2 high, 3 medium, 3 low findings; e2e-validation-suite (mpebmy32vc) — 2 critical, 3 high, 4 medium, 2 low findings. Independent-git implementation: 3 spec deviations found during initial validation (mpcwdqz3kc), fixes assigned as mpd4hktoxq, validation+tests blocked as mpd4hs14zp. Configurable-branch validation (mpfmfoduo6): COMPLETE — all 12 scenarios validated, 84 new tests, 100% branch-config.ts coverage. Documentation responsibilities transferred to library-releaser agent."
 
 project_phases:
   phase_1_foundation:
@@ -61,9 +61,9 @@ source_layout:
   public_api: "src/index.ts (62 lines) re-exports Tracker class, AgentrackError, all type and response type aliases"
 
 test_layout:
-  total_tests: 840
-  total_expect_calls: 2815
-  total_files: 45
+  total_tests: 802
+  total_expect_calls: 2625
+  total_files: 44
   test_helpers: [helpers/setup.ts (19 lines — createTestDir, cleanupTestDir), helpers/fixtures.ts (24 lines — createIssueParams, updateIssueParams), helpers/assertions.ts (18 lines — expectError, expectOk)]
 
   directory_structure: |
@@ -105,46 +105,71 @@ test_layout:
     └── integration/                # Placeholder for future integration tests (empty)
 
   e2e_layout:
-    location: "validation/e2e/"
-    total_tests: 107
-    total_expect_calls: 505
-    total_files: 16
-    run_command: "bun test validation/e2e/"
-    test_duration: "~38 seconds"
-    helpers: [helpers/runner.ts (45 lines — runAgt, BIN_PATH), helpers/setup.ts (133 lines — createTestRepo, initAgt, cleanupTestRepo, setAuthMode, createIsolatedDir), helpers/assertions.ts (55 lines — parseJson, assertSuccess, assertError, extractId)]
+    location: "packages/library/tests/e2e/"
+    total_tests: 69
+    total_expect_calls: 315
+    total_files: 15
+    run_command: "bun test tests/e2e/ (from packages/library/)"
+    test_duration: "~122 seconds"
+    infrastructure: "setup.ts (411 lines — shared worktree approach with Type A/Type B test split)"
+    setup_helpers:
+      - "getValidationDir() — resolves validation/ dir at project root, creates if missing"
+      - "getTrackerDir(branch) — e.g. validation/.e2edata/"
+      - "runAgt(args, cwd?, env?) — Bun.spawn CLI runner, defaults cwd to validation/"
+      - "initE2EWorktree(branch) — Type A: full cleanup + re-init"
+      - "teardownE2EWorktree(branch) — Type A: cleanup + restore Type B pointer"
+      - "ensureE2EWorktree(branch) — Type B: idempotent init in beforeAll"
+      - "resetWorktreeData(branch) — Type B: fast file-level reset in beforeEach"
+      - "setAuthMode(branch, mode, defaultUser?) — write config.json"
+      - "parseJson, assertSuccess, assertError, extractId — assertion helpers"
+    two_type_model:
+      type_a_git_operations:
+        description: "Full worktree lifecycle — create/destroy for each test"
+        commands: [init, push, pull]
+        files: [init.test.ts, push.test.ts, pull.test.ts]
+      type_b_tracker_operations:
+        description: "Shared long-lived worktree with fast data reset (no git ops)"
+        commands: [create, update, list, view, history, next, comments, blockages, users, hierarchy, auth, lifecycle]
+        files: [create.test.ts, update.test.ts, list.test.ts, view.test.ts, history.test.ts, next.test.ts, comments.test.ts, blockages.test.ts, users.test.ts, hierarchy.test.ts, auth.test.ts, lifecycle.test.ts]
     test_files:
-      init: { tests: 6, lines: 108, describes: [worktree creation, gitignore, non-git fallback, already initialized, post-init CRUD] }
-      create: { tests: 7, lines: 106, describes: [default values, all flags, parentId, special chars, many tags] }
-      update: { tests: 9, lines: 125, describes: [individual fields, multiple fields, clear parentId, no-op update] }
-      list: { tests: 8, lines: 104, describes: [empty list, status/assignee/tags/parentId filters, many issues] }
-      view: { tests: 4, lines: 72, describes: [full state, not found, updates reflected] }
-      history: { tests: 6, lines: 97, describes: [event array, updates, comments, blockages, many events] }
-      next: { tests: 7, lines: 101, describes: [priority, blocked, done/closed, resolved blockage, tiebreaking] }
-      comments: { tests: 10, lines: 119, describes: [full lifecycle, error paths, delete then re-add] }
-      blockages: { tests: 10, lines: 149, describes: [full lifecycle, cycle detection, chain] }
-      users: { tests: 9, lines: 116, describes: [register/list/revoke/regenerate, duplicate, anonymous, many] }
-      hierarchy: { tests: 12, lines: 230, describes: [parent-child CRUD, auto-close, auto-promotion, reparenting] }
-      auth: { tests: 14, lines: 199, describes: [open/read-only/strict modes, token enforcement, attribution] }
-      lifecycle: { tests: 5, lines: 248, describes: [full multi-step workflows spanning 10+ commands] }
+      init: { tests: ~6, describes: [worktree creation, gitignore, already initialized] }
+      create: { tests: ~5, describes: [default values, all flags, parentId] }
+      update: { tests: ~5, describes: [individual fields, multiple fields, clear parentId] }
+      list: { tests: ~4, describes: [empty list, status/assignee/tags/parentId filters] }
+      view: { tests: ~3, describes: [full state, not found] }
+      history: { tests: ~4, describes: [event array, updates, comments] }
+      next: { tests: ~5, describes: [priority, blocked, done/closed, resolved blockage] }
+      comments: { tests: ~6, describes: [full lifecycle, error paths] }
+      blockages: { tests: ~6, describes: [full lifecycle, cycle detection] }
+      users: { tests: ~5, describes: [register/list/revoke/regenerate, duplicate] }
+      hierarchy: { tests: ~6, describes: [parent-child CRUD, auto-close, auto-promotion] }
+      auth: { tests: ~6, describes: [open/read-only/strict modes, token enforcement] }
+      lifecycle: { tests: ~4, describes: [full multi-step workflows] }
+      push: { tests: ~2, describes: [push changes, push no changes] }
+      pull: { tests: ~2, describes: [pull updates, pull up to date] }
     key_differentiators:
-      - "Real git repos with worktree creation (existing tests use plain tmpdir)"
-      - "Auth mode enforcement tests (existing tests only test resolveAuthor unit)"
-      - "Hierarchy workflows at CLI level (existing tests only at Tracker level)"
-      - "Multi-command lifecycle tests (existing tests test commands in isolation)"
-      - "List filtering by assignee/tags/parentId (existing tests only filter by status)"
+      - "Shared worktree approach — Type B tests reuse one worktree, fast reset via file overwrite"
+      - "Real git worktrees mounted from orphan branches"
+      - "Auth mode enforcement tests"
+      - "Multi-command lifecycle tests"
+      - "Push/pull CLI commands tested E2E"
     design_decisions:
-      - "No --branch flag needed — each test creates its own git repo, getting isolated worktrees naturally"
-      - "createIsolatedDir() uses tmpdir() for NOT_INITIALIZED tests (avoids resolveTrackerDir walking up to project .agentrack/)"
-      - "Bun.spawn async (not spawnSync) for consistency with existing CLI test patterns"
-      - "Tests run sequentially via bun test default (no explicit describe.serial needed)"
+      - "Uses --branch flag for test isolation (e2edata/e2egit branches)"
+      - "validation/ directory at project root is the runtime workspace (pointer file + worktree dirs)"
+      - "Tests run serially — shared .agentrack.json pointer file"
+      - "Bun.spawn async for CLI subprocess execution"
+      - "No NOT_INITIALIZED tests in E2E — covered by unit tests"
+    cleanup_history:
+      - "OLD: validation/e2e/ (temp-dir-per-test, 107 tests, ~38s) — DELETED. Used createTestRepo/cleanupTestRepo helpers, each test created its own git repo."
+      - "NEW: packages/library/tests/e2e/ (shared worktree, 69 tests, ~122s) — ACTIVE. Uses setup.ts with Type A/Type B split, validation/ as runtime workspace."
 
   file_naming_convention:
-    monolithic_files: "{module}.test.ts" — single file per source module (e.g., auth.test.ts, id.test.ts)
-    split_files: "{module}-{feature}.test.ts" — feature-scoped slices of a large module
+    monolithic_files: '"{module}.test.ts" — single file per source module (e.g., auth.test.ts, id.test.ts)'
+    split_files: '"{module}-{feature}.test.ts" — feature-scoped slices of a large module'
     examples:
-      - "tracker-crud.test.ts" — Tracker create/list/view/update/history
-      - "tracker-blockages.test.ts" — Tracker blockages domain
-      - "compute-state.test.ts" — computeState function tests
+      - '"tracker-crud.test.ts" — Tracker create/list/view/update/history'
+      - '"tracker-blockages.test.ts" — Tracker blockages domain'
+      - '"compute-state.test.ts" — computeState function tests'
     rule: "Split when a single test file exceeds ~500 lines or covers multiple distinct feature domains"
 
   split_organization:
@@ -385,6 +410,7 @@ learnings:
   spec_review_e2e_validation_suite:
     issue: "mpebmy32vc (parent: mpebmstgs9)"
     change: "Create E2E test suite in validation/ folder exercising agt CLI against real git repos and agentrack instances."
+    outcome: "Suite was created in validation/e2e/ (107 tests) but later DELETED and replaced by worktree-based tests in packages/library/tests/e2e/ (69 tests). See e2e_layout for current state."
     review_perspective: "Testability, quality, and overlap with existing test infrastructure"
     critical_findings:
       - "C1: --branch flag on agt init does not exist — init accepts NO flags (runner.ts:42-45). Entire test isolation strategy (agt init --branch=test-<random>) is impossible. Worktree always uses hardcoded _agentrack branch."
@@ -407,11 +433,13 @@ learnings:
       - "Worktree cleanup must follow the pattern from existing tests: git worktree remove -f followed by git worktree prune"
   e2e_validation_suite:
     issue: "mpebnnq5qq (parent: mpebmstgs9)"
-    change: "Create E2E test suite in validation/ folder exercising agt CLI against real git repos."
-    infrastructure:
-      - "validation/e2e/helpers/runner.ts — Bun.spawn command runner, resolves BIN_PATH from validation/e2e/helpers/ to project root"
-      - "validation/e2e/helpers/setup.ts — createTestRepo (git init + initial commit), initAgt (run agt init), cleanupTestRepo (worktree remove + prune + rmSync), setAuthMode (direct config.json write), createIsolatedDir (tmpdir for NOT_INITIALIZED tests)"
-      - "validation/e2e/helpers/assertions.ts — parseJson, assertSuccess, assertError, extractId"
+    change: "Originally created E2E test suite in validation/e2e/ folder. DELETED — replaced by worktree-based tests in packages/library/tests/e2e/."
+    status: "DELETED — old validation/e2e/ removed. See e2e_layout section for current active tests in packages/library/tests/e2e/."
+    original_infrastructure:
+      - "validation/e2e/helpers/runner.ts — DELETED"
+      - "validation/e2e/helpers/setup.ts — DELETED"
+      - "validation/e2e/helpers/assertions.ts — DELETED"
+      - "All 14 test files + 3 helper files removed"
     lessons_learned:
       - "resolveTrackerDir walks UP from cwd looking for .agentrack/. Tests inside the project tree (validation/) will find the project's own .agentrack/ directory. NOT_INITIALIZED tests must use tmpdir() OUTSIDE the project tree."
       - "createTestRepo must include initial commit (git init + commit) for branch operations (agt init creates orphan branch, requires HEAD to exist)"
@@ -441,12 +469,17 @@ learnings:
     dependency_on_e2e_strategy: "The --branch flag is now implemented and validated. The E2E refactor (shared worktree proposal) can proceed."
     key_pattern: "When validating branch/namespace features, always test: (1) normalization consistency, (2) rejection of invalid chars, (3) backward compat without the feature, (4) discovery mechanism with and without the new config artifact, (5) independent instances coexisting."
   e2e_strategy_shared_worktree_proposal:
-    status: "Approved — two-type test model adopted. Report at validation/e2e-refactor.md. Awaiting --branch flag implementation."
-    proposed_flow: "Delete remote branch → agt init --branch <name> from validation/ → tests run with cwd=validation/ → resolveTrackerDir finds validation/.agentrack/ first → teardown removes worktree"
-    library_code_prerequisites:
-      - "agt init --branch <name> flag does NOT exist yet — runner.ts registers init with no options, initAction() takes no args"
-      - "worktree.ts WORKTREE_BRANCH is hardcoded as '_agentrack' — referenced 12 times across checkPreconditions, detectInitScenario, initFreshWorktree, initJoinWorktree, initWorktree. All need branch parameter."
-      - "initAction() must thread --branch flag through to initWorktree(cwd, branch)"
+    status: "IMPLEMENTED — two-type test model is now active in packages/library/tests/e2e/. Old validation/e2e/ tests deleted."
+    current_state:
+      - "packages/library/tests/e2e/setup.ts contains all shared worktree infrastructure (411 lines)"
+      - "validation/ directory is runtime workspace (.agentrack.json pointer, .e2edata/ worktree, .gitignore)"
+      - "Type A tests (init, push, pull) use initE2EWorktree/teardownE2EWorktree for full lifecycle"
+      - "Type B tests (all others) use ensureE2EWorktree (beforeAll) + resetWorktreeData (beforeEach) for fast resets"
+      - "--branch flag implemented and working for test isolation"
+    original_proposed_flow: "Delete remote branch → agt init --branch <name> from validation/ → tests run with cwd=validation/ → resolveTrackerDir finds validation/.agentrack/ first → teardown removes worktree"
+    completed_prerequisites:
+      - "agt init --branch <name> flag NOW EXISTS — configurable-branch feature validated (mpfmfoduo6)"
+      - "worktree.ts supports configurable branch names"
     two_test_types:
       type_a_git_operations:
         commands: [agt init, agt pull, agt push]
@@ -461,9 +494,9 @@ learnings:
     helpers_removed: [createTestRepo, cleanupTestRepo, createIsolatedDir, cleanupIsolatedDir]
     helpers_new: [getValidationDir, initE2EWorktree(branch), teardownE2EWorktree(branch), resetWorktreeData(dir), setAuthMode(dir, mode)]
     phased_plan:
-      - "Phase 1: Implement --branch flag in library code"
-      - "Phase 2: Implement new helpers"
-      - "Phase 3: Rewrite Type A tests (init, push, pull)"
-      - "Phase 4: Rewrite Type B tests (all other commands)"
-      - "Phase 5: Remove old helpers"
+      - "Phase 1: Implement --branch flag in library code — DONE (configurable-branch validation mpfmfoduo6)"
+      - "Phase 2: Implement new helpers — DONE (setup.ts with getValidationDir, initE2EWorktree, etc.)"
+      - "Phase 3: Rewrite Type A tests (init, push, pull) — DONE"
+      - "Phase 4: Rewrite Type B tests (all other commands) — DONE"
+      - "Phase 5: Remove old helpers — DONE (validation/e2e/ deleted)"
     key_pattern: "When splitting E2E tests by infrastructure dependency, separate git-operation tests (init/push/pull) from data-operation tests (CRUD). Git tests need full environment teardown; data tests only need file-level resets."
