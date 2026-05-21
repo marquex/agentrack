@@ -218,6 +218,16 @@ current_state:
           review: mpebmy32vc (library-validator, spec review)
           implement: mpebnnq5qq (library-validator, blocked by review)
         enabler: "validation/ folder access + agt init --branch=<name> for test isolation"
+      e2e_test_refactor:
+        issue: mpfobnq8ty
+        status: in-progress
+        parent: mpebmstgs9
+        description: "Refactor E2E tests from per-test git repos to shared worktree approach. Two test types: Type A (git ops, clean env per test) + Type B (CRUD, fast data reset). Spec authored by library-validator."
+        spec: .agentic/specs/e2e-refactor.md
+        chain:
+          implement: mpfobxibgb (library-validator, todo)
+          validate: mpfoc9r65a (library-validator, todo, blocked by impl)
+        prerequisite: "--branch flag (mpfm8bilwf) — done"
       configurable_branch:
         issue: mpfm8bilwf
         status: in-progress
@@ -272,6 +282,7 @@ current_state:
       - "All tracked as agentrack issues — see `agt list` and open_issues above"
       - "Configurable branch (--branch): issue mpfm8bilwf (in-progress) — implemented but validation found 2 critical bugs, fix mpfn4dkotn (library-developer, P1) in progress"
       - "E2E validation test suite: issue mpebmstgs9 (in-progress, CTO)"
+      - "E2E test refactor: issue mpfobnq8ty (in-progress, child of mpebmstgs9) — library-validator refactors to shared worktree approach"
       - "User docs validation: issue mpdpv6gw49 (todo, library-validator)"
       - "User docs overhaul parent: issue mpdpt4rego (in-progress, awaiting validation)"
       - "NPM_TOKEN secret: issue mp3peac1qo"

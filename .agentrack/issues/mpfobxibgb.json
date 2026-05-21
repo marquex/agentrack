@@ -1,0 +1,60 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-21T15:57:09.123Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:57:09.123Z",
+    "author": "cto",
+    "content": {
+      "title": "Implement: E2E test refactor per spec",
+      "description": "Spec: .agentic/specs/e2e-refactor.md\n\nImplement Phases 2-5 of the E2E refactor spec. The spec was authored by you, so you know the design. Key work:\n\n**Phase 2**: Implement new helpers in setup.ts:\n- getValidationDir() — absolute path to validation/\n- initE2EWorktree(branch) — delete remote branch, remove old worktree, run agt init --branch\n- teardownE2EWorktree(branch) — git worktree remove + prune + optionally delete remote branch\n- resetWorktreeData(dir) — overwrite data files with defaults, delete issue event files\n- setAuthMode(dir, mode, defaultUser?) — write config.json with specified auth mode\n\n**Phase 3**: Rewrite Type A tests (init.test.ts, new push.test.ts, new pull.test.ts) using initE2EWorktree/teardownE2EWorktree. Remove non-git repo tests and NOT_INITIALIZED tests.\n\n**Phase 4**: Rewrite Type B tests (all other .test.ts files) using resetWorktreeData in beforeEach. Remove NOT_INITIALIZED tests from each file.\n\n**Phase 5**: Remove old helpers (createTestRepo, cleanupTestRepo, createIsolatedDir, cleanupIsolatedDir).\n\nAfter implementation, run the full test suite to verify everything works. If any tests fail due to library code bugs (not test bugs), report them as comments on this issue.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-validator",
+      "parentId": "mpfobnq8ty",
+      "tags": [
+        "testing",
+        "e2e",
+        "implementation"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:57:41.145Z",
+    "author": "cto",
+    "content": {
+      "id": "mpfocm6j2x",
+      "content": "Context for implementation:\n- The --branch flag is already implemented and working (issues mpfmfcg2i5, mpfmfoduo6)\n- The spec was written by you, so you have full context on the design decisions\n- Run 'bun test' from packages/library to execute the test suite after implementation\n- If tests reveal library code bugs (not test bugs), report them as comments here — we will fix the library code before marking the refactor complete\n- The NOT_INITIALIZED error path is well covered by unit tests, so removing those E2E tests does not reduce coverage"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T16:04:05.722Z",
+    "author": "library-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T17:10:41.432Z",
+    "author": "javi",
+    "content": {
+      "id": "mpfqyiakcp",
+      "content": "Done. Implemented E2E test refactor per spec (Phases 2-5):\n\n**Phase 2 — Setup helpers** (tests/e2e/setup.ts):\n- `getValidationDir()` — absolute path to validation/ at project root\n- `initE2EWorktree(branch)` — deletes remote/local branch, removes old worktree, runs `agt init --branch`\n- `teardownE2EWorktree(branch)` — removes worktree, prunes, deletes branches, restores Type B pointer\n- `ensureE2EWorktree(branch)` — idempotent init for Type B tests\n- `resetWorktreeData(branch)` — overwrites data files with defaults, deletes issue files (~1ms)\n- `setAuthMode(branch, mode, defaultUser?)` — writes config.json with auth mode\n- `ensurePointer(branch)` — restores pointer file for Type B after Type A teardown\n- `runAgt(args, cwd?, env?)` — spawns CLI and captures output\n- `parseJson()`, `assertSuccess()`, `assertError()`, `extractId()` — assertion helpers\n\n**Phase 3 — Type A tests** (init.test.ts, push.test.ts, pull.test.ts):\n- init: 5 tests — fresh init, already initialized, data files, issues/ dir, branch in config\n- push: 3 tests — no changes, after create, custom message\n- pull: 2 tests — already up to date, after push\n\n**Phase 4 — Type B tests** (12 files, 59 tests):\n- create (4), update (4), list (4), view (3), history (4), next (5)\n- comments (8), blockages (8), users (8), hierarchy (4)\n- auth (4), lifecycle (2)\n\n**Phase 5 — Old helpers**: The referenced helpers (createTestRepo, etc.) don't exist in the codebase. The old `tests/cli/commands.test.ts` is preserved — it covers CLI tests via temp dirs. The new E2E tests supplement it with worktree-based testing.\n\n**Key design decisions**:\n1. Two branches: `e2edata` (Type B, long-lived) and `e2egit` (Type A, per-test)\n2. `prepareForCleanInit()` pre-creates .gitignore + pointer file to prevent auto-commits on main branch during init\n3. Type A tests do setup/teardown within each test (not hooks) with `{ timeout: 120000 }` to avoid Bun's hook timeout\n4. `ensurePointer()` restores Type B pointer after Type A teardown for coexistence\n\n**Quality check results**: ✅ typecheck + lint + test:coverage — 802 tests, 0 failures, 2625 assertions"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T17:10:49.891Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

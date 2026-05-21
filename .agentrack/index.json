@@ -706,6 +706,48 @@
       "parentId": "mpfm9aff8v",
       "tags": [],
       "priority": 1
+    },
+    {
+      "id": "mpfobnq8ty",
+      "title": "Refactor E2E tests to shared worktree approach",
+      "path": "issues/mpfobnq8ty.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "testing",
+        "e2e",
+        "refactor"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfobxibgb",
+      "title": "Implement: E2E test refactor per spec",
+      "path": "issues/mpfobxibgb.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpfobnq8ty",
+      "tags": [
+        "testing",
+        "e2e",
+        "implementation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfoc9r65a",
+      "title": "Validate: E2E test refactor — run full suite and report",
+      "path": "issues/mpfoc9r65a.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpfobnq8ty",
+      "tags": [
+        "testing",
+        "e2e",
+        "validation"
+      ],
+      "priority": 2
     }
   ],
   "closed": [
@@ -931,6 +973,10 @@
     ],
     "mpfm9aff8v": [
       "mpfn4dkotn"
+    ],
+    "mpfobnq8ty": [
+      "mpfobxibgb",
+      "mpfoc9r65a"
     ]
   }
 }

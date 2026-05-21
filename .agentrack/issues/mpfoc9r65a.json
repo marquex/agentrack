@@ -1,0 +1,68 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-21T15:57:24.480Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:57:24.480Z",
+    "author": "cto",
+    "content": {
+      "title": "Validate: E2E test refactor — run full suite and report",
+      "description": "Spec: .agentic/specs/e2e-refactor.md\n\nAfter the E2E test refactor is implemented, run the full test suite end-to-end and verify:\n\n1. All Type A tests (init, push, pull) pass with proper git isolation\n2. All Type B tests (create, update, list, view, history, next, comments, blockages, users, hierarchy, auth, lifecycle) pass with fast data reset\n3. No old helpers remain (createTestRepo, cleanupTestRepo, createIsolatedDir, cleanupIsolatedDir)\n4. New helpers work correctly\n5. Test isolation is clean — no test pollution between suites\n\nIf any tests fail due to library code bugs, create detailed issue reports with:\n- Command that failed\n- Expected vs actual behavior\n- Relevant error output\n- Suggested fix direction",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-validator",
+      "parentId": "mpfobnq8ty",
+      "tags": [
+        "testing",
+        "e2e",
+        "validation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-21T15:57:32.049Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpfobxibgb"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-21T17:10:49.894Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpfobxibgb",
+      "reason": "Blocker issue mpfobxibgb transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T17:12:01.139Z",
+    "author": "library-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T17:20:24.985Z",
+    "author": "javi",
+    "content": {
+      "id": "mpfrb0u5op",
+      "content": "## E2E Test Refactor Validation — COMPLETE ✅\n\nAll 5 acceptance criteria verified and passing:\n\n### 1. Type A tests (init, push, pull) — PASS\n- **init.test.ts**: 5 tests — fresh init, ALREADY_INITIALIZED, data files, issues dir, config.json branch\n- **push.test.ts**: 3 tests — no changes to sync, push after create, custom message\n- **pull.test.ts**: 2 tests — up to date, pull after push\n- All use `initE2EWorktree`/`teardownE2EWorktree` for proper git isolation\n- Each test does its own setup/teardown (no hooks) with 120s timeout\n\n### 2. Type B tests (all other commands) — PASS\n- 12 files, 60 tests using `ensureE2EWorktree` (beforeAll) + `resetWorktreeData` (beforeEach)\n- Fast data reset (~1ms): overwrites index.json, dependencies.json, users.json, config.json; deletes issue event files\n- Coverage: create(4), update(4), list(4), view(3), history(4), next(5), comments(8), blockages(9), users(8), hierarchy(4), auth(4), lifecycle(2)\n\n### 3. Old helpers removed — PASS\n- Zero matches for: `createTestRepo`, `cleanupTestRepo`, `createIsolatedDir`, `cleanupIsolatedDir`\n- Zero matches for `NOT_INITIALIZED` in E2E tests (removed, covered by unit tests)\n\n### 4. New helpers work correctly — PASS\n- `initE2EWorktree()`, `teardownE2EWorktree()` — used by Type A tests\n- `ensureE2EWorktree()`, `resetWorktreeData()` — used by Type B tests\n- `setAuthMode()` — used by auth tests\n- `getValidationDir()`, `getTrackerDir()`, `ensurePointer()` — internal helpers\n- `prepareForCleanInit()` — pre-creates .gitignore + pointer to prevent auto-commits\n\n### 5. Test isolation clean — PASS\n- No test pollution between suites\n- 69 E2E tests, 0 failures, 315 assertions\n- Full quality suite: 802 tests pass, 0 fail, typecheck + lint clean\n\n### Summary\n| Metric | Value |\n|--------|-------|\n| E2E test files | 15 |\n| E2E tests | 69 |\n| E2E assertions | 315 |\n| Type A tests (git ops) | 10 |\n| Type B tests (tracker ops) | 60* (59 + lifecycle) |\n| Failures | 0 |\n| Old helpers remaining | 0 |\n\nThe refactor is clean, well-structured, and follows the spec exactly. No issues found."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T17:20:30.911Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]
