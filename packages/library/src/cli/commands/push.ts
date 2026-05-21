@@ -1,15 +1,18 @@
 import { AgentrackError } from "../../core/errors";
+import { resolveWorktreeOptions } from "../../core/branch-config";
 import { pushWorktree } from "../../core/worktree";
 import { writeStderr, writeStdout } from "../output";
 
 /**
  * Handler for the `agt push` command.
- * Stages all changes in the .agentrack/ worktree, commits, and pushes to remote.
+ * Stages all changes in the worktree, commits, and pushes to remote.
+ * Resolves the active branch from the pointer file.
  */
 export async function pushAction(options?: { message?: string }): Promise<void> {
   try {
     const cwd = process.cwd();
-    const result = pushWorktree(cwd, options?.message);
+    const opts = resolveWorktreeOptions(cwd);
+    const result = pushWorktree(cwd, options?.message, opts);
     writeStdout({
       result: "OK",
       synced: result.synced,

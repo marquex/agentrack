@@ -1,6 +1,6 @@
 # Configurable Branch Name for `agt init`
 
-**Status: DRAFT**
+**Status: REVIEWED — Updated 2026-05-21 to incorporate review feedback from mpe3pvr2yu and mpe3pv74lo**
 
 ## Summary
 
@@ -37,9 +37,11 @@ agt init --branch myproject # branch: _myproject,  dir: .myproject/
 
 Each branch/directory pair is independent, allowing multiple agentrack instances per repository (each mounted at its own path).
 
-### AC2: Branch name stored in config
+### AC2: Branch name stored in config + pointer file
 
-After `agt init`, the chosen branch name is recorded in `config.json`:
+After `agt init`, the chosen branch name is recorded in two places:
+
+**1. Inside the worktree config** — `config.json` in the worktree directory:
 
 ```json
 {
@@ -49,40 +51,61 @@ After `agt init`, the chosen branch name is recorded in `config.json`:
 }
 ```
 
-The existing default init continues to produce `config.json` without a `branch` field (backward compatible — code falls back to `_agentrack` when absent).
+**2. As a pointer file in the main repo root** — `.agentrack.json` at the repo root (NOT inside the worktree):
+
+```json
+{
+  "branch": "_testing"
+}
+```
+
+This pointer file solves the circular discovery problem: to find the config, you need to know the directory, but the directory comes from the config. The pointer file at a fixed, well-known location (`cwd/.agentrack.json`) breaks the cycle.
+
+- The pointer file is created during `agt init` and must be committed to the main branch (not the worktree branch).
+- During `push`/`pull` and all other commands, read `.agentrack.json` to discover which worktree directory to use.
+- For backward compatibility: if `.agentrack.json` does not exist, assume branch `_agentrack` and directory `.agentrack/`.
+- The existing default init continues to produce `config.json` without a `branch` field (backward compatible — code falls back to `_agentrack` when absent).
+- The pointer file is always named `.agentrack.json` regardless of the branch name.
 
 ### AC3: `push` and `pull` respect the configured branch
 
-`agt push` and `agt pull` read the branch name from `config.json` and operate on that branch's worktree. They must resolve the correct directory (`.agentrack/` vs `.testing/` etc.) based on the stored config.
+`agt push` and `agt pull` read the branch name from the pointer file (`cwd/.agentrack.json`) and operate on that branch's worktree. They derive the correct directory (`.agentrack/` vs `.testing/` etc.) from the pointer file's `branch` field. If the pointer file is absent, fall back to `_agentrack` / `.agentrack/`.
 
-### AC4: Worktree module reads branch from config
+### AC4: Worktree module reads branch from pointer file
 
-The `worktree.ts` module currently hardcodes `WORKTREE_BRANCH = '_agentrack'` and `WORKTREE_DIR = '.agentrack'`. These become derived from config:
+The `worktree.ts` module currently hardcodes `WORKTREE_BRANCH = '_agentrack'` and `WORKTREE_DIR = '.agentrack'`. These become derived from the pointer file:
 
 ```typescript
 // Before
 export const WORKTREE_BRANCH = '_agentrack';
 export const WORKTREE_DIR = '.agentrack';
 
-// After: resolved per-operation from config.json (or defaults)
-export function getDefaultBranch(): { branch: string; dir: string }
-// Returns { branch: '_agentrack', dir: '.agentrack' } when no config exists
+// After: resolved from pointer file or defaults
+export const DEFAULT_BRANCH = '_agentrack';
+export const DEFAULT_DIR = '.agentrack';
+
+export function normalizeBranchName(input: string): { branch: string; dir: string }
+// Strips leading underscores, prepends _ and . respectively
+// IMPORTANT: Rejects slashes — see AC8
 
 export function resolveWorktreePaths(cwd: string): { branch: string; dir: string }
-// Reads config.json from cwd/.agentrack/config.json (or tries to find the config)
-// Falls back to defaults if no config or no branch field
+// Reads .agentrack.json from cwd to determine active branch/dir
+// Falls back to DEFAULT_BRANCH/DEFAULT_DIR if pointer file absent
 ```
 
-**Important:** During `init`, there's a chicken-and-egg problem — config.json doesn't exist yet, so we can't read the branch from it. The `--branch` flag value must be passed through to the worktree init functions explicitly.
+**Important:** During `init`, there's a chicken-and-egg problem — the pointer file doesn't exist yet, so we can't read the branch from it. The `--branch` flag value must be passed through to the worktree init functions explicitly. After init completes, the pointer file is written.
 
-### AC5: `isWorktreeInitialized` must discover the active instance
+### AC5: `isWorktreeInitialized` and `resolveTrackerDir` must discover the active instance
 
-The current check looks for `.agentrack/` specifically. It must be generalized:
+The current check looks for `.agentrack/` specifically. `resolution.ts` has `const AGENTACK_DIR = ".agentrack"` used by `resolveTrackerDir()` which walks up the filesystem. Both must be generalized:
 
 - **During `init`:** The command already knows the target directory from the `--branch` flag (or default). Check that specific directory.
-- **During `push`/`pull` and other commands:** Read `config.json` to discover the branch, derive the directory, then check that path.
+- **During all other commands:** Read the pointer file (`.agentrack.json`) to discover the branch, derive the directory, then check that path.
+- **`resolveTrackerDir()`** must read the pointer file at each level during its walk-up to determine the correct directory name. If no pointer file is found, fall back to `.agentrack/`.
 
-Do NOT scan for all agentrack directories — just resolve the single active one from config.
+Similarly, `tracker.ts` has `const AGENTACK_DIR = ".agentrack"` for the non-git fallback path. This must also be derived from the pointer file or passed as a parameter.
+
+Do NOT scan for all agentrack directories — just resolve the single active one from the pointer file.
 
 ### AC6: Error cases for `--branch`
 
@@ -90,6 +113,7 @@ Do NOT scan for all agentrack directories — just resolve the single active one
 |-----------|-----------|---------|
 | Branch name contains spaces or invalid git chars | `INVALID_BRANCH_NAME` | "Branch name '<name>' is not a valid git branch name" |
 | Branch name is empty | `INVALID_BRANCH_NAME` | "Branch name cannot be empty" |
+| Branch name contains slashes | `INVALID_BRANCH_NAME` | "Branch name cannot contain slashes (slashes would create nested directories)" |
 | Directory already exists (for that branch) and is not a worktree | `MIGRATION_REQUIRED` | Same as current, but with the specific directory name |
 | Branch already exists but with different content | `BRANCH_CONFLICT` | "Branch '<name>' already exists but does not contain agentrack data" |
 
@@ -99,6 +123,17 @@ All existing behavior is preserved:
 - `agt init` without `--branch` works exactly as before
 - Existing repos with `_agentrack` branch and `.agentrack/` directory continue to work
 - `config.json` files without a `branch` field are treated as `_agentrack`
+- Repos without a `.agentrack.json` pointer file fall back to `_agentrack` / `.agentrack/`
+- `WORKTREE_BRANCH` and `WORKTREE_DIR` exports are replaced with `DEFAULT_BRANCH` and `DEFAULT_DIR` (breaking change acceptable at 0.x)
+
+### AC8: No slashes in branch names
+
+Branch names containing `/` are explicitly rejected by the normalization function. While git supports slash-separated branch names (e.g., `feature/foo`), allowing them would create nested directories (`.feature/foo/`) which:
+- May have non-existent parent directories
+- Complicate git worktree operations
+- Break the walk-up resolution in `resolution.ts`
+
+Users who want hierarchical naming can use dashes: `--branch feature-test` → `_feature-test` / `.feature-test/`.
 
 ## API / Interface Changes
 
@@ -151,12 +186,15 @@ All worktree functions that currently use the constants must accept `{ branch, d
 
 | File | Change |
 |------|--------|
-| `src/cli/init.ts` | Parse `--branch` flag, pass normalized branch/dir to worktree init, store in config |
-| `src/core/worktree.ts` | Replace hardcoded constants with parameterized branch/dir; add normalization and resolution functions |
-| `src/cli/push.ts` | Resolve branch from config instead of using constant |
-| `src/cli/pull.ts` | Resolve branch from config instead of using constant |
+| `src/cli/init.ts` | Parse `--branch` flag, pass normalized branch/dir to worktree init, write pointer file, store branch in config |
+| `src/core/worktree.ts` | Replace hardcoded constants with parameterized branch/dir; add normalization and resolution functions; reject slashes |
+| `src/core/resolution.ts` | Replace hardcoded `AGENTACK_DIR` with pointer-file-based discovery; read `.agentrack.json` during walk-up |
+| `src/core/tracker.ts` | Replace hardcoded `AGENTACK_DIR` with pointer-file-based discovery or parameter |
+| `src/cli/push.ts` | Resolve branch from pointer file instead of using constant |
+| `src/cli/pull.ts` | Resolve branch from pointer file instead of using constant |
 | `src/types/config.ts` (or wherever Config is defined) | Add optional `branch` field |
-| `src/core/tracker.ts` (if init stores config) | Write `branch` field to config.json during init |
+| `src/core/pointer.ts` **(NEW)** | Read/write `.agentrack.json` pointer file; `readPointerFile(cwd)` → `{ branch, dir }` or null; `writePointerFile(cwd, branch)` |
+| `src/index.ts` | Update exports: replace `WORKTREE_BRANCH`/`WORKTREE_DIR` with `DEFAULT_BRANCH`/`DEFAULT_DIR` |
 
 ### New error codes
 
@@ -189,8 +227,13 @@ export function normalizeBranchName(input: string): { branch: string; dir: strin
   const cleaned = input.replace(/^_+/, '');
   if (!cleaned) throw new AgentrackError('INVALID_BRANCH_NAME', 'Branch name cannot be empty', 1);
 
+  // Reject slashes — they create nested directories
+  if (cleaned.includes('/')) {
+    throw new AgentrackError('INVALID_BRANCH_NAME', 'Branch name cannot contain slashes (would create nested directories)', 1);
+  }
+
   // Validate: no spaces, no special chars that git rejects
-  if (!/^[a-zA-Z0-9][a-zA-Z0-9._/-]*$/.test(cleaned)) {
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(cleaned)) {
     throw new AgentrackError('INVALID_BRANCH_NAME', `"${input}" is not a valid branch name`, 1);
   }
 
@@ -201,9 +244,49 @@ export function normalizeBranchName(input: string): { branch: string; dir: strin
 }
 ```
 
+### Pointer file implementation
+
+```typescript
+// src/core/pointer.ts
+import { readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
+const POINTER_FILE = '.agentrack.json';
+
+export interface PointerFile {
+  branch: string;
+}
+
+export async function readPointerFile(cwd: string): Promise<{ branch: string; dir: string } | null> {
+  try {
+    const content = await readFile(join(cwd, POINTER_FILE), 'utf-8');
+    const pointer: PointerFile = JSON.parse(content);
+    if (!pointer.branch) return null;
+    // Derive dir from branch: _testing → .testing
+    const dir = '.' + pointer.branch.replace(/^_/, '');
+    return { branch: pointer.branch, dir };
+  } catch {
+    return null; // File doesn't exist or is invalid — use defaults
+  }
+}
+
+export async function writePointerFile(cwd: string, branch: string): Promise<void> {
+  const pointer: PointerFile = { branch };
+  await writeFile(join(cwd, POINTER_FILE), JSON.stringify(pointer, null, 2) + '\n', 'utf-8');
+}
+
+// Convenience: resolve with fallback to defaults
+export async function resolveBranch(cwd: string): Promise<{ branch: string; dir: string }> {
+  const resolved = await readPointerFile(cwd);
+  return resolved ?? { branch: '_agentrack', dir: '.agentrack' };
+}
+```
+
 ### Config write during init
 
-After worktree setup and `tracker.init()`, the init command must ensure `config.json` includes the `branch` field:
+After worktree setup and `tracker.init()`, the init command must:
+
+1. Write the `branch` field to `config.json` inside the worktree:
 
 ```typescript
 // After init completes
@@ -212,7 +295,13 @@ config.branch = normalizedBranch;  // '_testing' etc.
 writeConfig(worktreeDir, config);
 ```
 
-Then auto-commit the updated config to the branch.
+2. Write the pointer file at the repo root:
+
+```typescript
+await writePointerFile(repoRoot, normalizedBranch);
+```
+
+3. Auto-commit both changes: the updated config to the worktree branch, and the pointer file to the main branch.
 
 ### Worktree function signature changes
 
@@ -231,13 +320,15 @@ Option 2 is cleaner and more extensible.
 
 ### Gitignore handling
 
-The gitignore entry must match the actual directory. Currently hardcoded as `/.agentrack/`. Must become dynamic:
+The gitignore entry must match the actual directory. Currently hardcoded as `/.agentrack/`. Must become dynamic and support multiple entries:
 
 ```typescript
 function gitignoreEntry(dir: string): string {
   return `/${dir}/`;
 }
 ```
+
+If multiple agentrack instances exist (multiple inits with different `--branch`), each directory gets its own gitignore entry. The gitignore matching logic must also be parameterized to check for the specific directory name rather than hardcoding `.agentrack`.
 
 ### Testing strategy
 

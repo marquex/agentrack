@@ -59,4 +59,8 @@ export const ErrorCodes = {
   PUSH_FAILED: { result: "PUSH_FAILED", exitCode: 16 },
   /** git pull failed. */
   PULL_FAILED: { result: "PULL_FAILED", exitCode: 17 },
+  /** Invalid branch name provided to --branch flag. */
+  INVALID_BRANCH_NAME: { result: "INVALID_BRANCH_NAME", exitCode: 18 },
+  /** Branch already exists but does not contain agentrack data. */
+  BRANCH_CONFLICT: { result: "BRANCH_CONFLICT", exitCode: 19 },
 } as const;

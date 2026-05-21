@@ -6,12 +6,13 @@ hierarchy:
   manager: cto
   subordinates: none — leaf agent
 
-expertise_status: "Session 3 — docs task mpdpuhd0r5 was completed by someone else (docs/markdown/ now exists). Picked up mpe7hg9ni7 (update docs for --branch flag) but found the feature was never implemented — blocked and escalated to cto."
+expertise_status: "Session 6 — Completed mpfmga9sol (docs for --branch flag). Blocker mpfmfoduo6 was resolved (all 12 validation scenarios passed, 84 new tests). Updated 4 docs files: cli-reference.md, getting-started.md, storing-issues-in-git.md, overview.md. Marked done, reassigned to cto."
 
 learnings:
   access_restrictions:
     - "CAN access docs/markdown/ — as of session 3, docs/markdown/ is accessible (previously blocked in session 2)."
     - "packages/library/ is the primary domain for build/test/source code."
+    - "CANNOT access .agentic/specs/ — access denied when trying to read spec files. Use implementation source files and validation comments instead."
 
   library_api:
     tracker_class:
@@ -57,6 +58,15 @@ learnings:
       - "agt create has --path flag"
       - "agt push has --message flag"
       - "agt blockages add/resolve/delete --by accepts variadic IDs"
+      - "agt init has --branch <name> flag (implemented in session 5, branch-config.ts + init.ts)"
+    branch_flag_details:
+      normalization: "Strips leading underscores, validates (letters/digits/dots/underscores/hyphens, no slashes/spaces), then _ prefix for branch, . prefix for dir"
+      pointer_file: ".agentrack.json at repo root — contains { branch: '_testing' } for non-default branches"
+      config_field: "branch written to config.json inside worktree dir"
+      default_behavior: "No --branch → _agentrack branch, .agentrack/ dir, no pointer file (backward compatible)"
+      source_files:
+        - "packages/library/src/core/branch-config.ts — normalizeBranchName, readBranchPointer, writeBranchPointer, resolveWorktreeOptions, WorktreeOptions type"
+        - "packages/library/src/cli/commands/init.ts — initAction now accepts --branch option"
 
   build_pipeline:
     build_tool: "tsup"
@@ -70,15 +80,28 @@ learnings:
     status: "completed by another agent (docs/markdown/ now exists with all 8 files)"
 
   branch_flag_task_mpe7hg9ni7:
-    status: "blocked — feature not implemented in codebase"
-    finding: "The --branch flag for agt init was never actually implemented despite issues being closed. The worktree.ts still uses hardcoded WORKTREE_BRANCH='_agentrack' and WORKTREE_DIR='.agentrack'. No normalizeBranchName, resolveWorktreePaths, or INVALID_BRANCH_NAME error codes exist."
-    spec_location: ".agentic/specs/configurable-branch-spec.md"
-    what_was_checked:
-      - "packages/library/src/cli/commands/init.ts — initAction() takes no params, no --branch option"
-      - "packages/library/src/cli/runner.ts — init command registered without flags"
-      - "packages/library/src/core/worktree.ts — hardcoded constants, no parameterization"
-      - "Searched for normalizeBranchName, resolveWorktreePaths, INVALID_BRANCH_NAME, BRANCH_CONFLICT — all absent"
-    lesson: "Always verify implementation exists before documenting it. Issue status can be misleading — closed issues don't guarantee code was committed. Check git log for the specific files mentioned in the task."
+    status: "superseded — original investigation task"
+    finding: "The --branch flag for agt init was never actually implemented despite issues being closed."
+    lesson: "Always verify implementation exists before documenting it. Issue status can be misleading — closed issues don't guarantee code was committed."
+
+  session6_process_notes:
+    blocked_task_workflow: "When re-picking up a previously blocked task, check blocker status via 'agt blockages list' (shows resolved/active). Then read blocker comments for validation results — these contain the detailed test results needed for accurate docs."
+    docs_accuracy: "Read actual implementation source files (branch-config.ts, init.ts) alongside validation comments to ensure docs match real behavior. Don't rely solely on specs (which may be inaccessible) or issue descriptions."
+    spec_inaccessible: ".agentic/specs/ is outside access domain — use source code + validation comments as primary references."
+
+  branch_flag_docs_mpfm9qxpsd:
+    status: "superseded by mpfmga9sol — old docs task from previous planning round"
+
+  branch_flag_docs_mpfmga9sol:
+    status: "completed in session 6"
+    parent: "mpfm8bilwf (--branch flag epic)"
+    implementation_task: "mpfm9aff8v — assigned to library-developer"
+    validation_task: "mpfmfoduo6 — completed, all 12 scenarios passed"
+    files_updated:
+      - "docs/markdown/cli-reference.md — added --branch flag docs, flags table, examples, normalization table, INVALID_BRANCH_NAME error code"
+      - "docs/markdown/getting-started.md — added custom branch example in init step"
+      - "docs/markdown/storing-issues-in-git.md — added Custom branch names section (rules, pointer file, multiple instances), updated resolution order and init scenarios"
+      - "docs/markdown/overview.md — brief --branch mention in Git-friendly bullet"
 
   docs_structure:
     location: "docs/markdown/"

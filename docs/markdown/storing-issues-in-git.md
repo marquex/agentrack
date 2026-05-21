@@ -23,6 +23,62 @@ This means:
 - **Branch-independent access** -- You can read and write issues from any code branch.
 - **Standard git sync** -- Push and pull use regular git operations.
 
+## Custom branch names
+
+By default, agentrack uses `_agentrack` as the branch name and `.agentrack/` as the directory. You can customize these with `--branch`:
+
+```bash
+agt init --branch testing
+```
+
+This creates a `_testing` branch and a `.testing/` directory. Each custom branch runs an independent tracker instance with its own issues, index, and config.
+
+### Branch name rules
+
+- Leading underscores are stripped automatically: `--branch _testing` is the same as `--branch testing`.
+- Only letters, digits, dots, underscores, and hyphens are allowed.
+- Slashes are rejected (they would create nested directories). Use hyphens instead: `--branch ci-results` instead of `--branch ci/results`.
+- Empty names are rejected.
+
+### The pointer file (`.agentrack.json`)
+
+When you use a non-default branch, agentrack writes a `.agentrack.json` file at the repository root:
+
+```json
+{ "branch": "_testing" }
+```
+
+This **pointer file** tells agentrack where to find the worktree directory. Without it, agentrack would only look for the default `.agentrack/` directory. The pointer file is committed to your main branch alongside `.gitignore`.
+
+**Do not delete `.agentrack.json`** -- if it's missing, agentrack won't be able to find a custom-branch worktree and will fall back to looking for `.agentrack/`.
+
+For the default branch (`_agentrack` / `.agentrack/`), no pointer file is created. This is fully backward compatible -- existing repos continue to work without any changes.
+
+### Multiple instances per repository
+
+You can run multiple tracker instances in the same repo, each on its own branch:
+
+```bash
+# Main tracker (default)
+agt init
+
+# Test results tracker
+agt init --branch testing
+
+# CI tracker
+agt init --branch ci
+```
+
+This creates three independent worktrees:
+
+| Instance | Branch | Directory | Pointer file |
+|----------|--------|-----------|-------------|
+| Main | `_agentrack` | `.agentrack/` | No |
+| Testing | `_testing` | `.testing/` | `.agentrack.json` |
+| CI | `_ci` | `.ci/` | `.agentrack.json` |
+
+Each instance has its own issues, index, config, and user registry. Push and pull operate on the instance detected from the current directory context.
+
 ## Directory structure
 
 The `.agentrack/` directory contains:
@@ -176,7 +232,7 @@ When no `_agentrack` branch exists on the remote:
 ```bash
 agt init
 # Creates a new orphan branch, sets up the directory, pushes to remote
-# { "result": "OK", "path": "/path/to/project" }
+# { "result": "OK", "scenario": "fresh", "path": "/path/to/project" }
 ```
 
 ### Joining an existing setup
@@ -186,21 +242,33 @@ When the remote already has an `_agentrack` branch (e.g., a teammate already ini
 ```bash
 agt init
 # Fetches the existing branch, checks out the worktree
-# { "result": "OK", "path": "/path/to/project" }
+# { "result": "OK", "scenario": "join", "path": "/path/to/project" }
 ```
 
-In both cases, the result is the same: a `.agentrack/` directory ready to use.
+### Custom branch
+
+Both scenarios also work with `--branch`:
+
+```bash
+agt init --branch testing
+# Creates or joins the _testing branch
+# Writes .agentrack.json pointer file at repo root
+# { "result": "OK", "scenario": "fresh", "path": "/path/to/project" }
+```
+
+In all cases, the result is a tracker directory ready to use.
 
 ## Resolution order
 
-Agentrack resolves the `.agentrack/` directory by walking up from the current working directory:
+Agentrack resolves the tracker directory by walking up from the current working directory:
 
-1. Check `cwd/.agentrack/` -- if it exists, use it.
-2. Check `parent/.agentrack/` -- if it exists, use it.
-3. Continue walking up until reaching the filesystem root.
-4. If no `.agentrack/` is found, return a `NOT_INITIALIZED` error.
+1. Check for a `.agentrack.json` pointer file in `cwd/` -- if it exists, read the branch name and look for the corresponding directory.
+2. Check `cwd/<dir>/` -- if it exists, use it.
+3. Walk up to the parent directory and repeat.
+4. If no pointer file or tracker directory is found, fall back to looking for the default `.agentrack/` directory.
+5. If nothing is found, return a `NOT_INITIALIZED` error.
 
-This means you can run `agt` commands from any subdirectory in your project. It also supports monorepos -- different subdirectories can have their own `.agentrack/` trackers.
+This means you can run `agt` commands from any subdirectory in your project. It also supports monorepos -- different subdirectories can have their own tracker instances.
 
 ## Team workflow example
 

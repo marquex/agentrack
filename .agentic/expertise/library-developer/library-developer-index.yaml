@@ -6,7 +6,7 @@ hierarchy:
   manager: cto
   subordinates: [none — leaf agent]
 
-expertise_status: "Phase 1-8 complete + next command + next-todo-only spec review + cap-upward-promotion spec review + independent-git spec review + user-docs spec review + configurable-branch spec review. Build pipeline with tsup producing CJS+ESM+dts output."
+expertise_status: "Phase 1-8 complete + next command + next-todo-only spec review + cap-upward-promotion spec review + independent-git spec review + user-docs spec review + configurable-branch spec review + configurable-branch implementation. Build pipeline with tsup producing CJS+ESM+dts output."
 
 knowledge:
   project_structure:
@@ -51,9 +51,9 @@ knowledge:
     - "Success -> stdout JSON, exit 0; Error -> stderr JSON, exit from error code"
     - "All file writes use atomic write-to-temp-then-rename pattern (file-io.ts)"
     - "ID generation: Date.now().toString(36).slice(0,6) + Math.random().toString(36).slice(-4) — always 10 chars"
-    - "Resolution: walk up from cwd looking for .agentrack/ dir, return abs path or null (resolution.ts)"
-    - "Three separate hardcoded AGENTACK_DIR/WORKTREE_DIR constants: worktree.ts (WORKTREE_BRANCH='_agentrack', WORKTREE_DIR='.agentrack'), tracker.ts line 75 (AGENTACK_DIR='.agentrack' for non-git init), resolution.ts line 4 (AGENTACK_DIR='.agentrack' for walk-up discovery). All 3 must be updated together for any directory name change."
-    - "Tracker.init() creates .agentrack/ with config.json, index.json, dependencies.json, users.json, issues/"
+    - "Resolution: resolveTrackerDir() walks up from cwd, reads .agentrack.json pointer file at each level to determine dir name, falls back to .agentrack/ (resolution.ts)"
+    - "Branch configuration centralized in src/core/branch-config.ts: DEFAULT_BRANCH='_agentrack', DEFAULT_DIR='.agentrack', normalizeBranchName(), readBranchPointer(), writeBranchPointer(), resolveWorktreeOptions(). Pointer file (.agentrack.json) at repo root breaks circular discovery. worktree.ts exports deprecated WORKTREE_BRANCH/WORKTREE_DIR aliases. tracker.ts init() accepts optional dirName param, falls back to resolveWorktreeOptions(). resolution.ts uses readBranchPointer() during walk-up."
+    - "Tracker.init(dirName?) creates data dir (default .agentrack/ or custom from pointer file) with config.json, index.json, dependencies.json, users.json, issues/"
     - "Init is idempotent: returns ALREADY_INITIALIZED if dir exists, does NOT overwrite"
     - "Event-sourced: each issue stored as JSON array of events in issues/[id].json"
     - "Two events on creation: creation event + update event with initial fields"
@@ -88,7 +88,7 @@ knowledge:
     - "AgentrackError extends Error with result, message, exitCode fields"
     - "NextResult = ComputedIssue | { result: 'NO_ISSUES_AVAILABLE'; message: string } — discriminated union; check for 'title' property to distinguish"
     - "Error messages polish: IDs wrapped in backticks (e.g., `abc123`), hierarchy messages end with period"
-    - "ErrorCodes const object maps error names to {result, exitCode} — 13 error codes defined (exit codes 0-12)"
+    - "ErrorCodes const object maps error names to {result, exitCode} — 15 error codes defined (exit codes 0-19, including INVALID_BRANCH_NAME exit 18, BRANCH_CONFLICT exit 19)"
     - "Event union: CreationEvent | UpdateEvent | CommentEvent | CommentUpdateEvent | CommentDeleteEvent | BlockageAddedEvent | BlockageResolvedEvent | BlockageDeletedEvent"
     - "ComputedIssue: id, title, description, status, priority, assignee, parentId, tags, createdAt, createdBy, updatedAt"
     - "IndexEntry: id, title, path, status, assignee, parentId, tags, priority (denormalized for fast list/filter)"
@@ -99,7 +99,7 @@ knowledge:
     - "Tests use createTestDir() from tests/helpers/setup.ts for isolation with cleanup"
     - "CLI tests use Bun.spawn to run bin.ts as subprocess, check stdout/stderr/exitCode"
     - "ID tests verify length (10), format (base36), and uniqueness (100 samples)"
-    - "549 tests across 24 files (1950 assertions)"
+    - "649 tests across 26 files (2163 assertions)"
     - "Core unit tests: tests/core/{auth,file-io,id,index-manager,resolution,hierarchy,dependency-manager}.test.ts"
     - "Core events tests (split by function): tests/core/events/{append-event,compute-comments,compute-state,replay-events}.test.ts"
     - "Core tracker tests (split by domain): tests/core/tracker/{tracker-auth,tracker-blockages,tracker-comments,tracker-crud,tracker-errors,tracker-hierarchy,tracker-init,tracker-users}.test.ts"
@@ -109,7 +109,7 @@ knowledge:
     - "Package tests: package.json fields validation, CLI --help, CLI --version"
 
   cli_commands:
-    - "init — no args, creates .agentrack/ dir"
+    - "init — option: --branch <name> for custom orphan branch (default: _agentrack); creates worktree or plain dir"
     - "create <title> — options: --description, --assignee, --tags (comma-sep), --status, --priority, --parentId, --path"
     - "list — options: --status, --assignee, --tags (comma-sep), --parentId ('null' for top-level)"
     - "view <issueId> — shows full computed state"
@@ -147,3 +147,4 @@ knowledge:
     independent_git_spec_review: "REVIEWED — Spec proposes storing .agentrack/ data on a dedicated orphan branch (_agentrack) mounted as git worktree, with agt init/push/pull commands for setup and sync. Critical findings: (1) Git plumbing initial files in spec have WRONG data formats (config has version field + missing defaultUser, index uses issues[] instead of open/closed arrays, deps uses different key names) — will cause all reads to fail. (2) Tracker.init() ordering bug — spec mounts worktree first then calls tracker.init(), but init() has existsSync check that returns ALREADY_INITIALIZED without creating files; AC7 claim 'no changes to Tracker' is inaccurate. (3) Wrong file paths: spec says src/errors.ts (actual: src/core/errors.ts) and src/runner.ts (actual: src/cli/runner.ts). (4) .gitignore auto-commit on user's branch is surprising behavior. (5) Missing: exit codes for 5 new error codes, public API exports for new types. (6) Edge cases: race condition in concurrent init (both detect 'fresh'), pre-existing local _agentrack branch not in error table, gitignore check too strict. Architecture is sound — worktree isolation is the right approach, but critical issues must be fixed before implementation."
     user_docs_spec_review: "REVIEWED — Spec proposes replacing TypeDoc with hand-written user docs in docs/markdown/ (8 files). Key findings: (1) CRITICAL: Section 3h JavaScript API has ALL method names wrong — spec uses verb-first (addComment, listBlockages) but actual Tracker uses domain-first (commentsAdd, blockagesList). 12 methods affected. (2) CRITICAL: create() signature wrong — spec says create(title, options?) but actual is create(params: CreateParams) single-object pattern. (3) CRITICAL: push()/pull() are NOT Tracker methods — they are standalone worktree module functions (pushWorktree/pullWorktree). (4) Type names wrong: CreateIssueOptions→CreateParams, UpdateIssueOptions→UpdateParams, ListFilters→ListParams. (5) CLI --by flag is variadic (--by <ids...>), not singular. (6) Missing push --message flag in CLI reference. (7) Spec lists 9 types but API exports 40+. Structural plan (TypeDoc removal, 8-section layout, file cleanup) is sound. Auth, issue-object, hierarchy sections are accurate."
     configurable_branch_spec_review: "REVIEWED — Spec adds --branch flag to agt init for configurable orphan branch names (default _agentrack). Normalization: strip leading underscores, prepend _ for branch and . for dir. Key findings: (1) CRITICAL: Circular config discovery — spec stores branch in config.json inside the worktree, but push/pull need to read config to find the worktree dir. resolveWorktreePaths pseudocode hardcodes cwd/.agentrack/ which defeats the purpose. Needs a pointer file at a fixed location in the main repo. (2) CRITICAL: Three hardcoded locations, not just worktree.ts — tracker.ts line 75 has AGENTACK_DIR='.agentrack' (used by Tracker.init for non-git fallback) and resolution.ts line 4 has same constant (used by resolveTrackerDir, called by 18 Tracker methods). Spec only addresses worktree.ts. (3) MODERATE: resolveTrackerDir cannot discover custom-named directories without a pointer mechanism. Tracker constructor needs to accept worktreeDir option. (4) MODERATE: gitignore handling (ensureGitignoreEntry, gitignoreHasEntry) is hardcoded for .agentrack patterns — must be parameterized. (5) MODERATE: Normalization regex allows slashes in branch names (git supports feature/foo) but dir derivation creates nested dirs (.feature/foo/) which breaks worktree add and resolution walk-up. (6) MINOR: Public API breaking change — WORKTREE_BRANCH/WORKTREE_DIR exported constants renamed. (7) MINOR: checkPreconditions, commit messages, gitignore commit message all hardcode _agentrack. Feature is viable but needs config discovery mechanism redesigned before implementation."
+    configurable_branch_implementation: "COMPLETE — Implemented remaining pieces of the --branch flag feature on top of prior work (branch-config.ts, worktree parameterization, resolution pointer-file discovery were already done). Changes: (1) branch-config.ts: Added explicit slash rejection with dedicated error message per AC8, improved generic validation message format per AC6. (2) tracker.ts: Removed hardcoded AGENTACK_DIR constant, init() now accepts optional dirName parameter and falls back to resolveWorktreeOptions() (pointer file → defaults). This fixed a bug where init() always created .agentrack/ even with custom --branch. (3) init.ts: Fixed both git and non-git paths to pass opts.dir to tracker.init(). Made writeBranchToConfig conditional (only for non-default branches per AC7 backward compat). (4) worktree.ts: commitGitignoreChange() now also stages/commits .agentrack.json pointer file when present. All 649 tests pass."

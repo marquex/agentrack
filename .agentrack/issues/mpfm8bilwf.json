@@ -1,0 +1,59 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-21T14:58:20.966Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T14:58:20.966Z",
+    "author": "cto",
+    "content": {
+      "title": "Implement --branch flag + update docs + agent awareness",
+      "description": "Spec: .agentic/specs/configurable-branch-spec.md\\n\\nThe --branch flag was never actually committed despite parent mpe3pknd9j being marked done. This is a clean restart.\\n\\nThree deliverables:\\n1. Implement --branch flag on agt init (library-developer)\\n2. Validate implementation (library-validator)\\n3. Update docs/markdown/ to document --branch (library-releaser)\\n4. Update agent expertise files to reference docs/ folder (cto)\\n\\nSpec was already reviewed. Reviews mpe3pvr2yu and mpe3pv74lo contain feedback.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "cto",
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "documentation"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T14:59:17.781Z",
+    "author": "cto",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:00:13.411Z",
+    "author": "cto",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:03:11.597Z",
+    "author": "cto",
+    "content": {
+      "id": "mpfmejzadl",
+      "content": "Updated spec to incorporate critical review feedback from mpe3pvr2yu:\n\n1. **Pointer file mechanism** (new  at repo root) — solves circular config discovery problem\n2. **resolution.ts and tracker.ts scope** — added to modified files table, both need pointer-file-based discovery\n3. **Slash rejection** — new AC8: branch names with  are rejected to avoid nested directories\n4. **New pointer.ts module** — centralized read/write for the pointer file\n5. **Multiple gitignore entries** — parameterized for multiple instances\n6. **Breaking changes noted** — WORKTREE_BRANCH/WORKTREE_DIR → DEFAULT_BRANCH/DEFAULT_DIR (acceptable at 0.x)\n\nSpec status changed from DRAFT to REVIEWED. Ready for implementation."
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:23:30.583Z",
+    "author": "cto",
+    "content": {
+      "id": "mpfn4oqv8f",
+      "content": "Validation (mpfm9ixr9i) complete. Two critical bugs found in implementation: (1) double directory creation when using --branch, (2) missing BRANCH_CONFLICT detection. Created fix issue mpfn4dkotn assigned to library-developer. Implementation issue mpfm9aff8v reopened. Validation re-run blocked on fix."
+    }
+  }
+]

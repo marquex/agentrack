@@ -10,7 +10,7 @@ hierarchy:
       - library-validator (testing, quality gates — documentation removed)
       - library-releaser (release prep, documentation, build, version management, publishing)
 
-expertise_status: "Dogfooding active. Project renamed from trackgentic to agentrack. CLI command is `agt`. New policy: any CLI/API change must route to library-releaser for build + docs update. Board cleaned up (session 66): mpa60i4skg, mpdpuhd0r5, mpcwcufhzk, mpe3pknd9j → done; mpe3pv74lo, mpe3qrgb9x, mpe3qr9gle → closed (work shipped via mpe3seanai/mpe3smr0kk). Active work: user docs overhaul (mpdpt4rego, in-progress) — docs written (mpdwq7dvls, done), validation unblocked (mpdpv6gw49, todo). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9). Future: Docusaurus site (mpdxdbqwt9, idea)."
+expertise_status: "Dogfooding active. Active chains: --branch flag implementation (mpfm8bilwf, in-progress) — implementation mpfm9aff8v done but validation found 2 critical bugs (double directory creation, missing BRANCH_CONFLICT). Fix issue mpfn4dkotn (library-developer, priority 1, in-progress). Validation re-run mpfm9ixr9i blocked on fix. Docs mpfm9qxpsd reassigned to library-releaser (CTO lacks docs/markdown/ write access). E2E validation suite (mpebmstgs9, in-progress). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9). Future: Docusaurus site (mpdxdbqwt9, idea). Public docs at docs/markdown/ (8 files) — all agents have read access, library-releaser has write access."
 
 project_overview:
   name: agentrack
@@ -18,7 +18,7 @@ project_overview:
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
   distribution: npm package with CLI entry point (`agt` command)
-  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Shipped features: independent git branch (worktree-based storage on orphan _agentrack branch), configurable branch name (--branch flag on agt init). Active: user docs overhaul (mpdpt4rego, awaiting validation). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9)."
+  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Shipped features: independent git branch (worktree-based storage on orphan _agentrack branch). In-progress: configurable branch name (--branch flag on agt init, mpfm8bilwf) — implemented but validation found 2 critical bugs (double directory creation, missing BRANCH_CONFLICT), fix in progress (mpfn4dkotn). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9). E2E validation suite in progress (mpebmstgs9)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
   docs_tool: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed. Docs overhaul in progress (mpdpt4rego), validation pending (mpdpv6gw49). Future: Docusaurus site consuming docs/markdown/ (mpdxdbqwt9, idea). Spec: .agentic/specs/user-docs-spec.md."
@@ -70,7 +70,9 @@ specifications:
     - path: user-docs-spec.md
       description: "User-friendly documentation overhaul. Replace TypeDoc auto-generated docs with hand-written markdown in docs/markdown/. 8 sections: overview, getting started, authentication, issue object, hierarchy & blockages, storing in git, CLI reference, JS reference. Removes typedoc tooling entirely. Parent: mpdpt4rego. CTO config (mpdpvfn3yb) done. TypeDoc deps removed from package.json. Doc writing: mpdwq7dvls (library-releaser, replaces failed mpdpuhd0r5)."
     - path: configurable-branch-spec.md
-      description: "Configurable branch name for agt init. --branch <name> flag allows custom orphan branch per agentrack instance. Normalization: strip leading _, prepend _ for branch, . for dir. Branch stored in config.json. push/pull resolve from config. Enables multiple instances per repo and test isolation. SHIPPED — implemented via mpe3seanai, validated via mpe3smr0kk. Parent mpe3pknd9j done."
+      description: "Configurable branch name for agt init. --branch <name> flag allows custom orphan branch per agentrack instance. Normalization: strip leading _, prepend _ for branch, . for dir. Pointer file (.agentrack.json) at repo root solves circular discovery. Slash rejection (AC8). resolution.ts and tracker.ts dynamic discovery via pointer file. New module: src/core/pointer.ts (actually implemented as branch-config.ts). Enables multiple instances per repo and test isolation. IMPLEMENTED (mpfm9aff8v) but validation (mpfm9ixr9i) found 2 critical bugs: (1) double directory creation — tracker init runs before branch flag takes effect, leaving stale .agentrack/ alongside custom dir, (2) missing BRANCH_CONFLICT detection. Fix: mpfn4dkotn (library-developer). Parent: mpfm8bilwf. Spec status: REVIEWED."
+    - path: e2e-validation-suite-spec.md
+      description: "E2E test suite in validation/ folder. Uses real git repos + agt CLI invocations (spawn + capture). Covers all CLI commands with happy/error/edge cases. Full lifecycle test. No library code changes. Parent: mpebmstgs9. Implementation: mpebnnq5qq (library-validator)."
 
 access_boundaries:
   rule: "CTO must NOT read or modify files under packages/library/. All code changes go through subordinates."
@@ -100,6 +102,12 @@ delegation_workflow:
     ENFORCEMENT: Every /issue chain that touches CLI or public API MUST include a library-releaser
     task as part of the issue chain. Do NOT mark the parent as done until library-releaser completes.
     Violation caught in session 68: configurable-branch shipped without docs+build task.
+  docs_awareness: |
+    All agents have read access to docs/markdown/ (8 files: overview, getting-started, authentication,
+    issue-object, hierarchy-and-blockages, storing-issues-in-git, cli-reference, javascript-reference).
+    Agents can consult these docs for API details, CLI usage patterns, and feature behavior.
+    library-releaser has docs_structure in its expertise file with full file listing.
+    When delegating tasks, mention docs/ availability if the agent might benefit from reference material.
   access_gaps: |
     Resolved: user granted CTO access to .github/ folder. CTO now owns workflow files.
     Root .gitignore is also writable by CTO.
@@ -323,3 +331,18 @@ session_log:
   - session: 68
     date: "2026-05-20"
     summary: "User pointed out docs were never updated for --branch flag. Confirmed: issue chain for mpe3pknd9j had implementation (mpe3seanai, library-developer) + validation (mpe3smr0kk, library-validator) but NO library-releaser task for docs+build. This violated the api_change_policy. Created retroactive task mpe7hg9ni7 (library-releaser) to update docs/markdown/ (cli-reference.md, getting-started.md, storing-issues-in-git.md) and rebuild dist/. Lesson: every /issue chain that involves CLI/API changes MUST include a library-releaser task."
+  - session: 69
+    date: "2026-05-20"
+    summary: "Planned E2E validation test suite. User granted library-validator full access to validation/ folder for real CLI testing. Key insight: git init + agt init --branch=<name> creates fully isolated agentrack instances for testing. Drafted spec (.agentic/specs/e2e-validation-suite-spec.md): command runner (spawn agt, capture output), test structure (validation/e2e/ with helpers + per-command test files), coverage requirements (every CLI command happy path + errors + edge cases), full lifecycle test. No library code changes — pure testing initiative. Created issue chain: parent mpebmstgs9 (CTO, in-progress), spec review mpebmy32vc (library-validator), implementation mpebnnq5qq (library-validator, blocked by review). No library-developer involvement — this is purely a testing task. No library-releaser task needed — no CLI/API changes."
+  - session: 70
+    date: "2026-05-21"
+    summary: "User requested docs update for --branch flag + agent awareness of docs/ folder. Discovered --branch was NEVER actually implemented (old parent mpe3pknd9j incorrectly marked done, code still has hardcoded WORKTREE_BRANCH='_agentrack'). Created clean restart chain: parent mpfm8bilwf (in-progress), implementation mpfm9aff8v (library-developer, unblocked — reviews already done), validation mpfm9ixr9i (library-validator, blocked by impl), docs mpfm9qxpsd (library-releaser, blocked by impl). Closed stale docs issue mpe7hg9ni7. Fixed CTO expertise: removed --branch from shipped features, updated configurable-branch spec status to NOT YET IMPLEMENTED. Added docs/markdown/ awareness to all agent expertise files."
+  - session: 71
+    date: "2026-05-21"
+    summary: "Picked up mpfm8bilwf via /agentrack-implement. CTO planning task. Read spec and review feedback from mpe3pvr2yu (critical: circular config discovery, missed hardcoded locations in resolution.ts and tracker.ts, slash issues). Updated spec with: (1) pointer file mechanism (.agentrack.json at repo root), (2) scope expansion to resolution.ts and tracker.ts, (3) slash rejection (AC8), (4) new src/core/pointer.ts module. Created issue chain: implementation mpfmfcg2i5 (library-developer, unblocked), validation mpfmfoduo6 (library-validator, blocked by impl), docs mpfmga9sol (library-releaser, blocked by validation). Parent stays in-progress."
+  - session: 72
+    date: "2026-05-21"
+    summary: "Picked up validation mpfm9ixr9i via /agentrack-implement. Ran quality gates (typecheck pass, lint pass, 649 tests pass). Discovered dist/ was stale — had to rebuild before --branch flag was recognized at CLI level. Behavioral testing found 2 critical bugs: (1) DOUBLE DIRECTORY — agt init --branch custom creates both .agentrack/ (stale regular dir) AND .custom/ (correct worktree). Root cause: tracker init runs before branch flag takes effect. (2) MISSING BRANCH_CONFLICT — branch with non-agentrack data silently overwritten. Also: branch-config.ts has 22.95% coverage, init.ts 7.95%, zero integration tests for --branch. Minor: slash error uses generic message, default init writes branch field to config (spec says omit). Posted validation report, reopened implementation mpfm9aff8v, created fix issue mpfn4dkotn (priority 1, library-developer). Blocked validation re-run on fix. Key lesson: always rebuild dist/ before CLI testing."
+  - session: 73
+    date: "2026-05-21"
+    summary: "Picked up docs task mpfm9qxpsd via /agentrack-implement. Blockage from implementation mpfm9aff8v was resolved. Read all 4 target docs files and the spec. Attempted to update cli-reference.md but hit access restriction — CTO has read-only access to docs/markdown/, only library-releaser has write access. Reassigned mpfm9qxpsd to library-releaser with comment explaining the interface is stable (bugs in mpfn4dkotn are runtime-only, spec/CLI interface unchanged). Key lesson: CTO cannot update docs directly — always delegate docs tasks to library-releaser."

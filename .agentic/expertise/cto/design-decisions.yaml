@@ -255,6 +255,28 @@ decisions:
       - "No change (status quo) — issues locked to code branch, conflicts in busy repos"
     spec: .agentic/specs/independent-git-spec.md
     issue: mpcwcufhzk
-    status: in-progress
+    status: decided
     decided_date: "2026-05-19"
-    current_phase: "Implementation complete, validation found 3 spec deviations. Fix chain: mpd4hktoxq → mpd4hs14zp → mpd4i06wz6"
+    current_phase: "Complete. All deviations fixed, validated, documented. Parent mpcwcufhzk closed."
+
+  - id: DD-019
+    title: "Configurable branch name via pointer file"
+    choice: "Store branch name in .agentrack.json at repo root (pointer file) to solve circular config discovery problem. Branch name also stored in config.json inside worktree."
+    rationale:
+      - "Solves chicken-and-egg: to find config, you need the directory; the directory comes from the config"
+      - "Pointer file at fixed well-known location (.agentrack.json) breaks the cycle"
+      - "Enables multiple agentrack instances per repo (each on its own orphan branch)"
+      - "Enables test isolation (test suites use dedicated branches)"
+    implementation:
+      - "--branch <name> flag on agt init with normalization (strip leading _, prepend _ for branch, . for dir)"
+      - "Reject slashes in branch names (would create nested directories)"
+      - "Pointer file read by all commands (push, pull, etc.) to discover active worktree"
+      - "Backward compatible: no pointer file → default _agentrack / .agentrack/"
+    tradeoffs:
+      - "Extra file at repo root (minimal — single JSON line)"
+      - "Pointer file must be kept in sync (mitigated: only written during init)"
+    spec: .agentic/specs/configurable-branch-spec.md
+    issue: mpfm8bilwf
+    status: in-progress
+    decided_date: "2026-05-21"
+    validation_notes: "First implementation had 2 critical bugs: (1) tracker init creates .agentrack/ before branch flag takes effect (double directory), (2) no BRANCH_CONFLICT detection. Fix issue mpfn4dkotn. Lesson: always rebuild dist/ and test CLI behaviorally."

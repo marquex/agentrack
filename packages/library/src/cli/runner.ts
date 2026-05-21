@@ -42,6 +42,7 @@ export function createProgram(): Command {
   program
     .command("init")
     .description("Initialize a new .agentrack/ directory")
+    .option("--branch <name>", "Branch name for agentrack data (default: _agentrack)")
     .action(initAction);
 
   // ─── create ───────────────────────────────────────────────────────

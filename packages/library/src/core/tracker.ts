@@ -56,6 +56,7 @@ import {
   writeIndex,
 } from "./index-manager";
 import { resolveTrackerDir } from "./resolution";
+import { resolveWorktreeOptions } from "./branch-config";
 import {
   addBlockage,
   deleteBlockage,
@@ -71,8 +72,6 @@ import {
   validateNewChild,
   validateParentStatusChange,
 } from "./hierarchy";
-
-const AGENTACK_DIR = ".agentrack";
 
 /**
  * Read dependencies.json synchronously (used inside sort comparator).
@@ -193,12 +192,16 @@ export class Tracker {
   }
 
   /**
-   * Initialize a new `.agentrack/` directory in `cwd`.
+   * Initialize a new agentrack data directory in `cwd`.
    *
    * Creates the directory structure with all initial files:
    * `config.json`, `index.json`, `dependencies.json`, `users.json`,
    * and an empty `issues/` subdirectory.
    *
+   * When `dirName` is not provided, resolves the directory from the pointer
+   * file (`.agentrack.json`) or falls back to `.agentrack/`.
+   *
+   * @param dirName - Optional directory name override (e.g. ".testing")
    * @returns `{ result: "OK", path }` on success, or `{ result: "ALREADY_INITIALIZED", path }` if already exists
    *
    * @example
@@ -207,8 +210,9 @@ export class Tracker {
    * if (result.result === "OK") console.log("Created at", result.path);
    * ```
    */
-  async init(): Promise<InitResult> {
-    const trackerDir = join(this.cwd, AGENTACK_DIR);
+  async init(dirName?: string): Promise<InitResult> {
+    const dir = dirName ?? resolveWorktreeOptions(this.cwd).dir;
+    const trackerDir = join(this.cwd, dir);
 
     if (existsSync(trackerDir)) {
       return { result: "ALREADY_INITIALIZED", path: resolve(trackerDir) };

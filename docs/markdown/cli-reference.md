@@ -34,25 +34,62 @@ All agentrack CLI commands follow the format `agt <subcommand> [arguments] [flag
 Initialize the agentrack tracker in the current directory. Creates the `.agentrack/` directory on the `_agentrack` orphan branch.
 
 ```bash
+agt init [--branch <name>]
+```
+
+**Flags:**
+
+| Flag | Type | Default | Description |
+|------|------|---------|-------------|
+| `--branch` | string | `"_agentrack"` | Custom branch name. See [Branch names](#branch-names) below. |
+
+**Examples:**
+
+```bash
+# Default init (branch: _agentrack, directory: .agentrack/)
 agt init
+
+# Custom branch (branch: _testing, directory: .testing/)
+agt init --branch testing
+
+# Leading underscores are stripped automatically — same result as above
+agt init --branch _testing
 ```
 
 **Output:**
 
 ```json
-{ "result": "OK", "path": "/path/to/project" }
+{ "result": "OK", "scenario": "fresh", "path": "/path/to/project" }
 ```
 
 If already initialized:
 
 ```json
-{ "result": "ALREADY_INITIALIZED", "path": "/path/to/project" }
+{ "result": "ALREADY_INITIALIZED", "path": "/path/to/project/.testing" }
 ```
+
+### Branch names
+
+The `--branch` flag lets you run multiple independent tracker instances in the same repository, each on its own branch. The name is normalized as follows:
+
+1. Leading underscores are stripped.
+2. The name is validated -- only letters, digits, dots, underscores, and hyphens are allowed. Slashes and spaces are rejected.
+3. The branch name is prefixed with `_` and the directory name with `.`.
+
+| `--branch` value | Git branch | Directory | Pointer file |
+|------------------|------------|-----------|-------------|
+| *(not specified)* | `_agentrack` | `.agentrack/` | No |
+| `testing` | `_testing` | `.testing/` | Yes (`.agentrack.json`) |
+| `_testing` | `_testing` | `.testing/` | Yes (`.agentrack.json`) |
+| `ci-results` | `_ci-results` | `.ci-results/` | Yes (`.agentrack.json`) |
+
+When a non-default branch is used, agentrack writes a `.agentrack.json` file at the repository root so it can discover the correct worktree directory. See [Storing issues in git](./storing-issues-in-git.md) for details.
 
 **Notes:**
 - Must be run inside a git repository.
-- Idempotent -- running it again won't overwrite existing data.
+- Idempotent -- running it again with the same branch won't overwrite existing data.
 - Handles two scenarios: creates a new orphan branch (fresh) or fetches an existing one (join). See [Storing issues in git](./storing-issues-in-git.md).
+- Backward compatible -- repos initialized without `--branch` continue to work as before.
 
 ---
 
@@ -778,6 +815,7 @@ Or if already up to date:
 | `NOT_A_GIT_REPO` | Current directory is not inside a git repository. |
 | `MIGRATION_REQUIRED` | `.agentrack/` exists but is not a git worktree. Remove it and re-run `agt init`. |
 | `INVALID_STATE` | Invalid state for the operation (e.g., currently on the `_agentrack` branch). |
+| `INVALID_BRANCH_NAME` | The `--branch` value is empty, contains slashes, or has invalid characters. |
 | `PUSH_FAILED` | `agt push` failed. Error message includes git output. |
 | `PULL_FAILED` | `agt pull` failed. Error message includes git output. |
 | `TOKEN_REQUIRED` | A token is required by the current auth mode but none was provided. |

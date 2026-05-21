@@ -1,0 +1,15 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T19:55:48.116Z",
+    "author": "javi"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T19:55:48.116Z",
+    "author": "javi",
+    "content": {
+      "title": "No Init"
+    }
+  }
+]

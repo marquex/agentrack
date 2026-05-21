@@ -1,15 +1,18 @@
 import { AgentrackError } from "../../core/errors";
+import { resolveWorktreeOptions } from "../../core/branch-config";
 import { pullWorktree } from "../../core/worktree";
 import { writeStderr, writeStdout } from "../output";
 
 /**
  * Handler for the `agt pull` command.
- * Pulls latest changes from remote into the .agentrack/ worktree.
+ * Pulls latest changes from remote into the worktree.
+ * Resolves the active branch from the pointer file.
  */
 export async function pullAction(): Promise<void> {
   try {
     const cwd = process.cwd();
-    const result = pullWorktree(cwd);
+    const opts = resolveWorktreeOptions(cwd);
+    const result = pullWorktree(cwd, opts);
     writeStdout({
       result: "OK",
       updated: result.updated,

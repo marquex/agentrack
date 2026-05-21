@@ -8,7 +8,7 @@ Traditional issue trackers (Jira, GitHub Issues, Linear) are built around web in
 
 - **File-backed** -- All data lives in JSON files. No database, no server, no infrastructure.
 - **Event-sourced** -- Every change is an immutable event. The current state of an issue is computed by replaying its event log, so you always have a full audit trail.
-- **Git-friendly** -- Issues are stored on a dedicated orphan branch (`_agentrack`) via git worktree. Push and pull with standard git commands. No merge conflicts with your code.
+- **Git-friendly** -- Issues are stored on a dedicated orphan branch (`_agentrack`) via git worktree. Push and pull with standard git commands. No merge conflicts with your code. Use `--branch` to run multiple independent trackers in the same repo.
 - **Designed for AI agents** -- The CLI outputs JSON by default, making it easy for agents and scripts to parse. The JavaScript API gives full programmatic access.
 - **Zero infrastructure** -- `npm install agentrack` and you're done. No accounts, no hosting, no configuration servers.
 - **Multi-agent ready** -- Token-based authentication lets multiple agents (and humans) attribute their actions. Choose from open, read-only, or strict auth modes.

@@ -535,19 +535,177 @@
       "priority": 2
     },
     {
-      "id": "mpe7hg9ni7",
-      "title": "Update docs for configurable branch feature",
-      "path": "issues/mpe7hg9ni7.json",
+      "id": "mpebmstgs9",
+      "title": "E2E validation test suite",
+      "path": "issues/mpebmstgs9.json",
       "status": "in-progress",
       "assignee": "cto",
-      "parentId": "mpe3pknd9j",
+      "parentId": null,
+      "tags": [
+        "testing",
+        "e2e",
+        "validation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpebmy32vc",
+      "title": "Review spec: e2e-validation-suite",
+      "path": "issues/mpebmy32vc.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpebmstgs9",
+      "tags": [
+        "review",
+        "spec"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpebnnq5qq",
+      "title": "Implement: E2E validation test suite",
+      "path": "issues/mpebnnq5qq.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpebmstgs9",
+      "tags": [
+        "testing",
+        "e2e",
+        "implementation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpegtkro99",
+      "title": "No Init",
+      "path": "issues/mpegtkro99.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mpehez52dn",
+      "title": "No Init",
+      "path": "issues/mpehez52dn.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mpfm8bilwf",
+      "title": "Implement --branch flag + update docs + agent awareness",
+      "path": "issues/mpfm8bilwf.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "documentation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfm9aff8v",
+      "title": "Implement: --branch flag for agt init",
+      "path": "issues/mpfm9aff8v.json",
+      "status": "in-progress",
+      "assignee": "library-developer",
+      "parentId": "mpfm8bilwf",
+      "tags": [
+        "init",
+        "cli",
+        "worktree",
+        "implementation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfm9ixr9i",
+      "title": "Validate: --branch flag for agt init",
+      "path": "issues/mpfm9ixr9i.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpfm8bilwf",
+      "tags": [
+        "validation",
+        "init",
+        "cli",
+        "worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfm9qxpsd",
+      "title": "Update docs: --branch flag for agt init",
+      "path": "issues/mpfm9qxpsd.json",
+      "status": "in-progress",
+      "assignee": "library-releaser",
+      "parentId": "mpfm8bilwf",
       "tags": [
         "documentation",
-        "build",
         "init",
         "cli"
       ],
       "priority": 2
+    },
+    {
+      "id": "mpfmfcg2i5",
+      "title": "Implement --branch flag per updated spec",
+      "path": "issues/mpfmfcg2i5.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpfm8bilwf",
+      "tags": [
+        "implementation",
+        "init",
+        "cli",
+        "worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfmfoduo6",
+      "title": "Validate --branch flag implementation",
+      "path": "issues/mpfmfoduo6.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpfm8bilwf",
+      "tags": [
+        "validation",
+        "testing",
+        "init",
+        "worktree"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfmga9sol",
+      "title": "Update docs for --branch flag",
+      "path": "issues/mpfmga9sol.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mpfm8bilwf",
+      "tags": [
+        "documentation",
+        "init"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mpfn4dkotn",
+      "title": "Fix: --branch double directory + BRANCH_CONFLICT",
+      "path": "issues/mpfn4dkotn.json",
+      "status": "in-progress",
+      "assignee": "library-developer",
+      "parentId": "mpfm9aff8v",
+      "tags": [],
+      "priority": 1
     }
   ],
   "closed": [
@@ -651,6 +809,21 @@
       "priority": 2
     },
     {
+      "id": "mpe7hg9ni7",
+      "title": "Update docs for configurable branch feature",
+      "path": "issues/mpe7hg9ni7.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": "mpe3pknd9j",
+      "tags": [
+        "documentation",
+        "build",
+        "init",
+        "cli"
+      ],
+      "priority": 2
+    },
+    {
       "id": "mpe7yb8izb",
       "title": "New test issue",
       "path": "issues/mpe7yb8izb.json",
@@ -741,7 +914,23 @@
       "mpe3pv74lo",
       "mpe3qrgb9x",
       "mpe3qr9gle",
+      "mpe7hg9ni7",
       "mpe7hg9ni7"
+    ],
+    "mpebmstgs9": [
+      "mpebmy32vc",
+      "mpebnnq5qq"
+    ],
+    "mpfm8bilwf": [
+      "mpfm9aff8v",
+      "mpfm9ixr9i",
+      "mpfm9qxpsd",
+      "mpfmfcg2i5",
+      "mpfmfoduo6",
+      "mpfmga9sol"
+    ],
+    "mpfm9aff8v": [
+      "mpfn4dkotn"
     ]
   }
 }

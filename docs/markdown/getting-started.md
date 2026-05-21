@@ -46,10 +46,18 @@ agt init
 Output:
 
 ```json
-{ "result": "OK", "path": "/path/to/your/project" }
+{ "result": "OK", "scenario": "fresh", "path": "/path/to/your/project" }
 ```
 
 This creates the `.agentrack/` directory (which lives on a separate git branch) with the index file, config, and user registry. See [Storing issues in git](./storing-issues-in-git.md) for details on how this works.
+
+**Custom branch:** If you want to run a separate tracker instance (for example, for test results or a different workflow), use `--branch`:
+
+```bash
+agt init --branch testing
+```
+
+This creates a `_testing` branch and `.testing/` directory instead of the defaults. See [CLI reference](./cli-reference.md#agt-init) for the full `--branch` documentation.
 
 ### 2. Create an issue
 

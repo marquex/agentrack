@@ -63,5 +63,14 @@
     "content": {
       "status": "done"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:00:25.651Z",
+    "author": "cto",
+    "content": {
+      "id": "mpfmaze6fg",
+      "content": "Issue was incorrectly marked done - the --branch flag was never committed. Restarted as mpfm8bilwf with fresh sub-issues. The spec and reviews are reused."
+    }
   }
 ]

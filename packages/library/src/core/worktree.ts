@@ -3,12 +3,19 @@ import { execFileSync } from "node:child_process";
 import { join, normalize, resolve } from "node:path";
 import type { WorktreeInitResult, WorktreePullResult, WorktreeSyncResult } from "../types";
 import { AgentrackError, ErrorCodes } from "./errors";
+import type { WorktreeOptions } from "./branch-config";
 
-/** Branch name used for the agentrack data worktree. */
-export const WORKTREE_BRANCH = "_agentrack";
+/** Default branch name used for the agentrack data worktree. */
+export const DEFAULT_BRANCH = "_agentrack";
 
-/** Directory name for the agentrack data worktree. */
-export const WORKTREE_DIR = ".agentrack";
+/** Default directory name for the agentrack data worktree. */
+export const DEFAULT_DIR = ".agentrack";
+
+/** @deprecated Use DEFAULT_BRANCH instead. */
+export const WORKTREE_BRANCH = DEFAULT_BRANCH;
+
+/** @deprecated Use DEFAULT_DIR instead. */
+export const WORKTREE_DIR = DEFAULT_DIR;
 
 /**
  * Default file contents for the orphan branch.
@@ -111,40 +118,40 @@ function gitCommitTree(cwd: string, tree: string, message: string): string {
 // ─── Gitignore helpers ───────────────────────────────────────────────
 
 /**
- * Check if the gitignore content already has an entry for .agentrack.
- * Matches common patterns: /.agentrack/, .agentrack/, /.agentrack, .agentrack
+ * Check if the gitignore content already has an entry for the given directory.
+ * Matches common patterns: /dir/, dir/, /dir, dir
  */
-function gitignoreHasEntry(content: string): boolean {
+function gitignoreHasEntry(content: string, dir: string): boolean {
   return content.split("\n").some((rawLine) => {
     const line = rawLine.trim();
     // Skip comments and empty lines
     if (!line || line.startsWith("#")) return false;
     return (
-      line === "/.agentrack/" ||
-      line === ".agentrack/" ||
-      line === "/.agentrack" ||
-      line === ".agentrack"
+      line === `/${dir}/` ||
+      line === `${dir}/` ||
+      line === `/${dir}` ||
+      line === dir
     );
   });
 }
 
 /**
- * Ensure .gitignore has an entry for .agentrack.
+ * Ensure .gitignore has an entry for the given directory.
  * Appends the entry if missing. Does NOT stage or commit.
  * Returns true if an entry was added.
  */
-function ensureGitignoreEntry(cwd: string): boolean {
+function ensureGitignoreEntry(cwd: string, dir: string): boolean {
   const gitignorePath = join(cwd, ".gitignore");
   if (existsSync(gitignorePath)) {
     const content = readFileSync(gitignorePath, "utf-8");
-    if (gitignoreHasEntry(content)) {
+    if (gitignoreHasEntry(content, dir)) {
       return false;
     }
     // Append entry (ensure newline before if file doesn't end with one)
     const suffix = content.endsWith("\n") ? "" : "\n";
-    writeFileSync(gitignorePath, `${content}${suffix}/.agentrack/\n`, "utf-8");
+    writeFileSync(gitignorePath, `${content}${suffix}/${dir}/\n`, "utf-8");
   } else {
-    writeFileSync(gitignorePath, "/.agentrack/\n", "utf-8");
+    writeFileSync(gitignorePath, `/${dir}/\n`, "utf-8");
   }
   return true;
 }
@@ -155,7 +162,7 @@ function ensureGitignoreEntry(cwd: string): boolean {
  * Validate preconditions before worktree initialization.
  * Throws AgentrackError if any precondition fails.
  */
-function checkPreconditions(cwd: string): void {
+function checkPreconditions(cwd: string, opts: WorktreeOptions): void {
   // Must be inside a git repo
   if (!isGitRepo(cwd)) {
     throw new AgentrackError(
@@ -165,36 +172,62 @@ function checkPreconditions(cwd: string): void {
     );
   }
 
-  // .agentrack must not exist as a non-worktree (legacy)
-  const agentrackPath = join(cwd, WORKTREE_DIR);
+  // Worktree dir must not exist as a non-worktree (legacy)
+  const agentrackPath = join(cwd, opts.dir);
   if (existsSync(agentrackPath)) {
     const stat = statSync(agentrackPath);
     if (!stat.isDirectory()) {
       throw new AgentrackError(
         ErrorCodes.MIGRATION_REQUIRED.result,
-        ".agentrack exists but is not a directory. Remove it and re-run init.",
+        `${opts.dir} exists but is not a directory. Remove it and re-run init.`,
         ErrorCodes.MIGRATION_REQUIRED.exitCode,
       );
     }
     // Directory exists — if not a worktree, it's a legacy directory
-    if (!isWorktreeInitialized(cwd)) {
+    if (!isWorktreeInitialized(cwd, opts)) {
       throw new AgentrackError(
         ErrorCodes.MIGRATION_REQUIRED.result,
-        ".agentrack/ exists but is not a git worktree. Remove it manually and re-run init.",
+        `${opts.dir}/ exists but is not a git worktree. Remove it manually and re-run init.`,
         ErrorCodes.MIGRATION_REQUIRED.exitCode,
       );
     }
     // If it IS a valid worktree, caller should handle ALREADY_INITIALIZED
   }
 
-  // Must not be on the _agentrack branch
+  // Must not be on the target branch
   const currentBranch = getCurrentBranch(cwd);
-  if (currentBranch === WORKTREE_BRANCH) {
+  if (currentBranch === opts.branch) {
     throw new AgentrackError(
       ErrorCodes.INVALID_STATE.result,
-      "Cannot init: currently on the _agentrack branch. Switch to a code branch first.",
+      `Cannot init: currently on the ${opts.branch} branch. Switch to a code branch first.`,
       ErrorCodes.INVALID_STATE.exitCode,
     );
+  }
+
+  // Check if branch already exists locally with non-agentrack data
+  try {
+    const existingCommit = gitExec(cwd, ["rev-parse", "--verify", opts.branch]).trim();
+    // Branch exists — validate it contains agentrack data
+    const files = gitExec(cwd, ["ls-tree", "--name-only", existingCommit]).trim();
+    const fileList = files
+      .split("\n")
+      .map((f) => f.trim())
+      .filter(Boolean);
+    const expectedFiles = ["config.json", "index.json", "dependencies.json", "users.json"];
+    const hasAgentrackData = expectedFiles.every((f) => fileList.includes(f));
+
+    if (!hasAgentrackData) {
+      throw new AgentrackError(
+        ErrorCodes.BRANCH_CONFLICT.result,
+        `Branch '${opts.branch}' already exists but does not contain agentrack data`,
+        ErrorCodes.BRANCH_CONFLICT.exitCode,
+      );
+    }
+    // Branch exists with agentrack data — allow re-init (re-creation of worktree)
+  } catch (err) {
+    // If it's our BRANCH_CONFLICT error, re-throw it
+    if (err instanceof AgentrackError) throw err;
+    // rev-parse failed — branch doesn't exist locally, proceed with creation
   }
 }
 
@@ -203,9 +236,10 @@ function checkPreconditions(cwd: string): void {
 /**
  * Detect which init scenario applies: 'fresh' (no remote branch) or 'join' (remote branch exists).
  */
-export function detectInitScenario(cwd: string): "fresh" | "join" {
+export function detectInitScenario(cwd: string, opts?: WorktreeOptions): "fresh" | "join" {
+  const { branch } = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
   try {
-    const result = gitExec(cwd, ["ls-remote", "--heads", "origin", WORKTREE_BRANCH]);
+    const result = gitExec(cwd, ["ls-remote", "--heads", "origin", branch]);
     return result.trim().length > 0 ? "join" : "fresh";
   } catch {
     // No remote or no connectivity → fresh
@@ -214,13 +248,15 @@ export function detectInitScenario(cwd: string): "fresh" | "join" {
 }
 
 /**
- * Check if .agentrack/ is a valid git worktree for the _agentrack branch.
+ * Check if the worktree directory is a valid git worktree for the target branch.
+ * When opts is not provided, uses default branch/dir.
  */
-export function isWorktreeInitialized(cwd: string): boolean {
+export function isWorktreeInitialized(cwd: string, opts?: WorktreeOptions): boolean {
+  const { dir } = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
   try {
     const worktreeList = gitExec(cwd, ["worktree", "list", "--porcelain"]);
     const normalizedCwd = resolve(cwd);
-    const expectedPath = normalize(join(normalizedCwd, WORKTREE_DIR));
+    const expectedPath = normalize(join(normalizedCwd, dir));
 
     return worktreeList.split("\n").some((line) => {
       if (!line.startsWith("worktree ")) return false;
@@ -236,7 +272,8 @@ export function isWorktreeInitialized(cwd: string): boolean {
  * Scenario A: create orphan branch with initial data, push, mount worktree.
  * Uses git plumbing commands to avoid modifying the working tree.
  */
-export function initFreshWorktree(cwd: string): WorktreeInitResult {
+export function initFreshWorktree(cwd: string, opts?: WorktreeOptions): WorktreeInitResult {
+  const worktreeOpts = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
   // 1. Create blob objects for initial files
   const configBlob = gitHashObject(cwd, `${JSON.stringify(DEFAULT_CONFIG, null, 2)}\n`);
   const indexBlob = gitHashObject(cwd, `${JSON.stringify(DEFAULT_INDEX, null, 2)}\n`);
@@ -253,17 +290,17 @@ export function initFreshWorktree(cwd: string): WorktreeInitResult {
   const tree = gitMkTree(cwd, treeInput);
 
   // 3. Create a commit from the tree
-  const commit = gitCommitTree(cwd, tree, "init _agentrack branch");
+  const commit = gitCommitTree(cwd, tree, `init ${worktreeOpts.branch} branch`);
 
-  // 4. Create the _agentrack branch ref
+  // 4. Create the branch ref
   try {
-    gitExec(cwd, ["branch", WORKTREE_BRANCH, commit]);
+    gitExec(cwd, ["branch", worktreeOpts.branch, commit]);
   } catch (err) {
     // Branch might already exist from a failed previous attempt
     const stderr = getGitError(err);
     if (stderr.includes("already exists")) {
       // Force-update the branch to our new commit
-      gitExec(cwd, ["branch", "-f", WORKTREE_BRANCH, commit]);
+      gitExec(cwd, ["branch", "-f", worktreeOpts.branch, commit]);
     } else {
       throw new AgentrackError(
         ErrorCodes.INVALID_STATE.result,
@@ -276,7 +313,7 @@ export function initFreshWorktree(cwd: string): WorktreeInitResult {
   // 5. Push to remote (if available)
   if (hasRemote(cwd)) {
     try {
-      gitExec(cwd, ["push", "-u", "origin", WORKTREE_BRANCH]);
+      gitExec(cwd, ["push", "-u", "origin", worktreeOpts.branch]);
     } catch (pushErr) {
       const stderr = getGitError(pushErr);
       // If push fails because branch already exists remotely, fall back to join
@@ -285,18 +322,18 @@ export function initFreshWorktree(cwd: string): WorktreeInitResult {
         stderr.includes("failed to push") ||
         stderr.includes("non-fast-forward")
       ) {
-        return initJoinWorktree(cwd);
+        return initJoinWorktree(cwd, worktreeOpts);
       }
       // Network or other errors — proceed with local branch only (warn implicitly)
     }
   }
 
   // 6. Ensure .gitignore entry
-  ensureGitignoreEntry(cwd);
+  ensureGitignoreEntry(cwd, worktreeOpts.dir);
 
   // 7. Mount worktree
   try {
-    gitExec(cwd, ["worktree", "add", WORKTREE_DIR, WORKTREE_BRANCH]);
+    gitExec(cwd, ["worktree", "add", worktreeOpts.dir, worktreeOpts.branch]);
   } catch (err) {
     const stderr = getGitError(err);
     throw new AgentrackError(
@@ -306,16 +343,17 @@ export function initFreshWorktree(cwd: string): WorktreeInitResult {
     );
   }
 
-  return { scenario: "fresh", path: resolve(cwd, WORKTREE_DIR) };
+  return { scenario: "fresh", path: resolve(cwd, worktreeOpts.dir) };
 }
 
 /**
  * Scenario B: fetch remote branch, create tracking branch, mount worktree.
  */
-export function initJoinWorktree(cwd: string): WorktreeInitResult {
+export function initJoinWorktree(cwd: string, opts?: WorktreeOptions): WorktreeInitResult {
+  const worktreeOpts = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
   // 1. Fetch the remote branch
   try {
-    gitExec(cwd, ["fetch", "origin", WORKTREE_BRANCH]);
+    gitExec(cwd, ["fetch", "origin", worktreeOpts.branch]);
   } catch (err) {
     const stderr = getGitError(err);
     throw new AgentrackError(
@@ -327,11 +365,11 @@ export function initJoinWorktree(cwd: string): WorktreeInitResult {
 
   // 2. Create local tracking branch
   try {
-    gitExec(cwd, ["branch", WORKTREE_BRANCH, `origin/${WORKTREE_BRANCH}`]);
+    gitExec(cwd, ["branch", worktreeOpts.branch, `origin/${worktreeOpts.branch}`]);
   } catch {
     // Branch might already exist — force-update to remote ref
     try {
-      gitExec(cwd, ["branch", "-f", WORKTREE_BRANCH, `origin/${WORKTREE_BRANCH}`]);
+      gitExec(cwd, ["branch", "-f", worktreeOpts.branch, `origin/${worktreeOpts.branch}`]);
     } catch (err) {
       const stderr = getGitError(err);
       throw new AgentrackError(
@@ -343,11 +381,11 @@ export function initJoinWorktree(cwd: string): WorktreeInitResult {
   }
 
   // 3. Ensure .gitignore entry
-  ensureGitignoreEntry(cwd);
+  ensureGitignoreEntry(cwd, worktreeOpts.dir);
 
   // 4. Mount worktree
   try {
-    gitExec(cwd, ["worktree", "add", WORKTREE_DIR, WORKTREE_BRANCH]);
+    gitExec(cwd, ["worktree", "add", worktreeOpts.dir, worktreeOpts.branch]);
   } catch (err) {
     const stderr = getGitError(err);
     throw new AgentrackError(
@@ -357,7 +395,7 @@ export function initJoinWorktree(cwd: string): WorktreeInitResult {
     );
   }
 
-  return { scenario: "join", path: resolve(cwd, WORKTREE_DIR) };
+  return { scenario: "join", path: resolve(cwd, worktreeOpts.dir) };
 }
 
 /**
@@ -365,33 +403,42 @@ export function initJoinWorktree(cwd: string): WorktreeInitResult {
  * scenario, and delegates to the appropriate setup function.
  *
  * Returns the init result, or throws AgentrackError on failure.
+ *
+ * When opts is not provided, uses default branch/dir.
  */
-export function initWorktree(cwd: string): WorktreeInitResult {
+export function initWorktree(cwd: string, opts?: WorktreeOptions): WorktreeInitResult {
+  const worktreeOpts = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
+
   // Check if already initialized
-  if (isWorktreeInitialized(cwd)) {
-    return { scenario: "already_initialized", path: resolve(cwd, WORKTREE_DIR) };
+  if (isWorktreeInitialized(cwd, worktreeOpts)) {
+    return { scenario: "already_initialized", path: resolve(cwd, worktreeOpts.dir) };
   }
 
   // Validate preconditions (throws on failure)
-  checkPreconditions(cwd);
+  checkPreconditions(cwd, worktreeOpts);
 
   // Detect scenario and delegate
-  const scenario = detectInitScenario(cwd);
+  const scenario = detectInitScenario(cwd, worktreeOpts);
   if (scenario === "fresh") {
-    return initFreshWorktree(cwd);
+    return initFreshWorktree(cwd, worktreeOpts);
   }
-  return initJoinWorktree(cwd);
+  return initJoinWorktree(cwd, worktreeOpts);
 }
 
 /**
- * Stage and commit .gitignore changes on the current code branch.
- * Used after initWorktree() to persist the .agentrack/ gitignore entry.
+ * Stage and commit .gitignore changes (and pointer file if present) on the current code branch.
+ * Used after initWorktree() to persist the worktree dir gitignore entry and pointer file.
  * No-op if there are no changes to commit.
  */
-export function commitGitignoreChange(cwd: string): void {
+export function commitGitignoreChange(cwd: string, dir?: string): void {
+  const entry = dir ?? DEFAULT_DIR;
   try {
     gitExec(cwd, ["add", ".gitignore"]);
-    gitExec(cwd, ["commit", "-m", "chore: add .agentrack/ to .gitignore"]);
+    // Also stage pointer file if it exists
+    if (existsSync(join(cwd, ".agentrack.json"))) {
+      gitExec(cwd, ["add", ".agentrack.json"]);
+    }
+    gitExec(cwd, ["commit", "-m", `chore: add ${entry}/ to .gitignore`]);
   } catch {
     // No changes to commit or .gitignore unchanged
   }
@@ -399,10 +446,11 @@ export function commitGitignoreChange(cwd: string): void {
 
 /**
  * Stage all changes in the worktree and commit them with the given message.
- * Used after tracker.init() to persist initial data to the _agentrack branch.
+ * Used after tracker.init() to persist initial data to the worktree branch.
  */
-export function commitWorktreeData(cwd: string, message: string): void {
-  const worktreeDir = join(cwd, WORKTREE_DIR);
+export function commitWorktreeData(cwd: string, message: string, opts?: WorktreeOptions): void {
+  const dir = opts?.dir ?? DEFAULT_DIR;
+  const worktreeDir = join(cwd, dir);
   gitExec(worktreeDir, ["add", "-A"]);
   try {
     gitExec(worktreeDir, ["commit", "-m", message]);
@@ -413,12 +461,15 @@ export function commitWorktreeData(cwd: string, message: string): void {
 
 /**
  * Stage all changes, auto-commit, and push to remote.
+ *
+ * When opts is not provided, resolves branch from pointer file or defaults.
  */
-export function pushWorktree(cwd: string, message?: string): WorktreeSyncResult {
-  const worktreeDir = join(cwd, WORKTREE_DIR);
+export function pushWorktree(cwd: string, message?: string, opts?: WorktreeOptions): WorktreeSyncResult {
+  const worktreeOpts = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
+  const worktreeDir = join(cwd, worktreeOpts.dir);
 
   // Verify worktree is initialized
-  if (!isWorktreeInitialized(cwd)) {
+  if (!isWorktreeInitialized(cwd, worktreeOpts)) {
     throw new AgentrackError(
       ErrorCodes.NOT_INITIALIZED.result,
       "Agentrack not initialized. Run `agt init` first.",
@@ -491,12 +542,15 @@ export function pushWorktree(cwd: string, message?: string): WorktreeSyncResult 
 
 /**
  * Pull latest from remote into the worktree.
+ *
+ * When opts is not provided, resolves branch from pointer file or defaults.
  */
-export function pullWorktree(cwd: string): WorktreePullResult {
-  const worktreeDir = join(cwd, WORKTREE_DIR);
+export function pullWorktree(cwd: string, opts?: WorktreeOptions): WorktreePullResult {
+  const worktreeOpts = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
+  const worktreeDir = join(cwd, worktreeOpts.dir);
 
   // Verify worktree is initialized
-  if (!isWorktreeInitialized(cwd)) {
+  if (!isWorktreeInitialized(cwd, worktreeOpts)) {
     throw new AgentrackError(
       ErrorCodes.NOT_INITIALIZED.result,
       "Agentrack not initialized. Run `agt init` first.",

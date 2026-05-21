@@ -1,0 +1,92 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-21T15:04:32.992Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:04:32.992Z",
+    "author": "cto",
+    "content": {
+      "title": "Update docs for --branch flag",
+      "description": "Update the user-facing documentation in docs/markdown/ to document the new --branch flag for agt init.\n\nKey points to document:\n1. agt init --branch name syntax\n2. Normalization rules (leading underscores stripped, then _ prefix for branch, . prefix for dir)\n3. Table of flag values to branch/dir mappings\n4. The .agentrack.json pointer file (what it is, why it exists, do not delete it)\n5. Multiple instances per repo (each on its own branch)\n6. Slash rejection (use dashes instead)\n7. Backward compatibility (no changes needed for existing repos)\n8. Use case: test suites can use dedicated branches\n\nThis task is blocked by validation mpfmfoduo6 — docs should only be written once the implementation is validated.\n\nCoordinate with any existing docs update task (mpdpt4rego, mpe7hg9ni7) to avoid conflicts.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-releaser",
+      "parentId": "mpfm8bilwf",
+      "tags": [
+        "documentation",
+        "init"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-21T15:04:39.671Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpfmfoduo6"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:05:03.103Z",
+    "author": "library-releaser",
+    "content": {
+      "id": "mpfmgxkmxm",
+      "content": "Blocked: mpfmfoduo6 (Validate --branch flag implementation) is still todo and assigned to library-validator. Cannot write docs until implementation is validated. Reassigning to manager."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:05:03.187Z",
+    "author": "library-releaser",
+    "content": {
+      "assignee": "cto"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:06:24.194Z",
+    "author": "cto",
+    "content": {
+      "assignee": "library-releaser"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-21T15:33:00.611Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpfmfoduo6",
+      "reason": "Blocker issue mpfmfoduo6 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:34:03.490Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:36:27.099Z",
+    "author": "library-releaser",
+    "content": {
+      "id": "mpfnlbdaoh",
+      "content": "Done. Updated 4 documentation files to cover the --branch flag:\n\n1. **cli-reference.md** — Added --branch flag to agt init section with flags table, examples, branch name normalization table, and INVALID_BRANCH_NAME error code.\n\n2. **getting-started.md** — Added custom branch example in the init step pointing to cli-reference for full docs.\n\n3. **storing-issues-in-git.md** — Added 'Custom branch names' section with: branch name rules, pointer file (.agentrack.json) explanation, multiple instances per repo with example and table. Updated resolution order to mention pointer file discovery. Updated init scenarios to show --branch usage.\n\n4. **overview.md** — Brief mention of --branch in the Git-friendly bullet.\n\nKey points documented: syntax, normalization rules, flag-to-branch/dir mapping table, pointer file explanation, multiple instances, slash rejection, backward compatibility."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:36:35.928Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

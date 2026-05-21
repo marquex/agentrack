@@ -37,7 +37,7 @@ current_state:
     linting: ESLint ^9.28 + typescript-eslint ^8.33 (replaced Biome), zero errors
     formatting: Prettier ^3.5.3 (replaced Biome formatter), zero issues
     typechecking: TypeScript strict + 4 extra flags, zero errors
-    testing: Bun test runner with coverage, 569 tests, 1997 assertions, 100% tracker.ts line coverage
+    testing: Bun test runner with coverage, 649 tests, 2163 assertions
     documentation: TypeDoc parses cleanly
     status: fully implemented — all quality gates passing
     test_helpers: setup.ts, fixtures.ts, assertions.ts created in tests/helpers/
@@ -174,7 +174,7 @@ current_state:
       - Impact score counts active blocks entries — used in list sort (priority ASC → impact DESC → id ASC)
       - BLOCKAGE_CYCLE error (exit code 11) prevents operation entirely, no partial state changes
     spec: .agentic/specs/07-phase6-blockages-spec.md
-  last_updated: "2026-05-20"
+  last_updated: "2026-05-21"
   org_change:
     description: "library-releaser agent onboarded. Documentation responsibility transferred from library-validator to library-releaser."
     issue: mpa5yz3kei
@@ -209,23 +209,26 @@ current_state:
       description: "CTO and subordinates receive issues via /agentrack-implement skill. Status-based workflow enforced."
       tested: "CTO processed mp9xefucmo — spec update, review coordination, delegation to subordinates."
     current_work:
-      configurable_branch:
-        issue: mpe3pknd9j
+      e2e_validation_suite:
+        issue: mpebmstgs9
         status: in-progress
-        description: "--branch flag on agt init for custom orphan branch names. Enables multiple instances per repo and test isolation."
+        description: "E2E test suite in validation/ folder using real git repos + agt CLI. library-validator owns fully."
+        spec: .agentic/specs/e2e-validation-suite-spec.md
+        chain:
+          review: mpebmy32vc (library-validator, spec review)
+          implement: mpebnnq5qq (library-validator, blocked by review)
+        enabler: "validation/ folder access + agt init --branch=<name> for test isolation"
+      configurable_branch:
+        issue: mpfm8bilwf
+        status: in-progress
+        description: "--branch flag for agt init. Implementation (mpfm9aff8v) completed but validation (mpfm9ixr9i) found 2 critical bugs: (1) double directory creation — tracker init creates .agentrack/ before branch flag takes effect, (2) missing BRANCH_CONFLICT — branch with non-agentrack data silently overwritten. Fix issue mpfn4dkotn (library-developer, priority 1) created. Also: dist/ was stale (library not rebuilt), branch-config.ts has 22.95% coverage, zero integration tests."
         spec: .agentic/specs/configurable-branch-spec.md
         chain:
-          reviews: [mpe3pvr2yu (library-developer), mpe3pv74lo (library-validator)]
-          implement: mpe3qrgb9x (library-developer, blocked by reviews)
-          validate: mpe3qr9gle (library-validator, blocked by implementation)
-      independent_git_branch:
-        issue: mpcwcufhzk
-        status: needs_closure
-        description: "All children done (fix mpd4hktoxq, validate mpd4hs14zp, doc+build mpd4i06wz6). Parent still in-progress — needs status update to done."
-      docs_cleanup:
-        issue: mpcvqqdhc5
-        status: done
-        description: "Cleaned up stale packages/library/docs-html/ directory."
+          implement: mpfm9aff8v (library-developer, todo — reopened for fixes)
+          fix: mpfn4dkotn (library-developer, priority 1 — blocks validation re-run)
+          validate: mpfm9ixr9i (cto, done — blocked on fix mpfn4dkotn for re-run)
+          docs: mpfm9qxpsd (library-releaser, blocked by validation)
+          stale_issues: [mpfmfcg2i5, mpfmfoduo6, mpfmga9sol, mpe7hg9ni7] (all stale from previous chain)
       user_friendly_docs:
         issue: mpdpt4rego
         status: in-progress
@@ -236,14 +239,30 @@ current_state:
           implementations: [mpdpu00ksc done, mpdwq7dvls done]
           validation: mpdpv6gw49 — todo, assigned library-validator
           config: mpdpvfn3yb — done
-        stale_issue: mpdpuhd0r5 (in-progress, replaced by mpdwq7dvls — should be closed)
         future: mpdxdbqwt9 (Docusaurus site setup, idea)
+      configurable_branch_old:
+        issue: mpe3pknd9j
+        status: done_incorrectly
+        description: "OLD CHAIN — incorrectly marked done. --branch flag was NEVER committed. Replaced by mpfm8bilwf."
+    validation_lessons:
+      - "Always rebuild dist/ (bun run build) before validating CLI changes — developer may have run tests against source but dist may be stale"
+      - "Behavioral testing in temp git repos catches bugs that unit tests miss (double directory creation, missing error codes)"
+      - "Check coverage on changed files specifically, not just overall — new modules with <30% coverage are a red flag"
+      independent_git_branch:
+        issue: mpcwcufhzk
+        status: done
+        description: "Orphan branch worktree storage. All children done."
       cap_upward_promotion:
         issue: mp9xefucmo
         status: done
-        spec: .agentic/specs/cap-upward-promotion-spec.md
-        description: "Cap upward auto-promotion at in-progress — parents never auto-promote to done/closed"
-    docs_status: "TRANSITIONING from TypeDoc auto-generated docs to hand-written user-friendly markdown. TypeDoc being removed (mpdpt4rego). New docs will live in docs/markdown/ with 8 sections. Docusaurus site generation tracked as idea mpdxdbqwt9."
+        description: "Cap upward auto-promotion at in-progress."
+    docs_status: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed from dependencies. Docs overhaul (mpdpt4rego) awaiting validation (mpdpv6gw49). Docusaurus site tracked as idea mpdxdbqwt9."
+    e2e_testing:
+      description: "New E2E test layer in validation/ folder. Real git repos + real agt CLI invocations. Covers all commands with happy/error/edge cases."
+      issue: mpebmstgs9
+      spec: .agentic/specs/e2e-validation-suite-spec.md
+      enabler: "validation/ folder access for library-validator + agt init --branch=<name> for test isolation"
+      status: spec_review_in_progress
     publish_pipeline:
       typedoc_html: complete
       ci_workflow: complete — .github/workflows/ci.yml (quality + build on push/PR to main)
@@ -251,14 +270,16 @@ current_state:
       gitignore_update: complete — docs-html/ added
     remaining:
       - "All tracked as agentrack issues — see `agt list` and open_issues above"
-      - "Independent git branch: issue mpcwcufhzk — all children done, parent needs closure"
-      - "Configurable branch name: issue mpe3pknd9j — in-progress, reviews pending"
+      - "Configurable branch (--branch): issue mpfm8bilwf (in-progress) — implemented but validation found 2 critical bugs, fix mpfn4dkotn (library-developer, P1) in progress"
+      - "E2E validation test suite: issue mpebmstgs9 (in-progress, CTO)"
       - "User docs validation: issue mpdpv6gw49 (todo, library-validator)"
-      - "Stale issues to clean up: mpa60i4skg (in-progress), mpdpuhd0r5 (in-progress, replaced)"
+      - "User docs overhaul parent: issue mpdpt4rego (in-progress, awaiting validation)"
       - "NPM_TOKEN secret: issue mp3peac1qo"
       - "GitHub Pages source: issue mp3peawcgs"
       - "First release v0.1.0: issue mp3peanz8b"
+      - "Docusaurus site: issue mpdxdbqwt9 (idea)"
       - "POLICY: any CLI/API change must route to library-releaser for build + docs update"
+      - "DOCS: all agents have read access to docs/markdown/ — mention in task descriptions when relevant"
 
 implementation_roadmap:
   source: .agentic/specs/05-implementation-phases.md

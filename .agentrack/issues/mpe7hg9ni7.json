@@ -56,5 +56,13 @@
     "content": {
       "assignee": "cto"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:00:13.503Z",
+    "author": "cto",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

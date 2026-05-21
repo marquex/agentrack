@@ -3,6 +3,18 @@
 // Error class
 export { AgentrackError } from "./core/errors";
 export { Tracker } from "./core/tracker";
+// Branch configuration
+export {
+  DEFAULT_BRANCH,
+  DEFAULT_DIR,
+  normalizeBranchName,
+  resolveWorktreeOptions,
+  defaultWorktreeOptions,
+  dirFromBranch,
+  readBranchPointer,
+  writeBranchPointer,
+} from "./core/branch-config";
+export type { WorktreeOptions } from "./core/branch-config";
 // Worktree operations
 export {
   WORKTREE_BRANCH,
@@ -14,7 +26,11 @@ export {
   isWorktreeInitialized,
   pullWorktree,
   pushWorktree,
+  commitGitignoreChange,
+  commitWorktreeData,
 } from "./core/worktree";
+// Resolution
+export { resolveTrackerDir } from "./core/resolution";
 // All data types
 export type {
   BlockageAddedEvent,

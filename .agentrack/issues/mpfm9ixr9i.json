@@ -1,0 +1,103 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-21T14:59:16.146Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T14:59:16.146Z",
+    "author": "cto",
+    "content": {
+      "title": "Validate: --branch flag for agt init",
+      "description": "Spec: .agentic/specs/configurable-branch-spec.md\n\nValidate the --branch implementation done by library-developer on issue mpfm9aff8v. Run quality gates, check test coverage on changed code, verify spec compliance. Key areas: normalization rules, config persistence, push and pull with custom branch, error handling, backward compatibility.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-validator",
+      "parentId": "mpfm8bilwf",
+      "tags": [
+        "validation",
+        "init",
+        "cli",
+        "worktree"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-21T14:59:36.891Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpfm9aff8v"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:00:08.188Z",
+    "author": "library-validator",
+    "content": {
+      "id": "mpfmambxif",
+      "content": "Blocked: Cannot validate --branch flag implementation. The implementation issue mpfm9aff8v is still in todo status — library-developer hasn't started it yet. Reassigning to manager to coordinate."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:00:18.126Z",
+    "author": "library-validator",
+    "content": {
+      "assignee": "cto"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-21T15:12:57.699Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpfm9aff8v",
+      "reason": "Blocker issue mpfm9aff8v transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:14:00.575Z",
+    "author": "cto",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:21:50.531Z",
+    "author": "cto",
+    "content": {
+      "id": "mpfn2j3744",
+      "content": "## Validation Report: --branch flag for agt init\n\n### Quality Gates\n- ✅ Typecheck: pass\n- ✅ Lint: pass  \n- ✅ All 649 existing tests: pass (0 failures)\n\n### Build Issue\nLibrary was NOT rebuilt after implementation. Running `agt init --branch testing` failed with \"unknown option\" until manual `bun run build`. Developer must build and verify CLI output before marking done.\n\n### Critical Bugs\n\n**BUG 1 — Double directory creation (BLOCKER)**\n`agt init --branch custom` creates BOTH `.agentrack/` (unused regular dir with stale data) AND `.custom/` (the actual worktree). The `.agentrack/` directory is a leftover from tracker init running before the branch flag takes effect. Users get junk data on disk.\n\n**BUG 2 — Missing BRANCH_CONFLICT detection**\nSpec requires error when branch exists with non-agentrack content. Currently silently succeeds — overwrites unrelated branch data.\n\n### Spec Compliance by AC\n\n| AC | Status | Detail |\n|----|--------|--------|\n| AC1: --branch flag | ⚠️ PARTIAL | Normalization correct for all spec cases. `--branch \"\"` treated as default instead of erroring. |\n| AC2: Config + pointer file | ⚠️ PARTIAL | Pointer file created for custom branches ✅. Config has branch field ✅. Default init also writes branch:\"_agentrack\" to config (spec says omit for backward compat). |\n| AC3: Push/pull | ✅ PASS | Push works with custom branch. Correct pointer file read. |\n| AC4: Worktree refactor | ✅ PASS | Constants parameterized, WorktreeOptions pattern works. |\n| AC5: resolution.ts | ⚠️ UNVERIFIED | Can't access source. 76% coverage, lines 25-29 uncovered. |\n| AC6: Error cases | ⚠️ PARTIAL | INVALID_BRANCH_NAME works for slashes/spaces/invalid chars ✅. Empty name not rejected ✗. BRANCH_CONFLICT not implemented ✗. Slash message generic (not spec-specific). |\n| AC7: Backward compat | ⚠️ PARTIAL | Default init works, existing tests pass ✅. Config includes branch field even for default init (deviation from spec). |\n| AC8: Slash rejection | ✅ PASS | Slashes rejected correctly. |\n\n### Test Coverage for Changed Files\n- `branch-config.ts` (NEW): **22.95%** line coverage — barely tested\n- `init.ts` (core of feature): **7.95%** line coverage — no tests\n- `push.ts`/`pull.ts`: **0%** function coverage\n- **No integration tests for --branch flag at all**\n- All 649 tests are pre-existing; none cover new functionality\n\n### Verdict: NOT READY\n\nTwo critical bugs (double directory, missing BRANCH_CONFLICT) and zero test coverage for the new feature. Needs rework before release."
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-21T15:22:10.287Z",
+    "author": "cto",
+    "content": {
+      "id": "mpfn2ypqto",
+      "content": "Validation complete. Reassigning to CTO (self) with findings. Implementation needs rework for double-directory bug and missing BRANCH_CONFLICT."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-21T15:22:10.322Z",
+    "author": "javi",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-21T15:23:23.270Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpfn4dkotn"
+    }
+  }
+]

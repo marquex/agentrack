@@ -1,0 +1,50 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-20T17:14:01.657Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T17:14:01.657Z",
+    "author": "cto",
+    "content": {
+      "title": "Review spec: e2e-validation-suite",
+      "description": "Review the draft spec at .agentic/specs/e2e-validation-suite-spec.md\n\nAnalyze from a testability and quality perspective. Comment with:\n- Testability concerns\n- Missing acceptance criteria\n- Edge cases that need coverage\n- Gaps in the test file list\n- Concerns about the command runner approach (bun vs node, path resolution)\n- Whether the test structure covers all CLI commands adequately\n- Concerns about git worktree cleanup in tests\n\nDo NOT implement — only analyze and comment.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-validator",
+      "parentId": "mpebmstgs9",
+      "tags": [
+        "review",
+        "spec"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T17:14:43.649Z",
+    "author": "library-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-20T17:17:35.020Z",
+    "author": "library-validator",
+    "content": {
+      "id": "mpebrimefa",
+      "content": "## Spec Review: e2e-validation-suite\n\n### CRITICAL: --branch flag does not exist\n\nAC1 is fundamentally broken. The spec states tests use agt init --branch=test-RANDOM to create an isolated agentrack instance on a dedicated orphan branch. But agt init accepts NO flags at all (see runner.ts lines 42-45). The init command always creates a worktree on the hardcoded _agentrack branch (defined in worktree.ts as WORKTREE_BRANCH). This means:\n\n1. Every test shares the same branch name _agentrack, so you cannot have multiple agentrack instances in separate directories that share a git repo\n2. Test isolation via unique branch per test is impossible as the CLI currently stands\n3. The random suffix in --branch=test-RANDOM is meaningless\n\nResolution needed: Either the --branch flag needs to be implemented as a prerequisite, or the spec must be rewritten to use a different isolation strategy (one git repo per test suite, each with its own _agentrack worktree which IS possible since worktrees are per-repo not per-branch).\n\n### CRITICAL: Existing CLI tests are already E2E\n\nThe spec presents E2E testing as a new capability, but packages/library/tests/cli/commands.test.ts already runs the real CLI via Bun.spawn with 887 test assertions across 74 describe blocks covering: init, create, list, view, update, history, users (register/list/revoke/regenerate), comments (add/update/delete/list), blockages (add/resolve/delete/list), and next. The helper at tests/cli/commands/cli-test-helper.ts already implements runCLI() with runCLIWithEnv() support.\n\nThis raises a fundamental question: what does validation/e2e/ add that tests/cli/commands.test.ts does not already provide? The spec needs to clearly articulate the differentiation. If it is just same tests in a different folder that is duplication not added value.\n\n### HIGH: Proposed runner.ts duplicates existing cli-test-helper.ts\n\nThe spec AC3 runAgt() helper is functionally identical to the existing runCLI() in tests/cli/commands/cli-test-helper.ts. Both use Bun.spawn to execute bin.ts, both capture stdout/stderr/exitCode, both support env overrides for auth tests. The E2E suite should either reuse the existing helper or the spec should explain why a new one is needed.\n\n### HIGH: Worktree cleanup code is incorrect\n\nThe cleanup example passes join(testDir, .agentrack) as an argument to git worktree remove with cwd: testDir, creating a double-path like /tmp/test-abc/test-abc/.agentrack. The existing worktree tests show the correct pattern: git worktree remove -f followed by git worktree prune. The spec should reference this existing cleanup pattern. Additionally cleanup must happen even if tests fail and must handle the case where the worktree was never created.\n\n### HIGH: Missing commands from test file list\n\nThe CLI has push and pull commands (src/cli/commands/push.ts, src/cli/commands/pull.ts) that are NOT included in the test file list (AC2), the coverage requirements table (AC4), or the lifecycle test (AC5). Even if these require a remote git repo and may be harder to test, the spec should explicitly note them as out-of-scope with reasoning rather than silently omitting them.\n\n### MEDIUM: spawnSync vs Bun.spawn inconsistency\n\nThe spec proposes spawnSync from child_process in the Implementation Notes but the existing CLI tests use Bun.spawn (async). Since this is a Bun project and the test runner is bun:test, using Bun.spawn is the better choice. The spec should standardize on one approach.\n\n### MEDIUM: Auth test setup is underspecified\n\nThe coverage table mentions open mode, read-only mode, strict mode but does not explain how to set the auth mode. Auth mode is configured via config.json inside .agentrack/. The spec needs to detail: (1) how to set auth mode for each test (direct file write or CLI command), (2) AGENTACK_USER_TOKEN env var usage is mentioned in AC3 but not in the auth test cases, (3) whether auth tests need to register users first.\n\n### MEDIUM: No plan for test parallelization conflicts\n\nThe spec says tests run sequentially to avoid git conflicts but does not explain how to enforce this. bun test runs tests in parallel by default. The spec should either use describe.serial from bun:test, use a global setup that creates a single test repo shared across tests, or document that specific flags are needed.\n\n### MEDIUM: Cleanup strategy contradiction\n\nAC1 says remove the test directory after tests complete but Implementation Notes say leftover directories help with debugging failures. These are contradictory. The spec should resolve this, for example clean up on success and preserve on failure.\n\n### LOW: validation/e2e-*/ gitignore pattern\n\nThe gitignore pattern validation/e2e-*/ does not match the proposed test structure at validation/e2e/. The test directories would be created as subdirectories of validation/e2e/ so the pattern should match whatever naming convention the test setup uses.\n\n### LOW: Missing --path option coverage\n\nThe create command has a --path option that is not mentioned in AC4 coverage table. While it may be a niche feature it should at least appear in the edge cases column.\n\n### Summary\n\nSeverity: Critical 2, High 3, Medium 4, Low 2\n\nRecommendation: The spec needs significant revision before implementation. The two critical issues -- the nonexistent --branch flag and the overlap with existing CLI tests -- require architectural decisions before this can proceed."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-20T17:17:45.035Z",
+    "author": "library-validator",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]
