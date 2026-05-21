@@ -1,6 +1,6 @@
 {
   "auth": {
-    "mode": "open",
+    "mode": "strict",
     "defaultUser": "anonymous"
   },
   "branch": "_e2edata"
