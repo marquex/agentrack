@@ -45,7 +45,7 @@
       "Edit(.claude/**)",
       "MultiEdit(.claude/**)",
       "Bash(agt *)",
-      "Bash(AGENTACK_USER_TOKEN=* agt *)",
+      "Bash(AGT_USER_TOKEN=* agt *)",
       "Bash(cd packages/library && bun run *)",
       "Bash(cd packages/library && bun test *)"
     ]

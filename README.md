@@ -95,7 +95,7 @@ npx agentrack users list
 npx agentrack users revoke alice
 
 # Regenerate token (self-service, requires your own token)
-AGENTACK_USER_TOKEN=tk_xxxxxxxx npx agentrack users regenerate alice
+AGT_USER_TOKEN=tk_xxxxxxxx npx agentrack users regenerate alice
 ```
 
 ### Sync

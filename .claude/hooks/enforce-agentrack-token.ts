@@ -10,7 +10,7 @@
  *     the agent_type against the user name.
  *   - Strips any token the agent may have manually put in the command and
  *     injects the correct one from users.json.
- *   - Injects the token as AGENTACK_USER_TOKEN=xxx prefix.
+ *   - Injects the token as AGT_USER_TOKEN=xxx prefix.
  *
  * Decision logic:
  *   1. No agent_type → main agent, allow
@@ -18,7 +18,7 @@
  *   3. Command doesn't contain "agt" → allow (safety net)
  *   4. Look up agent's token from .agentrack/users.json
  *   5. If not found → deny (agent is not registered as an agentrack user)
- *   6. Strip any existing AGENTACK_TOKEN / AGENTACK_USER_TOKEN from command
+ *   6. Strip any existing AGENTRACK_TOKEN / AGT_USER_TOKEN from command
  *   7. Inject the resolved token via updatedInput → allow
  *
  * Run with Bun (https://bun.sh). Uses only Node-compatible APIs.
@@ -89,13 +89,13 @@ function readStdin(): Promise<string> {
 // ---------- helpers ----------
 
 /**
- * Strip any existing AGENTACK_TOKEN or AGENTACK_USER_TOKEN assignment
+ * Strip any existing AGENTRACK_TOKEN or AGT_USER_TOKEN assignment
  * from a command string, so we can inject the correct one.
  */
 function stripExistingTokenEnv(cmd: string): string {
   return cmd
-    .replace(/\bAGENTACK_USER_TOKEN=\S+\s*/g, '')
-    .replace(/\bAGENTACK_TOKEN=\S+\s*/g, '')
+    .replace(/\bAGT_USER_TOKEN=\S+\s*/g, '')
+    .replace(/\bAGENTRACK_TOKEN=\S+\s*/g, '')
     .trimStart();
 }
 
@@ -150,7 +150,7 @@ async function main(): Promise<never> {
 
   // Strip any existing token env var the agent might have set, then inject the correct one
   const cleanCmd = stripExistingTokenEnv(cmd);
-  const injectedCmd = `AGENTACK_USER_TOKEN="${token}" ${cleanCmd}`;
+  const injectedCmd = `AGT_USER_TOKEN="${token}" ${cleanCmd}`;
 
   const updatedInput: Record<string, unknown> = { ...toolInput, command: injectedCmd };
 

@@ -63,7 +63,7 @@ knowledge:
     - "Index entries updated on create/update; binary search for lookups"
     - "Index manager has addChild, removeChild, getChildren for childrenOf map management"
     - "Auth: resolveAuthor() checks token -> mode (open/read-only/strict) -> defaultUser fallback"
-    - "Auth reads AGENTACK_USER_TOKEN env var; tokens are tk_ + 8 random alphanumeric chars"
+    - "Auth reads AGT_USER_TOKEN env var; tokens are tk_ + 8 random alphanumeric chars"
     - "Users register is bootstrap (no auth required); list requires read auth; revoke/regenerate require write auth"
     - "Token regeneration is self-service only (caller must be the target user)"
     - "Hierarchy module (hierarchy.ts): pure functions — isStatusAfter, validateNewChild, validateParentStatusChange, getClosableChildren, computeUpwardPromotions"

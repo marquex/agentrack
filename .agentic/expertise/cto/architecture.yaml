@@ -155,7 +155,7 @@ resolution_algorithm:
 cli_interface:
   format: "agt [subcommand] [args] [flags]"
   output: "JSON to stdout, errors to stderr with non-zero exit code"
-  auth: "token via AGENTACK_USER_TOKEN env var"
+  auth: "token via AGT_USER_TOKEN env var"
 
   commands:
     init: "create .agentrack/ with config.json, index.json, dependencies.json, users.json, issues/. IN PROGRESS: enhanced to set up git worktree on orphan branch _agentrack (issue mpcwcufhzk)"
@@ -185,7 +185,7 @@ auth_system:
     open: "no token required, unauthenticated writes attributed to defaultUser"
     read_only: "reads free, writes require token (default mode)"
     strict: "all commands require token"
-  token_passing: AGENTACK_USER_TOKEN environment variable
+  token_passing: AGT_USER_TOKEN environment variable
   author_in_events: "every mutating event includes author from resolved token"
 
 error_codes:

@@ -473,15 +473,15 @@ describe("Tracker", () => {
       mkdirSync(testDir, { recursive: true });
       tracker = new Tracker(testDir);
       await tracker.init();
-      savedToken = process.env.AGENTACK_USER_TOKEN;
-      delete process.env.AGENTACK_USER_TOKEN;
+      savedToken = process.env.AGT_USER_TOKEN;
+      delete process.env.AGT_USER_TOKEN;
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.AGENTACK_USER_TOKEN = savedToken;
+        process.env.AGT_USER_TOKEN = savedToken;
       } else {
-        delete process.env.AGENTACK_USER_TOKEN;
+        delete process.env.AGT_USER_TOKEN;
       }
     });
 
@@ -586,7 +586,7 @@ describe("Tracker", () => {
     test("with valid token: blockagesAdd uses author from token", async () => {
       const regResult = await tracker.usersRegister("charlie");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.AGENTACK_USER_TOKEN = regResult.token;
+      process.env.AGT_USER_TOKEN = regResult.token;
 
       const blocked = await tracker.create({ title: "Blocked" });
       const blocker = await tracker.create({ title: "Blocker" });
@@ -609,7 +609,7 @@ describe("Tracker", () => {
       const blocker = await tracker.create({ title: "Blocker" });
       if (!("id" in blocked) || !("id" in blocker)) throw new Error("Create failed");
 
-      process.env.AGENTACK_USER_TOKEN = "tk_fake0000";
+      process.env.AGT_USER_TOKEN = "tk_fake0000";
 
       const result = await tracker.blockagesAdd(blocked.id, { blockerIds: [blocker.id] });
 

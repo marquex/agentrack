@@ -62,7 +62,7 @@ If any step fails, report the issue clearly and do not proceed to the next step 
 
 ## Constants
 
-- $AGENTACK_TOKEN: `tk_66d51f89` (for reference only — the system injects it automatically when you run agt commands)
+- $AGENTRACK_TOKEN: `tk_66d51f89` (for reference only — the system injects it automatically when you run agt commands)
 
 ## Using agentrack as the issue tracker
 

@@ -61,7 +61,7 @@ Create the following files, each written for users (not library developers). Use
 - Auth modes: `open` (no token needed), `read-only` (reads free, writes need token), `strict` (everything needs token)
 - Default mode is `open`
 - Configuration in `.agentrack/config.json`
-- Token-based authentication: how it works, `AGENTACK_USER_TOKEN` environment variable
+- Token-based authentication: how it works, `AGT_USER_TOKEN` environment variable
 - User management: `agt users register <name>`, `agt users list`, `agt users revoke <name>`, `agt users regenerate <name>`
 - JavaScript API: how to pass tokens programmatically
 - Example: setting up auth for a multi-agent team

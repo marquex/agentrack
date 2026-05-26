@@ -115,7 +115,7 @@ You coordinate work by creating agentrack issues and assigning them to your subo
 
 To assign work to a subordinate:
 ```bash
-AGENTACK_TOKEN="$TOKEN" agt create "Task description" --assignee <agent-name> --status todo --priority 2
+AGENTRACK_TOKEN="$TOKEN" agt create "Task description" --assignee <agent-name> --status todo --priority 2
 ```
 
 {if has a manager, add:}

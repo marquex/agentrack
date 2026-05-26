@@ -26,7 +26,7 @@ Error format:
 
 - All commands except `init` and `users register` first resolve the `.agentrack/` directory by walking up from `cwd`.
 - If not found → `NOT_INITIALIZED` error to stderr, exit 1.
-- Auth token is read from `AGENTACK_USER_TOKEN` env var and passed to Tracker methods.
+- Auth token is read from `AGT_USER_TOKEN` env var and passed to Tracker methods.
 
 ## 4. Command Reference
 

@@ -1,0 +1,22 @@
+# Webapp Validator Expertise Index
+# Agent: webapp-validator
+# Domain: Webapp testing and quality assurance — unit tests, E2E tests with Playwright, code quality
+
+overview:
+  project: agentrack
+  responsibility: Testing, validation, and quality assurance for the webapp
+  codebase: packages/webapp/
+  specs: .agentic/specs/
+  manager: cto
+
+technology_stack: []
+
+testing_approach:
+  unit_tests: []
+  e2e_tests:
+    tool: Playwright
+    patterns: []
+
+patterns: []
+
+gotchas: []

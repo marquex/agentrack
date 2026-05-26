@@ -57,7 +57,7 @@ Build your expertise over time — learn the library's patterns, discover what k
 
 ## Constants
 
-- $AGENTACK_TOKEN: `tk_cmaub6ek` (for reference only — the system injects it automatically when you run agt commands)
+- $AGENTRACK_TOKEN: `tk_cmaub6ek` (for reference only — the system injects it automatically when you run agt commands)
 
 ## Advisory Workflow
 

@@ -25,17 +25,17 @@ describe("Tracker", () => {
     let savedToken: string | undefined;
 
     beforeEach(async () => {
-      savedToken = process.env.AGENTACK_USER_TOKEN;
-      delete process.env.AGENTACK_USER_TOKEN;
+      savedToken = process.env.AGT_USER_TOKEN;
+      delete process.env.AGT_USER_TOKEN;
       tracker = new Tracker(testDir);
       await tracker.init();
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.AGENTACK_USER_TOKEN = savedToken;
+        process.env.AGT_USER_TOKEN = savedToken;
       } else {
-        delete process.env.AGENTACK_USER_TOKEN;
+        delete process.env.AGT_USER_TOKEN;
       }
     });
 
@@ -152,7 +152,7 @@ describe("Tracker", () => {
         const oldToken = regResult.token;
 
         // Set env var so resolveAuthor identifies caller as alice
-        process.env.AGENTACK_USER_TOKEN = oldToken;
+        process.env.AGT_USER_TOKEN = oldToken;
 
         const result = await tracker.usersRegenerate("alice");
         if (result.result === "OK") {
@@ -170,7 +170,7 @@ describe("Tracker", () => {
         if (aliceResult.result !== "OK") throw new Error("Register failed");
 
         // Alice tries to regenerate bob's token
-        process.env.AGENTACK_USER_TOKEN = aliceResult.token;
+        process.env.AGT_USER_TOKEN = aliceResult.token;
         const result = await tracker.usersRegenerate("bob");
 
         expect(result.result).toBe("INVALID_TOKEN");
@@ -190,7 +190,7 @@ describe("Tracker", () => {
       test("persists new token to users.json", async () => {
         const regResult = await tracker.usersRegister("alice");
         if (regResult.result !== "OK") throw new Error("Register failed");
-        process.env.AGENTACK_USER_TOKEN = regResult.token;
+        process.env.AGT_USER_TOKEN = regResult.token;
 
         const genResult = await tracker.usersRegenerate("alice");
         if (genResult.result !== "OK") throw new Error("Regenerate failed");

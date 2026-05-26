@@ -53,7 +53,7 @@ describe("E2E: auth", () => {
     const result = await runAgt(
       ["create", "With Token Issue"],
       undefined,
-      { AGENTACK_USER_TOKEN: token },
+      { AGT_USER_TOKEN: token },
     );
 
     expect(result.exitCode).toBe(0);
@@ -68,7 +68,7 @@ describe("E2E: auth", () => {
     const result = await runAgt(
       ["create", "Bad Token Issue"],
       undefined,
-      { AGENTACK_USER_TOKEN: "tk_invalid" },
+      { AGT_USER_TOKEN: "tk_invalid" },
     );
 
     expect(result.exitCode).toBe(3);
@@ -84,7 +84,7 @@ describe("E2E: auth", () => {
     const regResult = await runAgt(["users", "register", "alice"]);
     const token = parseJson(regResult.stdout).token;
     await runAgt(["create", "Test"], undefined, {
-      AGENTACK_USER_TOKEN: token,
+      AGT_USER_TOKEN: token,
     });
 
     // List should work without token (read operation)

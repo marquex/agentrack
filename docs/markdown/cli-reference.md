@@ -699,7 +699,7 @@ agt users revoke <name>
 **Example:**
 
 ```bash
-export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+export AGT_USER_TOKEN=tk_k7x2m9p4
 agt users revoke bob
 ```
 
@@ -710,7 +710,7 @@ agt users revoke bob
 ```
 
 **Notes:**
-- Requires a valid token via `AGENTACK_USER_TOKEN`.
+- Requires a valid token via `AGT_USER_TOKEN`.
 
 ---
 
@@ -731,7 +731,7 @@ agt users regenerate <name>
 **Example:**
 
 ```bash
-export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+export AGT_USER_TOKEN=tk_k7x2m9p4
 agt users regenerate alice
 ```
 
@@ -742,7 +742,7 @@ agt users regenerate alice
 ```
 
 **Notes:**
-- The `AGENTACK_USER_TOKEN` must contain the user's current token (self-service only).
+- The `AGT_USER_TOKEN` must contain the user's current token (self-service only).
 
 ---
 

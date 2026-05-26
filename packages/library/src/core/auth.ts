@@ -5,7 +5,7 @@ import { ErrorCodes, AgentrackError } from "./errors";
  * Resolve the author for an operation based on auth configuration.
  *
  * Synchronous — only does in-memory lookups.
- * Reads `AGENTACK_USER_TOKEN` from env if no explicit token is provided.
+ * Reads `AGT_USER_TOKEN` from env if no explicit token is provided.
  *
  * @param options - Auth resolution options
  * @param options.token - Explicit token to validate (overrides env var)
@@ -22,7 +22,7 @@ export function resolveAuthor(options: {
 }): { author: string } | AgentrackError {
   const { config, users, requiresWrite } = options;
   // noPropertyAccessFromIndexSignature requires bracket notation for dynamic keys
-  const token = options.token ?? process.env["AGENTACK_USER_TOKEN"];
+  const token = options.token ?? process.env["AGT_USER_TOKEN"];
 
   // If token is provided, validate it regardless of mode
   if (token) {
@@ -42,7 +42,7 @@ export function resolveAuthor(options: {
     case "strict":
       return new AgentrackError(
         ErrorCodes.TOKEN_REQUIRED.result,
-        "Authentication required. Set AGENTACK_USER_TOKEN environment variable.",
+        "Authentication required. Set AGT_USER_TOKEN environment variable.",
         ErrorCodes.TOKEN_REQUIRED.exitCode,
       );
 
@@ -50,7 +50,7 @@ export function resolveAuthor(options: {
       if (requiresWrite) {
         return new AgentrackError(
           ErrorCodes.TOKEN_REQUIRED.result,
-          "Authentication required for write operations. Set AGENTACK_USER_TOKEN environment variable.",
+          "Authentication required for write operations. Set AGT_USER_TOKEN environment variable.",
           ErrorCodes.TOKEN_REQUIRED.exitCode,
         );
       }

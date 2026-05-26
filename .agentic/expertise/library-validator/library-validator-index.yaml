@@ -246,7 +246,7 @@ learnings:
     - "Current coverage: 98.46% line on tracker.ts (all other core at 100%), 100% function across all source files."
   typescript:
     - "4 extra strict flags (noUncheckedIndexedAccess, exactOptionalPropertyTypes, noImplicitOverride, noPropertyAccessFromIndexSignature) are enabled and pass clean."
-    - "noPropertyAccessFromIndexSignature requires bracket notation for dynamic keys (e.g. process.env['AGENTACK_USER_TOKEN'])."
+    - "noPropertyAccessFromIndexSignature requires bracket notation for dynamic keys (e.g. process.env['AGT_USER_TOKEN'])."
     - "exactOptionalPropertyTypes means `undefined` cannot be assigned to optional properties explicitly."
   typedoc: "REMOVED — Documentation ownership transferred to library-releaser agent. TypeDoc and docs generation are no longer library-validator responsibilities."
   testing_patterns:
@@ -421,7 +421,7 @@ learnings:
       - "H3: push and pull CLI commands silently omitted from test file list and coverage table"
     medium_findings:
       - "M1: spawnSync vs Bun.spawn inconsistency — spec proposes child_process.spawnSync but existing tests use Bun.spawn (async, native to Bun)"
-      - "M2: Auth test setup underspecified — no detail on how to set auth mode (config.json direct write? CLI?), AGENTACK_USER_TOKEN usage unclear"
+      - "M2: Auth test setup underspecified — no detail on how to set auth mode (config.json direct write? CLI?), AGT_USER_TOKEN usage unclear"
       - "M3: No plan for test parallelization — bun test parallelizes by default but spec says sequential; no describe.serial or similar enforcement"
       - "M4: Cleanup strategy contradiction — AC1 says remove after tests, Implementation Notes say preserve for debugging"
     low_findings:

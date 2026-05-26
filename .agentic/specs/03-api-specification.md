@@ -311,7 +311,7 @@ The auth layer is internal — it is not called directly by consumers. It is inv
 
 ```typescript
 function resolveAuthor(options: {
-  token?: string;         // from AGENTACK_USER_TOKEN env var
+  token?: string;         // from AGT_USER_TOKEN env var
   config: ConfigFile;
   users: UsersFile;
   requiresWrite: boolean; // true for mutations, false for reads
@@ -320,7 +320,7 @@ function resolveAuthor(options: {
 
 **Logic:**
 
-1. Resolve `token` from `process.env.AGENTACK_USER_TOKEN`.
+1. Resolve `token` from `process.env.AGT_USER_TOKEN`.
 2. Check `config.auth.mode`:
    - `strict`: all commands require token. No token → `TOKEN_REQUIRED`.
    - `read-only`: if `requiresWrite` and no token → `TOKEN_REQUIRED`.

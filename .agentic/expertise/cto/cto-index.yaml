@@ -9,8 +9,14 @@ hierarchy:
       - library-developer (implementation)
       - library-validator (testing, quality gates — documentation removed)
       - library-releaser (release prep, documentation, build, version management, publishing)
+      - webapp-developer (full-stack web development — React frontend + Hono backend)
+      - webapp-validator (webapp testing, quality assurance, spec compliance)
+    pending_setup:
+      - webapp-developer — registered in agentrack (tk_thd0nvbd), needs agent file and expertise folder
+      - webapp-validator — registered in agentrack (tk_f1g3kazq), needs agent file and expertise folder
+      - Setup guide: .agentic/specs/webapp-agent-setup.md
 
-expertise_status: "Dogfooding active. Active chains: (1) --branch flag implementation (mpfm8bilwf, in-progress) — implementation mpfm9aff8v done but validation found 2 critical bugs (double directory creation, missing BRANCH_CONFLICT). Fix issue mpfn4dkotn (library-developer, priority 1, in-progress). Validation re-run mpfm9ixr9i blocked on fix. Docs mpfm9qxpsd reassigned to library-releaser. (2) E2E test refactor (mpfobnq8ty, in-progress) — library-validator refactors E2E tests from per-test git repos to shared worktree approach. Implementation mpfobxibgb (library-validator), validation mpfoc9r65a (library-validator, blocked by impl). Spec: .agentic/specs/e2e-refactor.md. Prerequisite (--branch flag) done. Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9). Future: Docusaurus site (mpdxdbqwt9, idea). Public docs at docs/markdown/ (8 files) — all agents have read access, library-releaser has write access."
+expertise_status: "Webapp initiative launched. Specs written: .agentic/specs/webapp-spec.md (full spec), .agentic/specs/webapp-roadmap.md (5-phase roadmap). 10 implementation issues created with proper blocking relationships. Phase 1 (mpgqtsxcvh) is unblocked and ready for webapp-developer. Agent files and expertise folders need manual creation (see webapp-agent-setup.md). Previous chains: --branch flag and E2E refactor may still have standing issues. Public docs at docs/markdown/ (8 files)."
 
 project_overview:
   name: agentrack
@@ -75,6 +81,12 @@ specifications:
       description: "E2E test suite in validation/ folder. Uses real git repos + agt CLI invocations (spawn + capture). Covers all CLI commands with happy/error/edge cases. Full lifecycle test. No library code changes. Parent: mpebmstgs9. Implementation: mpebnnq5qq (library-validator)."
     - path: e2e-refactor.md
       description: "Refactor E2E tests from per-test git repos to shared worktree approach. Two test types: Type A (git ops: init/push/pull, clean git env per test) and Type B (CRUD etc., fast data reset per test). New helpers: initE2EWorktree, teardownE2EWorktree, resetWorktreeData, setAuthMode. Remove old helpers: createTestRepo, cleanupTestRepo, createIsolatedDir. Parent: mpfobnq8ty (child of mpebmstgs9). Implementation: mpfobxibgb (library-validator). Validation: mpfoc9r65a (library-validator)."
+    - path: webapp-spec.md
+      description: "Full-stack webapp specification for agentrack UI. React 19 + Vite + shadcn/ui frontend (SPA with list and detail views), Hono + Bun backend (REST API with 21 endpoints), TanStack Query state management. Covers API design (issues, comments, blockages, users, sync, health), UI/UX design (tree view, filters, inline editing, responsive layout), project structure, color scheme. v1 scope excludes init, custom branches, auth UI, real-time, markdown rendering, dark mode."
+    - path: webapp-roadmap.md
+      description: "5-phase development roadmap for the webapp. Phase 1: Foundation (scaffolding, health check). Phase 2: Core issues (CRUD endpoints, list page, detail page, create dialog). Phase 3: Rich detail (comments, blockages, history, tree view, tags, parent). Phase 4: Users & sync (user management UI, push/pull controls). Phase 5: Polish (responsive, loading states, sorting, filtering). 10 implementation issues with blocking dependencies."
+    - path: webapp-agent-setup.md
+      description: "Setup guide for webapp-developer and webapp-validator agents. Contains full agent configurations (frontmatter + system prompts) and expertise index templates. Agents registered in agentrack but need manual file creation in .claude/agents/ and .agentic/expertise/."
 
 access_boundaries:
   rule: "CTO must NOT read or modify files under packages/library/. All code changes go through subordinates."
@@ -351,3 +363,6 @@ session_log:
   - session: 74
     date: "2026-05-21"
     summary: "Planned E2E test refactor via /issue skill. Spec already existed at .agentic/specs/e2e-refactor.md (authored by library-validator). Prerequisite (--branch flag) already implemented. Skipped spec draft and review phases — implementer wrote the spec themselves. Created issue chain: parent mpfobnq8ty (CTO, in-progress, child of mpebmstgs9), implementation mpfobxibgb (library-validator), validation mpfoc9r65a (library-validator, blocked by impl). No library-developer or library-releaser involvement — pure test refactoring task."
+  - session: 75
+    date: "2026-05-22"
+    summary: "Launched webapp initiative. User requested a web UI for managing agentrack issues. Read all agentrack docs (8 files) to understand full API surface. Created 3 deliverables: (1) Comprehensive spec (.agentic/specs/webapp-spec.md, 24KB) — REST API design (21 endpoints across issues/comments/blockages/users/sync/health), frontend design (React+Vite+shadcn/ui, 2-page SPA with list+detail), backend design (Hono+Bun, thin REST layer over agentrack JS API), frontend architecture (TanStack Query, React Router, component tree). (2) Phased roadmap (.agentic/specs/webapp-roadmap.md) — 5 phases with validation criteria: Foundation → Core issues → Rich detail → Users & sync → Polish. (3) 10 implementation issues with blocking dependencies. Registered webapp-developer and webapp-validator in agentrack (tokens tk_thd0nvbd, tk_f1g3kazq). Created agent setup guide (.agentic/specs/webapp-agent-setup.md) since CTO lacks write access to .claude/agents/ and .agentic/expertise/ for other agents. Updated CTO expertise with new subordinates."

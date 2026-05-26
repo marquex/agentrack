@@ -38,7 +38,7 @@ export function resolveAuthor(options: {
 
 **Logic (synchronous — no need for async):**
 
-1. Resolve `token` from `process.env.AGENTACK_USER_TOKEN` if `options.token` is not provided.
+1. Resolve `token` from `process.env.AGT_USER_TOKEN` if `options.token` is not provided.
 2. Check `config.auth.mode`:
    - **`strict`**: all operations require token. No token → `TOKEN_REQUIRED` (exit code 2).
    - **`read-only`**: if `requiresWrite === true` and no token → `TOKEN_REQUIRED` (exit code 2).
@@ -198,7 +198,7 @@ agt users regenerate <name>
 
 Follow the same pattern as existing commands (see `create.ts`, `list.ts`, etc.). Each command:
 1. Resolves `.agentrack/` directory
-2. Reads `AGENTACK_USER_TOKEN` from env
+2. Reads `AGT_USER_TOKEN` from env
 3. Calls the corresponding Tracker method
 4. Prints result to stdout (JSON) or error to stderr
 
@@ -211,7 +211,7 @@ Register the `users` command with subcommands in `src/cli/runner.ts`.
 In each existing CLI command file (`create.ts`, `update.ts`, `list.ts`, `view.ts`, `history.ts`), add token reading:
 
 ```typescript
-const token = process.env.AGENTACK_USER_TOKEN;
+const token = process.env.AGT_USER_TOKEN;
 ```
 
 Pass this token to the Tracker method. The Tracker method will use it for auth resolution.
@@ -231,11 +231,11 @@ async history(id: IssueId, authToken?: string): Promise<HistoryResult>
 
 The `resolveAuthor` function receives `token: authToken` (or reads from env if not provided).
 
-Actually — simpler approach that's more aligned with the architecture spec: `resolveAuthor` reads from `process.env.AGENTACK_USER_TOKEN` automatically. The CLI sets this env var. The programmatic API can also set it. No need to pass tokens through method signatures.
+Actually — simpler approach that's more aligned with the architecture spec: `resolveAuthor` reads from `process.env.AGT_USER_TOKEN` automatically. The CLI sets this env var. The programmatic API can also set it. No need to pass tokens through method signatures.
 
-**Final decision:** `resolveAuthor` reads `process.env.AGENTACK_USER_TOKEN` if no token is explicitly passed. CLI commands don't need to change — the env var is already set by the user's shell. Tracker methods don't need a token parameter.
+**Final decision:** `resolveAuthor` reads `process.env.AGT_USER_TOKEN` if no token is explicitly passed. CLI commands don't need to change — the env var is already set by the user's shell. Tracker methods don't need a token parameter.
 
-This means: `resolveAuthor` is called inside Tracker methods with `token: process.env.AGENTACK_USER_TOKEN`. The `options.token` parameter in `resolveAuthor` is optional — if not provided, it reads from env.
+This means: `resolveAuthor` is called inside Tracker methods with `token: process.env.AGT_USER_TOKEN`. The `options.token` parameter in `resolveAuthor` is optional — if not provided, it reads from env.
 
 **No changes needed to CLI command files for auth token passing.** The env var is read by `resolveAuthor` internally. But the CLI commands DO need to be updated if the Tracker method signatures changed. Since we're not changing signatures, they stay the same.
 

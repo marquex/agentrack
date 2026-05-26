@@ -27,9 +27,9 @@ We want the app to be 100% client side, so we'll use React + TypeScript + Vite f
 
 For the backend, we will use a simple bun+hono server that will connect to agentrack using the agentrack library. The data will be the data stored in the current git repository, so we don't need a separate database. The backend will expose a REST API that the frontend can use to interact with agentrack.
 
-The API can just offer the same commands that the agentrack CLI offers, but as API endpoints. For example, there will be an endpoint to create a new issue, which will call the corresponding function in the agentrack library with the same parameters that the CLI command would use.
+Check the docs to know about what's possible with agentrack: docs/markdown/getting-started.md
 
-We can use bun+hono for the backend because it's a very fast and lightweight server, and it has good support for TypeScript. It also has a simple API for defining routes and handling requests, which will make it easy to implement the API endpoints.
+The API can just offer the same commands that the agentrack CLI offers, but as API endpoints. For example, there will be an endpoint to create a new issue, which will call the corresponding function in the agentrack library with the same parameters that the CLI command would use.
 
 ## New hires
 

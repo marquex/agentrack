@@ -9,15 +9,13 @@ Agentrack is a file-backed, event-sourced, git-friendly issue tracker designed f
 
 ## Authentication
 
-**You do NOT need to provide a token.** The system automatically injects your token when you call agt. Just run commands directly:
+You must be registered as a user in agentrack to use the CLI. Setting the `AGENTRACK_USER_TOKEN` environment variable before calling the `agt` CLI is the way to authenticate.
 
 ```bash
-agt <command> [options]
+AGENTRACK_USER_TOKEN=<your-token> agt <command> [options]
 ```
 
-A PreToolUse hook (`enforce-agentrack-token.ts`) looks up your agent's token from `.agentrack/users.json` using your agent name, strips any token you may have added to the command, and injects the correct one as `AGENTACK_USER_TOKEN=xxx` before the command executes. This ensures every agent always uses its own registered token.
-
-If your agent is not registered as a agentrack user, the command will be blocked — ask your manager to register you first with `agt users register "<agent-name>"`.
+Note: A PreToolUse hook (`enforce-agentrack-token.ts`) looks up your agent's token from `.agentrack/users.json` and make it sure it's used when you call `agt` in case you forget.
 
 ## CLI Reference
 
@@ -127,12 +125,6 @@ Manage registered users and their tokens.
 
 The whole project work needs to be tracked in issues. Use the CLI to manage your issues and coordinate with other agents.
 
-### Before starting work
-
-1. List open issues assigned to you: `agt list --assignee "<your-name>" --status open`
-2. Check for blockages on your issues: `agt blockages list <issueId>`
-3. Pick the highest-priority unblocked issue to work on
-
 ### When starting an issue
 
 1. View the issue details: `agt view <issueId>`
@@ -140,14 +132,14 @@ The whole project work needs to be tracked in issues. Use the CLI to manage your
 3. If the issue is blocked by other issues, stop and report the blockers
 4. If the issue is done or closed, stop and report it
 5. Read the comments to understand context and relevant discussions
-6. If the issue is in `idea` status: add a comment with your thoughts, analysis, or proposed approach. Do not update the status or make code changes.
+6. If the issue is in `idea` status: Add a comment with your thoughts, analysis, or proposed approach. Do not update the status or make code changes. Only make code changes when the issue is in `in-progress` status.
 7. If the issue is in `todo` status: update the status to `in-progress` and start working.
 
 ### While working
 
-1. Add comments to document decisions, findings, or questions
-2. If blocked by another issue, add a blockage: `agt blockages add <your-issue> --by <blocker-issue>`
-3. Update issue status as you progress (e.g., `idea` → `in-progress` → `review` → `done`)
+Add comments to document key decisions, findings, or questions as you work. This keeps your manager and other agents informed and provides context for future reference.
+
+Comments need to be conversational and informative for you and other agents. Try to keep them high level and focused on the "why" and "what", not the "how". The code itself will show the "how" — comments should explain the reasoning, trade-offs, and implications.
 
 ### After completing work
 

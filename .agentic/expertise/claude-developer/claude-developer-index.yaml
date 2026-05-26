@@ -22,7 +22,7 @@ architecture:
         model: opus
         description: Chief Technology Officer — designs architecture, generates specs, tracks development alignment
         access: [.agentic/expertise/cto/**, ./**]
-        subordinates: [library-developer, library-validator, library-releaser]
+        subordinates: [library-developer, library-validator, library-releaser, webapp-developer, webapp-validator]
         skills: [agent-expertise, agentrack, agentrack-implement, idea, issue]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
       - name: library-developer
@@ -49,12 +49,29 @@ architecture:
         skills: [agent-expertise, agentrack, agentrack-implement, idea]
         hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
         manager: cto
+      - name: webapp-developer
+        model: opus
+        description: Webapp expert engineer — owns full technical implementation of the webapp (components, pages, styling, build pipeline)
+        access: [.agentic/expertise/webapp-developer/**, packages/webapp/**, .agentic/specs/**(read)]
+        subordinates: none
+        skills: [agent-expertise, agentrack, agentrack-implement]
+        hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
+        manager: cto
+      - name: webapp-validator
+        model: opus
+        description: Webapp quality engineer — generates tests, E2E tests with Playwright, verifies code quality
+        access: [.agentic/expertise/webapp-validator/**, packages/webapp/**, validation/**, .agentic/specs/**(read)]
+        subordinates: none
+        skills: [agent-expertise, agentrack, agentrack-implement]
+        hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop)]
+        manager: cto
     notes: |
       hire-expert skill tested — workflow is: parse → ask → confirm → create → validate. Step-by-step approach works well.
       Second hire (library-developer) went smoothly — user provided complete info upfront, only changed model from sonnet to opus.
       Third hire (library-validator) — user again provided complete info upfront, changed model from sonnet to opus. This agent needs Write/Edit tools (creates test files and docs).
       CTO now has three subordinates — adding subsequent ones is simple since agentrack-based task assignment and Coordinating Work section already existed, just needed subordinates list update in frontmatter.
       Fourth hire (library-releaser) — release engineer agent. Needs Bash (test/build/publish commands) + Write/Edit (version bumps, generated docs). User provided complete info upfront again.
+      Fifth and sixth hires (webapp-developer, webapp-validator) — webapp engineering pair. Same pattern as library-developer/library-validator but for packages/webapp/. User provided all info upfront. CTO already had issue skill and subordinates, so only needed to append to the list. webapp-validator has Playwright E2E testing focus and validation/ directory for test artifacts.
 
   skills:
     path: .claude/skills/
@@ -89,12 +106,12 @@ architecture:
       - name: agentrack
         purpose: Interact with the agentrack issue tracker — create, list, view, update issues, comments, users, blockages
         has_scripts: false
-        auth_mechanism: Token looked up from .agentrack/users.json by enforce-agentrack-token.ts hook and injected as AGENTACK_USER_TOKEN env var — agents call agt directly without token prefix
+        auth_mechanism: Token looked up from .agentrack/users.json by enforce-agentrack-token.ts hook and injected as AGT_USER_TOKEN env var — agents call agt directly without token prefix
         notes: |
           Pure reference skill — no scripts, just CLI usage documentation.
           Each agent should be registered via `agt users register <name>` to get their own token.
           The PreToolUse hook reads users.json, matches agent_type to user name, strips any manual token from the command, and injects the correct one.
-          Agents do NOT need to provide tokens manually. The $AGENTACK_TOKEN constant in agent system files is informational only.
+          Agents do NOT need to provide tokens manually. The $AGENTRACK_TOKEN constant in agent system files is informational only.
       - name: issue
         purpose: Manager planning skill — analyze a request, draft spec, create review + implementation + quality tasks with blockages
         has_scripts: false
@@ -133,8 +150,8 @@ architecture:
           - Main agent (no agent_type) is always allowed without modification
           - Looks up token from .agentrack/users.json by matching agent_type against user name
           - If agent not found in users.json → deny with registration instructions
-          - Strips any existing AGENTACK_TOKEN or AGENTACK_USER_TOKEN from the command
-          - Injects the looked-up token via updatedInput: AGENTACK_USER_TOKEN="<token>" <command>
+          - Strips any existing AGENTRACK_TOKEN or AGT_USER_TOKEN from the command
+          - Injects the looked-up token via updatedInput: AGT_USER_TOKEN="<token>" <command>
           - Agents do NOT need to know or provide their own tokens — the hook handles everything transparently
       - name: enforce-issue-cleanup.ts
         trigger: SubagentStop — project-wide in settings.json
@@ -201,7 +218,7 @@ patterns:
   - Release engineer agents (build, test, publish) always need Bash tool for running CLI commands (npm test, npm run build, npm publish, etc.) and Write/Edit for version bumps and generated artifacts. They also need write access to the package directory since builds generate dist files and version bumps modify package.json.
   - Reference-only skills (no scripts): SKILL.md frontmatter just needs `name` and `description`, no `allowed-tools` or `argument-hint` needed. The body is purely instructional — teaches the agent how to use an external CLI tool, API, or convention. The agentrack skill is the first example of this pattern.
   - "PreToolUse updatedInput is powerful for transparent command modification: the hook can modify tool_input (e.g. inject env vars into Bash commands) without the agent needing to know. Combined with permissionDecision: 'allow', the tool call proceeds with the modified input seamlessly. This is better than requiring agents to manually include the right values."
-  - Token injection pattern: the hook reads .agentrack/users.json (not env var) to find the agent's token by name, strips any manual token from the command, and injects the correct one via updatedInput. The agent system files have $AGENTACK_TOKEN as an informational-only constant. The SKILL.md tells agents "just call agt directly" and explains the hook handles auth transparently.
+  - Token injection pattern: the hook reads .agentrack/users.json (not env var) to find the agent's token by name, strips any manual token from the command, and injects the correct one via updatedInput. The agent system files have $AGENTRACK_TOKEN as an informational-only constant. The SKILL.md tells agents "just call agt directly" and explains the hook handles auth transparently.
   - Agent runner lifecycle observed end-to-end: runner polls `agt next <agent>` → dispatches to free agents → agents process (read spec, analyze code, post comments, update expertise) → agents close issues → blockers auto-resolve → parent auto-promotes to done. The entire flow from poll to all-done worked correctly with no manual intervention.
   - Upfront task creation pattern: the /issue skill should create ALL tasks (reviews + implementation + quality) in one invocation with proper blockages, so the runner can process them in sequence without requiring CTO re-engagement between phases. This avoids the "multi-phase re-engagement" failure mode where the CTO never gets re-dispatched.
   - Skill consolidation: replaced worktask + agentrack-manager + agentrack-subordinate (3 skills with broken references) with a single agentrack-implement skill (all agents) + issue skill (CTO only). Fewer skills = fewer broken references.
@@ -210,6 +227,9 @@ patterns:
   - When monitoring running agents: check session log line counts for growth, parse tail lines for agent activity (tool calls = working, text output = thinking/reporting, result event = finished). Agent sessions typically take 3-5 min for review tasks, 20-26 turns.
   - After creating or renaming hook files, run a cross-check: `ls .claude/hooks/*.ts` vs the hook commands in settings.json and all agent frontmatter files. Mismatches are the #1 source of silent hook failures.
   - Agent rename is a multi-file operation: (1) rename agent .md file, (2) rename expertise folder, (3) rename index yaml inside folder, (4) update name + access path in agent frontmatter, (5) update all references in other agent files (subordinates lists, skill templates), (6) update all references in expertise files across ALL agents. Use `grep -r "old-name" .claude/ .agentic/expertise/` to find every occurrence — references are scattered across cto-index.yaml, claude-developer-index.yaml, status.yaml, skill SKILL.md files, and inside the renamed agent's own expertise index. The `replace_all` flag on Edit is essential for bulk renames within a single file.
+  - Parallel hires (hiring 2+ agents at once) follow the same pattern as individual hires — create each agent file independently, then update the manager's subordinates list in a single edit. No special handling needed for bulk hiring.
+  - Agent pairs (developer + validator) work well as a pattern: both get access to the same codebase directory but with different responsibilities. The developer implements, the validator tests. Both report to the same manager. The validator should NOT fix bugs — only report them for the developer to fix.
+  - When hiring agents for a new package that doesn't exist yet (like packages/webapp/), create the agent access rules pointing to the expected path. The access enforcement hook matches against the path pattern, not the actual filesystem — it will work once the package is created.
 
 gotchas:
   - No package.json in .claude/ directory — yaml-validator.ts imports js-yaml which needs install at runtime
@@ -225,8 +245,8 @@ gotchas:
   - "When a skill has duplicated/overlapping workflow sections (copy-paste drift), agents get confused by contradictory instructions. Consolidate into a single authoritative flow. The agentrack skill had 3 overlapping versions of the workflow — merged into one clean sequence."
   - "Blockages `--by` is variadic (`--by id1 id2`) — when documenting variadic options, add an explicit note since agents may not infer this from `--by <id1> <id2> ...` syntax alone."
   - "In settings.json, Stop and SubagentStop are separate events. In agent frontmatter, Stop is auto-converted to SubagentStop for subagents. Use SubagentStop in settings.json for hooks that should fire when subagents finish."
-  - "The `if` condition in settings.json hooks uses permission rule syntax: `Bash(agt *)` matches after VAR=value stripping, so `AGENTACK_TOKEN=... agt list` correctly matches. Only evaluated for PreToolUse/PostToolUse/PostToolUseFailure/PermissionRequest/PermissionDenied events."
-  - "Token enforcement reads from .agentrack/users.json (not env var) — the enforce-agentrack-token.ts hook uses agent_type to look up the agent's registered token, strips any manual token from the command, and injects the correct one. No env var needed; no agent runner changes needed. The $AGENTACK_TOKEN constant in agent system files is informational only."
+  - "The `if` condition in settings.json hooks uses permission rule syntax: `Bash(agt *)` matches after VAR=value stripping, so `AGENTRACK_TOKEN=... agt list` correctly matches. Only evaluated for PreToolUse/PostToolUse/PostToolUseFailure/PermissionRequest/PermissionDenied events."
+  - "Token enforcement reads from .agentrack/users.json (not env var) — the enforce-agentrack-token.ts hook uses agent_type to look up the agent's registered token, strips any manual token from the command, and injects the correct one. No env var needed; no agent runner changes needed. The $AGENTRACK_TOKEN constant in agent system files is informational only."
   - "Hook placement strategy: project-wide enforcement hooks (token injection, issue cleanup) go in settings.json so they apply to all agents automatically without per-agent config. Agent-specific hooks (access control, expertise injection) stay in agent frontmatter since they need per-agent configuration. This avoids duplicating hook config across every agent file."
   - "The enforce-issue-cleanup.ts SubagentStop hook uses both `reason` (shown to the agent) and `systemMessage` (shown to the user) in its block output. Both fields work for SubagentStop just like Stop."
   - "Agent runner orphan process risk: if run-agents.ts dies without SIGINT (e.g. piped through `head`, SIGPIPE), child claude processes become orphans (PPID 1) because the SIGINT handler never fires. These orphaned processes continue working on the same issue. Always check for orphaned claude agent processes before starting a new runner instance — duplicates will cause concurrent writes to the same agentrack issue."
@@ -236,7 +256,8 @@ gotchas:
   - "Deleted skills with dangling references are silently ignored — Claude Code doesn't error when a skill name in frontmatter doesn't match any SKILL.md. This means broken skill references go undetected. Always verify agent skill lists match existing skill directories after renames or deletions."
   - "agt users register is blocked for unregistered agents — enforce-agentrack-token.ts denies the command if the calling agent isn't in users.json. claude-developer can't register new agents itself. The user must run `agt users register <name>` from the main session. After registration, update the token in the agent file if a placeholder was used."
   - "FILENAME TYPOS BETWEEN DISK AND CONFIG ARE SILENTLY FATAL — settings.json references hooks by exact path. If the file on disk has a typo (e.g. enforce-agentack-token.ts vs enforce-agentrack-token.ts), the hook fails with 'Module not found' but the system doesn't surface this prominently. ALL agent calls through that hook silently fail. After creating or renaming any hook file, ALWAYS verify: (1) the filename matches the command in settings.json or agent frontmatter, (2) the hook runs: `echo '{}' | bun <path>`. This is the same class of bug as the earlier expertence.hook.ts typo — exact-match filenames are a recurring failure mode."
-  - "PARALLEL PreToolUse HOOKS MUST NOT CLOBBER updatedInput — when multiple PreToolUse hooks fire in parallel and both return `allow`, the JSON output from one can overwrite the other's `updatedInput`. Specifically: enforce-agent-access.ts returned `{permissionDecision: 'allow'}` (no updatedInput), which overrode enforce-agentrack-token.ts's `{permissionDecision: 'allow', updatedInput: {command: 'AGENTACK_USER_TOKEN=... ...'}}`. The fix: access hook now exits 0 silently (no JSON output) for `allow` decisions instead of outputting a JSON allow. Only `deny` decisions produce JSON output. This ensures hooks that modify `updatedInput` (token injection) aren't clobbered by hooks that just `allow`."
+  - "PARALLEL PreToolUse HOOKS MUST NOT CLOBBER updatedInput — when multiple PreToolUse hooks fire in parallel and both return `allow`, the JSON output from one can overwrite the other's `updatedInput`. Specifically: enforce-agent-access.ts returned `{permissionDecision: 'allow'}` (no updatedInput), which overrode enforce-agentrack-token.ts's `{permissionDecision: 'allow', updatedInput: {command: 'AGT_USER_TOKEN=... ...'}}`. The fix: access hook now exits 0 silently (no JSON output) for `allow` decisions instead of outputting a JSON allow. Only `deny` decisions produce JSON output. This ensures hooks that modify `updatedInput` (token injection) aren't clobbered by hooks that just `allow`."
+  - "`claude agents` requires an interactive TTY — when running from a tool/non-interactive context, use `claude agents --json` instead to get a machine-readable listing. Plain `claude agents` will fail with exit code 1."
 
 open_questions: []
 
@@ -254,4 +275,4 @@ resolved:
   - "FIXED: Multi-phase flow failure — /issue skill only created review tasks, then stopped. CTO never re-engaged because (a) parent was assigned to user not cto, (b) auto-promotion marked parent done when reviews completed. Fix: /issue skill now creates ALL tasks upfront (reviews + implementation + quality) with blockages, assigns parent to cto. Consolidated worktask/agentrack-manager/agentrack-subordinate into agentrack-implement + issue."
   - "FIXED: Broken skill references — agents referenced deleted skills (agentrack-manager, agentrack-subordinate, worktask) silently. Cleaned up all agents to use agentrack-implement (all) + issue (CTO only). Deleted worktask skill directory."
   - "FIXED: enforce-agentrack-token.ts hook file was named enforce-agentack-token.ts (missing 'r' in 'agentrack') — settings.json referenced the correct name but the file didn't match. This caused a 'Module not found' error on every agent's agt call, so all issues were created by the anonymous user. Renamed file to enforce-agentrack-token.ts to match settings.json reference."
-  - "FIXED: Parallel PreToolUse hooks clobbering updatedInput — enforce-agent-access.ts returned JSON allow (no updatedInput), which overwrote enforce-agentrack-token.ts's updatedInput (with injected AGENTACK_USER_TOKEN). Result: agt commands ran without token, defaulted to 'javi' author. Fix: access hook now exits 0 silently for allow (no JSON output), only outputs JSON for deny. This prevents it from interfering with other hooks' updatedInput."
+  - "FIXED: Parallel PreToolUse hooks clobbering updatedInput — enforce-agent-access.ts returned JSON allow (no updatedInput), which overwrote enforce-agentrack-token.ts's updatedInput (with injected AGT_USER_TOKEN). Result: agt commands ran without token, defaulted to 'javi' author. Fix: access hook now exits 0 silently for allow (no JSON output), only outputs JSON for deny. This prevents it from interfering with other hooks' updatedInput."

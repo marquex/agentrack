@@ -84,7 +84,7 @@ current_state:
       - Updated scripts: quality = typecheck + lint + test:coverage
     design_decisions:
       - Default auth mode changed from "read-only" to "open" for development ergonomics (users can switch to read-only/strict in production)
-      - resolveAuthor reads token from process.env.AGENTACK_USER_TOKEN
+      - resolveAuthor reads token from process.env.AGT_USER_TOKEN
       - Auth resolution is synchronous (in-memory lookup only)
       - Token format: tk_ + 8 random alphanumeric chars
       - User names stored lowercase, "anonymous" reserved

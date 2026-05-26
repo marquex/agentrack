@@ -70,7 +70,7 @@ async function runAgt(args: string[], cwd: string, env?: Record<string, string>)
 - Executes the built CLI binary (from `packages/library/`)
 - Captures stdout and stderr separately
 - Returns exit code for assertion
-- Supports passing `AGENTACK_USER_TOKEN` via env for auth tests
+- Supports passing `AGT_USER_TOKEN` via env for auth tests
 
 ### AC4: Test coverage requirements
 

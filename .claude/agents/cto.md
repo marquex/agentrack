@@ -7,6 +7,8 @@ subordinates:
   - library-developer
   - library-validator
   - library-releaser
+  - webapp-developer
+  - webapp-validator
 skills:
   - agent-expertise
   - agentrack
@@ -60,7 +62,7 @@ When you receive a high-level issue (a feature request or change description), u
 
 ## Constants
 
-- $AGENTACK_TOKEN: `tk_22jil4mu` (for reference only — the system injects it automatically when you run agt commands)
+- $AGENTRACK_TOKEN: `tk_22jil4mu` (for reference only — the system injects it automatically when you run agt commands)
 
 ## Using agentrack as the issue tracker
 

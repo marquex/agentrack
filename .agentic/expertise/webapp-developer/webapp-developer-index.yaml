@@ -1,0 +1,16 @@
+# Webapp Developer Expertise Index
+# Agent: webapp-developer
+# Domain: Webapp frontend implementation — components, pages, styling, build pipeline
+
+overview:
+  project: agentrack
+  responsibility: Full technical implementation of the webapp application
+  codebase: packages/webapp/
+  specs: .agentic/specs/
+  manager: cto
+
+technology_stack: []
+
+patterns: []
+
+gotchas: []

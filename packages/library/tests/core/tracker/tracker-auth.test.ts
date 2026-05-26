@@ -26,17 +26,17 @@ describe("Tracker", () => {
     let savedToken: string | undefined;
 
     beforeEach(async () => {
-      savedToken = process.env.AGENTACK_USER_TOKEN;
-      delete process.env.AGENTACK_USER_TOKEN;
+      savedToken = process.env.AGT_USER_TOKEN;
+      delete process.env.AGT_USER_TOKEN;
       tracker = new Tracker(testDir);
       await tracker.init();
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.AGENTACK_USER_TOKEN = savedToken;
+        process.env.AGT_USER_TOKEN = savedToken;
       } else {
-        delete process.env.AGENTACK_USER_TOKEN;
+        delete process.env.AGT_USER_TOKEN;
       }
     });
 
@@ -114,7 +114,7 @@ describe("Tracker", () => {
     test("with valid token: create uses author from token", async () => {
       const regResult = await tracker.usersRegister("alice");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.AGENTACK_USER_TOKEN = regResult.token;
+      process.env.AGT_USER_TOKEN = regResult.token;
 
       const result = await tracker.create({ title: "Auth Test" });
       if ("id" in result) {
@@ -126,7 +126,7 @@ describe("Tracker", () => {
     });
 
     test("with invalid token: create returns INVALID_TOKEN", async () => {
-      process.env.AGENTACK_USER_TOKEN = "tk_fake0000";
+      process.env.AGT_USER_TOKEN = "tk_fake0000";
       const result = await tracker.create({ title: "Bad Token" });
 
       expect(result).toBeInstanceOf(AgentrackError);
@@ -139,7 +139,7 @@ describe("Tracker", () => {
     test("events contain resolved author when token is used", async () => {
       const regResult = await tracker.usersRegister("bob");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.AGENTACK_USER_TOKEN = regResult.token;
+      process.env.AGT_USER_TOKEN = regResult.token;
 
       const created = await tracker.create({ title: "Authored Issue" });
       if ("id" in created) {
@@ -157,7 +157,7 @@ describe("Tracker", () => {
     test("author param overrides resolved author when provided", async () => {
       const regResult = await tracker.usersRegister("alice");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.AGENTACK_USER_TOKEN = regResult.token;
+      process.env.AGT_USER_TOKEN = regResult.token;
 
       // Pass explicit author param — should take precedence over auth
       const result = await tracker.create({ title: "Override", author: "custom" });
@@ -176,17 +176,17 @@ describe("Tracker", () => {
     let savedToken: string | undefined;
 
     beforeEach(async () => {
-      savedToken = process.env.AGENTACK_USER_TOKEN;
-      delete process.env.AGENTACK_USER_TOKEN;
+      savedToken = process.env.AGT_USER_TOKEN;
+      delete process.env.AGT_USER_TOKEN;
       tracker = new Tracker(testDir);
       await tracker.init();
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.AGENTACK_USER_TOKEN = savedToken;
+        process.env.AGT_USER_TOKEN = savedToken;
       } else {
-        delete process.env.AGENTACK_USER_TOKEN;
+        delete process.env.AGT_USER_TOKEN;
       }
     });
 
@@ -275,7 +275,7 @@ describe("Tracker", () => {
     test("with valid token: commentsAdd uses author from token", async () => {
       const regResult = await tracker.usersRegister("alice");
       if (regResult.result !== "OK") throw new Error("Register failed");
-      process.env.AGENTACK_USER_TOKEN = regResult.token;
+      process.env.AGT_USER_TOKEN = regResult.token;
 
       const created = await tracker.create({ title: "Auth Test" });
       if (!("id" in created)) throw new Error("Create failed");
@@ -296,17 +296,17 @@ describe("Tracker", () => {
     let savedToken: string | undefined;
 
     beforeEach(async () => {
-      savedToken = process.env.AGENTACK_USER_TOKEN;
-      delete process.env.AGENTACK_USER_TOKEN;
+      savedToken = process.env.AGT_USER_TOKEN;
+      delete process.env.AGT_USER_TOKEN;
       tracker = new Tracker(testDir);
       await tracker.init();
     });
 
     afterEach(() => {
       if (savedToken !== undefined) {
-        process.env.AGENTACK_USER_TOKEN = savedToken;
+        process.env.AGT_USER_TOKEN = savedToken;
       } else {
-        delete process.env.AGENTACK_USER_TOKEN;
+        delete process.env.AGT_USER_TOKEN;
       }
     });
 

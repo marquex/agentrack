@@ -159,9 +159,9 @@ describe("resolveAuthor", () => {
   });
 
   describe("env var fallback", () => {
-    test("reads token from AGENTACK_USER_TOKEN env when not passed explicitly", () => {
-      const original = process.env.AGENTACK_USER_TOKEN;
-      process.env.AGENTACK_USER_TOKEN = "tk_abc12345";
+    test("reads token from AGT_USER_TOKEN env when not passed explicitly", () => {
+      const original = process.env.AGT_USER_TOKEN;
+      process.env.AGT_USER_TOKEN = "tk_abc12345";
       try {
         const result = resolveAuthor({
           config: strictConfig,
@@ -171,16 +171,16 @@ describe("resolveAuthor", () => {
         expect(result).toEqual({ author: "alice" });
       } finally {
         if (original !== undefined) {
-          process.env.AGENTACK_USER_TOKEN = original;
+          process.env.AGT_USER_TOKEN = original;
         } else {
-          delete process.env.AGENTACK_USER_TOKEN;
+          delete process.env.AGT_USER_TOKEN;
         }
       }
     });
 
     test("explicit token takes precedence over env var", () => {
-      const original = process.env.AGENTACK_USER_TOKEN;
-      process.env.AGENTACK_USER_TOKEN = "tk_envbad00";
+      const original = process.env.AGT_USER_TOKEN;
+      process.env.AGT_USER_TOKEN = "tk_envbad00";
       try {
         // Env var is invalid but explicit token is valid — should use explicit
         const result = resolveAuthor({
@@ -192,9 +192,9 @@ describe("resolveAuthor", () => {
         expect(result).toEqual({ author: "alice" });
       } finally {
         if (original !== undefined) {
-          process.env.AGENTACK_USER_TOKEN = original;
+          process.env.AGT_USER_TOKEN = original;
         } else {
-          delete process.env.AGENTACK_USER_TOKEN;
+          delete process.env.AGT_USER_TOKEN;
         }
       }
     });

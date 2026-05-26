@@ -489,7 +489,7 @@ describe("CLI commands", () => {
       const oldToken = regOutput.token;
 
       const { stdout, stderr, exitCode } = await runCLIWithEnv(
-        { AGENTACK_USER_TOKEN: oldToken },
+        { AGT_USER_TOKEN: oldToken },
         "users",
         "regenerate",
         "alice",
@@ -511,7 +511,7 @@ describe("CLI commands", () => {
       const bobOutput = JSON.parse((await runCLI("users", "register", "bob")).stdout.trim());
 
       const { stderr, exitCode } = await runCLIWithEnv(
-        { AGENTACK_USER_TOKEN: bobOutput.token },
+        { AGT_USER_TOKEN: bobOutput.token },
         "users",
         "regenerate",
         "alice",

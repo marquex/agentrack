@@ -150,7 +150,7 @@ This document defines the implementation order, dependencies between phases, and
 3. **Integrate auth into existing commands**
    - All mutating Tracker methods call `resolveAuthor` first.
    - Author is included in all events.
-   - CLI reads `AGENTACK_USER_TOKEN` from env.
+   - CLI reads `AGT_USER_TOKEN` from env.
 
 4. **Wire CLI commands** for users register, list, revoke, regenerate.
 

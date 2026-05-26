@@ -73,10 +73,10 @@ Tokens are stored in `.agentrack/users.json` and used to identify the user for e
 
 ### Passing the token
 
-Set the `AGENTACK_USER_TOKEN` environment variable before running commands:
+Set the `AGT_USER_TOKEN` environment variable before running commands:
 
 ```bash
-export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+export AGT_USER_TOKEN=tk_k7x2m9p4
 agt create "Fix login bug" --status todo
 ```
 
@@ -129,7 +129,7 @@ Tokens are **never** included in list output.
 Remove a user's access:
 
 ```bash
-export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+export AGT_USER_TOKEN=tk_k7x2m9p4
 agt users revoke bob
 ```
 
@@ -146,7 +146,7 @@ The revoked user's token will no longer be accepted.
 If a token is accidentally exposed, generate a new one (the old token is invalidated):
 
 ```bash
-export AGENTACK_USER_TOKEN=tk_k7x2m9p4
+export AGT_USER_TOKEN=tk_k7x2m9p4
 agt users regenerate alice
 ```
 
@@ -156,7 +156,7 @@ Output:
 { "result": "OK", "name": "alice", "token": "tk_r5t1y8u2" }
 ```
 
-Only the user themselves can regenerate their token (the `AGENTACK_USER_TOKEN` must match the user's current token).
+Only the user themselves can regenerate their token (the `AGT_USER_TOKEN` must match the user's current token).
 
 ## Author field in events
 
@@ -193,15 +193,15 @@ Then each agent sets its token in its environment:
 
 ```bash
 # In the researcher's session
-export AGENTACK_USER_TOKEN=tk_aaaa1111
+export AGT_USER_TOKEN=tk_aaaa1111
 agt create "Research caching strategies" --status todo --assignee researcher
 
 # In the coder's session
-export AGENTACK_USER_TOKEN=tk_bbbb2222
+export AGT_USER_TOKEN=tk_bbbb2222
 agt update m1x2k9ab --status "in-progress" --assignee coder
 
 # In the reviewer's session
-export AGENTACK_USER_TOKEN=tk_cccc3333
+export AGT_USER_TOKEN=tk_cccc3333
 agt comments add m1x2k9ab --content "Looks good, approved."
 ```
 

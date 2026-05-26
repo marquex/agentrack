@@ -117,7 +117,7 @@ async function main(): Promise<never> {
   let issuesJson: string;
   try {
     issuesJson = execSync(
-      `AGENTACK_TOKEN="${token}" agt list --status "open" --assignee "${agentType}"`,
+      `AGENTRACK_TOKEN="${token}" agt list --status "open" --assignee "${agentType}"`,
       { encoding: 'utf8', cwd, timeout: 10000 },
     );
   } catch {
@@ -146,7 +146,7 @@ async function main(): Promise<never> {
   for (const issue of activeIssues) {
     try {
       const blockagesJson = execSync(
-        `AGENTACK_TOKEN="${token}" agt blockages list ${issue.id}`,
+        `AGENTRACK_TOKEN="${token}" agt blockages list ${issue.id}`,
         { encoding: 'utf8', cwd, timeout: 10000 },
       );
       const blockages: BlockagesInfo = JSON.parse(blockagesJson);

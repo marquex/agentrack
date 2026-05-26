@@ -65,7 +65,7 @@ function loadUsers(): UserEntry[] {
 async function getNextIssue(agentName: string, token: string): Promise<string | null> {
   const proc = spawn(["agt", "next", agentName], {
     cwd: ROOT,
-    env: { ...process.env, AGENTACK_TOKEN: token },
+    env: { ...process.env, AGENTRACK_TOKEN: token },
     stdout: "pipe",
     stderr: "pipe",
   });

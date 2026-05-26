@@ -102,7 +102,7 @@ describe("E2E: users", () => {
       const result = await runAgt(
         ["users", "regenerate", "alice"],
         undefined,
-        { AGENTACK_USER_TOKEN: oldToken },
+        { AGT_USER_TOKEN: oldToken },
       );
 
       assertSuccess(result);
@@ -121,7 +121,7 @@ describe("E2E: users", () => {
       const result = await runAgt(
         ["users", "regenerate", "alice"],
         undefined,
-        { AGENTACK_USER_TOKEN: bobToken },
+        { AGT_USER_TOKEN: bobToken },
       );
 
       expect(result.exitCode).toBe(3);
