@@ -1,5 +1,42 @@
 {
-  "open": [],
-  "closed": [],
-  "childrenOf": {}
+  "open": [
+    {
+      "id": "mpmw7lrjds",
+      "title": "Test Issue",
+      "path": "issues/mpmw7lrjds.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    }
+  ],
+  "closed": [
+    {
+      "id": "mpmw7kcd5c",
+      "title": "Child",
+      "path": "issues/mpmw7kcd5c.json",
+      "status": "closed",
+      "assignee": null,
+      "parentId": "mpmw7kizqi",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mpmw7kizqi",
+      "title": "Parent",
+      "path": "issues/mpmw7kizqi.json",
+      "status": "closed",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    }
+  ],
+  "childrenOf": {
+    "mpmw7kizqi": [
+      "mpmw7kcd5c",
+      "mpmw7kcd5c"
+    ]
+  }
 }
