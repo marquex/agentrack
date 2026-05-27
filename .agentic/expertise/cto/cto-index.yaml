@@ -16,7 +16,7 @@ hierarchy:
       - webapp-validator — registered in agentrack (tk_f1g3kazq), needs agent file and expertise folder
       - Setup guide: .agentic/specs/webapp-agent-setup.md
 
-expertise_status: "Webapp initiative launched. Specs written: .agentic/specs/webapp-spec.md (full spec), .agentic/specs/webapp-roadmap.md (5-phase roadmap). 10 implementation issues created with proper blocking relationships. Phase 1 (mpgqtsxcvh) is unblocked and ready for webapp-developer. Agent files and expertise folders need manual creation (see webapp-agent-setup.md). Previous chains: --branch flag and E2E refactor may still have standing issues. Public docs at docs/markdown/ (8 files)."
+expertise_status: "Mentions feature shipped (mpo1tdrjdm, all children done). Remove issueTitle from mentions: parent mpo5brxipq in-progress — impl mpo5c0hty7 done, validation mpo5c8otiz done, docs+build mpo6vnff2i (library-releaser, todo). Webapp initiative active with 10 issues. Public docs at docs/markdown/ (8 files). Key lesson: docs+build task must be created in every issue chain that touches CLI/API — retroactively added mpo6vnff2i after user flagged missing docs update."
 
 project_overview:
   name: agentrack
@@ -366,3 +366,12 @@ session_log:
   - session: 75
     date: "2026-05-22"
     summary: "Launched webapp initiative. User requested a web UI for managing agentrack issues. Read all agentrack docs (8 files) to understand full API surface. Created 3 deliverables: (1) Comprehensive spec (.agentic/specs/webapp-spec.md, 24KB) — REST API design (21 endpoints across issues/comments/blockages/users/sync/health), frontend design (React+Vite+shadcn/ui, 2-page SPA with list+detail), backend design (Hono+Bun, thin REST layer over agentrack JS API), frontend architecture (TanStack Query, React Router, component tree). (2) Phased roadmap (.agentic/specs/webapp-roadmap.md) — 5 phases with validation criteria: Foundation → Core issues → Rich detail → Users & sync → Polish. (3) 10 implementation issues with blocking dependencies. Registered webapp-developer and webapp-validator in agentrack (tokens tk_thd0nvbd, tk_f1g3kazq). Created agent setup guide (.agentic/specs/webapp-agent-setup.md) since CTO lacks write access to .claude/agents/ and .agentic/expertise/ for other agents. Updated CTO expertise with new subordinates."
+  - session: 76
+    date: "2026-05-27"
+    summary: "Picked up mpo1tdrjdm (mentions feature) via /agentrack-implement. Spec already existed at .agentic/specs/mentions-spec.md. Found pre-existing duplicate chain (mpo1to0veg/tpihee/u7xkl4/urfo4z/uzzj86) with completed reviews. Both reviews had detailed feedback: dev review found auth model mismatch (requiresIdentity flag needed), worktree init path, rebuild-with-revoked-users, case normalization issues. Quality review found regex edge case (double @), atomicity wording, missing NOT_INITIALIZED errors, update-resets-isRead behavior, mentionsList auth asymmetry. Updated spec to REVIEWED with 6 clarifications: improved regex (/(?:^|(?<=[^@\w]))@([\w-]+)/g), requiresIdentity flag for auth, NOT_INITIALIZED on all methods, rebuild extracts all @names, case normalization, honest atomicity wording. Closed old duplicate chain. Created new chain: mpo1wn9vsi (impl, unblocked) → mpo1wwsikr (validation, blocked by impl) → mpo1x35lft (docs+build, blocked by validation). Parent stays in-progress awaiting runner."
+  - session: 77
+    date: "2026-05-27"
+    summary: "Planned removal of issueTitle from mention list response. Focused API refinement — issueTitle is unnecessary coupling (consumers can look up the issue themselves). Skipped spec and reviews (obvious fix, well-scoped). Created issue chain: parent mpo5brxipq (CTO, in-progress), implement mpo5c0hty7 (library-developer, unblocked), validate mpo5c8otiz (library-validator, blocked by impl). Initially forgot docs+build task."
+  - session: 78
+    date: "2026-05-27"
+    summary: "User flagged that mentions docs weren't updated after the mentions feature work. Created retroactive docs+build task mpo6vnff2i (library-releaser, todo) under mpo5brxipq. Covers both: (1) mentions feature documentation (cli-reference.md, javascript-reference.md) and (2) issueTitle removal from docs. Lesson reinforced: EVERY issue chain that touches CLI/API MUST include a library-releaser task — no exceptions, even for 'small' refinements."

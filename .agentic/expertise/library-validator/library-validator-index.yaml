@@ -6,7 +6,7 @@ hierarchy:
   manager: cto
   subordinates: [none — leaf agent]
 
-expertise_status: "Active — Phases 1-7 complete. 802 total tests (733 library + 69 E2E), 2625 assertions, 98.46% tracker.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). E2E tests consolidated: old validation/e2e/ (temp-dir-per-test, 107 tests) DELETED — replaced by worktree-based packages/library/tests/e2e/ (69 tests across 15 files, shared worktree approach with Type A/Type B split). validation/ directory is now a runtime workspace only (.agentrack.json pointer, .e2edata/ worktree, .gitignore). Spec reviews completed: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities; independent-git (mpcwd7ued6) — 2 critical testability concerns, 2 high issues, 5 missing ACs; user-docs (mpdpthrliu) — 2 critical, 2 high, 3 medium, 3 low findings; e2e-validation-suite (mpebmy32vc) — 2 critical, 3 high, 4 medium, 2 low findings. Independent-git implementation: 3 spec deviations found during initial validation (mpcwdqz3kc), fixes assigned as mpd4hktoxq, validation+tests blocked as mpd4hs14zp. Configurable-branch validation (mpfmfoduo6): COMPLETE — all 12 scenarios validated, 84 new tests, 100% branch-config.ts coverage. Documentation responsibilities transferred to library-releaser agent."
+expertise_status: "Active — Phases 1-8 complete. 905 total tests (~820 library + 85 E2E), 2867 assertions, 100% tracker.ts line coverage, 100% mentions.ts line coverage. Prettier + ESLint tooling. Tests refactored into focused per-feature files. Phase 7: `next <user-name>` command validated (20 tests). Phase 8: Mentions feature validated (98 tests across 3 files). issueTitle removal from MentionResult validated (mpo5c8otiz) — clean removal, no regressions. 5 pre-existing spec deviation tests (unrelated to mentions): @@ regex (2), rebuild unregistered users (1), TOKEN_REQUIRED in open mode (2). E2E tests consolidated: old validation/e2e/ (temp-dir-per-test, 107 tests) DELETED — replaced by worktree-based packages/library/tests/e2e/ (85 tests across 16 files, shared worktree approach with Type A/Type B split). Spec reviews completed: cap-upward-promotion (mp9xemy1j3) — 2 critical ambiguities; independent-git (mpcwd7ued6) — 2 critical testability concerns, 2 high issues, 5 missing ACs; user-docs (mpdpthrliu) — 2 critical, 2 high, 3 medium, 3 low findings; e2e-validation-suite (mpebmy32vc) — 2 critical, 3 high, 4 medium, 2 low findings. Independent-git implementation: 3 spec deviations found during initial validation (mpcwdqz3kc), fixes assigned as mpd4hktoxq, validation+tests blocked as mpd4hs14zp. Configurable-branch validation (mpfmfoduo6): COMPLETE — all 12 scenarios validated, 84 new tests, 100% branch-config.ts coverage. Documentation responsibilities transferred to library-releaser agent."
 
 project_phases:
   phase_1_foundation:
@@ -32,8 +32,34 @@ project_phases:
     status: complete
     modules: [dependency-manager.ts (181 lines — readDependencies, writeDependencies, addBlockage, resolveBlockage, deleteBlockage, getImpactScore, detectCycle), tracker.ts (1329 lines — blockagesAdd/blockagesResolve/blockagesDelete/blockagesList + auto-resolution in update + impact score in list), cli/commands/blockages.ts (107 lines — add/resolve/delete/list actions), cli/runner.ts (164 lines — blockages subcommand registration)]
     description: "Blockage & dependency system — bidirectional dependency maps (blockedBy/blocks), cycle detection (BFS walk), batch atomicity, auto-resolution on done/closed, impact score for list sorting, CLI blockages subcommands (add/resolve/delete/list)."
+  phase_8_mentions:
+    status: complete
+    modules: [types/mention.ts (57 lines — MentionEntry, MentionsFile, MentionResult, MentionViewResult), core/mentions.ts (181 lines — extractMentions, readMentionsFile, writeMentionsFile, addMentionEntries, removeCommentMentions, rebuildMentionsIndex, findMentionById), cli/commands/mentions.ts (124 lines — mentionsListAction, mentionsViewAction, mentionsReadAction, mentionsUnreadAction, mentionsRebuildAction), tracker.ts mentions methods (mentionsList, mentionsView, mentionsRead, mentionsUnread, mentionsRebuild)]
+    description: "Mentions system — @mention extraction from comments, auto-indexing on add/update/delete, per-user mention storage in mentions.json, list/view/read/unread/rebuild operations. MentionResult (list response) has no issueTitle — just id, mentionedBy, issueId, commentId, createdAt, isRead. MentionViewResult (view response) includes nested issue.title for full context."
+    validation:
+      issue: "mpo5c8otiz (parent: mpo5brxipq)"
+      focus: "Validate removal of issueTitle from mention list response"
+      total_new_tests: 98
+      unit_tests: 41
+      tracker_integration_tests: 41
+      e2e_tests: 16
+      test_files:
+        - "tests/core/mentions.test.ts (41 tests) — extractMentions, read/writeMentionsFile, addMentionEntries, removeCommentMentions, findMentionById, rebuildMentionsIndex"
+        - "tests/core/tracker/tracker-mentions.test.ts (41 tests) — init creates mentions.json, auto-indexing (commentsAdd/Update/Delete), mentionsList, mentionsView, mentionsRead, mentionsUnread, mentionsRebuild, edge cases"
+        - "tests/e2e/mentions.test.ts (16 tests) — list, view, read, unread, rebuild, auto-indexing integration"
+      coverage: "mentions.ts 100% lines, tracker.ts 100% lines"
+      issueTitle_removal_validation:
+        - "Type consistency: MentionEntry, MentionResult — no issueTitle anywhere. MentionViewResult.issue.title is nested, not top-level."
+        - "Code cleanup: zero references to issueTitle in src/"
+        - "Tests: no test asserts on issueTitle. 900/905 pass (5 pre-existing spec deviation failures unrelated)."
+        - "Docs: zero references to issueTitle in docs/"
+        - "No regressions: mentionsList returns correct fields minus title. mentionsView retains issue.title in nested context."
+      pre_existing_spec_deviations:
+        - "extractMentions: @@ regex should not match but does (2 tests) — regex uses lookbehind (?<=\\W) which doesn't exclude @@"
+        - "rebuildMentionsIndex: filters by registered users but spec says extract ALL @names (1 test)"
+        - "mentionsRead/mentionsUnread: should return TOKEN_REQUIRED in open mode without token, returns MENTION_ACCESS_DENIED instead (2 tests)"
   phase_7_cli_refinement:
-    status: in-progress
+    status: complete
     modules: [tracker.ts (1734 lines — next method), cli/commands/next.ts (22 lines), cli/runner.ts (171 lines — next subcommand registration)]
     description: "`next <user-name>` command — suggests the best next issue for a user. Filters to open statuses (idea/todo/in-progress), excludes actively blocked issues, sorts by priority ASC → impact score DESC → id ASC. Returns NO_ISSUES_AVAILABLE when no match. Case-sensitive assignee matching."
     validation:
@@ -54,16 +80,16 @@ project_phases:
         - "ID tiebreak: when priority and impact equal, lower id (older) wins"
 
 source_layout:
-  total_lines: 3605
-  types: [api.ts (134 lines), event.ts (107), index.ts (61), issue.ts (49), index-file.ts (30), user.ts (23), dependency.ts (28), config.ts (9)]
-  core: [tracker.ts (1734), dependency-manager.ts (181), index-manager.ts (202), hierarchy.ts (106), events.ts (155), auth.ts (69), file-io.ts (37), errors.ts (31), resolution.ts (27), id.ts (18)]
-  cli: [runner.ts (171), commands/blockages.ts (107), commands/comments.ts (102), commands/users.ts (97), commands/update.ts (63), commands/create.ts (51), commands/list.ts (43), commands/next.ts (22), commands/view.ts (22), commands/history.ts (22), commands/init.ts (24), output.ts (13)]
+  total_lines: 3980
+  types: [api.ts (134 lines), event.ts (107), index.ts (73), issue.ts (49), index-file.ts (30), mention.ts (57), user.ts (23), dependency.ts (28), config.ts (9)]
+  core: [tracker.ts (~1930), mentions.ts (181), dependency-manager.ts (181), index-manager.ts (202), hierarchy.ts (106), events.ts (155), auth.ts (69), file-io.ts (37), errors.ts (31), resolution.ts (27), id.ts (18)]
+  cli: [runner.ts (171), commands/mentions.ts (124), commands/blockages.ts (107), commands/comments.ts (102), commands/users.ts (97), commands/update.ts (63), commands/create.ts (51), commands/list.ts (43), commands/next.ts (22), commands/view.ts (22), commands/history.ts (22), commands/init.ts (24), output.ts (13)]
   public_api: "src/index.ts (62 lines) re-exports Tracker class, AgentrackError, all type and response type aliases"
 
 test_layout:
-  total_tests: 802
-  total_expect_calls: 2625
-  total_files: 44
+  total_tests: 905
+  total_expect_calls: 2867
+  total_files: 47
   test_helpers: [helpers/setup.ts (19 lines — createTestDir, cleanupTestDir), helpers/fixtures.ts (24 lines — createIssueParams, updateIssueParams), helpers/assertions.ts (18 lines — expectError, expectOk)]
 
   directory_structure: |
@@ -82,7 +108,9 @@ test_layout:
     │   │   ├── tracker-blockages.test.ts   # blockages CRUD + batch + cycles + auto-resolve + impact + auth — 30 tests
     │   │   ├── tracker-auth.test.ts        # auth integration (open/read-only/strict + comments + hierarchy) — 19 tests
     │   │   ├── tracker-users.test.ts       # user management (register/list/revoke/regenerate) — 14 tests
-    │   │   └── tracker-next.test.ts        # next() — 14 tests
+    │   │   ├── tracker-next.test.ts        # next() — 14 tests
+    │   │   └── tracker-mentions.test.ts    # mentions (list/view/read/unread/rebuild + auto-indexing) — 41 tests
+    │   ├── mentions.test.ts       # Core mentions functions (extract, read/write, add/remove, rebuild, find) — 41 tests
     │   ├── events/                 # Event engine — split by function
     │   │   ├── append-event.test.ts        # appendEvent fs operations — 3 tests
     │   │   ├── compute-state.test.ts       # computeState pure function — 10 tests
@@ -106,9 +134,9 @@ test_layout:
 
   e2e_layout:
     location: "packages/library/tests/e2e/"
-    total_tests: 69
-    total_expect_calls: 315
-    total_files: 15
+    total_tests: 85
+    total_expect_calls: ~365
+    total_files: 16
     run_command: "bun test tests/e2e/ (from packages/library/)"
     test_duration: "~122 seconds"
     infrastructure: "setup.ts (411 lines — shared worktree approach with Type A/Type B test split)"
@@ -129,8 +157,8 @@ test_layout:
         files: [init.test.ts, push.test.ts, pull.test.ts]
       type_b_tracker_operations:
         description: "Shared long-lived worktree with fast data reset (no git ops)"
-        commands: [create, update, list, view, history, next, comments, blockages, users, hierarchy, auth, lifecycle]
-        files: [create.test.ts, update.test.ts, list.test.ts, view.test.ts, history.test.ts, next.test.ts, comments.test.ts, blockages.test.ts, users.test.ts, hierarchy.test.ts, auth.test.ts, lifecycle.test.ts]
+        commands: [create, update, list, view, history, next, comments, blockages, users, hierarchy, auth, lifecycle, mentions]
+        files: [create.test.ts, update.test.ts, list.test.ts, view.test.ts, history.test.ts, next.test.ts, comments.test.ts, blockages.test.ts, users.test.ts, hierarchy.test.ts, auth.test.ts, lifecycle.test.ts, mentions.test.ts]
     test_files:
       init: { tests: ~6, describes: [worktree creation, gitignore, already initialized] }
       create: { tests: ~5, describes: [default values, all flags, parentId] }
@@ -145,6 +173,7 @@ test_layout:
       hierarchy: { tests: ~6, describes: [parent-child CRUD, auto-close, auto-promotion] }
       auth: { tests: ~6, describes: [open/read-only/strict modes, token enforcement] }
       lifecycle: { tests: ~4, describes: [full multi-step workflows] }
+      mentions: { tests: ~16, describes: [list, view, read, unread, rebuild, auto-indexing integration] }
       push: { tests: ~2, describes: [push changes, push no changes] }
       pull: { tests: ~2, describes: [pull updates, pull up to date] }
     key_differentiators:
@@ -175,7 +204,7 @@ test_layout:
   split_organization:
     tracker_split:
       monolithic: "tracker.test.ts (2921 lines, 163 tests)"
-      split_total: "9 files, 3320 lines, 177 tests — organized by domain"
+      split_total: "10 files, ~3750 lines, 218 tests — organized by domain"
       files:
         tracker-init: { tests: 6, lines: 126, describes: ["init()"] }
         tracker-crud: { tests: 38, lines: 542, describes: ["create()", "list()", "view()", "update()", "history()"] }
@@ -186,6 +215,7 @@ test_layout:
         tracker-auth: { tests: 19, lines: 364, describes: ["auth integration", "comments auth integration", "auth + hierarchy integration"] }
         tracker-users: { tests: 14, lines: 206, describes: ["user management (usersRegister, usersList, usersRevoke, usersRegenerate)"] }
         tracker-next: { tests: 14, lines: 256, describes: ["next() — suggest best issue for user"] }
+        tracker-mentions: { tests: 41, lines: ~970, describes: ["init creates mentions.json", "auto-indexing on commentsAdd/Update/Delete", "mentionsList", "mentionsView", "mentionsRead", "mentionsUnread", "mentionsRebuild", "edge cases"] }
     events_split:
       monolithic: "events.test.ts (543 lines, 23 tests)"
       split_total: "4 files, 575 lines, 23 tests — same test count, organized by function"
@@ -206,8 +236,8 @@ test_layout:
     core_resolution: { tests: 4, lines: 57, describes: [resolveTrackerDir] }
 
 current_coverage:
-  overall_line: 98.46%  # tracker.ts at 98.46%, all other core at 100%
-  overall_func: 100%
+  overall_line: ~98.5%  # tracker.ts at 100%, mentions.ts at 100%, all other core at 100% except worktree and resolution
+  overall_func: ~98%
   per_file:
     auth: 100% / 100%
     dependency_manager: 100% / 100%
@@ -217,8 +247,10 @@ current_coverage:
     hierarchy: 100% / 100%
     id: 100% / 100%
     index_manager: 100% / 100%
-    resolution: 93.75% / 100%  # filesystem root walk-up path untested
-    tracker: 98.46% / 100%  # next() adds coverage; small gap remains (likely next() edge paths)
+    mentions: 100% / 93.75%  # 100% lines, 93.75% functions
+    resolution: 96% / 100%
+    tracker: 100% / 98.86%  # 100% lines, 98.86% functions
+    worktree: 92.84% / 92%  # git-dependent paths harder to test
 
 tooling:
   formatter: prettier (v3.5.3)
@@ -265,7 +297,7 @@ learnings:
     - "Edge cases tested: same status no-op on update, reparent from null, same parentId no-op, done parent allowed, mixed cascade (multiple children at different statuses), already-closed children."
   error_handling:
     - "AgentrackError carries result code, message, and exitCode. 13 error codes defined."
-    - "ErrorCodes: NOT_INITIALIZED(1), ALREADY_INITIALIZED(0), TOKEN_REQUIRED(2), INVALID_TOKEN(3), DEFAULT_USER_MISSING(4), NOT_FOUND(5), ISSUE_MISSING(6), COMMENT_NOT_FOUND(7), USER_ALREADY_EXISTS(8), USER_NOT_FOUND(9), INVALID_PARAMS(10), BLOCKAGE_CYCLE(11), HIERARCHY_CONSTRAINT(12)."
+    - "ErrorCodes: NOT_INITIALIZED(1), ALREADY_INITIALIZED(0), TOKEN_REQUIRED(2), INVALID_TOKEN(3), DEFAULT_USER_MISSING(4), NOT_FOUND(5), ISSUE_MISSING(6), COMMENT_NOT_FOUND(7), USER_ALREADY_EXISTS(8), USER_NOT_FOUND(9), INVALID_PARAMS(10), BLOCKAGE_CYCLE(11), HIERARCHY_CONSTRAINT(12), MENTION_NOT_FOUND(20), MENTION_ACCESS_DENIED(21)."
     - "HIERARCHY_CONSTRAINT (exit 12) used in Phase 5 — parent status would constrain child, or parent is closed."
     - "BLOCKAGE_CYCLE (exit 11) now active — used in Phase 6 blockages when addBlockage would create a cycle."
   phase_5_hierarchy:
@@ -500,3 +532,14 @@ learnings:
       - "Phase 4: Rewrite Type B tests (all other commands) — DONE"
       - "Phase 5: Remove old helpers — DONE (validation/e2e/ deleted)"
     key_pattern: "When splitting E2E tests by infrastructure dependency, separate git-operation tests (init/push/pull) from data-operation tests (CRUD). Git tests need full environment teardown; data tests only need file-level resets."
+  phase_8_mentions:
+    - "Mentions feature uses a separate mentions.json file keyed by mentionedUser, each value is an array of MentionEntry sorted by id."
+    - "Auto-indexing: commentsAdd extracts mentions and writes to mentions.json. commentsUpdate does remove+re-add. commentsDelete removes entries. All automatic, no explicit mention management needed."
+    - "MentionResult (list response) is intentionally flat: id, mentionedBy, issueId, commentId, createdAt, isRead — no issueTitle. Title resolution requires index lookup per mention (N lookups for N results), removed for performance."
+    - "MentionViewResult (single view) includes nested issue.title because it's a single lookup — full context is appropriate for individual views."
+    - "extractMentions uses regex /(?:^|(?<=\\W))@([\\w-]+)/g — matches @name at start or after non-word char, avoiding email addresses. Known spec deviation: @@name matches because @ is a non-word character (\\W)."
+    - "rebuildMentionsIndex scans all issue event files and re-extracts mentions from scratch. Known spec deviation: filters by registered users during rebuild, spec says extract ALL @names."
+    - "mentionsRead/mentionsUnread require identity (who is reading/unreading) via AGT_USER_TOKEN. Known spec deviation: in open auth mode, falls through to default user instead of returning TOKEN_REQUIRED."
+    - "E2E mentions tests need manual mentions.json reset in beforeEach because resetWorktreeData doesn't reset it (spec deviation CL5)."
+    - "5 pre-existing spec deviation tests in the test suite — they test EXPECTED behavior that hasn't been implemented yet, documenting the gap."
+    key_pattern: "When validating field removal from API responses, check: (1) type definitions, (2) mapping code, (3) all test assertions, (4) docs, (5) nested variants (like issue.title in view vs issueTitle in list). Different endpoints may legitimately have different field sets."

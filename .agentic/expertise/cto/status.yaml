@@ -209,6 +209,14 @@ current_state:
       description: "CTO and subordinates receive issues via /agentrack-implement skill. Status-based workflow enforced."
       tested: "CTO processed mp9xefucmo — spec update, review coordination, delegation to subordinates."
     current_work:
+      remove_mention_title:
+        issue: mpo5brxipq
+        status: in-progress
+        description: "Remove issueTitle from mention list response. Impl and validation done, docs+build pending."
+        chain:
+          implement: mpo5c0hty7 (library-developer, done)
+          validate: mpo5c8otiz (library-validator, done)
+          docs_build: mpo6vnff2i (library-releaser, todo)
       e2e_validation_suite:
         issue: mpebmstgs9
         status: in-progress
@@ -280,6 +288,7 @@ current_state:
       gitignore_update: complete — docs-html/ added
     remaining:
       - "All tracked as agentrack issues — see `agt list` and open_issues above"
+      - "Remove issueTitle from mentions: issue mpo5brxipq (in-progress) — impl+validation done, docs+build mpo6vnff2i (library-releaser, todo)"
       - "Configurable branch (--branch): issue mpfm8bilwf (in-progress) — implemented but validation found 2 critical bugs, fix mpfn4dkotn (library-developer, P1) in progress"
       - "E2E validation test suite: issue mpebmstgs9 (in-progress, CTO)"
       - "E2E test refactor: issue mpfobnq8ty (in-progress, child of mpebmstgs9) — library-validator refactors to shared worktree approach"

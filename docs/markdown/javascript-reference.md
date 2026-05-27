@@ -502,6 +502,134 @@ type UsersRegenerateResult =
   | { result: "INVALID_TOKEN"; message: string }
 ```
 
+### Mentions
+
+When a comment contains `@username` for a registered user, a mention is automatically created. Mentions are stored in `mentions.json` keyed by the mentioned user, and each mention tracks read/unread status.
+
+#### `mentionsList(userName, options?)`
+
+List mentions for a given user. Returns mentions sorted by `createdAt` descending (newest first).
+
+```javascript
+const mentions = await tracker.mentionsList("alice");
+// Only unread mentions by default
+
+const allMentions = await tracker.mentionsList("alice", {
+  includeReads: true,
+});
+```
+
+**Parameters:** `userName: string`, `options?: { includeReads?: boolean }`
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `includeReads` | boolean | `false` | Include read mentions alongside unread |
+
+**Return type:** `MentionsListResult`
+
+```typescript
+type MentionsListResult = MentionResult[] | AgentrackError;
+
+interface MentionResult {
+  id: string;
+  mentionedBy: string;
+  issueId: string;
+  commentId: string;
+  createdAt: string;  // ISO 8601
+  isRead: boolean;
+}
+```
+
+#### `mentionsView(mentionId)`
+
+View a single mention with full context -- includes the mention entry, the comment content, and the issue title.
+
+```javascript
+const view = await tracker.mentionsView("mn3k8x2a");
+console.log(view.comment.content);  // The comment that triggered the mention
+console.log(view.issue.title);      // The issue where the comment was posted
+```
+
+**Parameters:** `mentionId: string`
+
+**Return type:** `MentionsViewResult`
+
+```typescript
+type MentionsViewResult = MentionViewResult | AgentrackError;
+
+interface MentionViewResult {
+  mention: MentionEntry;
+  comment: {
+    id: string;
+    author: string;
+    content: string;
+    timestamp: string;    // ISO 8601
+    editedAt?: string;    // ISO 8601
+  };
+  issue: {
+    id: string;
+    title: string;
+  };
+}
+```
+
+#### `mentionsRead(mentionId)`
+
+Mark a mention as read. Only the mentioned user can perform this action -- the authenticated user must match the mentioned user.
+
+```javascript
+await tracker.mentionsRead("mn3k8x2a");
+```
+
+**Parameters:** `mentionId: string`
+
+**Return type:** `MentionsReadResult`
+
+```typescript
+type MentionsReadResult = { result: "OK" } | AgentrackError;
+```
+
+**Notes:**
+- Requires authentication. Returns `MENTION_ACCESS_DENIED` if the authenticated user is not the mentioned user.
+
+#### `mentionsUnread(mentionId)`
+
+Mark a mention as unread. Only the mentioned user can perform this action.
+
+```javascript
+await tracker.mentionsUnread("mn3k8x2a");
+```
+
+**Parameters:** `mentionId: string`
+
+**Return type:** `MentionsUnreadResult`
+
+```typescript
+type MentionsUnreadResult = { result: "OK" } | AgentrackError;
+```
+
+**Notes:**
+- Requires authentication. Returns `MENTION_ACCESS_DENIED` if the authenticated user is not the mentioned user.
+
+#### `mentionsRebuild()`
+
+Rebuild the entire mentions index from scratch by scanning all issue event files and re-extracting mentions from all non-deleted comments. Useful for fixing index corruption.
+
+```javascript
+const { mentionCount } = await tracker.mentionsRebuild();
+console.log(`Rebuilt ${mentionCount} mentions`);
+```
+
+**Return type:** `MentionsRebuildResult`
+
+```typescript
+type MentionsRebuildResult = { result: "OK"; mentionCount: number } | AgentrackError;
+```
+
+**Notes:**
+- No authentication required (system operation).
+- Clears the existing index and rebuilds from scratch.
+
 ## Worktree functions
 
 These standalone functions manage the git worktree where agentrack stores issue data. They are exported separately from the `Tracker` class.
@@ -654,6 +782,16 @@ import type {
   UsersRegenerateResult,
   UserInfo,
 
+  // Mentions
+  MentionsListResult,
+  MentionsViewResult,
+  MentionsReadResult,
+  MentionsUnreadResult,
+  MentionsRebuildResult,
+  MentionResult,
+  MentionEntry,
+  MentionViewResult,
+
   // Worktree
   WorktreeInitResult,
   WorktreeSyncResult,
@@ -704,6 +842,8 @@ Common error codes:
 | `NOT_INITIALIZED` | Tracker not initialized |
 | `TOKEN_REQUIRED` | Auth mode requires a token |
 | `INVALID_TOKEN` | Token doesn't match any user |
+| `MENTION_NOT_FOUND` | Mention ID doesn't exist |
+| `MENTION_ACCESS_DENIED` | Authenticated user is not the mentioned user |
 
 ## See also
 

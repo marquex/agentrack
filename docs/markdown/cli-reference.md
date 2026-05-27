@@ -23,6 +23,11 @@ All agentrack CLI commands follow the format `agt <subcommand> [arguments] [flag
 - [users list](#agt-users-list)
 - [users revoke](#agt-users-revoke)
 - [users regenerate](#agt-users-regenerate)
+- [mentions list](#agt-mentions-list)
+- [mentions view](#agt-mentions-view)
+- [mentions read](#agt-mentions-read)
+- [mentions unread](#agt-mentions-unread)
+- [mentions rebuild](#agt-mentions-rebuild)
 - [push](#agt-push)
 - [pull](#agt-pull)
 - [Error codes](#error-codes)
@@ -746,6 +751,202 @@ agt users regenerate alice
 
 ---
 
+## `agt mentions list`
+
+List mentions for a given user. By default, returns only unread mentions sorted by `createdAt` descending (newest first).
+
+```bash
+agt mentions list <agent-name> [--include-reads]
+```
+
+**Arguments:**
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `agent-name` | Yes | The registered user whose mentions to list |
+
+**Flags:**
+
+| Flag | Type | Default | Description |
+|------|------|---------|-------------|
+| `--include-reads` | boolean | `false` | Include read mentions alongside unread |
+
+**Examples:**
+
+```bash
+# List unread mentions for alice
+agt mentions list alice
+
+# List all mentions (read and unread)
+agt mentions list alice --include-reads
+```
+
+**Output:**
+
+```json
+[
+  {
+    "id": "mn3k8x2a",
+    "mentionedBy": "bob",
+    "issueId": "m1x2k9ab",
+    "commentId": "c1a2b3d4",
+    "createdAt": "2025-01-15T12:00:00.000Z",
+    "isRead": false
+  }
+]
+```
+
+**Notes:**
+- The user must be registered. Returns `USER_NOT_FOUND` otherwise.
+- Mentions are created automatically when a comment contains `@username` for a registered user.
+- The mention object does not include an issue title. Use `mentions view` for full context.
+
+---
+
+## `agt mentions view`
+
+View a single mention with full context — includes the mention entry, the comment content, and the issue title.
+
+```bash
+agt mentions view <mention-id>
+```
+
+**Arguments:**
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `mention-id` | Yes | The ID of the mention to view |
+
+**Example:**
+
+```bash
+agt mentions view mn3k8x2a
+```
+
+**Output:**
+
+```json
+{
+  "mention": {
+    "id": "mn3k8x2a",
+    "createdAt": "2025-01-15T12:00:00.000Z",
+    "mentionedUser": "alice",
+    "mentionedBy": "bob",
+    "issueId": "m1x2k9ab",
+    "commentId": "c1a2b3d4",
+    "isRead": false
+  },
+  "comment": {
+    "id": "c1a2b3d4",
+    "author": "bob",
+    "content": "@alice can you review the auth module?",
+    "timestamp": "2025-01-15T12:00:00.000Z"
+  },
+  "issue": {
+    "id": "m1x2k9ab",
+    "title": "Fix login bug"
+  }
+}
+```
+
+**Notes:**
+- Returns `MENTION_NOT_FOUND` if the mention ID doesn't exist.
+- Returns `COMMENT_NOT_FOUND` if the source comment was deleted.
+
+---
+
+## `agt mentions read`
+
+Mark a mention as read. Only the mentioned user can perform this action.
+
+```bash
+agt mentions read <mention-id>
+```
+
+**Arguments:**
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `mention-id` | Yes | The ID of the mention to mark as read |
+
+**Example:**
+
+```bash
+agt mentions read mn3k8x2a
+```
+
+**Output:**
+
+```json
+{ "result": "OK" }
+```
+
+**Notes:**
+- Requires authentication. The authenticated user must be the mentioned user.
+- Returns `MENTION_NOT_FOUND` if the mention ID doesn't exist.
+- Returns `MENTION_ACCESS_DENIED` if the authenticated user is not the mentioned user.
+
+---
+
+## `agt mentions unread`
+
+Mark a mention as unread. Only the mentioned user can perform this action.
+
+```bash
+agt mentions unread <mention-id>
+```
+
+**Arguments:**
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `mention-id` | Yes | The ID of the mention to mark as unread |
+
+**Example:**
+
+```bash
+agt mentions unread mn3k8x2a
+```
+
+**Output:**
+
+```json
+{ "result": "OK" }
+```
+
+**Notes:**
+- Requires authentication. The authenticated user must be the mentioned user.
+- Returns `MENTION_NOT_FOUND` if the mention ID doesn't exist.
+- Returns `MENTION_ACCESS_DENIED` if the authenticated user is not the mentioned user.
+
+---
+
+## `agt mentions rebuild`
+
+Rebuild the entire mentions index from scratch by scanning all issue event files and re-extracting mentions from all non-deleted comments. Useful for fixing index corruption.
+
+```bash
+agt mentions rebuild
+```
+
+**Example:**
+
+```bash
+agt mentions rebuild
+```
+
+**Output:**
+
+```json
+{ "result": "OK", "mentionCount": 42 }
+```
+
+**Notes:**
+- No authentication required (system operation).
+- Clears the existing index and rebuilds from scratch.
+
+---
+
 ## `agt push`
 
 Stage all changes in `.agentrack/`, auto-commit, and push to the remote `_agentrack` branch.
@@ -841,6 +1042,13 @@ Or if already up to date:
 |------|---------|
 | `USER_ALREADY_EXISTS` | A user with that name is already registered. |
 | `USER_NOT_FOUND` | No user with that name exists. |
+
+### Mention errors
+
+| Code | Meaning |
+|------|---------|
+| `MENTION_NOT_FOUND` | Mention with the given ID doesn't exist. |
+| `MENTION_ACCESS_DENIED` | Authenticated user is not the mentioned user (for read/unread). |
 
 ## See also
 
