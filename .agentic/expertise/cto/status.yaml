@@ -174,7 +174,7 @@ current_state:
       - Impact score counts active blocks entries — used in list sort (priority ASC → impact DESC → id ASC)
       - BLOCKAGE_CYCLE error (exit code 11) prevents operation entirely, no partial state changes
     spec: .agentic/specs/07-phase6-blockages-spec.md
-  last_updated: "2026-05-21"
+  last_updated: "2026-05-27"
   org_change:
     description: "library-releaser agent onboarded. Documentation responsibility transferred from library-validator to library-releaser."
     issue: mpa5yz3kei
@@ -211,12 +211,20 @@ current_state:
     current_work:
       remove_mention_title:
         issue: mpo5brxipq
-        status: in-progress
-        description: "Remove issueTitle from mention list response. Impl and validation done, docs+build pending."
+        status: done
+        description: "Remove issueTitle from mention list response. All children done, parent closed."
         chain:
           implement: mpo5c0hty7 (library-developer, done)
           validate: mpo5c8otiz (library-validator, done)
-          docs_build: mpo6vnff2i (library-releaser, todo)
+          docs_build: mpo6vnff2i (library-releaser, done)
+      mentions_feature:
+        issue: mpo1tdrjdm
+        status: done
+        description: "Mentions feature — @user notification in comments with read/unread tracking. All children done, parent closed."
+        chain:
+          implement: mpo1wn9vsi (library-developer, done)
+          validate: mpo1wwsikr (library-validator, done)
+          docs_build: mpo1x35lft (library-releaser, done)
       e2e_validation_suite:
         issue: mpebmstgs9
         status: in-progress
@@ -228,25 +236,15 @@ current_state:
         enabler: "validation/ folder access + agt init --branch=<name> for test isolation"
       e2e_test_refactor:
         issue: mpfobnq8ty
-        status: in-progress
+        status: uncertain
         parent: mpebmstgs9
-        description: "Refactor E2E tests from per-test git repos to shared worktree approach. Two test types: Type A (git ops, clean env per test) + Type B (CRUD, fast data reset). Spec authored by library-validator."
+        description: "Refactor E2E tests from per-test git repos to shared worktree approach. Old child issues no longer in index — likely from different worktree branch. Needs fresh assessment."
         spec: .agentic/specs/e2e-refactor.md
-        chain:
-          implement: mpfobxibgb (library-validator, todo)
-          validate: mpfoc9r65a (library-validator, todo, blocked by impl)
-        prerequisite: "--branch flag (mpfm8bilwf) — done"
       configurable_branch:
         issue: mpfm8bilwf
-        status: in-progress
-        description: "--branch flag for agt init. Implementation (mpfm9aff8v) completed but validation (mpfm9ixr9i) found 2 critical bugs: (1) double directory creation — tracker init creates .agentrack/ before branch flag takes effect, (2) missing BRANCH_CONFLICT — branch with non-agentrack data silently overwritten. Fix issue mpfn4dkotn (library-developer, priority 1) created. Also: dist/ was stale (library not rebuilt), branch-config.ts has 22.95% coverage, zero integration tests."
+        status: uncertain
+        description: "--branch flag for agt init. Old child issues (mpfm9aff8v, mpfn4dkotn, mpfm9ixr9i, mpfm9qxpsd) no longer in index — likely from different worktree branch. Needs fresh assessment."
         spec: .agentic/specs/configurable-branch-spec.md
-        chain:
-          implement: mpfm9aff8v (library-developer, todo — reopened for fixes)
-          fix: mpfn4dkotn (library-developer, priority 1 — blocks validation re-run)
-          validate: mpfm9ixr9i (cto, done — blocked on fix mpfn4dkotn for re-run)
-          docs: mpfm9qxpsd (library-releaser, blocked by validation)
-          stale_issues: [mpfmfcg2i5, mpfmfoduo6, mpfmga9sol, mpe7hg9ni7] (all stale from previous chain)
       user_friendly_docs:
         issue: mpdpt4rego
         status: in-progress
@@ -274,13 +272,13 @@ current_state:
         issue: mp9xefucmo
         status: done
         description: "Cap upward auto-promotion at in-progress."
-    docs_status: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed from dependencies. Docs overhaul (mpdpt4rego) awaiting validation (mpdpv6gw49). Docusaurus site tracked as idea mpdxdbqwt9."
+    docs_status: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed from dependencies. Mentions docs updated (cli-reference.md, javascript-reference.md). Docs overhaul (mpdpt4rego) awaiting validation (mpdpv6gw49). Docusaurus site tracked as idea mpdxdbqwt9."
     e2e_testing:
       description: "New E2E test layer in validation/ folder. Real git repos + real agt CLI invocations. Covers all commands with happy/error/edge cases."
       issue: mpebmstgs9
       spec: .agentic/specs/e2e-validation-suite-spec.md
       enabler: "validation/ folder access for library-validator + agt init --branch=<name> for test isolation"
-      status: spec_review_in_progress
+      status: uncertain
     publish_pipeline:
       typedoc_html: complete
       ci_workflow: complete — .github/workflows/ci.yml (quality + build on push/PR to main)
@@ -288,16 +286,17 @@ current_state:
       gitignore_update: complete — docs-html/ added
     remaining:
       - "All tracked as agentrack issues — see `agt list` and open_issues above"
-      - "Remove issueTitle from mentions: issue mpo5brxipq (in-progress) — impl+validation done, docs+build mpo6vnff2i (library-releaser, todo)"
-      - "Configurable branch (--branch): issue mpfm8bilwf (in-progress) — implemented but validation found 2 critical bugs, fix mpfn4dkotn (library-developer, P1) in progress"
-      - "E2E validation test suite: issue mpebmstgs9 (in-progress, CTO)"
-      - "E2E test refactor: issue mpfobnq8ty (in-progress, child of mpebmstgs9) — library-validator refactors to shared worktree approach"
+      - "Mentions feature: DONE (mpo1tdrjdm + mpmvdvi6lr both closed)"
+      - "Remove issueTitle from mentions: DONE (mpo5brxipq closed)"
+      - "Configurable branch (--branch): issue mpfm8bilwf — old issues no longer in index, status uncertain"
+      - "E2E validation test suite: issue mpebmstgs9 — old child issues no longer in index"
       - "User docs validation: issue mpdpv6gw49 (todo, library-validator)"
       - "User docs overhaul parent: issue mpdpt4rego (in-progress, awaiting validation)"
       - "NPM_TOKEN secret: issue mp3peac1qo"
       - "GitHub Pages source: issue mp3peawcgs"
       - "First release v0.1.0: issue mp3peanz8b"
       - "Docusaurus site: issue mpdxdbqwt9 (idea)"
+      - "Webapp initiative: 10 todo issues (Phase 1-5), agents pending setup"
       - "POLICY: any CLI/API change must route to library-releaser for build + docs update"
       - "DOCS: all agents have read access to docs/markdown/ — mention in task descriptions when relevant"
 

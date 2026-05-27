@@ -5,6 +5,7 @@
     "": {
       "name": "trackgentic",
       "dependencies": {
+        "agentrack": "workspace:packages/library",
         "js-yaml": "^4.1.1",
       },
     },

@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": ["packages/*"],
   "dependencies": {
+    "agentrack": "workspace:packages/library",
     "js-yaml": "^4.1.1"
   }
 }

@@ -1,5 +1,5 @@
 ---
-name: agentrack-implement
+name: work-issue
 description: "Pick up an assigned issue, implement it, and hand it back via agentrack status transitions. Receives issue ID from prompt argument."
 argument-hint: "<issue-id>"
 ---
@@ -12,7 +12,7 @@ This skill defines how an agent picks up, executes, and hands back an issue usin
 
 The issue ID is resolved in this order:
 
-1. Prompt argument: `/agentrack-implement <issue-id>`
+1. Prompt argument: `/work-issue <issue-id>`
 2. Environment variable: `$AGENTACK_ISSUE_ID`
 
 If neither is available, stop and report the error.
@@ -125,31 +125,6 @@ agt update <issue-id> --status "todo" --assignee "<manager>"
 
 Status reverts to `todo` — the manager will re-plan.
 
-## Status Transition Summary
-
-```
-         ┌─────────────────────────────────────────┐
-         │              Worker receives             │
-         │          issue in status: todo           │
-         └────────────────┬────────────────────────┘
-                          │
-                          ▼
-                   ┌─────────────┐
-                   │ in-progress │
-                   └──────┬──────┘
-                          │
-              ┌───────────┼───────────┐
-              ▼           ▼           ▼
-        ┌──────────┐ ┌────────┐ ┌─────────┐
-        │   done   │ │ blocked│ │  failed │
-        │          │ │        │ │         │
-        │assign:mgr│ │assign: │ │status:  │
-        │          │ │  mgr   │ │  todo   │
-        │          │ │status: │ │assign:  │
-        │          │ │in-prog │ │  mgr    │
-        └──────────┘ └────────┘ └─────────┘
-```
-
 ## Rules
 
 - **Never** set `done` on incomplete or failed work — it auto-resolves downstream blockages.
@@ -157,4 +132,4 @@ Status reverts to `todo` — the manager will re-plan.
 - **Never** pick up issues not assigned to you.
 - **Always** comment before changing status so history is clear.
 - **Always** reassign to your manager when you stop working — assignment = notification.
-- Work on only the issue you were given. If you discover adjacent work, create a new issue for it and assign to the manager.
+- Work on only the issue you were given. If you discover adjacent work, create a new issue with for it with status `idea` and assign to the manager.

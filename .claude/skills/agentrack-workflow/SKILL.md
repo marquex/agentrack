@@ -1,12 +1,15 @@
-We want to create some instructions on how to manage issues and work with agentrack for agents.
+---
+name: agentrack-workflow
+description: "Instructions on how to use the agentrack library efficiently as the main tool to manage and track work for agents. Use this skill when interacting with agentrack, when creating or starting new work, to ensure that the work is well organized, tracked and coordinated with other agents. "
+---
+
+All the work we do as agents should be tracked in agentrack issues. This is the main tool we have to organize, track and coordinate our work. We need to capture all the work in agentrack issues, and use it to coordinate with other agents and track the progress of our work.
 
 The goal is to have clear workflows for letting agents work independently on issues and collaborate with each others to implement features, fix bugs and achieve milestones.
 
 ## The work loop
 
-Issues are created by a manager and assigned to any agent. 
-
-There is a process that runs every minute checking the issues. If an issue is in `todo` status, the assigned agent is not working in other issue and there are no blockers, the assigned agent is waken up to start working on it.
+There is a process that runs every minute checking the existing issues. If an issue is in `todo` status, the assigned agent is not working in other issue and there are no blockers, the assigned agent is waken up to start working on it.
 
 This loop process is the key to let agents work independently and asynchronously. If the issues are well assigned and created with the right status, the work can be organized and done without the manager having to micromanage or coordinate every step.
 
@@ -16,13 +19,15 @@ When an issue is moved to `done` status, the system automatically resolves any b
 
 Blockages is the way we can model sequential work. If 2 issues are independent, they don't need to be blocked and can be worked in parallel. If one issue needs to be done before another one can start, we can create a blockage between them.
 
+The work loop also check for new mentions in issue comments for each agent. If an agent gets new mentions, it will be waken up to check the comments and address any questions or discussions that require their attention.
+
 ## Organizing work with hierarchies of issues
 
 Complex issues can be broken down into smaller sub-issues and assigned to different agents. Agentrack allows infinite nesting of issues, so you can create as many levels of sub-issues as needed to organize the work effectively:
 
 * Simple actionable tasks to be completed by a single agent can be modeled and tracked as a single issue.
 * When there's need to coordinate work between multiple agents, you can create a parent issue with the overall goal and then create child issues for each agent with their specific tasks.
-* When the task is big and make sense to break it down into phases, it's nice to create a parent issue for the whole process and then create child issues for each phase. Within each phase, you can create issues for each agent if needed.
+* When the task is big and make sense to break it down into phases, it's nice to create a parent issue for the whole process and then create child issues for each phase. Within each phase, you can create issues (grandchild ones) for each agent if needed.
 
 We can split work as we need and organize it in the way that makes more sense for each case trying to keep the issues actionable and focused. Divide and conquer.
 
@@ -43,6 +48,8 @@ Agents should use the issue comments to communicate and collaborate with each ot
 When an agent is working on an issue and encounters a question or needs input from another agent, they can add a comment mentioning the relevant agent (e.g., @agent-name) to get their attention. This allows for asynchronous communication and helps ensure that the right people are involved in the discussion.
 
 In the work loop, there will be a check for new mentions for each agent. If an agent has new mentions, it will be waken up to check the comments and respond if needed. This way, agents can stay informed about any discussions or questions that require their attention without having to constantly check the issues manually.
+
+When an agent finish handle the mention and address the question or discussion, they can mark the mention as read, so they are not returned by default in the command `mentions list` and the agent won't be waken up again for that mention.
 
 ## Working on a issue
 

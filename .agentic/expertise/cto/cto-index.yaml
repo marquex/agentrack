@@ -16,7 +16,7 @@ hierarchy:
       - webapp-validator — registered in agentrack (tk_f1g3kazq), needs agent file and expertise folder
       - Setup guide: .agentic/specs/webapp-agent-setup.md
 
-expertise_status: "Mentions feature shipped (mpo1tdrjdm, all children done). Remove issueTitle from mentions: parent mpo5brxipq in-progress — impl mpo5c0hty7 done, validation mpo5c8otiz done, docs+build mpo6vnff2i (library-releaser, todo). Webapp initiative active with 10 issues. Public docs at docs/markdown/ (8 files). Key lesson: docs+build task must be created in every issue chain that touches CLI/API — retroactively added mpo6vnff2i after user flagged missing docs update."
+expertise_status: "Mentions feature shipped and closed (mpo1tdrjdm, all children done). Earlier mentions chain mpmvdvi6lr also done. Remove issueTitle from mentions shipped and closed (mpo5brxipq, all children done including retroactive docs+build mpo6vnff2i). Both parent issues marked done. Webapp initiative active with 10 todo issues. Public docs at docs/markdown/ (8 files). Key lesson: docs+build task must be created in every issue chain that touches CLI/API."
 
 project_overview:
   name: agentrack
@@ -375,3 +375,6 @@ session_log:
   - session: 78
     date: "2026-05-27"
     summary: "User flagged that mentions docs weren't updated after the mentions feature work. Created retroactive docs+build task mpo6vnff2i (library-releaser, todo) under mpo5brxipq. Covers both: (1) mentions feature documentation (cli-reference.md, javascript-reference.md) and (2) issueTitle removal from docs. Lesson reinforced: EVERY issue chain that touches CLI/API MUST include a library-releaser task — no exceptions, even for 'small' refinements."
+  - session: 79
+    date: "2026-05-27"
+    summary: "Handled /work-mention mpoe57bo11 — mention was just 'Hey @cto ' with no specific request on mpgquqm43b (webapp Phase 4a). Incomplete/accidental mention, no action needed. Marked as read. Updated expertise: closed both parent issues mpo1tdrjdm (mentions feature) and mpo5brxipq (issueTitle removal) — all children were done. Noted stale old issues (configurable branch mpfn4dkotn, E2E refactor mpfobnq8ty) no longer in index — likely from different worktree branch. Discovered duplicate mentions chain mpmvdvi6lr (also all done)."
