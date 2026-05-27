@@ -56,6 +56,12 @@ export async function initAction(options?: { branch?: string }): Promise<void> {
         mkdirSync(issuesDir, { recursive: true });
       }
 
+      // Ensure mentions.json exists (upgrade scenario for joins)
+      const mentionsPath = join(resolve(cwd, opts.dir), "mentions.json");
+      if (!existsSync(mentionsPath)) {
+        writeFileSync(mentionsPath, "{}\n", "utf-8");
+      }
+
       // Write branch to config.json inside the worktree (only for non-default)
       if (opts.branch !== DEFAULT_BRANCH) {
         writeBranchToConfig(cwd, opts);

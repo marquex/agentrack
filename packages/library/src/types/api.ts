@@ -7,6 +7,8 @@ import type {
   IndexEntry,
   IssueId,
   IssueStatus,
+  MentionResult,
+  MentionViewResult,
   UserInfo,
 } from "./index";
 
@@ -217,3 +219,20 @@ export interface WorktreeSyncResult {
 export interface WorktreePullResult {
   updated: boolean;
 }
+
+// ─── Mentions ──────────────────────────────────────────────────────
+
+/** Result of listing mentions for a user. */
+export type MentionsListResult = MentionResult[] | AgentrackError;
+
+/** Result of viewing a single mention with full context. */
+export type MentionsViewResult = MentionViewResult | AgentrackError;
+
+/** Result of marking a mention as read. */
+export type MentionsReadResult = { result: "OK" } | AgentrackError;
+
+/** Result of marking a mention as unread. */
+export type MentionsUnreadResult = { result: "OK" } | AgentrackError;
+
+/** Result of rebuilding the mentions index. */
+export type MentionsRebuildResult = { result: "OK"; mentionCount: number } | AgentrackError;

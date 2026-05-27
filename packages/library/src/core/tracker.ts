@@ -29,6 +29,12 @@ import type {
   IssueStatus,
   ListParams,
   ListResult,
+  MentionEntry,
+  MentionsListResult,
+  MentionsReadResult,
+  MentionsRebuildResult,
+  MentionsUnreadResult,
+  MentionsViewResult,
   NextResult,
   UpdateParams,
   UpdateResult,
@@ -66,6 +72,15 @@ import {
   resolveBlockage,
   writeDependencies,
 } from "./dependency-manager";
+import {
+  addMentionEntries,
+  extractMentions,
+  findMentionById,
+  readMentionsFile,
+  rebuildMentionsIndex,
+  removeCommentMentions,
+  writeMentionsFile,
+} from "./mentions";
 import {
   computeUpwardPromotions,
   isStatusAfter,
@@ -225,6 +240,7 @@ export class Tracker {
     await atomicWriteJSON(join(trackerDir, "index.json"), DEFAULT_INDEX);
     await atomicWriteJSON(join(trackerDir, "dependencies.json"), DEFAULT_DEPENDENCIES);
     await atomicWriteJSON(join(trackerDir, "users.json"), DEFAULT_USERS);
+    await atomicWriteJSON(join(trackerDir, "mentions.json"), {});
 
     return { result: "OK", path: resolve(trackerDir) };
   }
@@ -994,6 +1010,22 @@ export class Tracker {
 
     await appendEvent(issueFilePath, commentEvent);
 
+    // Index mentions
+    const registeredUsers = users.users.map((u) => u.name);
+    const mentionedUsers = extractMentions(params.content, registeredUsers);
+    if (mentionedUsers.length > 0) {
+      const mentionEntries: MentionEntry[] = mentionedUsers.map((userName) => ({
+        id: generateId(),
+        createdAt: now,
+        mentionedUser: userName,
+        mentionedBy: author,
+        issueId: id,
+        commentId,
+        isRead: false,
+      }));
+      await addMentionEntries(trackerDir, mentionEntries);
+    }
+
     return { result: "OK", commentId };
   }
 
@@ -1074,6 +1106,23 @@ export class Tracker {
 
     await appendEvent(issueFilePath, updateEvent);
 
+    // Re-index mentions: remove old, add new
+    await removeCommentMentions(trackerDir, commentId);
+    const registeredUsers = users.users.map((u) => u.name);
+    const mentionedUsers = extractMentions(params.content, registeredUsers);
+    if (mentionedUsers.length > 0) {
+      const mentionEntries: MentionEntry[] = mentionedUsers.map((userName) => ({
+        id: generateId(),
+        createdAt: now,
+        mentionedUser: userName,
+        mentionedBy: author,
+        issueId: id,
+        commentId,
+        isRead: false,
+      }));
+      await addMentionEntries(trackerDir, mentionEntries);
+    }
+
     return { result: "OK" };
   }
 
@@ -1153,6 +1202,9 @@ export class Tracker {
     };
 
     await appendEvent(issueFilePath, deleteEvent);
+
+    // Remove mentions for the deleted comment
+    await removeCommentMentions(trackerDir, commentId);
 
     return { result: "OK" };
   }
@@ -1733,5 +1785,298 @@ export class Tracker {
     await atomicWriteJSON(join(trackerDir, "users.json"), users);
 
     return { result: "OK", name: lowerName, token: newToken };
+  }
+
+  // ─── Mentions ─────────────────────────────────────────────────────
+
+  /**
+   * List mentions for a given user.
+   *
+   * Returns mentions sorted by `createdAt` descending (newest first).
+   *
+   * @param userName - The user name whose mentions to list
+   * @param options - Optional flags
+   * @param options.includeReads - Include read mentions alongside unread
+   * @returns Array of mention results, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} USER_NOT_FOUND if the user is not registered
+   */
+  async mentionsList(
+    userName: string,
+    options?: { includeReads?: boolean },
+  ): Promise<MentionsListResult> {
+    const trackerDir = resolveTrackerDir(this.cwd);
+    if (!trackerDir) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_INITIALIZED.result,
+        "No .agentrack/ directory found. Run `agt init` first.",
+        ErrorCodes.NOT_INITIALIZED.exitCode,
+      );
+    }
+
+    const lowerName = userName.toLowerCase();
+
+    // Validate user is registered
+    const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
+    if (!users.users.find((u) => u.name === lowerName)) {
+      return new AgentrackError(
+        ErrorCodes.USER_NOT_FOUND.result,
+        `User "${lowerName}" not found.`,
+        ErrorCodes.USER_NOT_FOUND.exitCode,
+      );
+    }
+
+    const mentions = readMentionsFile(trackerDir);
+    const entries = mentions[lowerName] ?? [];
+
+    // Filter by read status unless includeReads is set
+    const filtered = options?.includeReads
+      ? entries
+      : entries.filter((e) => !e.isRead);
+
+    return filtered
+      .map((entry) => ({
+        id: entry.id,
+        mentionedBy: entry.mentionedBy,
+        issueId: entry.issueId,
+        commentId: entry.commentId,
+        createdAt: entry.createdAt,
+        isRead: entry.isRead,
+      }))
+      .sort((a, b) => (a.createdAt > b.createdAt ? -1 : a.createdAt < b.createdAt ? 1 : 0));
+  }
+
+  /**
+   * View a single mention with full context.
+   *
+   * Resolves the mention to the actual comment content and issue title.
+   *
+   * @param mentionId - The mention ID to look up
+   * @returns The mention with comment and issue context, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} MENTION_NOT_FOUND if the mention ID doesn't exist
+   * @throws {AgentrackError} COMMENT_NOT_FOUND if the source comment was deleted
+   */
+  async mentionsView(mentionId: string): Promise<MentionsViewResult> {
+    const trackerDir = resolveTrackerDir(this.cwd);
+    if (!trackerDir) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_INITIALIZED.result,
+        "No .agentrack/ directory found. Run `agt init` first.",
+        ErrorCodes.NOT_INITIALIZED.exitCode,
+      );
+    }
+
+    const found = findMentionById(trackerDir, mentionId);
+    if (!found) {
+      return new AgentrackError(
+        ErrorCodes.MENTION_NOT_FOUND.result,
+        `Mention \`${mentionId}\` not found.`,
+        ErrorCodes.MENTION_NOT_FOUND.exitCode,
+      );
+    }
+
+    const { entry } = found;
+
+    // Resolve issue title
+    const index = await readIndex(trackerDir);
+    const issueEntry = findEntry(index, entry.issueId);
+
+    // Resolve comment content by replaying events
+    if (!issueEntry) {
+      return new AgentrackError(
+        ErrorCodes.NOT_FOUND.result,
+        `Issue \`${entry.issueId}\` not found.`,
+        ErrorCodes.NOT_FOUND.exitCode,
+      );
+    }
+
+    const issueFilePath = join(trackerDir, issueEntry.path);
+    if (!existsSync(issueFilePath)) {
+      return new AgentrackError(
+        ErrorCodes.ISSUE_MISSING.result,
+        `Issue file for \`${entry.issueId}\` is missing.`,
+        ErrorCodes.ISSUE_MISSING.exitCode,
+      );
+    }
+
+    const events = await replayEvents(issueFilePath);
+    const comments = computeComments(events);
+    const comment = comments.find((c) => c.id === entry.commentId);
+
+    if (!comment) {
+      return new AgentrackError(
+        ErrorCodes.COMMENT_NOT_FOUND.result,
+        `Comment \`${entry.commentId}\` not found (may have been deleted).`,
+        ErrorCodes.COMMENT_NOT_FOUND.exitCode,
+      );
+    }
+
+    return {
+      mention: entry,
+      comment: {
+        id: comment.id,
+        author: comment.author,
+        content: comment.content,
+        timestamp: comment.timestamp,
+        ...(comment.editedAt ? { editedAt: comment.editedAt } : {}),
+      },
+      issue: {
+        id: entry.issueId,
+        title: issueEntry.title,
+      },
+    };
+  }
+
+  /**
+   * Mark a mention as read.
+   *
+   * Auth constraint: only the mentionedUser can mark a mention as read.
+   *
+   * @param mentionId - The mention ID to mark as read
+   * @returns `{ result: "OK" }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} MENTION_NOT_FOUND if the mention ID doesn't exist
+   * @throws {AgentrackError} MENTION_ACCESS_DENIED if the authenticated user is not the mentioned user
+   * @throws {AgentrackError} TOKEN_REQUIRED if no token provided in auth-required mode
+   */
+  async mentionsRead(mentionId: string): Promise<MentionsReadResult> {
+    const trackerDir = resolveTrackerDir(this.cwd);
+    if (!trackerDir) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_INITIALIZED.result,
+        "No .agentrack/ directory found. Run `agt init` first.",
+        ErrorCodes.NOT_INITIALIZED.exitCode,
+      );
+    }
+
+    const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
+    const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
+    const authResult = resolveAuthor({ config, users, requiresWrite: true });
+    if (authResult instanceof AgentrackError) return authResult;
+    const callerName = authResult.author;
+
+    const found = findMentionById(trackerDir, mentionId);
+    if (!found) {
+      return new AgentrackError(
+        ErrorCodes.MENTION_NOT_FOUND.result,
+        `Mention \`${mentionId}\` not found.`,
+        ErrorCodes.MENTION_NOT_FOUND.exitCode,
+      );
+    }
+
+    if (found.entry.mentionedUser !== callerName) {
+      return new AgentrackError(
+        ErrorCodes.MENTION_ACCESS_DENIED.result,
+        `Only the mentioned user (${found.entry.mentionedUser}) can mark this mention as read.`,
+        ErrorCodes.MENTION_ACCESS_DENIED.exitCode,
+      );
+    }
+
+    // Update the mention
+    const mentions = readMentionsFile(trackerDir);
+    const userEntries = mentions[found.user];
+    if (userEntries) {
+      mentions[found.user] = userEntries.map((e) =>
+        e.id === mentionId ? { ...e, isRead: true } : e,
+      );
+      await writeMentionsFile(trackerDir, mentions);
+    }
+
+    return { result: "OK" };
+  }
+
+  /**
+   * Mark a mention as unread.
+   *
+   * Auth constraint: only the mentionedUser can mark a mention as unread.
+   *
+   * @param mentionId - The mention ID to mark as unread
+   * @returns `{ result: "OK" }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} MENTION_NOT_FOUND if the mention ID doesn't exist
+   * @throws {AgentrackError} MENTION_ACCESS_DENIED if the authenticated user is not the mentioned user
+   * @throws {AgentrackError} TOKEN_REQUIRED if no token provided in auth-required mode
+   */
+  async mentionsUnread(mentionId: string): Promise<MentionsUnreadResult> {
+    const trackerDir = resolveTrackerDir(this.cwd);
+    if (!trackerDir) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_INITIALIZED.result,
+        "No .agentrack/ directory found. Run `agt init` first.",
+        ErrorCodes.NOT_INITIALIZED.exitCode,
+      );
+    }
+
+    const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
+    const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
+    const authResult = resolveAuthor({ config, users, requiresWrite: true });
+    if (authResult instanceof AgentrackError) return authResult;
+    const callerName = authResult.author;
+
+    const found = findMentionById(trackerDir, mentionId);
+    if (!found) {
+      return new AgentrackError(
+        ErrorCodes.MENTION_NOT_FOUND.result,
+        `Mention \`${mentionId}\` not found.`,
+        ErrorCodes.MENTION_NOT_FOUND.exitCode,
+      );
+    }
+
+    if (found.entry.mentionedUser !== callerName) {
+      return new AgentrackError(
+        ErrorCodes.MENTION_ACCESS_DENIED.result,
+        `Only the mentioned user (${found.entry.mentionedUser}) can mark this mention as unread.`,
+        ErrorCodes.MENTION_ACCESS_DENIED.exitCode,
+      );
+    }
+
+    // Update the mention
+    const mentions = readMentionsFile(trackerDir);
+    const userEntries = mentions[found.user];
+    if (userEntries) {
+      mentions[found.user] = userEntries.map((e) =>
+        e.id === mentionId ? { ...e, isRead: false } : e,
+      );
+      await writeMentionsFile(trackerDir, mentions);
+    }
+
+    return { result: "OK" };
+  }
+
+  /**
+   * Rebuild the entire mentions index from scratch.
+   *
+   * Scans all issue event files and re-extracts mentions from all
+   * non-deleted comments. Useful for fixing index corruption.
+   * Requires no auth (system operation).
+   *
+   * @returns `{ result: "OK", mentionCount }` on success, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   */
+  async mentionsRebuild(): Promise<MentionsRebuildResult> {
+    const trackerDir = resolveTrackerDir(this.cwd);
+    if (!trackerDir) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_INITIALIZED.result,
+        "No .agentrack/ directory found. Run `agt init` first.",
+        ErrorCodes.NOT_INITIALIZED.exitCode,
+      );
+    }
+
+    const index = await readIndex(trackerDir);
+    const allIssues = [...index.open, ...index.closed];
+
+    const mentionCount = await rebuildMentionsIndex(
+      trackerDir,
+      allIssues,
+      () => {
+        const usersData = readFileSync(join(trackerDir, "users.json"), "utf-8");
+        const parsed = JSON.parse(usersData) as UsersFile;
+        return parsed.users.map((u) => u.name);
+      },
+    );
+
+    return { result: "OK", mentionCount };
   }
 }

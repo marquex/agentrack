@@ -22,6 +22,11 @@ export type {
   InitResult,
   ListParams,
   ListResult,
+  MentionsListResult,
+  MentionsReadResult,
+  MentionsRebuildResult,
+  MentionsUnreadResult,
+  MentionsViewResult,
   NextResult,
   UpdateParams,
   UpdateResult,
@@ -38,6 +43,8 @@ export type {
 export type { ConfigFile } from "./config";
 // Dependency types
 export type { BlockageEntry, BlockageInfo, DependenciesFile } from "./dependency";
+// Mention types
+export type { MentionEntry, MentionResult, MentionsFile, MentionViewResult } from "./mention";
 // Event types
 export type {
   BaseEvent,

@@ -63,4 +63,8 @@ export const ErrorCodes = {
   INVALID_BRANCH_NAME: { result: "INVALID_BRANCH_NAME", exitCode: 18 },
   /** Branch already exists but does not contain agentrack data. */
   BRANCH_CONFLICT: { result: "BRANCH_CONFLICT", exitCode: 19 },
+  /** Mention with the given ID doesn't exist. */
+  MENTION_NOT_FOUND: { result: "MENTION_NOT_FOUND", exitCode: 20 },
+  /** Authenticated user is not the mentioned user (for read/unread commands). */
+  MENTION_ACCESS_DENIED: { result: "MENTION_ACCESS_DENIED", exitCode: 21 },
 } as const;

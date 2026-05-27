@@ -15,6 +15,13 @@ import { createAction } from "./commands/create";
 import { historyAction } from "./commands/history";
 import { initAction } from "./commands/init";
 import { listAction } from "./commands/list";
+import {
+  mentionsListAction,
+  mentionsReadAction,
+  mentionsRebuildAction,
+  mentionsUnreadAction,
+  mentionsViewAction,
+} from "./commands/mentions";
 import { nextAction } from "./commands/next";
 import { pullAction } from "./commands/pull";
 import { pushAction } from "./commands/push";
@@ -182,6 +189,35 @@ export function createProgram(): Command {
     .command("list <issueId>")
     .description("List blockage info for an issue")
     .action(blockagesListAction);
+
+  // ─── mentions ──────────────────────────────────────────────────────
+  const mentionsCmd = program.command("mentions").description("Manage @mentions in comments");
+
+  mentionsCmd
+    .command("list <agent-name>")
+    .description("List mentions for a user")
+    .option("--include-reads", "Include read mentions")
+    .action(mentionsListAction);
+
+  mentionsCmd
+    .command("view <mention-id>")
+    .description("View a mention with full context")
+    .action(mentionsViewAction);
+
+  mentionsCmd
+    .command("read <mention-id>")
+    .description("Mark a mention as read")
+    .action(mentionsReadAction);
+
+  mentionsCmd
+    .command("unread <mention-id>")
+    .description("Mark a mention as unread")
+    .action(mentionsUnreadAction);
+
+  mentionsCmd
+    .command("rebuild")
+    .description("Rebuild the mentions index from scratch")
+    .action(mentionsRebuildAction);
 
   return program;
 }

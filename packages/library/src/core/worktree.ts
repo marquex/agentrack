@@ -279,6 +279,7 @@ export function initFreshWorktree(cwd: string, opts?: WorktreeOptions): Worktree
   const indexBlob = gitHashObject(cwd, `${JSON.stringify(DEFAULT_INDEX, null, 2)}\n`);
   const depsBlob = gitHashObject(cwd, `${JSON.stringify(DEFAULT_DEPENDENCIES, null, 2)}\n`);
   const usersBlob = gitHashObject(cwd, `${JSON.stringify(DEFAULT_USERS, null, 2)}\n`);
+  const mentionsBlob = gitHashObject(cwd, `${JSON.stringify({}, null, 2)}\n`);
 
   // 2. Create a tree object referencing these blobs
   const treeInput = [
@@ -286,6 +287,7 @@ export function initFreshWorktree(cwd: string, opts?: WorktreeOptions): Worktree
     `100644 blob ${indexBlob}\tindex.json`,
     `100644 blob ${depsBlob}\tdependencies.json`,
     `100644 blob ${usersBlob}\tusers.json`,
+    `100644 blob ${mentionsBlob}\tmentions.json`,
   ].join("\n");
   const tree = gitMkTree(cwd, treeInput);
 
