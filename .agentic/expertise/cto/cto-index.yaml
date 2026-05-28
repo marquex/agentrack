@@ -11,12 +11,9 @@ hierarchy:
       - library-releaser (release prep, documentation, build, version management, publishing)
       - webapp-developer (full-stack web development — React frontend + Hono backend)
       - webapp-validator (webapp testing, quality assurance, spec compliance)
-    pending_setup:
-      - webapp-developer — registered in agentrack (tk_thd0nvbd), needs agent file and expertise folder
-      - webapp-validator — registered in agentrack (tk_f1g3kazq), needs agent file and expertise folder
-      - Setup guide: .agentic/specs/webapp-agent-setup.md
+    pending_setup: []  # All agents fully set up as of session 80
 
-expertise_status: "Mentions feature shipped and closed (mpo1tdrjdm, all children done). Earlier mentions chain mpmvdvi6lr also done. Remove issueTitle from mentions shipped and closed (mpo5brxipq, all children done including retroactive docs+build mpo6vnff2i). Both parent issues marked done. Webapp initiative active with 10 todo issues. Public docs at docs/markdown/ (8 files). Key lesson: docs+build task must be created in every issue chain that touches CLI/API."
+expertise_status: "Webapp initiative planned and tracked (parent mppqqp8y26, in-progress). 10 issues across 5 phases with sequential dependencies. Webapp-developer and webapp-validator fully set up (agent files + expertise folders exist). Specs at .agentic/specs/webapp-spec.md and webapp-roadmap.md. Phase 1 unblocked (mppqqte6gs), awaiting agent runner. Mentions feature shipped and closed. Public docs at docs/markdown/ (8 files). Key lesson: docs+build task must be created in every issue chain that touches CLI/API."
 
 project_overview:
   name: agentrack
@@ -24,7 +21,7 @@ project_overview:
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
   distribution: npm package with CLI entry point (`agt` command)
-  stage: "Dogfooding active. Project renamed from trackgentic to agentrack. .trackgentic/ → .agentrack/, CLI command tg → agt. npm link must be re-run from packages/library/ to restore global symlink. Shipped features: independent git branch (worktree-based storage on orphan _agentrack branch). In-progress: configurable branch name (--branch flag on agt init, mpfm8bilwf) — implemented but validation found 2 critical bugs (double directory creation, missing BRANCH_CONFLICT), fix in progress (mpfn4dkotn). Standing issues: defensive index validation (mp3pe95w9e), concurrent writes decision (mp3pe96e9f), CLAUDE.md decision (mp3pe9urb9). E2E validation suite in progress (mpebmstgs9)."
+  stage: "Dogfooding active. All 7 library phases complete + build pipeline. Mentions feature shipped. Webapp initiative active (parent mppqqp8y26): 5-phase plan, 10 issues, webapp-developer and webapp-validator agents set up. Phase 1 unblocked and ready. Old issues (configurable branch, E2E tests) from previous worktree — not in current index. Public docs at docs/markdown/ (8 files)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
   docs_tool: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed. Docs overhaul in progress (mpdpt4rego), validation pending (mpdpv6gw49). Future: Docusaurus site consuming docs/markdown/ (mpdxdbqwt9, idea). Spec: .agentic/specs/user-docs-spec.md."
@@ -378,3 +375,6 @@ session_log:
   - session: 79
     date: "2026-05-27"
     summary: "Handled /work-mention mpoe57bo11 — mention was just 'Hey @cto ' with no specific request on mpgquqm43b (webapp Phase 4a). Incomplete/accidental mention, no action needed. Marked as read. Updated expertise: closed both parent issues mpo1tdrjdm (mentions feature) and mpo5brxipq (issueTitle removal) — all children were done. Noted stale old issues (configurable branch mpfn4dkotn, E2E refactor mpfobnq8ty) no longer in index — likely from different worktree branch. Discovered duplicate mentions chain mpmvdvi6lr (also all done)."
+  - session: 80
+    date: "2026-05-28"
+    summary: "Planned webapp initiative from tmp/webapp.md. Existing specs (webapp-spec.md, webapp-roadmap.md) already aligned with requirements. Created 11 issues in agentrack: parent mppqqp8y26 (in-progress, CTO), 5 implementation tasks for webapp-developer, 5 validation tasks for webapp-validator. Sequential dependency chain: Phase 1 impl → Phase 1 validate → Phase 2 impl → ... → Phase 5 validate. Each implementation task has detailed scope comment referencing the spec and roadmap. Phase 1 (mppqqte6gs) is unblocked and ready for webapp-developer. Updated CTO expertise: webapp agents marked as fully set up (pending_setup cleared)."

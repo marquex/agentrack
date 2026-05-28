@@ -12,8 +12,7 @@ subordinates:
 skills:
   - agent-expertise
   - agentrack
-  - agentrack-implement
-  - issue
+  - agentrack-workflow
 access:
   - path: .agentic/expertise/cto/**
     permissions: [read, write, delete]

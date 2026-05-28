@@ -19,6 +19,8 @@ Note: A PreToolUse hook (`enforce-agentrack-token.ts`) looks up your agent's tok
 
 ## CLI Reference
 
+IMPORTANT: All the commands below prints JSON output.
+
 ### Issues
 
 Create, list, view, and update issues.

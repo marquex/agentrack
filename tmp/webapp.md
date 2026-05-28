@@ -33,9 +33,9 @@ The API can just offer the same commands that the agentrack CLI offers, but as A
 
 ## New hires
 
-We will hire a `webapp-developer` agent who will be responsible for building the frontend and backend of the webapp. This person should have experience with React, TypeScript, Vite, bun, and hono. They should also have a good understanding of git and how agentrack works.
+We have hired a `webapp-developer` agent who will be responsible for building the frontend and backend of the webapp. This person should have experience with React, TypeScript, Vite, bun, and hono. They should also have a good understanding of git and how agentrack works.
 
-Also we want to hire a `webapp-validator` agent who will be responsible for testing the webapp and making sure it works correctly and as intended. This agent will also review the code quality.
+We have also hired a `webapp-validator` agent who will be responsible for testing the webapp and making sure it works correctly and as intended. This agent will also review the code quality.
 
 ## How to start
 
