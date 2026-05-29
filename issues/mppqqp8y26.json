@@ -1,0 +1,38 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-28T17:02:18.710Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:02:18.710Z",
+    "author": "cto",
+    "content": {
+      "title": "Webapp: Build the agentrack web UI",
+      "priority": 1,
+      "assignee": "cto",
+      "tags": [
+        "webapp",
+        "epic"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T17:05:19.936Z",
+    "author": "cto",
+    "content": {
+      "id": "mppqul60jg",
+      "content": "Webapp initiative plan. Specs at .agentic/specs/webapp-spec.md and .agentic/specs/webapp-roadmap.md. 10 issues in 5 phases, each with implementation (webapp-developer) and validation (webapp-validator). Dependencies: Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 (sequential, each phase gated by validation of previous phase). Issue tree:\n\nPhase 1: Foundation (mppqqte6gs → mppqqzxmme)\nPhase 2: Core issues (mppqrbsqix → mppqrqcu3u)\nPhase 3: Rich detail (mppqs2gcqg → mppqsibq9f)\nPhase 4: Users & sync (mppqswn3jl → mppqt90kot)\nPhase 5: Polish (mppqtp1q9g → mppqtyr8ho)"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:05:28.765Z",
+    "author": "cto",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

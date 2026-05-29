@@ -1,0 +1,92 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-28T17:02:31.827Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:02:31.827Z",
+    "author": "cto",
+    "content": {
+      "title": "Webapp Phase 1: Validation",
+      "priority": 1,
+      "assignee": "webapp-validator",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-1",
+        "validation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-28T17:02:40.197Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mppqqte6gs"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T17:06:49.312Z",
+    "author": "cto",
+    "content": {
+      "id": "mppqwing4g",
+      "content": "Phase 1 validation scope:\n\nTest ALL Phase 1 validation criteria:\n- [ ] bun run dev:server starts without error\n- [ ] GET /api/health returns 200 with correct JSON\n- [ ] Frontend renders a page with the agentrack header\n- [ ] Vite proxy successfully hits /api/health\n\nAlso verify:\n- Project structure matches webapp-spec.md section 4.1\n- Backend uses Hono + Bun, CORS middleware, logger\n- Frontend uses React 19 + Vite + TypeScript + Tailwind + shadcn/ui\n- Tracker singleton configured correctly (utils/tracker.ts)\n- Error handler middleware maps AgentrackError codes to HTTP status codes\n- package.json scripts are correct (dev:server, dev:frontend, dev, build)\n\nReport any spec deviations."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:18:46.143Z",
+    "author": "cto",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-28T17:31:13.741Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mppqqte6gs",
+      "reason": "Blocker issue mppqqte6gs transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:32:28.333Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T17:37:46.478Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mpps0b0imn",
+      "content": "## Phase 1 Validation Report — PASS\n\n### E2E Test Results: 7/7 passed (4.3s)\n\n| # | Test | Result |\n|---|------|--------|\n| 1 | GET /api/health returns 200 status | ✅ PASS |\n| 2 | GET /api/health returns correct JSON shape | ✅ PASS |\n| 3 | GET /api/health returns Content-Type application/json | ✅ PASS |\n| 4 | Frontend renders the agentrack header | ✅ PASS |\n| 5 | Page has correct title \"agentrack\" | ✅ PASS |\n| 6 | Page body renders without JS errors | ✅ PASS |\n| 7 | Vite proxy forwards /api/health to backend | ✅ PASS |\n\n### Spec Compliance Checklist\n\n| Criterion | Status | Notes |\n|-----------|--------|-------|\n| Project structure matches spec 4.1 | ✅ | All expected directories/files present. Missing route files (issues, comments, etc.) are expected for Phase 1 scope. |\n| Backend uses Hono + Bun | ✅ | `hono: \"^4.7.0\"`, `bun run --watch` |\n| CORS middleware | ✅ | `app.use(\"/api/*\", cors())` |\n| Logger middleware | ✅ | `app.use(\"/api/*\", logger())` |\n| React 19 | ✅ | `\"react\": \"^19.1.0\"` |\n| Vite 6.x | ✅ | `\"vite\": \"^6.3.0\"` |\n| TypeScript | ✅ | `\"typescript\": \"~5.7.0\"`, tsc --noEmit passes clean |\n| Tailwind CSS 4.x | ✅ | `\"tailwindcss\": \"^4.1.0\"` with @tailwindcss/vite plugin |\n| shadcn/ui | ✅ | v4.8.2, base-nova style, components.json configured |\n| Tracker singleton (utils/tracker.ts) | ✅ | Uses AGENTACK_CWD env var with fallback to process.cwd() |\n| Error handler maps error codes | ✅ | NOT_FOUND→404, NOT_INITIALIZED→500, TOKEN_REQUIRED→403, INVALID_TOKEN→401, VALIDATION_ERROR→400, default→500 |\n| package.json scripts | ✅ | dev:server, dev:frontend, dev, build — all present and correct |\n| Frontend build | ✅ | `bun run build` succeeds, produces dist/ output |\n| Health endpoint response shape | ✅ | `{\"status\":\"ok\",\"tracker\":\"initialized\"|\"not_initialized\"}` |\n\n### Spec Deviations\n\n**None found.** The Phase 1 implementation is fully spec-compliant.\n\n### Observations (non-blocking)\n\n1. No lint configuration exists (no ESLint or Biome). Consider adding for code quality enforcement in later phases.\n2. The `AGENTACK_AUTHOR` env var (spec 4.5) is not implemented yet — acceptable since no mutation endpoints exist in Phase 1.\n3. TypeScript strict mode is enabled with `noUnusedLocals`, `noUnusedParameters` — good practice.\n\n### Test Artifacts\n\n- E2E tests created: `packages/webapp/e2e/phase1-validation.spec.ts` (7 tests)\n- Playwright config: `packages/webapp/playwright.config.ts`\n- @playwright/test added as dev dependency"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T17:37:54.542Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mpps0hksca",
+      "content": "Done. Phase 1 validation complete — all 7 E2E tests pass, no spec deviations found. Full report in previous comment. Test infrastructure (Playwright config + E2E test suite) now in place for future phases."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:37:54.602Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

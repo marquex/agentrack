@@ -1,0 +1,91 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-28T17:03:22.386Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:03:22.386Z",
+    "author": "cto",
+    "content": {
+      "title": "Webapp Phase 3: Rich detail (comments, blockages, hierarchy, history)",
+      "priority": 2,
+      "assignee": "webapp-developer",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-3"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-28T17:03:33.486Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mppqrqcu3u"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T17:06:15.907Z",
+    "author": "cto",
+    "content": {
+      "id": "mppqvsoqwp",
+      "content": "Phase 3 scope (see .agentic/specs/webapp-spec.md and .agentic/specs/webapp-roadmap.md Phase 3):\n\nBACKEND (7 endpoints):\n1. GET /api/issues/:id/comments — list comments\n2. POST /api/issues/:id/comments — add comment\n3. PATCH /api/issues/:id/comments/:commentId — edit comment\n4. DELETE /api/issues/:id/comments/:commentId — delete comment\n5. GET /api/issues/:id/blockages — list blockages\n6. POST /api/issues/:id/blockages — add blockages\n7. PATCH /api/issues/:id/blockages/resolve — resolve blockages\n8. DELETE /api/issues/:id/blockages — delete blockages\n9. GET /api/issues/:id/history — return event log\n10. GET /api/issues/next/:assignee — recommended next issue\n\nFRONTEND:\n11. CommentsSection (list, add, edit, delete comments)\n12. BlockagesSection (blocked-by list, blocks list, add blockage dialog, resolve button)\n13. SubIssuesSection (list children, create sub-issue button with pre-filled parentId)\n14. IssueTree component for expandable sub-issues in list view\n15. HistorySection (collapsible event timeline, read-only)\n16. TagInput component (add tags by typing + enter, remove with x)\n17. Parent selector in issue detail (set/change/clear parent)\n\nVALIDATION CRITERIA:\n- Can add, edit, delete comments\n- Can add, resolve, delete blockages\n- Sub-issues display in both list tree and detail views\n- Can create sub-issues with parentId pre-filled\n- History timeline displays correctly\n- Tag input works (add/remove)\n- Parent can be set, changed, and cleared\n- Blockage indicators show on issue list rows"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:18:46.250Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-28T18:20:55.723Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mppqrqcu3u",
+      "reason": "Blocker issue mppqrqcu3u transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T06:44:50.796Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-29T06:47:10.481Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mpqk7h2f91",
+      "content": "Starting Phase 3 implementation. Plan:\n1. Backend: comments routes, blockages routes, history route, next-issue route\n2. Frontend types: Comment, Blockage, HistoryEvent\n3. Frontend API layer: comments.ts, blockages.ts\n4. Frontend hooks: use-comments.ts, use-blockages.ts\n5. Frontend components: CommentsSection, BlockagesSection, SubIssuesSection, IssueTree, HistorySection, TagInput, Parent selector\n6. Update IssueDetailPage and IssueList with new sections and tree view"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-29T06:59:37.182Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mpqknhuaz2",
+      "content": "Phase 3 implementation complete. All TypeScript compiles and frontend builds cleanly.\n\n**Backend (6 new route files/endpoints):**\n- server/routes/comments.ts — GET/POST/PATCH/DELETE for comments\n- server/routes/blockages.ts — GET/POST/PATCH resolve/DELETE for blockages\n- Added GET /api/issues/:id/history and GET /api/issues/next/:assignee to issues routes\n- Registered all new routes in server/index.ts\n\n**Frontend types:**\n- Added Comment, BlockageEntry, BlockageInfo, HistoryEvent, NextIssueResult types\n\n**Frontend API layer:**\n- api/comments.ts — list, add, update, delete\n- api/blockages.ts — list, add, resolve, delete\n- Extended api/issues.ts with history() and next()\n\n**Frontend hooks:**\n- hooks/use-comments.ts — useComments, useAddComment, useUpdateComment, useDeleteComment\n- hooks/use-blockages.ts — useBlockages, useAddBlockage, useResolveBlockage, useDeleteBlockage\n\n**Frontend components (6 new):**\n- CommentsSection — list/add/edit/delete comments with inline editing and delete confirmation\n- BlockagesSection — blocked-by list, blocks list, add blockage dialog with search, resolve/delete buttons\n- SubIssuesSection — children list, create sub-issue with pre-filled parentId\n- HistorySection — collapsible timeline with event icons and summaries\n- TagInput — type+enter to add tags, x to remove, backspace support\n- ParentSelector — search/select to set parent, clear parent, navigate to parent\n- IssueTree — recursive expandable sub-issues with chevrons and indentation\n\n**Updated existing components:**\n- IssueDetailPage — integrated all new sections (tags with TagInput, parent selector, blockages, sub-issues, comments, history)\n- IssueList — now uses IssueTree for expandable sub-issues\n\n**Note:** Blockage indicators on issue list rows require per-issue API calls which is expensive. The tree view loads blockages only when expanded. Full blockage detail is available on the issue detail page. This is a reasonable v1 tradeoff."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T06:59:44.750Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

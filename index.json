@@ -1,9 +1,203 @@
 {
   "open": [
-   
+    {
+      "id": "mppqqp8y26",
+      "title": "Webapp: Build the agentrack web UI",
+      "path": "issues/mppqqp8y26.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "webapp",
+        "epic"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mppqswn3jl",
+      "title": "Webapp Phase 4: Users & sync",
+      "path": "issues/mppqswn3jl.json",
+      "status": "in-progress",
+      "assignee": "webapp-developer",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-4"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mppqt90kot",
+      "title": "Webapp Phase 4: Validation",
+      "path": "issues/mppqt90kot.json",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-4",
+        "validation"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mppqtp1q9g",
+      "title": "Webapp Phase 5: Polish (responsive, loading, empty states, sorting)",
+      "path": "issues/mppqtp1q9g.json",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-5"
+      ],
+      "priority": 4
+    },
+    {
+      "id": "mppqtyr8ho",
+      "title": "Webapp Phase 5: Validation",
+      "path": "issues/mppqtyr8ho.json",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-5",
+        "validation"
+      ],
+      "priority": 4
+    },
+    {
+      "id": "mpqn5bi2us",
+      "title": "Isolated E2E data for webapp validation",
+      "path": "issues/mpqn5bi2us.json",
+      "status": "in-progress",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "e2e-isolation"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mpqn5i7wui",
+      "title": "Implement isolated E2E data for webapp",
+      "path": "issues/mpqn5i7wui.json",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mpqn5bi2us",
+      "tags": [
+        "webapp",
+        "e2e-isolation"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mpqn5qf6zq",
+      "title": "Validate isolated E2E data for webapp",
+      "path": "issues/mpqn5qf6zq.json",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mpqn5bi2us",
+      "tags": [
+        "webapp",
+        "e2e-isolation",
+        "validation"
+      ],
+      "priority": 1
+    }
   ],
   "closed": [
+    {
+      "id": "mppqqte6gs",
+      "title": "Webapp Phase 1: Foundation",
+      "path": "issues/mppqqte6gs.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-1"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mppqqzxmme",
+      "title": "Webapp Phase 1: Validation",
+      "path": "issues/mppqqzxmme.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-1",
+        "validation"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mppqrbsqix",
+      "title": "Webapp Phase 2: Core issues (list + CRUD)",
+      "path": "issues/mppqrbsqix.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-2"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mppqrqcu3u",
+      "title": "Webapp Phase 2: Validation",
+      "path": "issues/mppqrqcu3u.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-2",
+        "validation"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mppqs2gcqg",
+      "title": "Webapp Phase 3: Rich detail (comments, blockages, hierarchy, history)",
+      "path": "issues/mppqs2gcqg.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-3"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mppqsibq9f",
+      "title": "Webapp Phase 3: Validation",
+      "path": "issues/mppqsibq9f.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-3",
+        "validation"
+      ],
+      "priority": 2
+    }
   ],
   "childrenOf": {
+    "mppqqp8y26": [
+      "mpqn5bi2us"
+    ],
+    "mpqn5bi2us": [
+      "mpqn5i7wui",
+      "mpqn5qf6zq"
+    ]
   }
 }

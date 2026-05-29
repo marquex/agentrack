@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-29T08:09:47.387Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T08:09:47.387Z",
+    "author": "cto",
+    "content": {
+      "title": "Validate isolated E2E data for webapp",
+      "priority": 1,
+      "assignee": "webapp-validator",
+      "parentId": "mpqn5bi2us",
+      "tags": [
+        "webapp",
+        "e2e-isolation",
+        "validation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-29T08:10:55.285Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpqn5i7wui"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T08:11:13.170Z",
+    "author": "cto",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-29T08:12:26.321Z",
+    "author": "cto",
+    "content": {
+      "id": "mpqn94vw5f",
+      "content": "## Scope: Validate isolated E2E data for webapp\n\nThe implementation (mpqn5i7wui) will set up isolated test data infrastructure. Your job is to validate it works correctly.\n\n### Validation steps:\n\n1. **Run all E2E tests:** cd packages/webapp && npx playwright test — all 114+ tests must pass\n2. **Verify isolation:** After tests complete, check that validation/.e2edata/issues/ contains test-created issues\n3. **Verify main .agentrack/ untouched:** Run agt list from repo root — should show only the ~11 real issues, NOT test issues\n4. **Verify global-setup runs:** Check that resetWorktreeData() fires before each test run (data should be clean at start)\n5. **Verify env var:** Confirm the server is using AGENTRACK_CWD (not the old AGENTACK_CWD)\n\n### After validation passes:\n- Update your expertise at .agentic/expertise/webapp-validator/webapp-validator-index.yaml:\n  - Remove gotcha: No issue deletion API means test data accumulates across runs (now solved)\n  - Update test_isolation pattern to mention isolated directory + global-setup reset\n  - Add pattern about AGENTRACK_CWD / isolated data"
+    }
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-28T17:03:07.523Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:03:07.523Z",
+    "author": "cto",
+    "content": {
+      "title": "Webapp Phase 2: Validation",
+      "priority": 2,
+      "assignee": "webapp-validator",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-2",
+        "validation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-28T17:03:14.777Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mppqrbsqix"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:18:46.215Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-28T17:53:52.665Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mppqrbsqix",
+      "reason": "Blocker issue mppqrbsqix transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:54:58.102Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T18:20:46.514Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mpptjlnbnj",
+      "content": "## Phase 2 Validation Complete\n\n### Validation Results\n\n**TypeScript**: ✅ Zero errors (`tsc --noEmit` and `bun run build` pass)\n**Build**: ✅ Clean build (2059 modules, 472KB JS gzip 152KB)\n**Phase 1 E2E**: ✅ 7/7 passed\n**Phase 2 E2E**: ✅ 55/55 passed (new test suite created)\n**Total E2E**: ✅ 62/62 passed\n\n### Phase 2 Acceptance Criteria\n\n| Criteria | Status |\n|----------|--------|\n| Issue list loads and displays real data from agentrack | ✅ PASS |\n| Can create a new issue via the dialog | ✅ PASS |\n| Can view issue's full details | ✅ PASS |\n| Can change status, priority, assignee, title, description | ✅ PASS |\n| Filters work (status, assignee, search) | ✅ PASS |\n| Navigation between list and detail works | ✅ PASS |\n\n### Test Coverage Created\n\n**e2e/phase2-validation.spec.ts** — 55 E2E tests covering:\n\n- **Backend API tests (29 tests)**:\n  - GET /api/issues: 9 tests (array response, shape validation, status/assignee/search/tags/parentId filters, case-insensitive search)\n  - POST /api/issues: 7 tests (minimal create, full create, validation errors for missing/empty/non-string title, default status/priority)\n  - GET /api/issues/:id: 2 tests (full detail with timestamps, 404 error)\n  - PATCH /api/issues/:id: 9 tests (update status/priority/assignee/title/description/tags, clear assignee, empty body 400, 404 error)\n  - GET /api/users: 2 tests (array response, shape validation)\n\n- **Frontend tests (26 tests)**:\n  - Issues List Page: 6 tests (heading, issue rows, status badges, priority indicators, no console errors, empty state)\n  - Filtering: 3 tests (search by title, status dropdown options, clear filters)\n  - Create Issue Dialog: 4 tests (open dialog, form fields present, create issue flow, disabled submit)\n  - Navigation: 3 tests (list→detail, detail→list back, 404 page)\n  - Issue Detail Page: 10 tests (title/ID display, description, status badge, timestamps, tags, inline edit title/description, change status/priority/assignee via dropdown)\n\n### Quality Issues Found\n\n1. **Select.Value shows raw value instead of label** (LOW): The base-ui `Select.Value` component in the filter dropdowns displays the raw value (e.g., \"all\") instead of the user-friendly label (e.g., \"All statuses\"). This affects both the status and assignee filter dropdowns.\n\n2. **No test data cleanup**: The agentrack API has no DELETE endpoint for issues, so test data accumulates across E2E test runs. Tests use unique titles to avoid collisions.\n\n3. **No unit/integration tests**: The project currently has only E2E tests. Unit tests for API client, hooks, and components would improve test speed and catch regressions earlier."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T18:20:55.721Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

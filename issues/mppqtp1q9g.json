@@ -1,0 +1,47 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-28T17:04:38.783Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:04:38.783Z",
+    "author": "cto",
+    "content": {
+      "title": "Webapp Phase 5: Polish (responsive, loading, empty states, sorting)",
+      "priority": 4,
+      "assignee": "webapp-developer",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-5"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-28T17:04:44.809Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mppqt90kot"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T17:06:35.946Z",
+    "author": "cto",
+    "content": {
+      "id": "mppqw7qlar",
+      "content": "Phase 5 scope (see .agentic/specs/webapp-spec.md and .agentic/specs/webapp-roadmap.md Phase 5):\n\nTASKS:\n1. Responsive design:\n   - Mobile card layout for issue list (< 768px)\n   - Sidebar collapse on tablet/mobile\n   - Touch-friendly interactions\n   - Proper viewport meta tag\n2. Loading and error states:\n   - Skeleton loaders for issue list and detail\n   - Error boundaries for failed API calls\n   - Toast notifications for mutations (success/error)\n   - Retry buttons on failed requests\n3. Empty states:\n   - No issues yet — friendly onboarding message\n   - No search results — clear message with filter reset\n   - No comments — prompt to add first comment\n   - No blockages — prompt to add dependencies\n4. Sorting:\n   - Sort by: priority, status, assignee, updated date, created date\n   - Click column headers to toggle sort direction\n   - Persist sort preference in localStorage\n5. Filter improvements:\n   - Tag filter (multi-select from existing tags)\n   - Combined filters (all filters work together)\n   - Active filter chips with clear button\n   - URL query params for shareable filter state\n\nVALIDATION CRITERIA:\n- App works well on mobile (375px, 768px, 1024px)\n- Loading states show skeletons, not empty space\n- Errors display user-friendly messages\n- Empty states guide the user\n- Sorting works correctly\n- All filters combine properly"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:18:46.389Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  }
+]

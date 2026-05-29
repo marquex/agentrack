@@ -1,0 +1,63 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-28T17:04:01.466Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:04:01.466Z",
+    "author": "cto",
+    "content": {
+      "title": "Webapp Phase 4: Users & sync",
+      "assignee": "webapp-developer",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-4"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-28T17:04:08.677Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mppqsibq9f"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-28T17:06:25.215Z",
+    "author": "cto",
+    "content": {
+      "id": "mppqvz16db",
+      "content": "Phase 4 scope (see .agentic/specs/webapp-spec.md and .agentic/specs/webapp-roadmap.md Phase 4):\n\nBACKEND (5 endpoints):\n1. POST /api/users — register new user\n2. DELETE /api/users/:name — revoke user\n3. POST /api/users/:name/regenerate — regenerate token\n4. POST /api/sync/push — push local changes to remote\n5. POST /api/sync/pull — pull remote changes\n\nFRONTEND:\n6. User management UI (list users, register new user dialog, revoke with confirmation, regenerate token showing new token)\n7. Sync controls in header (Push/Pull buttons, loading spinner, success/error feedback, last sync timestamp)\n\nVALIDATION CRITERIA:\n- Can register a new user via the UI\n- Can revoke a user\n- Can regenerate a token\n- Push button syncs changes to remote\n- Pull button fetches remote changes\n- Sync status feedback is clear"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:18:46.320Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-29T07:16:38.713Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mppqsibq9f",
+      "reason": "Blocker issue mppqsibq9f transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T07:17:39.524Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

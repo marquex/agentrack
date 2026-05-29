@@ -1,0 +1,39 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-29T08:09:37.246Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T08:09:37.246Z",
+    "author": "cto",
+    "content": {
+      "title": "Implement isolated E2E data for webapp",
+      "priority": 1,
+      "assignee": "webapp-developer",
+      "parentId": "mpqn5bi2us",
+      "tags": [
+        "webapp",
+        "e2e-isolation"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T08:11:13.083Z",
+    "author": "cto",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-29T08:12:07.783Z",
+    "author": "cto",
+    "content": {
+      "id": "mpqn8q7z35",
+      "content": "## Scope: Implement isolated E2E data for webapp validation\n\n**Problem:** The 114+ Playwright E2E tests create issues through the webapp API into the main .agentrack/ directory. No delete API exists, so test data accumulates permanently. Recently required manual deletion of 416 test issues.\n\n**Solution:** Use the existing validation/.e2edata/ isolated git worktree (same pattern as library-validator) by pointing the webapp server at it via an env var.\n\n### Changes (all in packages/webapp/):\n\n**1. Rename env var in server/utils/tracker.ts:**\n- Change AGENTACK_CWD → AGENTRACK_CWD (fix typo in env var name)\n- Update JSDoc comment to match\n\n**2. Create e2e/setup.ts — E2E helpers:**\n- getValidationDir() — resolve validation/ relative to project root via git rev-parse --show-toplevel\n- getE2EDataDir() — returns join(getValidationDir(), .e2edata)\n- resetWorktreeData() — overwrite index.json, dependencies.json, users.json, config.json to empty defaults; delete all files in issues/ directory; ensure pointer file at validation/.agentrack.json. ~1ms, no git ops.\n- ensureE2EWorktree() — idempotent: check if validation/.e2edata/ exists, if not run agt init --branch e2edata with cwd=validation/\n\n**3. Create e2e/global-setup.ts — Playwright globalSetup:**\n- Import ensureE2EWorktree + resetWorktreeData from setup.ts\n- Run both before all tests (once, before server starts)\n\n**4. Modify playwright.config.ts:**\n- Add globalSetup: require.resolve(./e2e/global-setup)\n- Add env: { AGENTRACK_CWD: validationDir } to the backend webServer config (resolve validationDir via git rev-parse)\n- Frontend webServer config stays unchanged\n\n### What does NOT change:\n- No changes to existing test files (phase1/2/3 validation specs are data-agnostic)\n- No changes to server/index.ts\n- No changes to validation/.e2edata/ itself (reused as-is)\n\n### Verification:\n- Run cd packages/webapp && npx playwright test — all 114 tests pass against isolated data\n- Verify validation/.e2edata/issues/ contains test-created issues after the run\n- Verify main repo .agentrack/ is untouched\n\nFull spec at: .agentic/tmp/isolated-web-validation.md"
+    }
+  }
+]

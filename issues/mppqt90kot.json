@@ -1,0 +1,46 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-28T17:04:18.191Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:04:18.191Z",
+    "author": "cto",
+    "content": {
+      "title": "Webapp Phase 4: Validation",
+      "assignee": "webapp-validator",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-4",
+        "validation"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-28T17:04:28.995Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mppqswn3jl"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-28T17:18:46.355Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-29T08:11:02.953Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpqn5qf6zq"
+    }
+  }
+]
