@@ -11,9 +11,10 @@ hierarchy:
       - library-releaser (release prep, documentation, build, version management, publishing)
       - webapp-developer (full-stack web development — React frontend + Hono backend)
       - webapp-validator (webapp testing, quality assurance, spec compliance)
-    pending_setup: []  # All agents fully set up as of session 80
+      - webapp-styler (UI/UX expert — visual design, interaction patterns, accessibility, polish)
+    pending_setup: []  # All agents fully set up as of session 85
 
-expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) has code on disk but not committed. Phase 4 validation (mppqt90kot) todo, blocked by impl AND mpr50trdgw. E2E isolation fix: mpr50trdgw (webapp-developer, todo, P1) — dedicated test ports 3001/5174, reuseExistingServer false, vite env vars, spec URL updates. Validation: mpr51myb9q (webapp-validator, todo, blocked by mpr50trdgw) — verify no pollution in main .agentrack/. Also blocked mppqt90kot on mpr50trdgw. cto now registered in agentrack. Board: 3 done + 5 open (mppqqp8y26, mppqswn3jl, mppqt90kot, mpr50trdgw, mpr51myb9q). NEXT: agent runner picks up mpr50trdgw for webapp-developer. Lesson: agt create defaults to idea status — must always agt update to todo immediately after creation, or agents won't pick up the work."
+expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation: mpr50trdgw + mpr51myb9q both DONE. New: UI/UX audit mpr7q3putx (webapp-styler, todo, P2) — read-only audit of webapp frontend, deliverable is a comment with prioritized findings. CTO review mpr7qd6bjq (todo, blocked by mpr7q3putx) — process audit findings and create implementation tickets for webapp-styler. Board: 5 done + 5 open (mppqqp8y26, mppqswn3jl, mppqt90kot, mpr7q3putx, mpr7qd6bjq). NEXT: agent runner picks up mpr7q3putx for webapp-styler."
 
 project_overview:
   name: agentrack

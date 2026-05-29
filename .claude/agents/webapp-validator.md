@@ -7,6 +7,7 @@ skills:
   - agent-expertise
   - agentrack
   - agentrack-implement
+  - playwright-cli
 access:
   - path: .agentic/expertise/webapp-validator/**
     permissions: [read, write, delete]

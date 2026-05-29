@@ -9,6 +9,7 @@ subordinates:
   - library-releaser
   - webapp-developer
   - webapp-validator
+  - webapp-styler
 skills:
   - agent-expertise
   - agentrack
