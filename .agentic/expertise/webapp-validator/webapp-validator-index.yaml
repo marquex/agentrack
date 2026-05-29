@@ -31,6 +31,8 @@ testing_approach:
       - e2e/phase1-validation.spec.ts (7 tests)
       - e2e/phase2-validation.spec.ts (55 tests)
       - e2e/phase3-validation.spec.ts (52 tests)
+      - e2e/setup.ts (isolated data helpers)
+      - e2e/global-setup.ts (Playwright globalSetup — resets e2edata before each run)
 
 patterns:
   base_ui_select:
@@ -40,7 +42,8 @@ patterns:
     issue: "waitForLoadState(networkidle) resolves before TanStack Query makes API calls. Use waitForResponse instead."
     pattern: "const responsePromise = page.waitForResponse(...); await page.goto(url); await responsePromise;"
   test_isolation:
-    issue: "Tests create persistent issues (no DELETE API). Use unique titles with timestamp+random to avoid collisions."
+    issue: "Tests run against isolated validation/.e2edata/ worktree via AGENTRACK_CWD env var. Data is reset by global-setup.ts before each run."
+    pattern: "globalSetup in e2e/global-setup.ts calls ensureE2EWorktree() + resetWorktreeData(). Server receives AGENTRACK_CWD via playwright.config.ts webServer env. Main .agentrack/ stays untouched."
   comment_edit_textarea:
     issue: "When editing comments, the textarea is controlled — its innerText doesn't match the value. Filter by hasText fails."
     pattern: "Use container locator (e.g., .rounded-lg.border) then locate textarea inside, rather than filter by hasText."
@@ -51,7 +54,7 @@ patterns:
 gotchas:
   - "base-ui Select.Value does not display the SelectItem label text — shows raw value string"
   - "TanStack Query fetches happen after React hydration, so networkidle is unreliable"
-  - "No issue deletion API means test data accumulates across runs"
+  - "E2E data is isolated via validation/.e2edata/ worktree — resetWorktreeData() clears all issues before each test run (global-setup.ts)"
   - "shadcn/ui with base-ui uses different DOM structure than Radix-based shadcn"
   - "Controlled textareas don't have innerText matching their value — use locator directly, not hasText filter"
   - "waitForResponse must be set up BEFORE the triggering click, not after — otherwise the response is missed"

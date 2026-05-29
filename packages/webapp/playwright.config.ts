@@ -1,17 +1,21 @@
 import { defineConfig } from "@playwright/test";
+import { getE2EDataDir } from "./e2e/setup.js";
+import { fileURLToPath } from "node:url";
 
 /**
  * Playwright configuration for agentrack webapp E2E tests.
  *
- * Tests validate Phase 1 requirements:
- * - Server starts and serves health endpoint
- * - Frontend renders with correct header
- * - Vite proxy forwards /api requests to backend
+ * Tests run against the isolated validation/.e2edata/ worktree
+ * so that test data doesn't pollute the main .agentrack/ directory.
  */
+const e2eDataDir = getE2EDataDir();
+const globalSetupPath = fileURLToPath(new URL("./e2e/global-setup.ts", import.meta.url));
+
 export default defineConfig({
   testDir: "./e2e",
   timeout: 30_000,
   retries: 0,
+  globalSetup: globalSetupPath,
   use: {
     baseURL: "http://localhost:5173",
     headless: true,
@@ -30,6 +34,9 @@ export default defineConfig({
       port: 3000,
       reuseExistingServer: true,
       timeout: 10_000,
+      env: {
+        AGENTRACK_CWD: e2eDataDir,
+      },
     },
     {
       command: "cd frontend && bun run dev",
