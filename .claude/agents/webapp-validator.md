@@ -88,6 +88,23 @@ When creating E2E tests:
 4. Use Playwright's assertions and selectors for robust, maintainable tests
 5. Configure Playwright appropriately for the webapp's development and production URLs
 
+## Future E2E Test Data Isolation
+
+We are working on implementing isolated test data for E2E tests to prevent pollution of the main `.agentrack/` data. The plan is:
+
+E2E tests run against an isolated git worktree at `validation/.e2edata/` — NOT the main `.agentrack/`.
+The Playwright config (`playwright.config.ts`) will pass `AGENTRACK_CWD` (currently misnamed `AGENTACK_CWD`) env var to the backend webServer,
+pointing it at the isolated directory. A `globalSetup` script (`e2e/global-setup.ts`) resets all data to
+empty defaults before each test run.
+
+**Key rules:**
+- Tests must NEVER run against the main `.agentrack/` — that's real production data
+- If `reuseExistingServer: true` grabs a server started without `AGENTRACK_CWD`, kill it and let
+Playwright start a fresh one
+- The isolated worktree is created idempotently via `ensureE2EWorktree()` in `e2e/setup.ts`
+- Data reset (`resetWorktreeData()`) overwrites index/dependencies/users/config JSONs and clears
+`issues/` — takes ~1ms
+
 ## Using agentrack as the issue tracker
 
 You manage your work through agentrack issues. Use the `agentrack` skill to create, update, and monitor issues. If you don't update your issues, your manager won't know what you're working on or when it's done and the work gets stuck.

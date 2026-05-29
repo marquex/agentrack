@@ -9,8 +9,30 @@ overview:
   specs: .agentic/specs/
   manager: cto
 
-technology_stack: []
+technology_stack:
+  - React 19 + TypeScript 5.7
+  - Vite 6.x with @tailwindcss/vite plugin
+  - shadcn/ui (base-ui/react based) for components
+  - TanStack Query 5.x for server state
+  - React Router 7.x for routing
+  - Hono + Bun for the backend server
+  - Tailwind CSS 4.x for styling
+  - Lucide React for icons
 
-patterns: []
+patterns:
+  - Server routes in server/routes/ follow Hono router pattern
+  - Frontend API layer in frontend/src/api/ with apiClient fetch wrapper
+  - TanStack Query hooks in frontend/src/hooks/ use-query pattern
+  - Components split into issues/, issue-detail/, layout/, shared/, ui/
+  - Two routes: / (IssuesPage) and /issues/:id (IssueDetailPage)
+  - IssueTree component for recursive expandable sub-issues
+  - Build command: `cd packages/webapp && npm run build`
+  - Typecheck: `cd packages/webapp/frontend && npx tsc --noEmit`
 
-gotchas: []
+gotchas:
+  - TypeScript interface intersection syntax (interface A {} & B) is invalid — use type A = X | Y instead
+  - No lint command configured in the project
+  - Tests are Playwright E2E only (no unit tests)
+  - Frontend package.json scripts: dev, build, preview (no lint/test)
+  - The agentrack Tracker API methods may return either success objects or error objects — server routes need to check both cases
+  - shadcn/ui components are base-ui/react based (not radix-ui), so some APIs differ from standard shadcn

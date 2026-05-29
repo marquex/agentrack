@@ -13,7 +13,7 @@ hierarchy:
       - webapp-validator (webapp testing, quality assurance, spec compliance)
     pending_setup: []  # All agents fully set up as of session 80
 
-expertise_status: "Webapp initiative planned and tracked (parent mppqqp8y26, in-progress). 10 issues across 5 phases with sequential dependencies. Webapp-developer and webapp-validator fully set up (agent files + expertise folders exist). Specs at .agentic/specs/webapp-spec.md and webapp-roadmap.md. Phase 1 unblocked (mppqqte6gs), awaiting agent runner. Mentions feature shipped and closed. Public docs at docs/markdown/ (8 files). Key lesson: docs+build task must be created in every issue chain that touches CLI/API."
+expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. TOP PRIORITY: Isolated E2E data fix (parent mpqn5bi2us) — webapp-developer implements (mpqn5i7wui, todo, P1), webapp-validator validates (mpqn5qf6zq, blocked by impl). Phase 4 validation (mppqt90kot) blocked by isolation fix — prevents test data pollution in main .agentrack/. Key lessons: (1) docs+build task must be created in every issue chain that touches CLI/API, (2) for chained work, set all issues to todo upfront and let blockages control order, (3) E2E tests must use isolated data — no delete API means pollution is permanent."
 
 project_overview:
   name: agentrack
@@ -21,7 +21,7 @@ project_overview:
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
   distribution: npm package with CLI entry point (`agt` command)
-  stage: "Dogfooding active. All 7 library phases complete + build pipeline. Mentions feature shipped. Webapp initiative active (parent mppqqp8y26): 5-phase plan, 10 issues, webapp-developer and webapp-validator agents set up. Phase 1 unblocked and ready. Old issues (configurable branch, E2E tests) from previous worktree — not in current index. Public docs at docs/markdown/ (8 files)."
+  stage: "Dogfooding active. All 7 library phases complete + build pipeline. Mentions feature shipped. Webapp initiative active (parent mppqqp8y26, in-progress): Phases 1-3 done, Phase 4 impl in-progress. TOP PRIORITY: Isolated E2E data fix (mpqn5bi2us) — blocks Phase 4 validation until resolved. 114+ Playwright tests were polluting main .agentrack/ (416 issues manually cleaned). Public docs at docs/markdown/ (8 files)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
   docs_tool: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed. Docs overhaul in progress (mpdpt4rego), validation pending (mpdpv6gw49). Future: Docusaurus site consuming docs/markdown/ (mpdxdbqwt9, idea). Spec: .agentic/specs/user-docs-spec.md."
@@ -122,6 +122,18 @@ delegation_workflow:
   access_gaps: |
     Resolved: user granted CTO access to .github/ folder. CTO now owns workflow files.
     Root .gitignore is also writable by CTO.
+  validation_rejection_flow: |
+    When a validator rejects an implementation (reports issues):
+    1. Validator posts a comment on their issue with findings and keeps it in their status (or reopens)
+    2. CTO reviews the findings and reopens the implementation issue (move back to todo/in-progress)
+    3. Developer picks up the reopened issue, makes fixes, marks done again
+    4. Validator re-validates — cycle continues until implementation passes
+    This is the same pattern used for library issues (e.g., configurable branch mpfn4dkotn fix cycle).
+  webapp_delegation_pattern: |
+    Webapp issues follow sequential phases: impl → validate → next phase impl.
+    ALL issues in a chain should be set to todo upfront. Blockages control the execution order.
+    Only todo issues are picked up by `agt next`. Idea is invisible to the runner.
+    Do NOT use idea status for work that should flow through the agent runner automatically.
   note: "Self-check and validation steps are enforced via agent system prompts. No need to duplicate in delegation messages."
   library-developer:
     focus: "Focus delegation messages on the implementation task itself. The agent self-checks typecheck+lint+test before completion."
@@ -377,4 +389,7 @@ session_log:
     summary: "Handled /work-mention mpoe57bo11 — mention was just 'Hey @cto ' with no specific request on mpgquqm43b (webapp Phase 4a). Incomplete/accidental mention, no action needed. Marked as read. Updated expertise: closed both parent issues mpo1tdrjdm (mentions feature) and mpo5brxipq (issueTitle removal) — all children were done. Noted stale old issues (configurable branch mpfn4dkotn, E2E refactor mpfobnq8ty) no longer in index — likely from different worktree branch. Discovered duplicate mentions chain mpmvdvi6lr (also all done)."
   - session: 80
     date: "2026-05-28"
-    summary: "Planned webapp initiative from tmp/webapp.md. Existing specs (webapp-spec.md, webapp-roadmap.md) already aligned with requirements. Created 11 issues in agentrack: parent mppqqp8y26 (in-progress, CTO), 5 implementation tasks for webapp-developer, 5 validation tasks for webapp-validator. Sequential dependency chain: Phase 1 impl → Phase 1 validate → Phase 2 impl → ... → Phase 5 validate. Each implementation task has detailed scope comment referencing the spec and roadmap. Phase 1 (mppqqte6gs) is unblocked and ready for webapp-developer. Updated CTO expertise: webapp agents marked as fully set up (pending_setup cleared)."
+    summary: "Planned webapp initiative from tmp/webapp.md. Existing specs (webapp-spec.md, webapp-roadmap.md) already aligned with requirements. Created 11 issues in agentrack: parent mppqqp8y26 (in-progress, CTO), 5 implementation tasks for webapp-developer, 5 validation tasks for webapp-validator. Sequential dependency chain: Phase 1 impl → Phase 1 validate → Phase 2 impl → ... → Phase 5 validate. Each implementation task has detailed scope comment referencing the spec and roadmap. Initially left all issues in idea status — agent runner couldn't pick them up. Moved Phase 1 (mppqqte6gs) to todo, confirmed via agt next. Key lesson: agent runner only picks up todo status, not idea."
+  - session: 81
+    date: "2026-05-29"
+    summary: "Planned isolated E2E data fix as TOP PRIORITY. Problem: webapp-validator's 114+ Playwright tests pollute main .agentrack/ with test issues (no delete API — recently cleaned up 416 manually). Solution: use validation/.e2edata/ isolated worktree via AGENTRACK_CWD env var (rename from typo AGENTACK_CWD). Spec at .agentic/tmp/isolated-web-validation.md. Created issue chain under mppqqp8y26: parent mpqn5bi2us (CTO, in-progress, P1), impl mpqn5i7wui (webapp-developer, todo), validation mpqn5qf6zq (webapp-validator, blocked by impl). Blocked Phase 4 validation (mppqt90kot) on isolation validation — prevents further pollution before fix ships. Phase 4 impl (mppqswn3jl) still in-progress with webapp-developer in parallel."

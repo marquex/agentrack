@@ -1,0 +1,19 @@
+{
+  "name": "agentrack-webapp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:server": "bun run --watch server/index.ts",
+    "dev:frontend": "cd frontend && bun run dev",
+    "dev": "bun run dev:server & bun run dev:frontend",
+    "build": "cd frontend && bun run build && cd .. && echo 'Frontend built successfully'"
+  },
+  "dependencies": {
+    "agentrack": "workspace:packages/library",
+    "hono": "^4.7.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
