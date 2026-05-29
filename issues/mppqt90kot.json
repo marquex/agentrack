@@ -42,5 +42,14 @@
     "content": {
       "blockerId": "mpqn5qf6zq"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-29T15:12:25.495Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpqn5qf6zq",
+      "reason": "Blocker issue mpqn5qf6zq transitioned to done"
+    }
   }
 ]
