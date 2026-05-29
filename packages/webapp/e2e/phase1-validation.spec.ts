@@ -12,12 +12,12 @@ import { test, expect } from "@playwright/test";
 test.describe("Phase 1 Validation", () => {
   test.describe("Backend: Health Endpoint", () => {
     test("GET /api/health returns 200 status", async ({ request }) => {
-      const response = await request.get("http://localhost:3000/api/health");
+      const response = await request.get("http://localhost:3001/api/health");
       expect(response.status()).toBe(200);
     });
 
     test("GET /api/health returns correct JSON shape", async ({ request }) => {
-      const response = await request.get("http://localhost:3000/api/health");
+      const response = await request.get("http://localhost:3001/api/health");
       const body = await response.json();
 
       expect(body).toHaveProperty("status");
@@ -29,7 +29,7 @@ test.describe("Phase 1 Validation", () => {
     test("GET /api/health returns Content-Type application/json", async ({
       request,
     }) => {
-      const response = await request.get("http://localhost:3000/api/health");
+      const response = await request.get("http://localhost:3001/api/health");
       const contentType = response.headers()["content-type"];
       expect(contentType).toContain("application/json");
     });

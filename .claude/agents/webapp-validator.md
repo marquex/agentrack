@@ -90,10 +90,8 @@ When creating E2E tests:
 
 ## Future E2E Test Data Isolation
 
-We are working on implementing isolated test data for E2E tests to prevent pollution of the main `.agentrack/` data. The plan is:
-
 E2E tests run against an isolated git worktree at `validation/.e2edata/` — NOT the main `.agentrack/`.
-The Playwright config (`playwright.config.ts`) will pass `AGENTRACK_CWD` (currently misnamed `AGENTACK_CWD`) env var to the backend webServer,
+The Playwright config (`playwright.config.ts`) pass `AGENTRACK_CWD` (currently misnamed `AGENTACK_CWD`) env var to the backend webServer,
 pointing it at the isolated directory. A `globalSetup` script (`e2e/global-setup.ts`) resets all data to
 empty defaults before each test run.
 

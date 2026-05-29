@@ -17,7 +17,7 @@
  */
 import { test, expect } from "@playwright/test";
 
-const BASE = "http://localhost:3000";
+const BASE = "http://localhost:3001";
 
 /**
  * Helper: navigate to page and wait for the issues API to respond.

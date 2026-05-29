@@ -8,6 +8,7 @@ import issueRoutes from "./routes/issues.js";
 import userRoutes from "./routes/users.js";
 import commentRoutes from "./routes/comments.js";
 import blockageRoutes from "./routes/blockages.js";
+import syncRoutes from "./routes/sync.js";
 
 const app = new Hono();
 
@@ -21,6 +22,7 @@ app.route("/api/issues", issueRoutes);
 app.route("/api/issues", commentRoutes);
 app.route("/api/issues", blockageRoutes);
 app.route("/api/users", userRoutes);
+app.route("/api/sync", syncRoutes);
 
 // Serve frontend static files (production)
 app.use("/*", serveStatic({ root: "./frontend/dist" }));

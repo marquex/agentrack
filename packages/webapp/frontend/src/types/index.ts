@@ -100,6 +100,32 @@ export type NextIssueResult =
   | { result: string; message: string }
   | IssueDetail;
 
+// ─── Users ──────────────────────────────────────────────────────
+
+export interface RegisterUserResult {
+  result: "OK";
+  name: string;
+  token: string;
+}
+
+export interface RegenerateTokenResult {
+  result: "OK";
+  name: string;
+  token: string;
+}
+
+// ─── Sync ───────────────────────────────────────────────────────
+
+export interface SyncPushResult {
+  synced: boolean;
+  commitCount?: number;
+  message?: string;
+}
+
+export interface SyncPullResult {
+  updated: boolean;
+}
+
 // ─── Error ───────────────────────────────────────────────────────
 
 export interface ApiErrorResponse {

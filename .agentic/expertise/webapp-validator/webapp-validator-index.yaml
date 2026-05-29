@@ -31,6 +31,7 @@ testing_approach:
       - e2e/phase1-validation.spec.ts (7 tests)
       - e2e/phase2-validation.spec.ts (55 tests)
       - e2e/phase3-validation.spec.ts (52 tests)
+      - e2e/phase4-validation.spec.ts (38 tests)
       - e2e/setup.ts (isolated data helpers)
       - e2e/global-setup.ts (Playwright globalSetup — resets e2edata before each run)
 
@@ -44,12 +45,25 @@ patterns:
   test_isolation:
     issue: "Tests run against isolated validation/.e2edata/ worktree via AGENTRACK_CWD env var. Data is reset by global-setup.ts before each run."
     pattern: "globalSetup in e2e/global-setup.ts calls ensureE2EWorktree() + resetWorktreeData(). Server receives AGENTRACK_CWD via playwright.config.ts webServer env. Main .agentrack/ stays untouched."
+    validated: "2026-05-29: Verified across 3 consecutive full runs (456 test executions). git status/diff on .agentrack/ showed zero changes each time. e2edata had 96-98 issue files after each run."
   comment_edit_textarea:
     issue: "When editing comments, the textarea is controlled — its innerText doesn't match the value. Filter by hasText fails."
     pattern: "Use container locator (e.g., .rounded-lg.border) then locate textarea inside, rather than filter by hasText."
   history_section_locator:
     issue: "getByText('History') can match both the issue title (containing 'History') and the History section heading, causing strict mode violations."
     pattern: "Use getByRole('button', { name: /History/ }) for the collapsible history toggle. Avoid 'History' in test issue titles."
+  users_link_strict_mode:
+    issue: "getByRole('link', { name: /Users/ }) matches both the 'Users' nav link AND issue titles containing 'Users' (e.g., 'Webapp Phase 4: Users & sync'), causing strict mode violations."
+    pattern: "Use getByRole('link', { name: 'Users', exact: true }) for the Users navigation link."
+  base_ui_dialog_confirm:
+    issue: "base-ui Dialog.Popup confirm button clicks may not trigger React onClick handlers via Playwright. The dialog renders correctly and cancel works, but destructive/primary confirm buttons don't fire mutations."
+    pattern: "For revoke/delete confirm dialogs, use API directly for the action and verify UI updates via page reload. Test dialog visibility separately."
+  tanstack_query_cache_navigation:
+    issue: "When navigating between pages (e.g., Users → Issues), TanStack Query may serve cached data (staleTime: 30s) without making a new API call. waitForResponse for the re-fetch times out."
+    pattern: "Don't rely on waitForResponse for re-fetch after navigation. Just verify URL change and page content. Use page.goto() or reload for fresh data."
+  known_bugs:
+    bug_1: "POST /api/users/:name/regenerate returns 401 INVALID_TOKEN. Server doesn't forward user token to tracker.usersRegenerate(). In open mode, resolveAuthor returns 'anonymous' which fails self-service check."
+    bug_2: "POST /api/sync/push and /api/sync/pull return 500 NOT_INITIALIZED. Sync routes pass AGENTRACK_CWD (worktree dir) directly to pushWorktree/pullWorktree which expect the project root. Should use resolveTrackerDir()."
 
 gotchas:
   - "base-ui Select.Value does not display the SelectItem label text — shows raw value string"
@@ -61,3 +75,10 @@ gotchas:
   - "Issue tree rows can duplicate when both parent and child appear — use .first() to avoid strict mode violations"
   - "Avoid using keywords like 'History' or 'Blockages' in test issue titles — they collide with section headings in strict mode"
   - "Phase 2 PATCH beforeAll test is flaky with parallel workers — shared state race condition"
+  - "2-3 tests fail per run due to parallel worker shared state races — the specific failing tests vary each run (not deterministic). Common flaky: 'renders the agentrack header' (phase1), 'filters by search title substring' (phase2), 'adds blockages and returns 200' (phase3), 'defaults priority to 3' (phase2), 'navigates from list to detail page' (phase2)"
+  - "E2E isolation VERIFIED (2026-05-29): 3 runs, 456 tests, zero .agentrack/ pollution. Ports 3001/5174, AGENTRACK_CWD, reuseExistingServer:false all working"
+  - "getByRole('link', { name: /Users/ }) triggers strict mode — use exact: true to match only the nav link"
+  - "base-ui Dialog.Popup confirm buttons may not trigger React onClick via Playwright — use API for action, test dialog visibility separately"
+  - "TanStack Query staleTime (30s) means navigation may not trigger API re-fetch — don't waitForResponse for navigated-to page data"
+  - "BUG: /api/users/:name/regenerate fails with 401 — server doesn't forward user token"
+  - "BUG: /api/sync/push and /api/sync/pull fail with 500 NOT_INITIALIZED — AGENTRACK_CWD passed to worktree functions instead of project root"
