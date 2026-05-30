@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type {
   BlockagesAddParams,
@@ -24,6 +24,8 @@ import type {
   IndexEntry,
   IndexFile,
   InitResult,
+  IssueDeleteParams,
+  IssueDeleteResult,
   IssueId,
   IssueProperties,
   IssueStatus,
@@ -58,6 +60,7 @@ import {
   insertEntry,
   readIndex,
   removeChild,
+  removeEntry,
   updateEntry,
   writeIndex,
 } from "./index-manager";
@@ -69,6 +72,7 @@ import {
   detectCycle,
   getImpactScore,
   readDependencies,
+  removeAllBlockagesForIssue,
   resolveBlockage,
   writeDependencies,
 } from "./dependency-manager";
@@ -79,6 +83,7 @@ import {
   readMentionsFile,
   rebuildMentionsIndex,
   removeCommentMentions,
+  removeIssueMentions,
   writeMentionsFile,
 } from "./mentions";
 import {
@@ -938,6 +943,137 @@ export class Tracker {
     }
 
     return replayEvents(issueFilePath);
+  }
+
+  /**
+   * Delete an issue and all its descendants.
+   *
+   * Hard deletes the issue and all children (depth-first, leaves first) from:
+   * - index.json (entries and childrenOf references)
+   * - dependencies.json (all blockage references)
+   * - mentions.json (all mention entries)
+   * - Event files on disk
+   *
+   * @param id - The issue ID to delete
+   * @param params - Optional parameters
+   * @param params.author - Override author (resolved by auth layer if not provided)
+   * @returns `{ result: "OK", deletedIds }` with all deleted IDs in order, or a AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   *
+   * @example
+   * ```typescript
+   * const result = await tracker.issueDelete("abc123def4");
+   * if (result.result === "OK") console.log("Deleted:", result.deletedIds);
+   * ```
+   */
+  async issueDelete(id: IssueId, _params?: IssueDeleteParams): Promise<IssueDeleteResult> {
+    const trackerDir = resolveTrackerDir(this.cwd);
+    if (!trackerDir) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_INITIALIZED.result,
+        "No .agentrack/ directory found. Run `agt init` first.",
+        ErrorCodes.NOT_INITIALIZED.exitCode,
+      );
+    }
+
+    const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
+    const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
+    const authResult = resolveAuthor({ config, users, requiresWrite: true });
+    if (authResult instanceof AgentrackError) return authResult;
+
+    const index = await readIndex(trackerDir);
+    const entry = findEntry(index, id);
+    if (!entry) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_FOUND.result,
+        `Issue \`${id}\` not found in index.`,
+        ErrorCodes.NOT_FOUND.exitCode,
+      );
+    }
+
+    // Collect ALL descendants recursively (depth-first, build flat array leaves-first)
+    const collectDescendants = (parentId: IssueId): IssueId[] => {
+      const childIds = getChildren(index, parentId);
+      const result: IssueId[] = [];
+      for (const childId of childIds) {
+        // Recurse into this child's children first (depth-first)
+        result.push(...collectDescendants(childId));
+        result.push(childId);
+      }
+      return result;
+    };
+
+    const descendantIds = collectDescendants(id);
+
+    let updatedIndex = index;
+    let deps = await readDependencies(trackerDir);
+
+    // Delete descendants (leaves first, parents last)
+    for (const descendantId of descendantIds) {
+      const descendantEntry = findEntry(updatedIndex, descendantId);
+
+      // Clean blockages
+      deps = removeAllBlockagesForIssue(deps, descendantId);
+
+      // Clean mentions
+      await removeIssueMentions(trackerDir, descendantId);
+
+      // Delete event file from disk
+      if (descendantEntry) {
+        const filePath = join(trackerDir, descendantEntry.path);
+        if (existsSync(filePath)) {
+          unlinkSync(filePath);
+        }
+
+        // Remove from parent's childrenOf
+        if (descendantEntry.parentId) {
+          updatedIndex = removeChild(updatedIndex, descendantEntry.parentId, descendantId);
+        }
+      }
+
+      // Remove childrenOf key for this descendant (cleanup)
+      if (updatedIndex.childrenOf[descendantId]) {
+        const { [descendantId]: _, ...restChildrenOf } = updatedIndex.childrenOf;
+        updatedIndex = { ...updatedIndex, childrenOf: restChildrenOf };
+      }
+
+      // Remove from index
+      updatedIndex = removeEntry(updatedIndex, descendantId);
+    }
+
+    // Delete the target issue itself
+    // Clean blockages
+    deps = removeAllBlockagesForIssue(deps, id);
+
+    // Clean mentions
+    await removeIssueMentions(trackerDir, id);
+
+    // Delete event file from disk
+    const filePath = join(trackerDir, entry.path);
+    if (existsSync(filePath)) {
+      unlinkSync(filePath);
+    }
+
+    // Remove from parent's childrenOf
+    if (entry.parentId) {
+      updatedIndex = removeChild(updatedIndex, entry.parentId, id);
+    }
+
+    // Remove childrenOf key for target (cleanup)
+    if (updatedIndex.childrenOf[id]) {
+      const { [id]: _, ...restChildrenOf } = updatedIndex.childrenOf;
+      updatedIndex = { ...updatedIndex, childrenOf: restChildrenOf };
+    }
+
+    // Remove from index
+    updatedIndex = removeEntry(updatedIndex, id);
+
+    // Write updated files
+    await writeIndex(trackerDir, updatedIndex);
+    await writeDependencies(trackerDir, deps);
+
+    return { result: "OK", deletedIds: [...descendantIds, id] };
   }
 
   // ─── Comments ─────────────────────────────────────────────────────

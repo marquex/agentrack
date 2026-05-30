@@ -12,6 +12,7 @@ import {
   commentsUpdateAction,
 } from "./commands/comments";
 import { createAction } from "./commands/create";
+import { deleteAction } from "./commands/delete";
 import { historyAction } from "./commands/history";
 import { initAction } from "./commands/init";
 import { listAction } from "./commands/list";
@@ -121,6 +122,12 @@ export function createProgram(): Command {
     .command("history <issueId>")
     .description("View an issue's raw event history")
     .action(historyAction);
+
+  // ─── delete ────────────────────────────────────────────────────────
+  program
+    .command("delete <issueId>")
+    .description("Delete an issue and all its children")
+    .action(deleteAction);
 
   // ─── comments ─────────────────────────────────────────────────────
   const commentsCmd = program.command("comments").description("Manage comments on issues");

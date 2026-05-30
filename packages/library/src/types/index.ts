@@ -20,6 +20,8 @@ export type {
   CreateResult,
   HistoryResult,
   InitResult,
+  IssueDeleteParams,
+  IssueDeleteResult,
   ListParams,
   ListResult,
   MentionsListResult,

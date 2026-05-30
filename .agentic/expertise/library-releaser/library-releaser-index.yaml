@@ -6,7 +6,7 @@ hierarchy:
   manager: cto
   subordinates: none — leaf agent
 
-expertise_status: "Session 6 — Completed mpfmga9sol (docs for --branch flag). Blocker mpfmfoduo6 was resolved (all 12 validation scenarios passed, 84 new tests). Updated 4 docs files: cli-reference.md, getting-started.md, storing-issues-in-git.md, overview.md. Marked done, reassigned to cto."
+expertise_status: "Session 8 — Reopened mps4viae0a to complete the gap found by CTO: javascript-reference.md was missing issueDelete method docs (cli-reference.md was done in session 7). Added issueDelete section under Issues with params, return type, usage example, and notes. Added IssueDeleteParams/IssueDeleteResult to exported types. Marked done, reassigned to cto."
 
 learnings:
   access_restrictions:
@@ -38,6 +38,7 @@ learnings:
         - "usersList() → UsersListResult"
         - "usersRevoke(name: string) → UsersRevokeResult"
         - "usersRegenerate(name: string) → UsersRegenerateResult"
+        - "issueDelete(id: IssueId, params?: IssueDeleteParams) → IssueDeleteResult — hard delete, cascades to children depth-first"
 
     standalone_exports:
       - "pushWorktree(cwd, message?) — from core/worktree.ts"
@@ -59,6 +60,16 @@ learnings:
       - "agt push has --message flag"
       - "agt blockages add/resolve/delete --by accepts variadic IDs"
       - "agt init has --branch <name> flag (implemented in session 5, branch-config.ts + init.ts)"
+    delete_command:
+      cli_syntax: "agt delete <issue-id>"
+      method: "tracker.issueDelete(id)"
+      behavior: "Hard delete — removes event file from disk, cleans index, blockages, mentions, childrenOf refs"
+      cascade: "Depth-first, leaves-first — all descendants deleted before parent"
+      output: "{ result: 'OK', deletedIds: [...descendantIds, id] } — children first, target last"
+      errors: "NOT_FOUND (issue not in index), NOT_INITIALIZED (no .agentrack dir)"
+      source_files:
+        - "packages/library/src/core/tracker.ts lines 970-1077 — issueDelete method"
+        - "packages/library/src/cli/commands/delete.ts — deleteAction CLI handler"
     branch_flag_details:
       normalization: "Strips leading underscores, validates (letters/digits/dots/underscores/hyphens, no slashes/spaces), then _ prefix for branch, . prefix for dir"
       pointer_file: ".agentrack.json at repo root — contains { branch: '_testing' } for non-default branches"
@@ -89,6 +100,16 @@ learnings:
     docs_accuracy: "Read actual implementation source files (branch-config.ts, init.ts) alongside validation comments to ensure docs match real behavior. Don't rely solely on specs (which may be inaccessible) or issue descriptions."
     spec_inaccessible: ".agentic/specs/ is outside access domain — use source code + validation comments as primary references."
 
+  session7_process_notes:
+    docs_workflow: "For docs tasks blocked by validation issues: check blocker is resolved via 'agt blockages list', read validation comments for test results/coverage, then read source code (tracker.ts + CLI command file) to verify exact behavior before writing docs."
+    delete_docs_approach: "Read tracker.issueDelete() implementation to understand cascade order, cleanup steps, and return shape. Read delete.ts CLI handler for error handling pattern. No need to read the spec (inaccessible) — source + validation comments are sufficient."
+    cli_reference_format: "Each command section follows: ## heading, one-line description, code block with syntax, Arguments table, Flags table (if any), Example(s), Output JSON (success and error variants), Notes bullet list. Maintain this format exactly."
+
+  session8_process_notes:
+    rework_workflow: "When an issue gets reopened with a gap (CTO comment mpsff662hk), read the new comment carefully to understand exactly what's missing. Don't assume prior work is still sufficient."
+    js_reference_format: "Each method section follows: #### heading with method signature, one-line description, usage example in JS, Parameters table, Return type code block, Notes bullet list. Placed in domain section (Issues, Comments, Blockages, Users, Mentions). Exported types section at bottom must include new types alphabetically in the right category."
+    completeness_check: "For features that span both CLI and JS API: update cli-reference.md (CLI surface) AND javascript-reference.md (programmatic surface). Check both files against the source types (api.ts) to ensure all params/results are documented."
+
   branch_flag_docs_mpfm9qxpsd:
     status: "superseded by mpfmga9sol — old docs task from previous planning round"
 
@@ -102,6 +123,14 @@ learnings:
       - "docs/markdown/getting-started.md — added custom branch example in init step"
       - "docs/markdown/storing-issues-in-git.md — added Custom branch names section (rules, pointer file, multiple instances), updated resolution order and init scenarios"
       - "docs/markdown/overview.md — brief --branch mention in Git-friendly bullet"
+
+  delete_docs_mps4viae0a:
+    status: "completed across sessions 7-8"
+    validation_task: "mps4uwcsqx — completed, 55 tests, full coverage on delete modules"
+    files_updated:
+      - "docs/markdown/cli-reference.md — added agt delete section (session 7: TOC entry + full docs with syntax, arguments, examples, output JSON, error output, notes on cascade/blockages/mentions)"
+      - "docs/markdown/javascript-reference.md — added issueDelete method section (session 8: placed after next() before Comments, with params table, return type IssueDeleteResult, usage example, notes on cascade/errors/auth). Also added IssueDeleteParams and IssueDeleteResult to exported types."
+    lesson: "When a docs task covers both CLI and JS API surfaces, verify BOTH files are updated before marking done. The CTO caught that cli-reference.md was updated but javascript-reference.md was missed."
 
   docs_structure:
     location: "docs/markdown/"

@@ -280,3 +280,19 @@ decisions:
     status: in-progress
     decided_date: "2026-05-21"
     validation_notes: "First implementation had 2 critical bugs: (1) tracker init creates .agentrack/ before branch flag takes effect (double directory), (2) no BRANCH_CONFLICT detection. Fix issue mpfn4dkotn. Lesson: always rebuild dist/ and test CLI behaviorally."
+
+  - id: DD-020
+    title: "Hard delete for agt delete command (no soft-delete)"
+    choice: "agt delete <issue-id> physically removes the issue event file from disk and cleans all references (index, blockages, mentions, parent-child). No event is appended — no audit trail."
+    rationale:
+      - "Agent use case — agents don't need undo/restore for deletions"
+      - "Simplicity — no zombie entries accumulating, no deleted-state edge cases"
+      - "Session 87 proved the need: manually deleting 8 issues required node scripts to manipulate raw files"
+      - "Event sourcing is for state changes, not for undo — if you want audit, don't delete"
+    tradeoffs:
+      - "Irreversible — no way to recover a deleted issue (acceptable for agent CLI)"
+      - "Not atomic across files — partial failure leaves inconsistent state (acceptable for delete)"
+    spec: .agentic/specs/delete-command-spec.md
+    issue: mps4sfny0f
+    status: todo
+    decided_date: "2026-05-30"

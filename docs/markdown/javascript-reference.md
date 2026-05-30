@@ -238,6 +238,38 @@ const nextIssue = await tracker.next("alice");
 type NextResult = ComputedIssue | { result: "NO_ISSUES_AVAILABLE"; message: string };
 ```
 
+#### `issueDelete(id, params?)`
+
+Delete an issue and all its descendants. This is a hard delete — event files are removed from disk and the index is cleaned up.
+
+```javascript
+const { deletedIds } = await tracker.issueDelete("m1x2k9ab");
+console.log(`Deleted ${deletedIds.length} issue(s)`);
+```
+
+**Parameters:** `id: IssueId`, `params?: IssueDeleteParams`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `author` | string | No | Override author |
+
+**Return type:** `IssueDeleteResult`
+
+```typescript
+type IssueDeleteResult =
+  | { result: "OK"; deletedIds: IssueId[] }
+  | AgentrackError;
+```
+
+**Notes:**
+- Hard delete — the event file is removed from disk, not just marked deleted.
+- Cascades to all descendants depth-first, leaves-first. All children and their children are deleted before the target issue.
+- `deletedIds` contains descendant IDs first, then the target ID last.
+- Cleans up blockages, mentions, and parent-child references for all deleted issues.
+- Throws `NOT_FOUND` if the issue ID doesn't exist in the index.
+- Throws `NOT_INITIALIZED` if the tracker has not been initialized.
+- Requires write authentication.
+
 ### Comments
 
 #### `commentsAdd(id, params)`
@@ -753,6 +785,8 @@ import type {
   HistoryResult,
   NextResult,
   InitResult,
+  IssueDeleteParams,
+  IssueDeleteResult,
 
   // Comments
   CommentAddParams,

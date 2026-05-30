@@ -5,6 +5,7 @@ import {
   deleteBlockage,
   detectCycle,
   getImpactScore,
+  removeAllBlockagesForIssue,
   resolveBlockage,
 } from "../../src/core/dependency-manager";
 
@@ -201,6 +202,181 @@ describe("dependency-manager", () => {
       // Would adding blocker01 blocked by issue0003 be a cycle?
       // Walk from issue0003 through blockedBy: blockedBy[issue0003] → undefined → no cycle
       expect(detectCycle(deps, "blocker01", "issue0003")).toBe(false);
+    });
+  });
+
+  describe("removeAllBlockagesForIssue", () => {
+    test("removes blockedBy entries and their counterparts in blocks", () => {
+      // issue0001 is blocked by issue0002
+      const deps = addBlockage(EMPTY_DEPS, "issue0001", "issue0002");
+
+      const result = removeAllBlockagesForIssue(deps, "issue0001");
+
+      // blockedBy["issue0001"] should be gone
+      expect(result.blockedBy["issue0001"]).toBeUndefined();
+      // blocks["issue0002"] should be gone (counterpart cleaned up)
+      expect(result.blocks["issue0002"]).toBeUndefined();
+    });
+
+    test("removes blocks entries and their counterparts in blockedBy", () => {
+      // issue0002 blocks issue0001
+      const deps = addBlockage(EMPTY_DEPS, "issue0001", "issue0002");
+
+      // Remove issue0002 (the blocker) from all blockages
+      const result = removeAllBlockagesForIssue(deps, "issue0002");
+
+      // blocks["issue0002"] should be gone
+      expect(result.blocks["issue0002"]).toBeUndefined();
+      // blockedBy["issue0001"] should be gone (counterpart cleaned up)
+      expect(result.blockedBy["issue0001"]).toBeUndefined();
+    });
+
+    test("removes blockages in both directions for the same issue", () => {
+      // issue0001 is blocked by issue0002 AND issue0001 blocks issue0003
+      let deps = addBlockage(EMPTY_DEPS, "issue0001", "issue0002");
+      deps = addBlockage(deps, "issue0003", "issue0001");
+
+      const result = removeAllBlockagesForIssue(deps, "issue0001");
+
+      // blockedBy["issue0001"] gone (was blocked by issue0002)
+      expect(result.blockedBy["issue0001"]).toBeUndefined();
+      // blocks["issue0001"] gone (was blocking issue0003)
+      expect(result.blocks["issue0001"]).toBeUndefined();
+      // Counterparts also cleaned
+      expect(result.blocks["issue0002"]).toBeUndefined();
+      expect(result.blockedBy["issue0003"]).toBeUndefined();
+    });
+
+    test("preserves unrelated blockages", () => {
+      // issue0001 blocked by issue0002
+      // issue0003 blocked by issue0004 (unrelated)
+      let deps = addBlockage(EMPTY_DEPS, "issue0001", "issue0002");
+      deps = addBlockage(deps, "issue0003", "issue0004");
+
+      const result = removeAllBlockagesForIssue(deps, "issue0001");
+
+      // issue0001 blockages removed
+      expect(result.blockedBy["issue0001"]).toBeUndefined();
+      expect(result.blocks["issue0002"]).toBeUndefined();
+      // issue0003/issue0004 blockages preserved
+      expect(result.blockedBy["issue0003"]).toHaveLength(1);
+      expect(result.blocks["issue0004"]).toHaveLength(1);
+    });
+
+    test("no-op for issue with no blockages", () => {
+      const result = removeAllBlockagesForIssue(EMPTY_DEPS, "nonexistent");
+
+      expect(result.blockedBy).toEqual({});
+      expect(result.blocks).toEqual({});
+    });
+
+    test("removes multiple blockedBy entries", () => {
+      // issue0001 is blocked by issue0002, issue0003, issue0004
+      let deps = addBlockage(EMPTY_DEPS, "issue0001", "issue0002");
+      deps = addBlockage(deps, "issue0001", "issue0003");
+      deps = addBlockage(deps, "issue0001", "issue0004");
+
+      const result = removeAllBlockagesForIssue(deps, "issue0001");
+
+      expect(result.blockedBy["issue0001"]).toBeUndefined();
+      // All counterpart blocks entries cleaned
+      expect(result.blocks["issue0002"]).toBeUndefined();
+      expect(result.blocks["issue0003"]).toBeUndefined();
+      expect(result.blocks["issue0004"]).toBeUndefined();
+    });
+
+    test("removes multiple blocks entries (issue blocks multiple others)", () => {
+      // blocker01 blocks issue0001, issue0002, issue0003
+      let deps = addBlockage(EMPTY_DEPS, "issue0001", "blocker01");
+      deps = addBlockage(deps, "issue0002", "blocker01");
+      deps = addBlockage(deps, "issue0003", "blocker01");
+
+      const result = removeAllBlockagesForIssue(deps, "blocker01");
+
+      expect(result.blocks["blocker01"]).toBeUndefined();
+      // All counterpart blockedBy entries cleaned
+      expect(result.blockedBy["issue0001"]).toBeUndefined();
+      expect(result.blockedBy["issue0002"]).toBeUndefined();
+      expect(result.blockedBy["issue0003"]).toBeUndefined();
+    });
+
+    test("cleans up empty arrays after removal", () => {
+      // blocker01 blocks issue0001 and issue0002
+      let deps = addBlockage(EMPTY_DEPS, "issue0001", "blocker01");
+      deps = addBlockage(deps, "issue0002", "blocker01");
+
+      // Remove issue0001's blockage — blocker01 still has issue0002
+      deps = removeAllBlockagesForIssue(deps, "issue0001");
+
+      // blocks["blocker01"] should still have issue0002
+      expect(deps.blocks["blocker01"]).toHaveLength(1);
+
+      // Now remove issue0002 — blocker01's blocks should be fully gone
+      const result = removeAllBlockagesForIssue(deps, "issue0002");
+      expect(result.blocks["blocker01"]).toBeUndefined();
+    });
+
+    test("preserves other blockers on a shared blocked issue (else branch)", () => {
+      // issue0001 is blocked by BOTH blocker01 AND blocker02
+      let deps = addBlockage(EMPTY_DEPS, "issue0001", "blocker01");
+      deps = addBlockage(deps, "issue0001", "blocker02");
+
+      // Remove blocker01 — issue0001 is still blocked by blocker02
+      const result = removeAllBlockagesForIssue(deps, "blocker01");
+
+      // blocker01's blocks key is gone
+      expect(result.blocks["blocker01"]).toBeUndefined();
+      // issue0001 still has blocker02 in blockedBy
+      expect(result.blockedBy["issue0001"]).toHaveLength(1);
+      expect(result.blockedBy["issue0001"]![0]!.blockerId).toBe("blocker02");
+    });
+
+    test("preserves other blocked issues on a shared blocker (else branch)", () => {
+      // blocker01 blocks BOTH issue0001 AND issue0002
+      let deps = addBlockage(EMPTY_DEPS, "issue0001", "blocker01");
+      deps = addBlockage(deps, "issue0002", "blocker01");
+
+      // Remove issue0001 — blocker01 still blocks issue0002
+      const result = removeAllBlockagesForIssue(deps, "issue0001");
+
+      // issue0001's blockedBy is gone
+      expect(result.blockedBy["issue0001"]).toBeUndefined();
+      // blocker01 still has issue0002 in blocks
+      expect(result.blocks["blocker01"]).toHaveLength(1);
+      expect(result.blocks["blocker01"]![0]!.blockedId).toBe("issue0002");
+    });
+
+    test("cleans up pre-existing empty arrays in blockedBy", () => {
+      const deps = {
+        blockedBy: { emptykey: [] as Array<{ blockerId: string; blockedId: string }> },
+        blocks: {},
+      };
+
+      const result = removeAllBlockagesForIssue(deps, "unrelated");
+
+      expect(result.blockedBy["emptykey"]).toBeUndefined();
+    });
+
+    test("cleans up pre-existing empty arrays in blocks", () => {
+      const deps = {
+        blockedBy: {},
+        blocks: { emptykey: [] as Array<{ blockerId: string; blockedId: string }> },
+      };
+
+      const result = removeAllBlockagesForIssue(deps, "unrelated");
+
+      expect(result.blocks["emptykey"]).toBeUndefined();
+    });
+
+    test("does not mutate the original", () => {
+      const deps = addBlockage(EMPTY_DEPS, "issue0001", "issue0002");
+      const originalBlockedBy = { ...deps.blockedBy };
+      const originalBlocks = { ...deps.blocks };
+
+      removeAllBlockagesForIssue(deps, "issue0001");
+
+      expect(deps.blockedBy).toEqual(originalBlockedBy);
+      expect(deps.blocks).toEqual(originalBlocks);
     });
   });
 });

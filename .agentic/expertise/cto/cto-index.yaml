@@ -12,9 +12,9 @@ hierarchy:
       - webapp-developer (full-stack web development — React frontend + Hono backend)
       - webapp-validator (webapp testing, quality assurance, spec compliance)
       - webapp-styler (UI/UX expert — visual design, interaction patterns, accessibility, polish)
-    pending_setup: []  # All agents fully set up as of session 85
+    pending_setup: []
 
-expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation: mpr50trdgw + mpr51myb9q both DONE. UI/UX audit mpr7q3putx DONE. CTO review mpr7qd6bjq DONE — created 6 implementation issues for webapp-styler: (1) mpraw5x3rp P1 design tokens foundation (unblocked), (2) mprawicnef P2 status badges+priority (blocked by 1), (3) mprawwui44 P2 loading+empty states (blocked by 1), (4) mpraxha5es P2 form UX+accessibility (blocked by 1), (5) mpray2w1kj P2 layout+nav+responsive (blocked by 1), (6) mpraygczia P3 micro-interactions+polish (blocked by all 1-5). Board: 7 done + 7 open. NEXT: agent runner picks up mpraw5x3rp for webapp-styler (P1, no blockers)."
+expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) stuck in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation: mpr50trdgw + mpr51myb9q both DONE. Delete command FULLY COMPLETE: impl (mps4sfny0f) done, validation (mps4uwcsqx) done, bug fix (mpscu5l9rk+mpscw71ria) done, docs (mps4viae0a) done — both cli-reference.md and javascript-reference.md updated. Board: 13 issues (7 done, 2 in-progress, 1 todo). webapp-styler active but no assigned issues."
 
 project_overview:
   name: agentrack
@@ -85,6 +85,8 @@ specifications:
       description: "5-phase development roadmap for the webapp. Phase 1: Foundation (scaffolding, health check). Phase 2: Core issues (CRUD endpoints, list page, detail page, create dialog). Phase 3: Rich detail (comments, blockages, history, tree view, tags, parent). Phase 4: Users & sync (user management UI, push/pull controls). Phase 5: Polish (responsive, loading states, sorting, filtering). 10 implementation issues with blocking dependencies."
     - path: webapp-agent-setup.md
       description: "Setup guide for webapp-developer and webapp-validator agents. Contains full agent configurations (frontmatter + system prompts) and expertise index templates. Agents registered in agentrack but need manual file creation in .claude/agents/ and .agentic/expertise/."
+    - path: delete-command-spec.md
+      description: "Spec for agt delete <issue-id> command. Hard delete of issue and all descendants. Cleans blockages (bidirectional), mentions, parent-child relationships, and event file from disk. Returns deletedIds array (children first, target last). New types: IssueDeleteParams, IssueDeleteResult. New helpers: removeIssueMentions, removeAllBlockagesForIssue. Parent: mps4sfny0f."
 
 access_boundaries:
   rule: "CTO must NOT read or modify files under packages/library/. All code changes go through subordinates."
@@ -142,6 +144,7 @@ delegation_workflow:
     webapp-styler's domain: CSS, component styling, layout, accessibility, responsive design,
     interaction patterns, visual consistency, micro-interactions.
     webapp-styler does NOT own: backend API, data model, business logic, test infrastructure.
+    Currently no assigned issues — cleared in session 87. Ready for new tasks when needed.
   note: "Self-check and validation steps are enforced via agent system prompts. No need to duplicate in delegation messages."
   library-developer:
     focus: "Focus delegation messages on the implementation task itself. The agent self-checks typecheck+lint+test before completion."
@@ -413,3 +416,15 @@ session_log:
   - session: 86
     date: "2026-05-29"
     summary: "Completed CTO review of UI/UX audit (mpr7qd6bjq). Evaluated webapp-styler's audit findings and created 6 implementation issues in dependency order: (1) mpraw5x3rp — design tokens + CSS variable system (P1, foundation, unblocked), (2) mprawicnef — status badges + priority indicators (P2, blocked by 1), (3) mprawwui44 — loading states + empty states (P2, blocked by 1), (4) mpraxha5es — form UX + accessibility (P2, blocked by 1), (5) mpray2w1kj — layout + navigation + responsiveness (P2, blocked by 1), (6) mpraygczia — micro-interactions + polish (P3, blocked by 1-5, final pass). Design tokens (1) must ship first — all other issues consume the CSS variables. Issues 2-5 can run in parallel once tokens are done. Issue 6 is the final polish pass that refines the output of 2-5."
+  - session: 87
+    date: "2026-05-30"
+    summary: "User requested complete deletion (not just closure) of all webapp-styler issues from agentrack. Deleted 8 issue files (mpraw5x3rp, mprawicnef, mprawwui44, mpraxha5es, mpray2w1kj, mpraygczia, mpr7q3putx, mpr7qd6bjq) and cleaned index.json (open/closed/childrenOf) and dependencies.json references. agt CLI has no delete command — used node scripts to directly manipulate the file-backed store. Key learning: index.json structure is {open:[], closed:[], childrenOf:{}}, not {issues:[]}. webapp-styler remains an active subordinate."
+  - session: 88
+    date: "2026-05-30"
+    summary: "Planned agt delete command feature. User realized there's no way to delete issues from agentrack — had to manually manipulate files in session 87. Investigated full codebase: types, tracker, index-manager, dependency-manager, mentions, events, CLI runner, existing e2e test patterns. Wrote comprehensive spec (.agentic/specs/delete-command-spec.md): hard delete with cascade, bidirectional blockage cleanup, mentions cleanup, parent-child relationship cleanup, event file removal. Created 3-issue chain: mps4sfny0f (impl, library-developer) → mps4uwcsqx (validation, library-validator, blocked by impl) → mps4viae0a (docs, library-releaser, blocked by validation). Validation and docs are children of impl. Updated expertise."
+  - session: 89
+    date: "2026-05-30"
+    summary: "Agents weren't picking up issues. Diagnosed: mps4sfny0f was stuck in-progress assigned to cto (not library-developer), and it was parent of validation/docs — hierarchy constraint prevented closing parent with non-done children. Detached children from parent, marked impl done. Also reset mppqswn3jl (stuck in-progress) back to todo. User asked about JS library readiness for delete — confirmed issueDelete is implemented and types exported but javascript-reference.md was missing docs entirely. Reopened mps4viae0a (was marked done) with detailed gap description. JS reference subsequently updated by library-releaser with full issueDelete method section + exported types. Closed mps4viae0a. Delete command feature now fully complete (impl + validation + bug fix + docs). Key lesson: parent-child hierarchy on issue chains creates a catch-22 with done constraints — prefer flat sibling chains with blockages instead."
+  - session: 89
+    date: "2026-05-30"
+    summary: "Picked up bug mpscu5l9rk (removeAllBlockagesForIssue inverted counterpart filter). Found during delete command validation (mps4uwcsqx). One-line fix: filter uses issueId instead of entry.blockerId when cleaning counterpart entries from blocks map. CTO can't edit source files — delegated to library-developer via child issue mpscw71ria (todo, unblocked). Blockage chain: mpscw71ria → mpscu5l9rk → mps4uwcsqx (delete validation). Parent stays in-progress until child completes."

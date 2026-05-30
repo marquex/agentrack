@@ -107,6 +107,32 @@ export async function removeCommentMentions(dir: string, commentId: string): Pro
 }
 
 /**
+ * Remove all mention entries for a given issue ID.
+ * Cleans up empty user keys.
+ */
+export async function removeIssueMentions(dir: string, issueId: string): Promise<void> {
+  const mentions = readMentionsFile(dir);
+  let changed = false;
+
+  for (const user of Object.keys(mentions)) {
+    const entries = mentions[user]!;
+    const filtered = entries.filter((e) => e.issueId !== issueId);
+    if (filtered.length !== entries.length) {
+      changed = true;
+      if (filtered.length === 0) {
+        delete mentions[user];
+      } else {
+        mentions[user] = filtered;
+      }
+    }
+  }
+
+  if (changed) {
+    await writeMentionsFile(dir, mentions);
+  }
+}
+
+/**
  * Rebuild the entire mentions index from scratch by scanning all issue event files.
  * Clears the existing index and re-extracts all mentions from all non-deleted comments.
  * Returns the total number of mentions created.

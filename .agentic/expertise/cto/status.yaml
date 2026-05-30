@@ -174,7 +174,7 @@ current_state:
       - Impact score counts active blocks entries — used in list sort (priority ASC → impact DESC → id ASC)
       - BLOCKAGE_CYCLE error (exit code 11) prevents operation entirely, no partial state changes
     spec: .agentic/specs/07-phase6-blockages-spec.md
-  last_updated: "2026-05-29"
+  last_updated: "2026-05-30"
   org_change:
     description: "library-releaser agent onboarded. Documentation responsibility transferred from library-validator to library-releaser. webapp-styler onboarded for UI/UX."
     issues: [mpa5yz3kei, mpr7q3putx]
@@ -309,6 +309,16 @@ current_state:
         issue: mp9xefucmo
         status: done
         description: "Cap upward auto-promotion at in-progress."
+      delete_command:
+        issue: mps4sfny0f
+        status: done
+        description: "agt delete <issue-id> command. Hard delete with cascade, blockage cleanup, mentions cleanup, event file removal. FULLY COMPLETE."
+        spec: .agentic/specs/delete-command-spec.md
+        chain:
+          implement: mps4sfny0f (done)
+          validate: mps4uwcsqx (done)
+          bug: mpscu5l9rk + fix mpscw71ria (done)
+          docs_build: mps4viae0a (done — cli-reference.md + javascript-reference.md)
     docs_status: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed from dependencies. Mentions docs updated (cli-reference.md, javascript-reference.md). Docs overhaul (mpdpt4rego) awaiting validation (mpdpv6gw49). Docusaurus site tracked as idea mpdxdbqwt9. UI/UX audit (mpr7q3putx) ready for webapp-styler."
     e2e_testing:
       description: "New E2E test layer in validation/ folder. Real git repos + real agt CLI invocations. Covers all commands with happy/error/edge cases."
@@ -326,6 +336,7 @@ current_state:
       - "Webapp initiative: ACTIVE (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl in-progress. E2E isolation done. UI/UX audit ready for webapp-styler."
       - "Webapp specs: .agentic/specs/webapp-spec.md (API + UI design) + webapp-roadmap.md (5-phase plan)"
       - "Webapp agents: webapp-developer + webapp-validator + webapp-styler fully set up"
+      - "Delete command: NEW (parent mps4sfny0f, todo). agt delete <issue-id> with cascade. Spec at .agentic/specs/delete-command-spec.md"
       - "Old issues (configurable branch, E2E tests, docs overhaul) from previous worktree branch — not in current index"
       - "POLICY: any CLI/API change must route to library-releaser for build + docs update"
       - "DOCS: all agents have read access to docs/markdown/ — mention in task descriptions when relevant"

@@ -176,3 +176,78 @@ export function detectCycle(
 
   return false;
 }
+
+/**
+ * Remove ALL blockage entries involving a given issue ID.
+ * Removes from both blockedBy and blocks maps, including counterpart cleanup.
+ * Returns a new immutable DependenciesFile.
+ */
+export function removeAllBlockagesForIssue(
+  deps: DependenciesFile,
+  issueId: IssueId,
+): DependenciesFile {
+  let newBlockedBy = { ...deps.blockedBy };
+  let newBlocks = { ...deps.blocks };
+
+  // 1. For each entry in blockedBy[issueId] (issue was blocked):
+  //    remove counterpart from blocks[entry.blockerId]
+  const blockedByEntries = deps.blockedBy[issueId];
+  if (blockedByEntries) {
+    for (const entry of blockedByEntries) {
+      const blockerBlocks = newBlocks[entry.blockerId];
+      if (blockerBlocks) {
+        const filtered = blockerBlocks.filter(
+          (e) => !(e.blockerId === entry.blockerId && e.blockedId === entry.blockedId),
+        );
+        if (filtered.length === 0) {
+          const { [entry.blockerId]: _, ...rest } = newBlocks;
+          newBlocks = rest;
+        } else {
+          newBlocks = { ...newBlocks, [entry.blockerId]: filtered };
+        }
+      }
+    }
+    // Delete blockedBy[issueId]
+    const { [issueId]: _, ...restBlockedBy } = newBlockedBy;
+    newBlockedBy = restBlockedBy;
+  }
+
+  // 2. For each entry in blocks[issueId] (issue was blocker):
+  //    remove counterpart from blockedBy[entry.blockedId]
+  const blocksEntries = deps.blocks[issueId];
+  if (blocksEntries) {
+    for (const entry of blocksEntries) {
+      const blockedBlockedBy = newBlockedBy[entry.blockedId];
+      if (blockedBlockedBy) {
+        const filtered = blockedBlockedBy.filter(
+          (e) => !(e.blockerId === issueId && e.blockedId === entry.blockedId),
+        );
+        if (filtered.length === 0) {
+          const { [entry.blockedId]: _, ...rest } = newBlockedBy;
+          newBlockedBy = rest;
+        } else {
+          newBlockedBy = { ...newBlockedBy, [entry.blockedId]: filtered };
+        }
+      }
+    }
+    // Delete blocks[issueId]
+    const { [issueId]: _, ...restBlocks } = newBlocks;
+    newBlocks = restBlocks;
+  }
+
+  // 3. Clean up empty arrays
+  for (const key of Object.keys(newBlockedBy)) {
+    if (newBlockedBy[key]!.length === 0) {
+      const { [key]: _, ...rest } = newBlockedBy;
+      newBlockedBy = rest;
+    }
+  }
+  for (const key of Object.keys(newBlocks)) {
+    if (newBlocks[key]!.length === 0) {
+      const { [key]: _, ...rest } = newBlocks;
+      newBlocks = rest;
+    }
+  }
+
+  return { blockedBy: newBlockedBy, blocks: newBlocks };
+}

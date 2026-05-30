@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Key, Trash2, Copy, Check } from "lucide-react";
+import { Key, Trash2, Copy, Check, UserPlus } from "lucide-react";
 import { useUsers, useRegisterUser, useRevokeUser, useRegenerateToken } from "@/hooks/use-users";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,6 +75,17 @@ export function UsersPage() {
       ]}
     >
       <div className="space-y-6">
+        {/* Register button */}
+        <div className="flex items-center justify-end">
+          <Button
+            onClick={() => setShowRegisterDialog(true)}
+            className="gap-1.5"
+          >
+            <UserPlus className="h-4 w-4" />
+            Register User
+          </Button>
+        </div>
+
         {/* User list */}
         {isLoading ? (
           <div className="py-10 text-center text-slate-400">Loading users...</div>

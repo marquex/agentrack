@@ -10,6 +10,7 @@ All agentrack CLI commands follow the format `agt <subcommand> [arguments] [flag
 - [list](#agt-list)
 - [view](#agt-view)
 - [history](#agt-history)
+- [delete](#agt-delete)
 - [next](#agt-next)
 - [comments add](#agt-comments-add)
 - [comments update](#agt-comments-update)
@@ -320,6 +321,56 @@ agt history m1x2k9ab
 ```
 
 See [The issue object](./issue-object.md) for the event sourcing model.
+
+---
+
+## `agt delete`
+
+Hard delete an issue and all its descendants (depth-first, leaves first). Removes the issue from the index, cleans up blockages, mentions, hierarchy references, and deletes the event file from disk.
+
+```bash
+agt delete <issue-id>
+```
+
+**Arguments:**
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `issue-id` | Yes | The ID of the issue to delete |
+
+**Example:**
+
+```bash
+# Delete a leaf issue with no children
+agt delete m1x2k9ab
+```
+
+**Output:**
+
+```json
+{ "result": "OK", "deletedIds": ["m1x2k9ab"] }
+```
+
+When deleting an issue with children, all descendants are deleted first:
+
+```json
+{ "result": "OK", "deletedIds": ["m3a4b5c6", "m2d3e4f5", "m1x2k9ab"] }
+```
+
+If the issue does not exist:
+
+```json
+{ "result": "NOT_FOUND", "message": "Issue `m1x2k9ab` not found in index." }
+```
+
+**Notes:**
+- This is a hard delete — the event file is removed from disk. There is no undo.
+- Cascade: all children are deleted recursively, depth-first (leaves before parents).
+- The `deletedIds` array lists children first, target last.
+- All blockages involving the deleted issues (as blocker or blocked) are removed from the dependency index.
+- All mentions referencing the deleted issues are removed from the mentions index.
+- Works on issues in any status, including `closed`.
+- Requires write authentication.
 
 ---
 

@@ -236,3 +236,16 @@ export type MentionsUnreadResult = { result: "OK" } | AgentrackError;
 
 /** Result of rebuilding the mentions index. */
 export type MentionsRebuildResult = { result: "OK"; mentionCount: number } | AgentrackError;
+
+// ─── Delete ──────────────────────────────────────────────────────────
+
+/** Parameters for deleting an issue. */
+export interface IssueDeleteParams {
+  /** Override author (resolved by auth layer if not provided). */
+  author?: string;
+}
+
+/** Result of deleting an issue. */
+export type IssueDeleteResult =
+  | { result: "OK"; deletedIds: IssueId[] }
+  | AgentrackError;

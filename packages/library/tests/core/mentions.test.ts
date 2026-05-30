@@ -16,6 +16,7 @@ import {
   readMentionsFile,
   rebuildMentionsIndex,
   removeCommentMentions,
+  removeIssueMentions,
   writeMentionsFile,
 } from "../../src/core/mentions";
 
@@ -478,6 +479,196 @@ describe("removeCommentMentions", () => {
 
     await removeCommentMentions(testDir, "comment001");
 
+    const result = readMentionsFile(testDir);
+    expect(result).toEqual({});
+  });
+});
+
+// ─── removeIssueMentions ───────────────────────────────────────────────
+
+describe("removeIssueMentions", () => {
+  let testDir: string;
+
+  beforeEach(() => {
+    testDir = join(
+      tmpdir(),
+      `mentions-test-remove-issue-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    );
+    mkdirSync(testDir, { recursive: true });
+  });
+
+  afterEach(() => {
+    rmSync(testDir, { recursive: true, force: true });
+  });
+
+  test("removes all entries for a given issueId", async () => {
+    const data: MentionsFile = {
+      alice: [
+        {
+          id: "aaaa000001",
+          createdAt: "2026-05-27T10:00:00.000Z",
+          mentionedUser: "alice",
+          mentionedBy: "bob",
+          issueId: "issue001",
+          commentId: "comment001",
+          isRead: false,
+        },
+        {
+          id: "bbbb000002",
+          createdAt: "2026-05-27T11:00:00.000Z",
+          mentionedUser: "alice",
+          mentionedBy: "charlie",
+          issueId: "issue001",
+          commentId: "comment002",
+          isRead: false,
+        },
+      ],
+    };
+    writeFileSync(join(testDir, "mentions.json"), JSON.stringify(data));
+
+    await removeIssueMentions(testDir, "issue001");
+
+    const result = readMentionsFile(testDir);
+    expect(result.alice).toBeUndefined();
+  });
+
+  test("removes entries across multiple users for the same issue", async () => {
+    const data: MentionsFile = {
+      alice: [
+        {
+          id: "aaaa000001",
+          createdAt: "2026-05-27T10:00:00.000Z",
+          mentionedUser: "alice",
+          mentionedBy: "bob",
+          issueId: "issue001",
+          commentId: "comment001",
+          isRead: false,
+        },
+      ],
+      bob: [
+        {
+          id: "bbbb000002",
+          createdAt: "2026-05-27T11:00:00.000Z",
+          mentionedUser: "bob",
+          mentionedBy: "alice",
+          issueId: "issue001",
+          commentId: "comment002",
+          isRead: false,
+        },
+      ],
+    };
+    writeFileSync(join(testDir, "mentions.json"), JSON.stringify(data));
+
+    await removeIssueMentions(testDir, "issue001");
+
+    const result = readMentionsFile(testDir);
+    expect(result.alice).toBeUndefined();
+    expect(result.bob).toBeUndefined();
+  });
+
+  test("preserves entries for other issues", async () => {
+    const data: MentionsFile = {
+      alice: [
+        {
+          id: "aaaa000001",
+          createdAt: "2026-05-27T10:00:00.000Z",
+          mentionedUser: "alice",
+          mentionedBy: "bob",
+          issueId: "issue001",
+          commentId: "comment001",
+          isRead: false,
+        },
+        {
+          id: "bbbb000002",
+          createdAt: "2026-05-27T11:00:00.000Z",
+          mentionedUser: "alice",
+          mentionedBy: "charlie",
+          issueId: "issue002",
+          commentId: "comment002",
+          isRead: false,
+        },
+      ],
+    };
+    writeFileSync(join(testDir, "mentions.json"), JSON.stringify(data));
+
+    await removeIssueMentions(testDir, "issue001");
+
+    const result = readMentionsFile(testDir);
+    expect(result.alice).toHaveLength(1);
+    expect(result.alice![0]!.issueId).toBe("issue002");
+  });
+
+  test("cleans up empty user keys", async () => {
+    const data: MentionsFile = {
+      alice: [
+        {
+          id: "aaaa000001",
+          createdAt: "2026-05-27T10:00:00.000Z",
+          mentionedUser: "alice",
+          mentionedBy: "bob",
+          issueId: "issue001",
+          commentId: "comment001",
+          isRead: false,
+        },
+      ],
+      bob: [
+        {
+          id: "bbbb000002",
+          createdAt: "2026-05-27T11:00:00.000Z",
+          mentionedUser: "bob",
+          mentionedBy: "alice",
+          issueId: "issue002",
+          commentId: "comment002",
+          isRead: false,
+        },
+      ],
+    };
+    writeFileSync(join(testDir, "mentions.json"), JSON.stringify(data));
+
+    // Remove alice's only mention — alice key should be cleaned up
+    await removeIssueMentions(testDir, "issue001");
+
+    const result = readMentionsFile(testDir);
+    expect(result.alice).toBeUndefined();
+    expect(result.bob).toHaveLength(1);
+  });
+
+  test("no-op for issue with no mentions", async () => {
+    const data: MentionsFile = {
+      alice: [
+        {
+          id: "aaaa000001",
+          createdAt: "2026-05-27T10:00:00.000Z",
+          mentionedUser: "alice",
+          mentionedBy: "bob",
+          issueId: "issue001",
+          commentId: "comment001",
+          isRead: false,
+        },
+      ],
+    };
+    writeFileSync(join(testDir, "mentions.json"), JSON.stringify(data));
+
+    await removeIssueMentions(testDir, "nonexistent_issue");
+
+    const result = readMentionsFile(testDir);
+    expect(result.alice).toHaveLength(1);
+  });
+
+  test("no-op when mentions file is empty", async () => {
+    writeFileSync(join(testDir, "mentions.json"), "{}");
+
+    await removeIssueMentions(testDir, "issue001");
+
+    const result = readMentionsFile(testDir);
+    expect(result).toEqual({});
+  });
+
+  test("no-op when mentions file does not exist", async () => {
+    // No mentions.json file at all
+    await removeIssueMentions(testDir, "issue001");
+
+    // Should not crash
     const result = readMentionsFile(testDir);
     expect(result).toEqual({});
   });
