@@ -174,12 +174,13 @@ current_state:
       - Impact score counts active blocks entries — used in list sort (priority ASC → impact DESC → id ASC)
       - BLOCKAGE_CYCLE error (exit code 11) prevents operation entirely, no partial state changes
     spec: .agentic/specs/07-phase6-blockages-spec.md
-  last_updated: "2026-05-28"
+  last_updated: "2026-05-29"
   org_change:
-    description: "library-releaser agent onboarded. Documentation responsibility transferred from library-validator to library-releaser."
-    issue: mpa5yz3kei
+    description: "library-releaser agent onboarded. Documentation responsibility transferred from library-validator to library-releaser. webapp-styler onboarded for UI/UX."
+    issues: [mpa5yz3kei, mpr7q3putx]
     library_quality_no_longer_owns: "documentation (TypeDoc, docs-html, docs generation)"
     library_release_now_owns: "release prep, documentation, build, version management, publishing"
+    webapp_styler_owns: "UI/UX audit, visual design, interaction patterns, accessibility, CSS, component styling, responsive design, polish"
   phase_6_complete_date: "2026-05-10"
   phase_7_start_date: "2026-05-11"
   phase_7_complete_date: "2026-05-11"
@@ -219,22 +220,32 @@ current_state:
         agents:
           developer: webapp-developer (tk_thd0nvbd)
           validator: webapp-validator (tk_f1g3kazq)
+          styler: webapp-styler (UI/UX expert)
         chain:
           phase_1:
-            impl: mppqqte6gs (webapp-developer, idea, UNBLOCKED)
-            validate: mppqqzxmme (webapp-validator, blocked by impl)
+            impl: mppqqte6gs (done)
+            validate: mppqqzxmme (done)
           phase_2:
-            impl: mppqrbsqix (webapp-developer, blocked by phase_1 validate)
-            validate: mppqrqcu3u (webapp-validator, blocked by impl)
+            impl: mppqrbsqix (done)
+            validate: mppqrqcu3u (done)
           phase_3:
-            impl: mppqs2gcqg (webapp-developer, blocked by phase_2 validate)
-            validate: mppqsibq9f (webapp-validator, blocked by impl)
+            impl: mppqs2gcqg (done)
+            validate: mppqsibq9f (done)
           phase_4:
-            impl: mppqswn3jl (webapp-developer, blocked by phase_3 validate)
-            validate: mppqt90kot (webapp-validator, blocked by impl)
+            impl: mppqswn3jl (webapp-developer, in-progress)
+            validate: mppqt90kot (webapp-validator, todo, blocked by impl)
           phase_5:
             impl: mppqtp1q9g (webapp-developer, blocked by phase_4 validate)
             validate: mppqtyr8ho (webapp-validator, blocked by impl)
+          e2e_isolation:
+            description: "Fix E2E test isolation — dedicated test ports so tests don't pollute main .agentrack/"
+            parent: mpqn5bi2us (done)
+            impl: mpr50trdgw (done)
+            validate: mpr51myb9q (done)
+          ui_ux_audit:
+            description: "UI/UX expert audits webapp frontend and proposes improvements"
+            audit: mpr7q3putx (webapp-styler, todo, P2) — read-only audit, deliverable is prioritized findings comment
+            cto_review: mpr7qd6bjq (cto, todo, P2, blocked by audit) — process findings and create implementation tickets
       remove_mention_title:
         issue: mpo5brxipq
         status: done
@@ -298,7 +309,7 @@ current_state:
         issue: mp9xefucmo
         status: done
         description: "Cap upward auto-promotion at in-progress."
-    docs_status: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed from dependencies. Mentions docs updated (cli-reference.md, javascript-reference.md). Docs overhaul (mpdpt4rego) awaiting validation (mpdpv6gw49). Docusaurus site tracked as idea mpdxdbqwt9."
+    docs_status: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed from dependencies. Mentions docs updated (cli-reference.md, javascript-reference.md). Docs overhaul (mpdpt4rego) awaiting validation (mpdpv6gw49). Docusaurus site tracked as idea mpdxdbqwt9. UI/UX audit (mpr7q3putx) ready for webapp-styler."
     e2e_testing:
       description: "New E2E test layer in validation/ folder. Real git repos + real agt CLI invocations. Covers all commands with happy/error/edge cases."
       issue: mpebmstgs9
@@ -312,9 +323,9 @@ current_state:
       gitignore_update: complete — docs-html/ added
     remaining:
       - "All tracked as agentrack issues — see `agt list` for current backlog"
-      - "Webapp initiative: ACTIVE (parent mppqqp8y26, in-progress). 10 issues across 5 phases. Phase 1 (mppqqte6gs) unblocked and ready for webapp-developer."
+      - "Webapp initiative: ACTIVE (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl in-progress. E2E isolation done. UI/UX audit ready for webapp-styler."
       - "Webapp specs: .agentic/specs/webapp-spec.md (API + UI design) + webapp-roadmap.md (5-phase plan)"
-      - "Webapp agents: webapp-developer + webapp-validator fully set up (agent files + expertise folders)"
+      - "Webapp agents: webapp-developer + webapp-validator + webapp-styler fully set up"
       - "Old issues (configurable branch, E2E tests, docs overhaul) from previous worktree branch — not in current index"
       - "POLICY: any CLI/API change must route to library-releaser for build + docs update"
       - "DOCS: all agents have read access to docs/markdown/ — mention in task descriptions when relevant"

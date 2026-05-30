@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router";
 import { useBlockages, useAddBlockage, useResolveBlockage, useDeleteBlockage } from "@/hooks/use-blockages";
 import { useIssues } from "@/hooks/use-issues";
@@ -28,6 +28,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { data: searchResults } = useIssues(
     searchTerm ? { search: searchTerm } : {}
@@ -46,6 +47,12 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
       }
     );
   }
+
+  useEffect(() => {
+    if (showAddDialog && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showAddDialog]);
 
   function handleResolve(blockerId: string) {
     resolveBlockage.mutate({ blockerIds: [blockerId] });
@@ -111,6 +118,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                       <Link
                         to={`/issues/${b.blockerId}`}
                         className="flex items-center gap-1 font-mono text-xs text-blue-600 hover:underline"
+                        aria-label={`View blocker issue ${b.blockerId}`}
                       >
                         {b.blockerId}
                         <ExternalLink className="h-3 w-3" />
@@ -134,6 +142,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                           className="h-6 px-2 text-xs"
                           onClick={() => handleResolve(b.blockerId)}
                           disabled={resolveBlockage.isPending}
+                          aria-label={`Resolve blocker ${b.blockerId}`}
                         >
                           <Check className="mr-1 h-3 w-3" />
                           Resolve
@@ -147,6 +156,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                             className="h-6 px-2 text-xs text-red-600"
                             onClick={() => handleDelete(b.blockerId)}
                             disabled={deleteBlockage.isPending}
+                            aria-label={`Confirm delete blocker ${b.blockerId}`}
                           >
                             Confirm
                           </Button>
@@ -155,6 +165,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                             size="sm"
                             className="h-6 px-2 text-xs"
                             onClick={() => setDeleteConfirmId(null)}
+                            aria-label="Cancel delete confirmation"
                           >
                             Cancel
                           </Button>
@@ -165,6 +176,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                           size="sm"
                           className="h-6 w-6 p-0 text-slate-400 hover:text-red-600"
                           onClick={() => setDeleteConfirmId(b.blockerId)}
+                          aria-label={`Delete blocker ${b.blockerId}`}
                         >
                           <X className="h-3 w-3" />
                         </Button>
@@ -189,6 +201,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                     <Link
                       to={`/issues/${b.blockedId}`}
                       className="flex items-center gap-1 font-mono text-xs text-blue-600 hover:underline"
+                      aria-label={`View blocked issue ${b.blockedId}`}
                     >
                       {b.blockedId}
                       <ExternalLink className="h-3 w-3" />
@@ -222,11 +235,17 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
             <DialogTitle>Add Blockage</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
+            <label htmlFor="blockage-search" className="sr-only">
+              Search for issues to block by
+            </label>
             <Input
+              id="blockage-search"
+              ref={searchInputRef}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search issues to block by..."
               autoFocus
+              aria-label="Search for issues to block by"
             />
 
             {/* Selected issues */}
@@ -238,6 +257,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                     <button
                       onClick={() => toggleSelect(id)}
                       className="ml-1 hover:text-red-600"
+                      aria-label={`Remove selected issue ${id}`}
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -260,6 +280,7 @@ export function BlockagesSection({ issueId }: BlockagesSectionProps) {
                           ? "border-blue-300 bg-blue-50"
                           : "border-slate-200 bg-white hover:bg-slate-50"
                       }`}
+                      aria-label={`Select issue ${issue.id} as blocker`}
                     >
                       <span className="font-mono text-xs text-slate-400">
                         {issue.id}

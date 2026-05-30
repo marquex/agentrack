@@ -11,7 +11,7 @@ export function IssueRow({ issue }: IssueRowProps) {
   return (
     <Link
       to={`/issues/${issue.id}`}
-      className="flex items-center gap-4 px-4 py-3 hover:bg-slate-50 transition-colors"
+      className="flex items-center gap-4 px-4 py-3 hover:bg-slate-50 transition-colors transition-normal focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:border-ring outline-none"
     >
       {/* ID */}
       <span className="shrink-0 font-mono text-xs text-slate-400 w-20">

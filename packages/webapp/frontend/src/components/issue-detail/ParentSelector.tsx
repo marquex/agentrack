@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router";
 import { useIssues } from "@/hooks/use-issues";
 import { useUpdateIssue } from "@/hooks/use-issues";
@@ -14,6 +14,7 @@ export function ParentSelector({ issueId, parentId }: ParentSelectorProps) {
   const [editing, setEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const updateIssue = useUpdateIssue();
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { data: searchResults } = useIssues(
     searchTerm ? { search: searchTerm } : {}
@@ -43,18 +44,29 @@ export function ParentSelector({ issueId, parentId }: ParentSelectorProps) {
     );
   }
 
+  useEffect(() => {
+    if (editing && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [editing]);
+
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-slate-500">Parent:</span>
+    <div className="space-y-2">
+      <label htmlFor="parent-selector" className="block text-sm font-medium text-slate-700">
+        Parent
+      </label>
       {editing ? (
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="space-y-2">
           <div className="flex items-center gap-2">
             <input
+              id="parent-selector"
+              ref={searchInputRef}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search for parent issue..."
               className="flex-1 rounded-md border border-slate-200 px-3 py-1.5 text-sm outline-none focus:border-blue-400"
               autoFocus
+              aria-label="Search for parent issue"
             />
             <Button
               variant="ghost"
@@ -76,6 +88,7 @@ export function ParentSelector({ issueId, parentId }: ParentSelectorProps) {
                     key={issue.id}
                     onClick={() => handleSetParent(issue.id)}
                     className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-slate-50"
+                    aria-label={`Select parent issue ${issue.id}: ${issue.title}`}
                   >
                     <span className="font-mono text-xs text-slate-400">
                       {issue.id}
@@ -98,6 +111,7 @@ export function ParentSelector({ issueId, parentId }: ParentSelectorProps) {
           <Link
             to={`/issues/${parentId}`}
             className="flex items-center gap-1 font-mono text-sm text-blue-600 hover:underline"
+            aria-label={`View parent issue ${parentId}`}
           >
             {parentId}
             <ExternalLink className="h-3 w-3" />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useComments, useAddComment, useUpdateComment, useDeleteComment } from "@/hooks/use-comments";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,11 +14,18 @@ export function CommentsSection({ issueId }: CommentsSectionProps) {
   const addComment = useAddComment(issueId);
   const updateComment = useUpdateComment(issueId);
   const deleteComment = useDeleteComment(issueId);
+  const commentInputRef = useRef<HTMLTextAreaElement>(null);
 
   const [newContent, setNewContent] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (commentInputRef.current) {
+      commentInputRef.current.focus();
+    }
+  }, []);
 
   function handleAddComment() {
     if (!newContent.trim()) return;
@@ -100,6 +107,7 @@ export function CommentsSection({ issueId }: CommentsSectionProps) {
                         onChange={(e) => setEditContent(e.target.value)}
                         rows={3}
                         autoFocus
+                        aria-label="Edit comment"
                       />
                       <div className="flex gap-2">
                         <Button
@@ -189,24 +197,43 @@ export function CommentsSection({ issueId }: CommentsSectionProps) {
               ))}
             </div>
           ) : (
-            <p className="py-4 text-center text-sm text-slate-400">
-              No comments yet. Add the first comment below.
-            </p>
+            <div className="text-center py-8">
+              <div className="text-slate-400 mb-4">
+                <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h4 className="text-base font-medium text-slate-900 mb-2">No comments yet</h4>
+              <p className="text-slate-500 text-sm mb-4">Be the first to add a comment</p>
+            </div>
           )}
 
           {/* Add comment form */}
           <div className="space-y-2">
+            <label htmlFor="new-comment" className="sr-only">
+              Add a comment
+            </label>
             <Textarea
+              id="new-comment"
+              ref={commentInputRef}
               value={newContent}
               onChange={(e) => setNewContent(e.target.value)}
               placeholder="Write a comment..."
               rows={3}
+              aria-label="Add a comment"
+              aria-describedby="comment-hint"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                   handleAddComment();
                 }
               }}
             />
+            <p
+              id="comment-hint"
+              className="text-xs text-slate-500"
+            >
+              Press Enter+Cmd or Enter+Ctrl to submit
+            </p>
             <div className="flex justify-end">
               <Button
                 size="sm"

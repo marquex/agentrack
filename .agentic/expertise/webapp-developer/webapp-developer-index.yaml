@@ -24,10 +24,11 @@ patterns:
   - Frontend API layer in frontend/src/api/ with apiClient fetch wrapper
   - TanStack Query hooks in frontend/src/hooks/ use-query pattern
   - Components split into issues/, issue-detail/, layout/, shared/, ui/
-  - Two routes: / (IssuesPage) and /issues/:id (IssueDetailPage)
+  - Three routes: / (IssuesPage), /issues/:id (IssueDetailPage), /users (UsersPage)
   - IssueTree component for recursive expandable sub-issues
   - Build command: `cd packages/webapp && npm run build`
   - Typecheck: `cd packages/webapp/frontend && npx tsc --noEmit`
+  - Custom hooks exist: use-blockages, use-comments, use-issues, use-sync, use-users, use-media-query
 
 gotchas:
   - TypeScript interface intersection syntax (interface A {} & B) is invalid — use type A = X | Y instead
@@ -36,3 +37,7 @@ gotchas:
   - Frontend package.json scripts: dev, build, preview (no lint/test)
   - The agentrack Tracker API methods may return either success objects or error objects — server routes need to check both cases
   - shadcn/ui components are base-ui/react based (not radix-ui), so some APIs differ from standard shadcn
+  - CRITICAL: base-ui/react does NOT support `asChild` prop — use `render={<Element />}` pattern instead. Children of the component go inside as content. Example: `<TooltipTrigger render={<span className="..." />}>{children}</TooltipTrigger>`
+  - CRITICAL: Tailwind CSS v4 does NOT support `@apply` with variant modifiers (like `hover:`, `focus-visible:`) inside `@layer utilities` — use plain CSS properties or `@utility` directive instead
+  - CRITICAL: index.css must have `@import "tailwindcss"` as the first line for Tailwind v4
+  - When shadcn/ui components use `render` prop pattern, the render element is self-closing (`<Element />`) and children of the parent component become the content

@@ -1,0 +1,42 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "agentrack" [ref=e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e8]:
+        - link "Users" [ref=e9] [cursor=pointer]:
+          - /url: /users
+          - button "Users" [ref=e10]:
+            - img
+            - text: Users
+        - button "Push" [ref=e11]:
+          - img
+          - text: Push
+        - button "Pull" [ref=e12]:
+          - img
+          - text: Pull
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - heading "Issues" [level=2] [ref=e16]
+        - button "New Issue" [ref=e17]:
+          - img
+          - text: New Issue
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: Search issues
+          - img [ref=e21]
+          - textbox "Search issues" [ref=e24]:
+            - /placeholder: Search issues...
+        - generic [ref=e25]:
+          - generic [ref=e26]: Status
+          - combobox "Status" [ref=e27]:
+            - generic [ref=e28]: all
+            - img: ▼
+          - textbox [ref=e29]: all
+        - generic [ref=e30]:
+          - generic [ref=e31]: Assignee
+          - combobox "Assignee" [ref=e32]:
+            - generic [ref=e33]: all
+            - img: ▼
+          - textbox [ref=e34]: all

@@ -1,0 +1,225 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "agentrack" [ref=e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e8]:
+        - link "Users" [ref=e9] [cursor=pointer]:
+          - /url: /users
+          - button "Users" [ref=e10]:
+            - img
+            - text: Users
+        - button "Push" [ref=e11]:
+          - img
+          - text: Push
+        - button "Pull" [ref=e12]:
+          - img
+          - text: Pull
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - heading "Issues" [level=2] [ref=e16]
+        - button "New Issue" [ref=e17]:
+          - img
+          - text: New Issue
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - img [ref=e20]
+          - textbox "Search issues..." [ref=e23]
+        - combobox [ref=e24]:
+          - generic [ref=e25]: all
+          - img: ▼
+        - textbox [ref=e26]: all
+        - combobox [ref=e27]:
+          - generic [ref=e28]: all
+          - img: ▼
+        - textbox [ref=e29]: all
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - button "Expand" [ref=e32]:
+            - img [ref=e33]
+          - 'link "mpraw5x3rp Webapp: Establish design tokens and CSS variable system In Progress P1 webapp-styler" [ref=e35] [cursor=pointer]':
+            - /url: /issues/mpraw5x3rp
+            - generic [ref=e36]: mpraw5x3rp
+            - generic [ref=e37]: "Webapp: Establish design tokens and CSS variable system"
+            - generic [ref=e39]: In Progress
+            - generic [ref=e40]: P1
+            - generic [ref=e41]: webapp-styler
+        - generic [ref=e42]:
+          - button "Expand" [ref=e43]:
+            - img [ref=e44]
+          - 'link "mppqqp8y26 Webapp: Build the agentrack web UI In Progress P1 cto webapp epic" [ref=e46] [cursor=pointer]':
+            - /url: /issues/mppqqp8y26
+            - generic [ref=e47]: mppqqp8y26
+            - generic [ref=e48]: "Webapp: Build the agentrack web UI"
+            - generic [ref=e50]: In Progress
+            - generic [ref=e51]: P1
+            - generic [ref=e52]: cto
+            - generic [ref=e53]:
+              - generic [ref=e54]: webapp
+              - generic [ref=e55]: epic
+        - generic [ref=e56]:
+          - button "Expand" [ref=e57]:
+            - img [ref=e58]
+          - link "mpqn5bi2us Isolated E2E data for webapp validation Done P1 cto webapp e2e-isolation" [ref=e60] [cursor=pointer]:
+            - /url: /issues/mpqn5bi2us
+            - generic [ref=e61]: mpqn5bi2us
+            - generic [ref=e62]: Isolated E2E data for webapp validation
+            - generic [ref=e64]: Done
+            - generic [ref=e65]: P1
+            - generic [ref=e66]: cto
+            - generic [ref=e67]:
+              - generic [ref=e68]: webapp
+              - generic [ref=e69]: e2e-isolation
+        - generic [ref=e70]:
+          - button "Expand" [ref=e71]:
+            - img [ref=e72]
+          - link "mpqn5i7wui Implement isolated E2E data for webapp Done P1 cto webapp e2e-isolation" [ref=e74] [cursor=pointer]:
+            - /url: /issues/mpqn5i7wui
+            - generic [ref=e75]: mpqn5i7wui
+            - generic [ref=e76]: Implement isolated E2E data for webapp
+            - generic [ref=e78]: Done
+            - generic [ref=e79]: P1
+            - generic [ref=e80]: cto
+            - generic [ref=e81]:
+              - generic [ref=e82]: webapp
+              - generic [ref=e83]: e2e-isolation
+        - generic [ref=e84]:
+          - button "Expand" [ref=e85]:
+            - img [ref=e86]
+          - link "mpqn5qf6zq Validate isolated E2E data for webapp Done P1 cto webapp e2e-isolation +1" [ref=e88] [cursor=pointer]:
+            - /url: /issues/mpqn5qf6zq
+            - generic [ref=e89]: mpqn5qf6zq
+            - generic [ref=e90]: Validate isolated E2E data for webapp
+            - generic [ref=e92]: Done
+            - generic [ref=e93]: P1
+            - generic [ref=e94]: cto
+            - generic [ref=e95]:
+              - generic [ref=e96]: webapp
+              - generic [ref=e97]: e2e-isolation
+              - generic [ref=e98]: "+1"
+        - generic [ref=e99]:
+          - button "Expand" [ref=e100]:
+            - img [ref=e101]
+          - link "mpr50trdgw Fix E2E test isolation - dedicated test ports Done P1 cto" [ref=e103] [cursor=pointer]:
+            - /url: /issues/mpr50trdgw
+            - generic [ref=e104]: mpr50trdgw
+            - generic [ref=e105]: Fix E2E test isolation - dedicated test ports
+            - generic [ref=e107]: Done
+            - generic [ref=e108]: P1
+            - generic [ref=e109]: cto
+        - generic [ref=e110]:
+          - button "Expand" [ref=e111]:
+            - img [ref=e112]
+          - link "mpr51myb9q Validate E2E test isolation - verify no pollution in main .agentrack/ Done P1 cto" [ref=e114] [cursor=pointer]:
+            - /url: /issues/mpr51myb9q
+            - generic [ref=e115]: mpr51myb9q
+            - generic [ref=e116]: Validate E2E test isolation - verify no pollution in main .agentrack/
+            - generic [ref=e118]: Done
+            - generic [ref=e119]: P1
+            - generic [ref=e120]: cto
+        - generic [ref=e121]:
+          - button "Expand" [ref=e122]:
+            - img [ref=e123]
+          - 'link "mprawicnef Webapp: Fix status badges and priority indicators Todo P2 webapp-styler" [ref=e125] [cursor=pointer]':
+            - /url: /issues/mprawicnef
+            - generic [ref=e126]: mprawicnef
+            - generic [ref=e127]: "Webapp: Fix status badges and priority indicators"
+            - generic [ref=e129]: Todo
+            - generic [ref=e130]: P2
+            - generic [ref=e131]: webapp-styler
+        - generic [ref=e132]:
+          - button "Expand" [ref=e133]:
+            - img [ref=e134]
+          - 'link "mprawwui44 Webapp: Unify loading states and redesign empty states Todo P2 webapp-styler" [ref=e136] [cursor=pointer]':
+            - /url: /issues/mprawwui44
+            - generic [ref=e137]: mprawwui44
+            - generic [ref=e138]: "Webapp: Unify loading states and redesign empty states"
+            - generic [ref=e140]: Todo
+            - generic [ref=e141]: P2
+            - generic [ref=e142]: webapp-styler
+        - generic [ref=e143]:
+          - button "Expand" [ref=e144]:
+            - img [ref=e145]
+          - 'link "mpraxha5es Webapp: Improve form UX validation and accessibility Todo P2 webapp-styler" [ref=e147] [cursor=pointer]':
+            - /url: /issues/mpraxha5es
+            - generic [ref=e148]: mpraxha5es
+            - generic [ref=e149]: "Webapp: Improve form UX validation and accessibility"
+            - generic [ref=e151]: Todo
+            - generic [ref=e152]: P2
+            - generic [ref=e153]: webapp-styler
+        - generic [ref=e154]:
+          - button "Expand" [ref=e155]:
+            - img [ref=e156]
+          - 'link "mpray2w1kj Webapp: Improve layout navigation and responsiveness Todo P2 webapp-styler" [ref=e158] [cursor=pointer]':
+            - /url: /issues/mpray2w1kj
+            - generic [ref=e159]: mpray2w1kj
+            - generic [ref=e160]: "Webapp: Improve layout navigation and responsiveness"
+            - generic [ref=e162]: Todo
+            - generic [ref=e163]: P2
+            - generic [ref=e164]: webapp-styler
+        - generic [ref=e165]:
+          - button "Expand" [ref=e166]:
+            - img [ref=e167]
+          - 'link "mpr7q3putx Webapp UI/UX Audit: Analyze current interface and propose improvements Done P2 cto webapp ui-ux +1" [ref=e169] [cursor=pointer]':
+            - /url: /issues/mpr7q3putx
+            - generic [ref=e170]: mpr7q3putx
+            - generic [ref=e171]: "Webapp UI/UX Audit: Analyze current interface and propose improvements"
+            - generic [ref=e173]: Done
+            - generic [ref=e174]: P2
+            - generic [ref=e175]: cto
+            - generic [ref=e176]:
+              - generic [ref=e177]: webapp
+              - generic [ref=e178]: ui-ux
+              - generic [ref=e179]: "+1"
+        - generic [ref=e180]:
+          - button "Expand" [ref=e181]:
+            - img [ref=e182]
+          - 'link "mpr7qd6bjq CTO Review: Process webapp-styler UI/UX audit and create implementation tickets Done P2 cto webapp ui-ux +2" [ref=e184] [cursor=pointer]':
+            - /url: /issues/mpr7qd6bjq
+            - generic [ref=e185]: mpr7qd6bjq
+            - generic [ref=e186]: "CTO Review: Process webapp-styler UI/UX audit and create implementation tickets"
+            - generic [ref=e188]: Done
+            - generic [ref=e189]: P2
+            - generic [ref=e190]: cto
+            - generic [ref=e191]:
+              - generic [ref=e192]: webapp
+              - generic [ref=e193]: ui-ux
+              - generic [ref=e194]: "+2"
+        - generic [ref=e195]:
+          - button "Expand" [ref=e196]:
+            - img [ref=e197]
+          - 'link "mppqswn3jl Webapp Phase 4: Users & sync In Progress P3 webapp-developer webapp phase-4" [ref=e199] [cursor=pointer]':
+            - /url: /issues/mppqswn3jl
+            - generic [ref=e200]: mppqswn3jl
+            - generic [ref=e201]: "Webapp Phase 4: Users & sync"
+            - generic [ref=e203]: In Progress
+            - generic [ref=e204]: P3
+            - generic [ref=e205]: webapp-developer
+            - generic [ref=e206]:
+              - generic [ref=e207]: webapp
+              - generic [ref=e208]: phase-4
+        - generic [ref=e209]:
+          - button "Expand" [ref=e210]:
+            - img [ref=e211]
+          - 'link "mppqt90kot Webapp Phase 4: Validation Todo P3 webapp-validator webapp phase-4 +1" [ref=e213] [cursor=pointer]':
+            - /url: /issues/mppqt90kot
+            - generic [ref=e214]: mppqt90kot
+            - generic [ref=e215]: "Webapp Phase 4: Validation"
+            - generic [ref=e217]: Todo
+            - generic [ref=e218]: P3
+            - generic [ref=e219]: webapp-validator
+            - generic [ref=e220]:
+              - generic [ref=e221]: webapp
+              - generic [ref=e222]: phase-4
+              - generic [ref=e223]: "+1"
+        - generic [ref=e224]:
+          - button "Expand" [ref=e225]:
+            - img [ref=e226]
+          - 'link "mpraygczia Webapp: Add micro-interactions and visual polish Todo P3 webapp-styler" [ref=e228] [cursor=pointer]':
+            - /url: /issues/mpraygczia
+            - generic [ref=e229]: mpraygczia
+            - generic [ref=e230]: "Webapp: Add micro-interactions and visual polish"
+            - generic [ref=e232]: Todo
+            - generic [ref=e233]: P3
+            - generic [ref=e234]: webapp-styler

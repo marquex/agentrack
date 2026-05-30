@@ -62,7 +62,7 @@ function IssueTreeRow({ issue, depth }: IssueTreeRowProps) {
           </span>
 
           {/* Title */}
-          <span className="flex-1 truncate text-sm text-slate-900">
+          <span className="flex-1 truncate text-sm text-slate-900 font-medium">
             {issue.title}
           </span>
 

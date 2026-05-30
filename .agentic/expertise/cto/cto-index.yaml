@@ -14,7 +14,7 @@ hierarchy:
       - webapp-styler (UI/UX expert — visual design, interaction patterns, accessibility, polish)
     pending_setup: []  # All agents fully set up as of session 85
 
-expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation: mpr50trdgw + mpr51myb9q both DONE. New: UI/UX audit mpr7q3putx (webapp-styler, todo, P2) — read-only audit of webapp frontend, deliverable is a comment with prioritized findings. CTO review mpr7qd6bjq (todo, blocked by mpr7q3putx) — process audit findings and create implementation tickets for webapp-styler. Board: 5 done + 5 open (mppqqp8y26, mppqswn3jl, mppqt90kot, mpr7q3putx, mpr7qd6bjq). NEXT: agent runner picks up mpr7q3putx for webapp-styler."
+expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation: mpr50trdgw + mpr51myb9q both DONE. UI/UX audit mpr7q3putx DONE. CTO review mpr7qd6bjq DONE — created 6 implementation issues for webapp-styler: (1) mpraw5x3rp P1 design tokens foundation (unblocked), (2) mprawicnef P2 status badges+priority (blocked by 1), (3) mprawwui44 P2 loading+empty states (blocked by 1), (4) mpraxha5es P2 form UX+accessibility (blocked by 1), (5) mpray2w1kj P2 layout+nav+responsive (blocked by 1), (6) mpraygczia P3 micro-interactions+polish (blocked by all 1-5). Board: 7 done + 7 open. NEXT: agent runner picks up mpraw5x3rp for webapp-styler (P1, no blockers)."
 
 project_overview:
   name: agentrack
@@ -135,6 +135,13 @@ delegation_workflow:
     ALL issues in a chain should be set to todo upfront. Blockages control the execution order.
     Only todo issues are picked up by `agt next`. Idea is invisible to the runner.
     Do NOT use idea status for work that should flow through the agent runner automatically.
+  webapp_styler_pattern: |
+    webapp-styler is a UI/UX specialist — does NOT write backend code or tests.
+    Workflow: (1) webapp-styler audits UI and posts findings comment, (2) CTO reviews findings
+    and creates implementation issues, (3) webapp-styler implements changes within scope.
+    webapp-styler's domain: CSS, component styling, layout, accessibility, responsive design,
+    interaction patterns, visual consistency, micro-interactions.
+    webapp-styler does NOT own: backend API, data model, business logic, test infrastructure.
   note: "Self-check and validation steps are enforced via agent system prompts. No need to duplicate in delegation messages."
   library-developer:
     focus: "Focus delegation messages on the implementation task itself. The agent self-checks typecheck+lint+test before completion."
@@ -400,3 +407,9 @@ session_log:
   - session: 84
     date: "2026-05-29"
     summary: "Diagnosed E2E isolation breach — reuseExistingServer:true defeats AGENTRACK_CWD. Created two fix issues: mpr50trdgw (webapp-developer, dedicated test ports 3001/5174, reuseExistingServer false, vite env var config, test URL updates) and mpr51myb9q (webapp-validator, verify no pollution in main .agentrack/). Blocked mppqt90kot (Phase 4 validation) on mpr50trdgw. Hit blocker: cto wasn't registered in agentrack — enforce-agentrack-token hook denied all agt commands. User registered cto. Initially created issues in idea status — user flagged nobody picks them up. Fixed by updating both to todo. Key lessons: (1) reuseExistingServer:true is a test isolation anti-pattern when env vars control server behavior, (2) cto needs to be registered in agentrack users for agt CLI access, (3) agt create defaults to idea status — MUST agt update to todo immediately after creation, (4) the hook reads users.json BEFORE the bash command runs so self-registration in same call doesn't work."
+  - session: 85
+    date: "2026-05-29"
+    summary: "Onboarded new subordinate webapp-styler (UI/UX expert). Created two issues under webapp epic (mppqqp8y26): (1) mpr7q3putx — UI/UX audit task for webapp-styler (todo, P2) to explore webapp frontend and produce prioritized findings comment (critical/high/medium/low), explicitly read-only no code changes. (2) mpr7qd6bjq — CTO review task (todo, P2, blocked by mpr7q3putx) to process the audit, evaluate findings, cluster into batches, and create implementation issues for webapp-styler. Updated expertise: added webapp-styler to subordinates list, refreshed expertise_status with new issues."
+  - session: 86
+    date: "2026-05-29"
+    summary: "Completed CTO review of UI/UX audit (mpr7qd6bjq). Evaluated webapp-styler's audit findings and created 6 implementation issues in dependency order: (1) mpraw5x3rp — design tokens + CSS variable system (P1, foundation, unblocked), (2) mprawicnef — status badges + priority indicators (P2, blocked by 1), (3) mprawwui44 — loading states + empty states (P2, blocked by 1), (4) mpraxha5es — form UX + accessibility (P2, blocked by 1), (5) mpray2w1kj — layout + navigation + responsiveness (P2, blocked by 1), (6) mpraygczia — micro-interactions + polish (P3, blocked by 1-5, final pass). Design tokens (1) must ship first — all other issues consume the CSS variables. Issues 2-5 can run in parallel once tokens are done. Issue 6 is the final polish pass that refines the output of 2-5."

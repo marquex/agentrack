@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +36,7 @@ export function CreateIssueDialog({
 }: CreateIssueDialogProps) {
   const { data: users } = useUsers();
   const createIssue = useCreateIssue();
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -43,6 +44,13 @@ export function CreateIssueDialog({
   const [assignee, setAssignee] = useState<string>("__none__");
   const [tags, setTags] = useState("");
   const [priority, setPriority] = useState("3");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    if (open && titleInputRef.current) {
+      titleInputRef.current.focus();
+    }
+  }, [open]);
 
   function resetForm() {
     setTitle("");
@@ -51,12 +59,29 @@ export function CreateIssueDialog({
     setAssignee("__none__");
     setTags("");
     setPriority("3");
+    setErrors({});
+  }
+
+  function validateForm() {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!title.trim()) {
+      newErrors.title = "Title is required";
+    } else if (title.trim().length < 3) {
+      newErrors.title = "Title must be at least 3 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setErrors({});
 
-    if (!title.trim()) return;
+    if (!validateForm()) {
+      return;
+    }
 
     createIssue.mutate(
       {
@@ -78,55 +103,112 @@ export function CreateIssueDialog({
           resetForm();
           onOpenChange(false);
         },
+        onError: (error) => {
+          console.error("Failed to create issue:", error);
+          setErrors({ submit: "Failed to create issue. Please try again." });
+        },
       }
     );
+  }
+
+  function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setTitle(e.target.value);
+    if (errors.title) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.title;
+        return newErrors;
+      });
+    }
+  }
+
+  function handleDescriptionChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setDescription(e.target.value);
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger render={<Button size="sm" />}>
-          <Plus className="mr-1 h-4 w-4" />
-          New Issue
+        <Plus className="mr-1 h-4 w-4" />
+        New Issue
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Create New Issue</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Title <span className="text-red-500">*</span>
             </label>
             <Input
+              id="title"
+              ref={titleInputRef}
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={handleTitleChange}
               placeholder="Issue title"
               required
-              autoFocus
+              aria-required="true"
+              aria-invalid={!!errors.title}
+              aria-describedby={errors.title ? "title-error" : undefined}
+              className={errors.title ? "border-red-500" : ""}
+              disabled={createIssue.isPending}
             />
+            {errors.title && (
+              <p
+                id="title-error"
+                role="alert"
+                className="mt-1 text-sm text-red-600"
+              >
+                {errors.title}
+              </p>
+            )}
           </div>
 
           {/* Description */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Description
             </label>
             <Textarea
+              id="description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={handleDescriptionChange}
               placeholder="Optional description..."
               rows={3}
+              aria-describedby="description-hint"
+              disabled={createIssue.isPending}
             />
+            <p
+              id="description-hint"
+              className="mt-1 text-xs text-slate-500"
+            >
+              Provide additional context for the issue
+            </p>
           </div>
 
           {/* Status + Priority row */}
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="mb-1 block text-sm font-medium text-slate-700">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="status"
+                className="block text-sm font-medium text-slate-700 mb-1"
+              >
                 Status
               </label>
-              <Select value={status} onValueChange={(v) => setStatus((v ?? "idea") as IssueStatus)}>
+              <Select
+                id="status"
+                value={status}
+                onValueChange={(v) => setStatus((v ?? "idea") as IssueStatus)}
+                disabled={createIssue.isPending}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
@@ -139,11 +221,19 @@ export function CreateIssueDialog({
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex-1">
-              <label className="mb-1 block text-sm font-medium text-slate-700">
+            <div>
+              <label
+                htmlFor="priority"
+                className="block text-sm font-medium text-slate-700 mb-1"
+              >
                 Priority
               </label>
-              <Select value={priority} onValueChange={(v) => setPriority(v ?? "3")}>
+              <Select
+                id="priority"
+                value={priority}
+                onValueChange={(v) => setPriority(v ?? "3")}
+                disabled={createIssue.isPending}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
@@ -160,10 +250,18 @@ export function CreateIssueDialog({
 
           {/* Assignee */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="assignee"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Assignee
             </label>
-            <Select value={assignee} onValueChange={(v) => setAssignee(v ?? "__none__")}>
+            <Select
+              id="assignee"
+              value={assignee}
+              onValueChange={(v) => setAssignee(v ?? "__none__")}
+              disabled={createIssue.isPending}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -180,23 +278,50 @@ export function CreateIssueDialog({
 
           {/* Tags */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="tags"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Tags
             </label>
             <Input
+              id="tags"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="Comma-separated tags"
+              aria-describedby="tags-hint"
+              disabled={createIssue.isPending}
             />
+            <p
+              id="tags-hint"
+              className="mt-1 text-xs text-slate-500"
+            >
+              Add tags to categorize this issue (comma-separated)
+            </p>
           </div>
 
           {/* Parent (read-only if provided) */}
           {defaultParentId && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
+              <label
+                htmlFor="parent"
+                className="block text-sm font-medium text-slate-700 mb-1"
+              >
                 Parent
               </label>
-              <Input value={defaultParentId} disabled className="font-mono" />
+              <Input
+                id="parent"
+                value={defaultParentId}
+                disabled
+                className="font-mono"
+                aria-describedby="parent-hint"
+              />
+              <p
+                id="parent-hint"
+                className="mt-1 text-xs text-slate-500"
+              >
+                This issue is a child of the parent issue
+              </p>
             </div>
           )}
 
@@ -206,11 +331,26 @@ export function CreateIssueDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              disabled={createIssue.isPending}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={!title.trim() || createIssue.isPending}>
-              {createIssue.isPending ? "Creating..." : "Create Issue"}
+            <Button
+              type="submit"
+              disabled={!title.trim() || createIssue.isPending}
+              className="flex items-center gap-2"
+            >
+              {createIssue.isPending ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Creating...
+                </>
+              ) : (
+                "Create Issue"
+              )}
             </Button>
           </div>
         </form>

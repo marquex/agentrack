@@ -1,5 +1,4 @@
 import { useParams, Link } from "react-router";
-import { ArrowLeft } from "lucide-react";
 import { useIssue, useUpdateIssue } from "@/hooks/use-issues";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusBadge } from "@/components/shared/StatusBadge";
@@ -19,9 +18,9 @@ import {
 } from "@/components/ui/select";
 import { useUsers } from "@/hooks/use-users";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { AppLayout } from "@/components/layout/AppLayout";
 import type { IssueStatus } from "@/types";
 
 const STATUS_OPTIONS: IssueStatus[] = ["idea", "todo", "in-progress", "done", "closed"];
@@ -41,8 +40,6 @@ export function IssueDetailPage() {
   const { data: users } = useUsers();
   const updateIssue = useUpdateIssue();
 
-  const [editingTitle, setEditingTitle] = useState(false);
-  const [titleValue, setTitleValue] = useState("");
   const [editingDescription, setEditingDescription] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState("");
 
@@ -82,13 +79,6 @@ export function IssueDetailPage() {
     });
   }
 
-  function handleTitleSave() {
-    if (titleValue.trim() && issue && titleValue !== issue.title) {
-      updateIssue.mutate({ id: id!, data: { title: titleValue.trim() } });
-    }
-    setEditingTitle(false);
-  }
-
   function handleDescriptionSave() {
     if (issue && descriptionValue !== issue.description) {
       updateIssue.mutate({ id: id!, data: { description: descriptionValue } });
@@ -101,184 +91,154 @@ export function IssueDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Back navigation */}
-      <Link
-        to="/"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to issues
-      </Link>
-
-      {/* Title */}
-      <div className="flex items-start justify-between gap-4">
-        {editingTitle ? (
-          <div className="flex flex-1 items-center gap-2">
-            <Input
-              value={titleValue}
-              onChange={(e) => setTitleValue(e.target.value)}
-              onBlur={handleTitleSave}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleTitleSave();
-                if (e.key === "Escape") setEditingTitle(false);
-              }}
-              autoFocus
-              className="text-xl font-semibold"
-            />
+    <AppLayout
+      pageTitle={issue.title}
+      breadcrumbs={[
+        { label: "Dashboard", href: "/" },
+        { label: "Issues", href: "/issues" },
+        { label: issue.title }
+      ]}
+    >
+      <div className="space-y-6">
+        {/* Properties row */}
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Status */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-500">Status:</span>
+            <Select value={issue.status} onValueChange={handleStatusChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUS_OPTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {statusLabel[s]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        ) : (
-          <h1
-            className="cursor-pointer text-xl font-semibold text-slate-900 hover:text-slate-700"
-            onClick={() => {
-              setTitleValue(issue.title);
-              setEditingTitle(true);
-            }}
-          >
-            {issue.title}
-          </h1>
-        )}
-        <span className="shrink-0 font-mono text-sm text-slate-400">{issue.id}</span>
-      </div>
 
-      {/* Properties row */}
-      <div className="flex flex-wrap items-center gap-4">
-        {/* Status */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-500">Status:</span>
-          <Select value={issue.status} onValueChange={handleStatusChange}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {STATUS_OPTIONS.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {statusLabel[s]}
+          {/* Priority */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-500">Priority:</span>
+            <Select value={String(issue.priority)} onValueChange={handlePriorityChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PRIORITY_OPTIONS.map((p) => (
+                  <SelectItem key={p} value={String(p)}>
+                    <PriorityIndicator priority={p} />
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Assignee */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-500">Assignee:</span>
+            <Select
+              value={issue.assignee ?? "__none__"}
+              onValueChange={handleAssigneeChange}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">
+                  <span className="text-slate-400">Unassigned</span>
                 </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                {users?.map((u) => (
+                  <SelectItem key={u.name} value={u.name}>
+                    {u.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        {/* Priority */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-500">Priority:</span>
-          <Select value={String(issue.priority)} onValueChange={handlePriorityChange}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {PRIORITY_OPTIONS.map((p) => (
-                <SelectItem key={p} value={String(p)}>
-                  <PriorityIndicator priority={p} />
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Status & Priority display */}
+        <div className="flex items-center gap-3">
+          <StatusBadge status={issue.status} />
+          <PriorityIndicator priority={issue.priority} />
         </div>
 
-        {/* Assignee */}
+        {/* Tags */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-slate-500">Assignee:</span>
-          <Select
-            value={issue.assignee ?? "__none__"}
-            onValueChange={handleAssigneeChange}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__none__">
-                <span className="text-slate-400">Unassigned</span>
-              </SelectItem>
-              {users?.map((u) => (
-                <SelectItem key={u.name} value={u.name}>
-                  {u.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <span className="text-sm text-slate-500">Tags:</span>
+          <TagInput tags={issue.tags} onTagsChange={handleTagsChange} />
         </div>
-      </div>
 
-      {/* Status & Priority display */}
-      <div className="flex items-center gap-3">
-        <StatusBadge status={issue.status} />
-        <PriorityIndicator priority={issue.priority} />
-      </div>
+        {/* Parent */}
+        <ParentSelector issueId={id!} parentId={issue.parentId} />
 
-      {/* Tags */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-slate-500">Tags:</span>
-        <TagInput tags={issue.tags} onTagsChange={handleTagsChange} />
-      </div>
+        {/* Timestamps */}
+        <div className="flex gap-4 text-sm text-slate-400">
+          <span>
+            Created {new Date(issue.createdAt).toLocaleDateString()} by{" "}
+            {issue.createdBy}
+          </span>
+          <span>
+            Updated {new Date(issue.updatedAt).toLocaleDateString()}
+          </span>
+        </div>
 
-      {/* Parent */}
-      <ParentSelector issueId={id!} parentId={issue.parentId} />
-
-      {/* Timestamps */}
-      <div className="flex gap-4 text-sm text-slate-400">
-        <span>
-          Created {new Date(issue.createdAt).toLocaleDateString()} by{" "}
-          {issue.createdBy}
-        </span>
-        <span>
-          Updated {new Date(issue.updatedAt).toLocaleDateString()}
-        </span>
-      </div>
-
-      {/* Description */}
-      <div className="border-t pt-4">
-        <h3 className="mb-2 text-sm font-medium text-slate-700">Description</h3>
-        {editingDescription ? (
-          <div className="space-y-2">
-            <Textarea
-              value={descriptionValue}
-              onChange={(e) => setDescriptionValue(e.target.value)}
-              rows={6}
-              autoFocus
-            />
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleDescriptionSave}>
-                Save
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setEditingDescription(false)}
-              >
-                Cancel
-              </Button>
+        {/* Description */}
+        <div className="border-t pt-4">
+          <h3 className="mb-2 text-sm font-medium text-slate-700">Description</h3>
+          {editingDescription ? (
+            <div className="space-y-2">
+              <Textarea
+                value={descriptionValue}
+                onChange={(e) => setDescriptionValue(e.target.value)}
+                rows={6}
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <Button size="sm" onClick={handleDescriptionSave}>
+                  Save
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setEditingDescription(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div
-            className="min-h-[80px] cursor-pointer rounded-md border border-dashed border-slate-200 p-3 text-sm text-slate-600 hover:border-slate-300"
-            onClick={() => {
-              setDescriptionValue(issue.description);
-              setEditingDescription(true);
-            }}
-          >
-            {issue.description || (
-              <span className="italic text-slate-400">
-                Click to add a description...
-              </span>
-            )}
-          </div>
-        )}
+          ) : (
+            <div
+              className="min-h-[80px] cursor-pointer rounded-md border border-dashed border-slate-200 p-3 text-sm text-slate-600 hover:border-slate-300"
+              onClick={() => {
+                setDescriptionValue(issue.description);
+                setEditingDescription(true);
+              }}
+            >
+              {issue.description || (
+                <span className="italic text-slate-400">
+                  Click to add a description...
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Blockages */}
+        <BlockagesSection issueId={id!} />
+
+        {/* Sub-issues */}
+        <SubIssuesSection issueId={id!} />
+
+        {/* Comments */}
+        <CommentsSection issueId={id!} />
+
+        {/* History */}
+        <HistorySection issueId={id!} />
       </div>
-
-      {/* Blockages */}
-      <BlockagesSection issueId={id!} />
-
-      {/* Sub-issues */}
-      <SubIssuesSection issueId={id!} />
-
-      {/* Comments */}
-      <CommentsSection issueId={id!} />
-
-      {/* History */}
-      <HistorySection issueId={id!} />
-    </div>
+    </AppLayout>
   );
 }
