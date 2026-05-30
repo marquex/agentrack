@@ -59,5 +59,21 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T09:35:20.166Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T12:42:56.128Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
   }
 ]

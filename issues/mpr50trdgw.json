@@ -1,0 +1,52 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-29T16:29:51.861Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:29:51.861Z",
+    "author": "cto",
+    "content": {
+      "title": "Fix E2E test isolation - dedicated test ports",
+      "description": "E2E isolation is broken. reuseExistingServer true in playwright.config.ts reuses existing dev server on port 3000 WITHOUT AGENTRACK_CWD, so all test data writes to main .agentrack/. Need: (1) playwright.config.ts use port 3001 backend and 5174 frontend with reuseExistingServer false, (2) vite.config.ts read API_PORT and VITE_PORT env vars, (3) all e2e specs change localhost 3000 to 3001.",
+      "priority": 1,
+      "assignee": "webapp-developer"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:32:23.064Z",
+    "author": "cto",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:32:41.439Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-29T16:35:50.569Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mpr58ib1ht",
+      "content": "Done. Fixed E2E test isolation by using dedicated test ports:\n\n1. **playwright.config.ts** — Backend port changed to 3001, frontend to 5174, both with reuseExistingServer: false. Env vars PORT, API_PORT, VITE_PORT passed to child processes.\n\n2. **frontend/vite.config.ts** — Reads API_PORT env var for proxy target (default 3000) and VITE_PORT env var for dev server port (with strictPort when set). Default behavior unchanged for regular dev.\n\n3. **All 4 e2e specs** — All localhost:3000 references changed to localhost:3001.\n\nThis ensures E2E tests never accidentally reuse an existing dev server on port 3000 (which would lack AGENTRACK_CWD isolation and write test data to the main .agentrack/ directory). The server already reads PORT from env, so no server code changes needed.\n\nVerified: typecheck passes, build succeeds."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:35:55.342Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

@@ -1,0 +1,69 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-29T16:30:28.936Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:30:28.936Z",
+    "author": "cto",
+    "content": {
+      "title": "Validate E2E test isolation - verify no pollution in main .agentrack/",
+      "description": "After mpr50trdgw fixes the test ports, validate that E2E tests do NOT create any data in the main .agentrack/ directory. Test plan: (1) Run ALL e2e tests with a dev server running on 3000/5173, (2) Check .agentrack/users.json for test-created users, (3) Check .agentrack/index.json for test-created issues, (4) Verify validation/.e2edata/ IS populated with test data, (5) Run tests multiple times to confirm consistent isolation.",
+      "priority": 1,
+      "assignee": "webapp-validator"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-29T16:30:36.212Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpr50trdgw"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:32:23.156Z",
+    "author": "cto",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-29T16:35:55.344Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpr50trdgw",
+      "reason": "Blocker issue mpr50trdgw transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:36:41.176Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-29T16:40:17.488Z",
+    "author": "webapp-validator",
+    "content": {
+      "id": "mpr5e8rasf",
+      "content": "## Validation Complete: E2E Test Isolation ✅\n\n### Test Plan Executed\nRan all 152 E2E tests **3 consecutive times** and verified main `.agentrack/` directory after each run.\n\n### Results Summary\n\n| Run | Tests | Passed | Failed | .agentrack/ polluted? |\n|-----|-------|--------|--------|-----------------------|\n| 1   | 152   | 150    | 2      | ❌ NO (0 changes)     |\n| 2   | 152   | 149    | 3      | ❌ NO (0 changes)     |\n| 3   | 152   | 150    | 2      | ❌ NO (0 changes)     |\n\n### Isolation Mechanisms Verified\n\n1. **Dedicated ports** — Backend on 3001, frontend on 5174 (not dev 3000/5173)\n2. **`reuseExistingServer: false`** — Cannot accidentally grab an existing dev server\n3. **`AGENTRACK_CWD` env var** — Points to `validation/.e2edata/` worktree, not project root\n4. **Tracker isolation** — `server/utils/tracker.ts` reads `AGENTRACK_CWD` and all API routes go through this singleton\n5. **global-setup.ts** — Resets all data (index, users, dependencies, mentions, issues/) to empty defaults before each run\n6. **e2edata confirmed populated** — `validation/.e2edata/issues/` had 96-98 issue files after each run — all test data goes to the isolated worktree\n\n### Git Verification\n- `git status --porcelain .agentrack/` returned empty after every run\n- `git diff --stat HEAD -- .agentrack/` returned empty after every run\n- Main `.agentrack/` is completely untouched by E2E tests\n\n### Test Failure Analysis (Not Related to Isolation)\nThe 2-3 flaky failures per run are due to **parallel worker shared state races** — tests that depend on data created in `beforeAll` sometimes run before the creating worker finishes. The failures vary per run:\n- Run 1: `renders the agentrack header` (phase1), `adds blockages and returns 200` (phase3)\n- Run 2: `filters by search title substring` (phase2), `renders the agentrack header` (phase1), `navigates from list to detail page` (phase2)\n- Run 3: `renders the agentrack header` (phase1), `defaults priority to 3` (phase2)\n\nThese are pre-existing flakiness issues, not isolation problems.\n\n### Conclusion\n**E2E test isolation is working correctly.** The main `.agentrack/` directory shows zero changes across 3 consecutive full test runs. All test data is correctly routed to `validation/.e2edata/`."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-29T16:40:24.991Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

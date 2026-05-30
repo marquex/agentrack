@@ -44,7 +44,7 @@
       "id": "mpqn5bi2us",
       "title": "Isolated E2E data for webapp validation",
       "path": "issues/mpqn5bi2us.json",
-      "status": "in-progress",
+      "status": "done",
       "assignee": "cto",
       "parentId": "mppqqp8y26",
       "tags": [
@@ -78,6 +78,92 @@
         "e2e-isolation",
         "validation"
       ],
+      "priority": 1
+    },
+    {
+      "id": "mpr50trdgw",
+      "title": "Fix E2E test isolation - dedicated test ports",
+      "path": "issues/mpr50trdgw.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [],
+      "priority": 1
+    },
+    {
+      "id": "mpr51myb9q",
+      "title": "Validate E2E test isolation - verify no pollution in main .agentrack/",
+      "path": "issues/mpr51myb9q.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [],
+      "priority": 1
+    },
+    {
+      "id": "mps4sfny0f",
+      "title": "Feature: agt delete issue-id command",
+      "path": "issues/mps4sfny0f.json",
+      "status": "done",
+      "assignee": "library-developer",
+      "parentId": null,
+      "tags": [
+        "feature",
+        "delete",
+        "core"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mps4uwcsqx",
+      "title": "Validate: agt delete command",
+      "path": "issues/mps4uwcsqx.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "validation",
+        "delete",
+        "core"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mps4viae0a",
+      "title": "Document: agt delete command",
+      "path": "issues/mps4viae0a.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "docs",
+        "delete",
+        "core"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mpscu5l9rk",
+      "title": "Bug: removeAllBlockagesForIssue has inverted counterpart filter",
+      "path": "issues/mpscu5l9rk.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "bug",
+        "delete",
+        "blockages"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mpscw71ria",
+      "title": "Fix inverted counterpart filter in dependency-manager",
+      "path": "issues/mpscw71ria.json",
+      "status": "done",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [],
       "priority": 1
     }
   ],

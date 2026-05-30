@@ -51,5 +51,22 @@
       "blockerId": "mpqn5qf6zq",
       "reason": "Blocker issue mpqn5qf6zq transitioned to done"
     }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-29T16:30:21.591Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mpr50trdgw"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-29T16:35:55.344Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mpr50trdgw",
+      "reason": "Blocker issue mpr50trdgw transitioned to done"
+    }
   }
 ]

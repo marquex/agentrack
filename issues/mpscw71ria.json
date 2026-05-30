@@ -1,0 +1,45 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-30T12:57:59.153Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T12:57:59.153Z",
+    "author": "cto",
+    "content": {
+      "title": "Fix inverted counterpart filter in dependency-manager",
+      "description": "Fix a one-line bug in the dependency manager where the filter condition for removing counterpart blockage entries uses the wrong variable. The filter checks e.blockerId === issueId when it should check e.blockerId === entry.blockerId. This causes counterpart entries to not be cleaned up when deleting a blocked issue. Found during validation of delete command.",
+      "status": "todo",
+      "priority": 1,
+      "assignee": "library-developer"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T12:59:07.777Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-30T13:03:10.456Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mpsd2vp9qv",
+      "content": "Fixed the inverted filter condition at line 200 of dependency-manager.ts. Changed `e.blockerId === issueId` to `e.blockerId === entry.blockerId` in the first loop of `removeAllBlockagesForIssue`. \n\nThe bug: When iterating over `blockedByEntries` (entries where issueId is the blocked issue), the filter was checking `e.blockerId === issueId` against the blocker's blocks list. Since `issueId` is the blocked issue (not the blocker), the condition never matched, so counterpart entries in `blocks[]` were never cleaned up.\n\nThe second loop (line 223) was already correct — there `issueId` IS the blocker so `e.blockerId === issueId` is right.\n\nVerified: typecheck passes, all 28 dependency-manager tests pass. The 5 pre-existing test failures in mentions are unrelated."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T13:03:18.151Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]

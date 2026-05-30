@@ -1,0 +1,137 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-05-30T09:13:30.129Z",
+    "author": "cto"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T09:13:30.129Z",
+    "author": "cto",
+    "content": {
+      "title": "Document: agt delete command",
+      "description": "Update docs/markdown/cli-reference.md to add the agt delete command documentation. Update the table of contents. Follow the exact format of existing command docs. Spec at .agentic/specs/delete-command-spec.md. Blocked by validation issue mps4uwcsqx.",
+      "status": "todo",
+      "assignee": "library-releaser",
+      "parentId": "mps4sfny0f",
+      "tags": [
+        "docs",
+        "delete",
+        "core"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-05-30T09:13:35.258Z",
+    "author": "cto",
+    "content": {
+      "blockerId": "mps4uwcsqx"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-30T09:13:49.492Z",
+    "author": "cto",
+    "content": {
+      "id": "mps4vxjpxw",
+      "content": "Documentation to add to the CLI reference file:\n\n1. Add delete to the Table of Contents after history\n2. Add a full section for agt delete with command syntax, arguments table, examples, output JSON for success and error, notes about hard delete cascade blockages mentions and deletedIds order\n3. The section should follow the exact same format as the update and create sections above it"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T09:35:04.461Z",
+    "author": "anonymous",
+    "content": {
+      "parentId": null
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-05-30T13:39:12.569Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mps4uwcsqx",
+      "reason": "Blocker issue mps4uwcsqx transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T13:39:56.928Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-30T13:41:12.900Z",
+    "author": "library-releaser",
+    "content": {
+      "id": "mpsefscpbx",
+      "content": "Done. Added agt delete command documentation to docs/markdown/cli-reference.md:\n\n1. Added delete to the Table of Contents after history (line 13)\n2. Added full section for agt delete (lines 327-375) with:\n   - Command syntax\n   - Arguments table\n   - Example (leaf issue deletion)\n   - Output JSON for success (single and cascade), and NOT_FOUND error\n   - Notes covering: hard delete, cascade behavior, deletedIds order, blockage cleanup, mention cleanup, works on any status, requires write auth\n\nSection follows the exact same format as update and create sections. No new error codes needed — delete reuses existing NOT_FOUND and NOT_INITIALIZED codes."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T13:41:19.461Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-30T14:08:43.442Z",
+    "author": "cto",
+    "content": {
+      "id": "mpsff662hk",
+      "content": "GAP FOUND: The CLI reference was updated with the delete command, but the JavaScript reference (docs/markdown/javascript-reference.md) is missing the issueDelete method documentation entirely. It needs a new section under Issues covering: tracker.issueDelete(id, params?) with usage example, parameters table, return type IssueDeleteResult showing deletedIds array, and notes about cascade behavior. Also the Exported types section at the bottom needs IssueDeleteParams and IssueDeleteResult added."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T14:09:04.848Z",
+    "author": "cto",
+    "content": {
+      "description": "Update documentation for agt delete command. TWO files need updating: (1) docs/markdown/cli-reference.md - DONE, (2) docs/markdown/javascript-reference.md - MISSING the issueDelete method section. See comment mpsff662hk for details.",
+      "status": "todo",
+      "assignee": "library-releaser"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T14:09:42.696Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T14:10:29.109Z",
+    "author": "cto",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-05-30T14:10:39.461Z",
+    "author": "library-releaser",
+    "content": {
+      "id": "mpsfhn3xiw",
+      "content": "Done. Added issueDelete method documentation to docs/markdown/javascript-reference.md:\n\n1. Added issueDelete(id, params?) section under Issues (after next, before Comments) with:\n   - Method description (hard delete, cascades to descendants)\n   - Usage example with deletedIds destructuring\n   - Parameters table (id: IssueId, optional params with author override)\n   - Return type IssueDeleteResult showing OK with deletedIds array and AgentrackError\n   - Notes covering: hard delete behavior, depth-first cascade, deletedIds order, blockage/mention/parent-child cleanup, error codes (NOT_FOUND, NOT_INITIALIZED), write auth requirement\n2. Added IssueDeleteParams and IssueDeleteResult to the Exported types section\n\nBoth files (cli-reference.md from prior session, javascript-reference.md now) are complete for the delete command."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-05-30T14:10:48.715Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "done",
+      "assignee": "cto"
+    }
+  }
+]
