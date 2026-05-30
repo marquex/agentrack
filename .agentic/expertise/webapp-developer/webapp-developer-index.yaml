@@ -30,6 +30,16 @@ patterns:
   - Typecheck: `cd packages/webapp/frontend && npx tsc --noEmit`
   - Custom hooks exist: use-blockages, use-comments, use-issues, use-sync, use-users, use-media-query
 
+dev_setup:
+  webapp_package_scripts:
+    dev: runs both backend and frontend in parallel (`bun run dev:server & bun run dev:frontend`)
+    dev:server: `bun run --watch server/index.ts` — Hono backend on port 3000
+    dev:frontend: `cd frontend && bun run dev` — Vite dev server on port 5173
+  frontend_only: `cd packages/webapp/frontend && bun run dev` or `cd packages/webapp && bun run dev:frontend`
+  vite_proxy: Vite proxies `/api` requests to `http://localhost:${API_PORT || 3000}` — backend must be running for API calls to work
+  build: Only builds the frontend (`cd frontend && bun run build`) — no separate backend build step
+  production: Port 3000 is API-only — no static file serving. Frontend is served separately (Vite dev server in dev, or a separate static host in prod)
+
 gotchas:
   - TypeScript interface intersection syntax (interface A {} & B) is invalid — use type A = X | Y instead
   - No lint command configured in the project
