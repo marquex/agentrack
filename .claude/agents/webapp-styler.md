@@ -29,6 +29,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
   Stop:
     - hooks:
         - type: command

@@ -25,11 +25,11 @@ hooks:
   SessionStart:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
   Stop:
     - hooks:
         - type: command
