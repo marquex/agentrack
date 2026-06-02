@@ -38,8 +38,17 @@ if (!sourcePath || !outputPath) {
     process.exit(1);
 }
 
-// Ensure the output directory exists before we start writing.
+// Ensure the output directories exist before we start writing.
 mkdirSync(dirname(outputPath), { recursive: true });
+
+/** Write the process_end marker to the output file before exiting. */
+function writeProcessEnd(): void {
+    try {
+        appendFileSync(outputPath, JSON.stringify({ role: 'system', type: 'process_end', data: {} }) + '\n');
+    } catch {
+        // Best-effort — never crash the tail due to a write failure.
+    }
+}
 
 // Byte offset tracks how much of the source file we have already copied.
 // Start from the end of any existing content so we only copy lines written
@@ -57,8 +66,8 @@ let idlePolls = 0;
 let lastGrowthTime = Date.now();
 
 // Clean exit on termination signals.
-process.on('SIGTERM', () => process.exit(0));
-process.on('SIGINT', () => process.exit(0));
+process.on('SIGTERM', () => { writeProcessEnd(); process.exit(0); });
+process.on('SIGINT', () => { writeProcessEnd(); process.exit(0); });
 
 /** Entry types to exclude from the output entirely. */
 const IGNORED_TYPES = new Set([
@@ -113,8 +122,11 @@ function filterChunk(chunk: string): string[] {
         // If the entry carries a `message`, emit only the message.
         if (typeof entry.message === 'object' && entry.message !== null) {
             const {message} = entry;
-            const {content} = message;
+            let {content} = message;
             const isPrompt = typeof content === 'string';
+            if( Array.isArray(content) ){
+                content = content[0];
+            }
             const messageEntry ={
                 role: message.role,
                 type: content.type,
@@ -185,6 +197,7 @@ async function tail(): Promise<void> {
 
                 // Orphan protection: if no growth for a long time, exit.
                 if (Date.now() - lastGrowthTime > ORPHAN_TIMEOUT_MS) {
+                    writeProcessEnd();
                     process.exit(0);
                 }
 
@@ -195,6 +208,7 @@ async function tail(): Promise<void> {
                     existsSync(stopSignalPath) &&
                     idlePolls >= IDLE_POLLS_BEFORE_EXIT
                 ) {
+                    writeProcessEnd();
                     process.exit(0);
                 }
             }

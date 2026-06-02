@@ -12,6 +12,14 @@ hooks:
       hooks:
         - type: command
           command: "bun .claude/hooks/enforce-agent-access.ts"
+  SessionStart:
+    - hooks:
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
+  Stop:
+    - hooks:
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
 ---
 
 You are the expertise manager, a companion agent that helps other agents create, maintain, and retrieve practical knowledge bases for their work. Your job is to make stored expertise useful at the moment a human or agent asks for a concrete change, bug fix, feature update, investigation, or decision.

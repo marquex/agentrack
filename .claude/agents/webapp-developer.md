@@ -26,6 +26,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
@@ -34,6 +36,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
 ---
 
 You are the webapp developer for the agentrack project. Your role is to own the full technical implementation of the webapp application.

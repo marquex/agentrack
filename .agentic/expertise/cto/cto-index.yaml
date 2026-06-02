@@ -12,9 +12,11 @@ hierarchy:
       - webapp-developer (full-stack web development — React frontend + Hono backend)
       - webapp-validator (webapp testing, quality assurance, spec compliance)
       - webapp-styler (UI/UX expert — visual design, interaction patterns, accessibility, polish)
+      - claude-developer (Claude Code extensions — agents, skills, hooks, .claude/ config)
+      - expertise-manager (companion — manages expertise KBs for all agents, .agentic/expertise/)
     pending_setup: []
 
-expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation FIXED: mpr50trdgw + mpr51myb9q both DONE. Delete command FULLY COMPLETE: impl (mps4sfny0f) done, validation (mps4uwcsqx) done, bug fix (mpscu5l9rk+mpscw71ria) done, docs (mps4viae0a) done — both cli-reference.md and javascript-reference.md updated. Board: 13 issues (10 done, 2 in-progress, 1 todo). webapp-styler active but no assigned issues."
+expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation FIXED. Delete command FULLY COMPLETE. Board: 13 issues (10 done, 2 in-progress, 1 todo). INFRA: expertise-manager agent created for knowledge base management. claude-developer agent created for Claude Code extensions. library-developer expertise restructured to multi-file .md format (18 files + patterns/ + recipes/, from single YAML). observable-agent hooks added for session logging (observable-agent.ts + observable-agent-tail.ts). runner log utils added (scripts/runner/). webapp-styler active but no assigned issues. CTO NOT registered in agentrack users — agt CLI blocked by enforce-agentrack-token hook."
 
 project_overview:
   name: agentrack
@@ -431,3 +433,9 @@ session_log:
   - session: 90
     date: "2026-06-01"
     summary: "Stop hook triggered expertise update. Board audit: 13 issues (10 done, 2 in-progress, 1 todo). Fixed stale counts in expertise_status (was '7 done', now '10 done'). Fixed project_overview stage — removed 'E2E isolation BROKEN' (now fixed), added 'Delete command shipped', updated Phase 4 description. No new work."
+  - session: 91
+    date: "2026-06-02"
+    summary: "Stop hook expertise update. Added two new agents to subordinates: claude-developer (Claude Code extensions) and expertise-manager (expertise KB management). Updated expertise_status with all infra changes: multi-file .md expertise format for library-developer, observable-agent hooks for session logging, runner log utils. Noted CTO is NOT registered in agentrack users — agt CLI commands blocked. No functional code changes."
+  - session: 92
+    date: "2026-06-02"
+    summary: "Stop hook expertise check. Reviewed all uncommitted changes: session 91 CTO expertise update (uncommitted), claude-developer observable-agent-tail v3 bug fix (destructuring double-wrap, process_end markers), settings.json model config updates. Expertise is current — no updates needed beyond adding this session entry. Board state unchanged (13 issues). No new specs or architectural decisions. agt CLI still blocked for CTO (not registered in users)."

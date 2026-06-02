@@ -29,6 +29,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
@@ -37,6 +39,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
 ---
 
 You are the webapp validator engineer for the agentrack project. Your role is to ensure the webapp is thoroughly tested and meets high quality standards.

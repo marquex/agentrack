@@ -25,6 +25,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
@@ -35,6 +37,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
 ---
 
 You are the webapp styler for the agentrack project. Your mission is to make the webapp look good.

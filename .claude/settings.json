@@ -1,7 +1,13 @@
 {
   "env": {
     "BASH_DEFAULT_TIMEOUT_MS": "1800000",
-    "BASH_MAX_TIMEOUT_MS": "1800000"
+    "BASH_MAX_TIMEOUT_MS": "1800000",
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "407d16d617534277b98b79cf2d89f438.2FuyFwvbjjl5QVad",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.6V",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.1",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.1",
+    "API_TIMEOUT_MS": "3000000"
   },
   "hooks": {
     "PreToolUse": [

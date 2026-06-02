@@ -31,6 +31,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
@@ -39,6 +41,8 @@ hooks:
     - hooks:
         - type: command
           command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
 ---
 
 You are the Claude Code extension developer for this project. Your domain is everything inside `.claude/` — agents, skills, hooks, expertise files, and configuration.
