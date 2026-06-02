@@ -14,7 +14,7 @@ hierarchy:
       - webapp-styler (UI/UX expert — visual design, interaction patterns, accessibility, polish)
     pending_setup: []
 
-expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) stuck in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation: mpr50trdgw + mpr51myb9q both DONE. Delete command FULLY COMPLETE: impl (mps4sfny0f) done, validation (mps4uwcsqx) done, bug fix (mpscu5l9rk+mpscw71ria) done, docs (mps4viae0a) done — both cli-reference.md and javascript-reference.md updated. Board: 13 issues (7 done, 2 in-progress, 1 todo). webapp-styler active but no assigned issues."
+expertise_status: "Webapp initiative (parent mppqqp8y26, in-progress). Phases 1-3 done. Phase 4 impl (mppqswn3jl) in-progress with webapp-developer. Phase 4 validation (mppqt90kot) todo, blocked by mppqswn3jl. E2E isolation FIXED: mpr50trdgw + mpr51myb9q both DONE. Delete command FULLY COMPLETE: impl (mps4sfny0f) done, validation (mps4uwcsqx) done, bug fix (mpscu5l9rk+mpscw71ria) done, docs (mps4viae0a) done — both cli-reference.md and javascript-reference.md updated. Board: 13 issues (10 done, 2 in-progress, 1 todo). webapp-styler active but no assigned issues."
 
 project_overview:
   name: agentrack
@@ -22,7 +22,7 @@ project_overview:
   type: npm library (TypeScript, Bun runtime)
   purpose: Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly
   distribution: npm package with CLI entry point (`agt` command)
-  stage: "Dogfooding active. All 7 library phases complete + build pipeline. Mentions feature shipped. Webapp initiative active (parent mppqqp8y26, in-progress): Phases 1-3 done, Phase 4 code on disk but not committed (mppqswn3jl). E2E isolation BROKEN — reuseExistingServer:true defeats AGENTRACK_CWD, needs dedicated test ports fix. Public docs at docs/markdown/ (8 files)."
+  stage: "Dogfooding active. All 7 library phases complete + build pipeline. Delete command shipped. Mentions feature shipped. Webapp initiative active (parent mppqqp8y26, in-progress): Phases 1-3 done, Phase 4 (users & sync) in-progress with webapp-developer (mppqswn3jl). E2E isolation fixed (dedicated test ports). Public docs at docs/markdown/ (8 files)."
   bun_version: "1.3.11"
   build_tool: tsup (implemented, producing dist/)
   docs_tool: "Hand-written markdown docs in docs/markdown/ (8 sections). TypeDoc removed. Docs overhaul in progress (mpdpt4rego), validation pending (mpdpv6gw49). Future: Docusaurus site consuming docs/markdown/ (mpdxdbqwt9, idea). Spec: .agentic/specs/user-docs-spec.md."
@@ -428,3 +428,6 @@ session_log:
   - session: 89
     date: "2026-05-30"
     summary: "Picked up bug mpscu5l9rk (removeAllBlockagesForIssue inverted counterpart filter). Found during delete command validation (mps4uwcsqx). One-line fix: filter uses issueId instead of entry.blockerId when cleaning counterpart entries from blocks map. CTO can't edit source files — delegated to library-developer via child issue mpscw71ria (todo, unblocked). Blockage chain: mpscw71ria → mpscu5l9rk → mps4uwcsqx (delete validation). Parent stays in-progress until child completes."
+  - session: 90
+    date: "2026-06-01"
+    summary: "Stop hook triggered expertise update. Board audit: 13 issues (10 done, 2 in-progress, 1 todo). Fixed stale counts in expertise_status (was '7 done', now '10 done'). Fixed project_overview stage — removed 'E2E isolation BROKEN' (now fixed), added 'Delete command shipped', updated Phase 4 description. No new work."

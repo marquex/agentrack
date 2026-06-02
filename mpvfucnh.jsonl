@@ -1,0 +1,3 @@
+{"type":"assistant","message":"thinking..."}
+{"type":"tool","name":"Read"}
+{"type":"tool_result","success":true}

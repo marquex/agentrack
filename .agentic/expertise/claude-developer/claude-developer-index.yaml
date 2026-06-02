@@ -25,7 +25,7 @@ architecture:
         access: [.agentic/expertise/cto/**, ./**]
         subordinates: [library-developer, library-validator, library-releaser, webapp-developer, webapp-validator, webapp-styler]
         skills: [agent-expertise, agentrack, agentrack-implement, idea, issue]
-        hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop), new-expertise.hook.ts (UserPromptSubmit)]
+        hooks: [enforce-agent-access.ts, expertise.hook.ts (Stop), new-expertise.hook.ts (UserPromptSubmit), observable-agent.ts (SessionStart, Stop)]
       - name: library-developer
         model: opus
         description: TypeScript library developer — owns all technical details of the npm-published library
@@ -192,6 +192,17 @@ architecture:
           - Only activates when Read tool reads a file in .claude/agents/
           - File on disk is NEVER modified — markers persist and expand in memory
           - Reads subordinate agent files to get descriptions for SUBORDINATES expansion
+      - name: observable-agent.ts
+        trigger: SessionStart + Stop (in agent frontmatter)
+        purpose: Track agent session output by tailing the JSONL transcript into a separate observable log file
+        key_behaviors:
+          - SessionStart: reads transcript_path from hook input, generates session ID (base36 timestamp), spawns detached background tail process (observable-agent-tail.ts), saves state to tmpdir, reports log path via additionalContext
+          - Stop/SubagentStop: writes a .stop signal file — does NOT kill the tail directly. The tail checks for this signal and self-terminates when the source file stops growing.
+          - Deduplicates on resume/compact by checking if tail PID is still alive before respawning
+          - Uses OBSERVABLE_AGENT_LOGS_PATH env var for output directory, falls back to CWD
+          - State stored in tmpdir/claude-observable-agent/{session_id}.json
+          - Stop signal at tmpdir/claude-observable-agent/{session_id}.stop
+          - v1 bug (FIXED): used `sleep 3 && kill` which killed the tail before Claude finished writing. The expertise Stop hook blocks the stop, causing Claude to continue for minutes. v2 uses signal-based graceful shutdown — tail exits only after 10 idle polls (20s) with no new content AND a stop signal exists.
   settings:
     path: .claude/settings.json
     hooks_configured:
@@ -258,6 +269,12 @@ patterns:
   - Multiple command hooks on the same event in agent frontmatter: add multiple handler objects in the `hooks` array. They all run when the event fires. This is useful for composing concerns (e.g. expertise index injection + expertise-manager reminder on UserPromptSubmit).
   - Once-per-session reminder pattern for hooks: use a flag file in tmpdir (unique per sessionId + agentType) to ensure the reminder fires only on the first prompt. Subsequent calls check the flag and exit silently. Use a separate tmpdir subdirectory per hook to avoid conflicts between hooks.
   - new-expertise.hook.ts uses `additionalContext` in `hookSpecificOutput` rather than plain stdout — this injects the reminder more discretely as a system reminder rather than visible hook output in the transcript.
+  - Detached background process pattern for hooks: spawn a child with `detached: true` and `stdio: 'ignore'`, then `child.unref()` so the hook process can exit while the child continues. Use a state file (JSON in tmpdir) to pass data between hook invocations. For termination: the Stop hook writes a signal file (not a kill), and the background process self-terminates when it detects the signal plus inactivity. This avoids race conditions with other Stop hooks that may block the stop. Used by observable-agent.ts for file tailing.
+  - Observable session ID generation: `Date.now().toString(36)` gives short, unique, sortable IDs (e.g. "mpveil94"). Base-36 is compact and naturally ordered by time.
+  - File tailing with byte offsets is more efficient than line-counting for large JSONL files — `statSync().size` to check for growth, then `readSync(fd, buffer, 0, bytesToRead, byteOffset)` to read only new content.
+  - Multiple hooks on the same event in agent frontmatter are additive: adding `observable-agent.ts` alongside `expertise.hook.ts` on SessionStart means both fire. They run in parallel and both contribute their output.
+  - `import.meta.dir` in Bun gives the directory of the current file — use this in hooks to resolve sibling script paths (e.g. `join(import.meta.dir, 'other-script.ts')`) instead of relying on CWD which may differ at hook execution time.
+  - `process.kill(pid, 0)` sends signal 0 which checks if a process exists without actually signaling it — useful for deduplication logic that needs to verify whether a previously spawned background process is still alive.
 
 gotchas:
   - No package.json in .claude/ directory — yaml-validator.ts imports js-yaml which needs install at runtime
@@ -283,6 +300,7 @@ gotchas:
   - "Issue assignment is critical for agent runner dispatch: the runner only dispatches agents for issues assigned to them. If the parent issue is assigned to the user instead of the CTO, the CTO never gets dispatched and the flow stops. The /issue skill now always assigns the parent to cto."
   - "Deleted skills with dangling references are silently ignored — Claude Code doesn't error when a skill name in frontmatter doesn't match any SKILL.md. This means broken skill references go undetected. Always verify agent skill lists match existing skill directories after renames or deletions."
   - "agt users register is blocked for unregistered agents — enforce-agentrack-token.ts denies the command if the calling agent isn't in users.json. claude-developer can't register new agents itself. The user must run `agt users register <name>` from the main session. After registration, update the token in the agent file if a placeholder was used."
+  - "STOP HOOK RACE CONDITION: When multiple Stop hooks fire in parallel, one may block the stop (decision: 'block') while another starts a timed kill. The observable-agent hook originally killed its tail process 3s after Stop — but the expertise hook blocked the stop, causing Claude to continue for 2+ more minutes. The tail died prematurely, losing 60% of the transcript. FIX: Don't kill on Stop. Instead, write a stop-signal file and let the tail self-terminate when it detects the source file has stopped growing (10 idle polls = 20s after stop signal). This makes the tail immune to other hooks blocking the stop. The 20s window covers API latency + thinking time after a blocked stop. The tail also has a 2-minute inactivity timeout as orphan protection."
   - "FILENAME TYPOS BETWEEN DISK AND CONFIG ARE SILENTLY FATAL — settings.json references hooks by exact path. If the file on disk has a typo (e.g. enforce-agentack-token.ts vs enforce-agentrack-token.ts), the hook fails with 'Module not found' but the system doesn't surface this prominently. ALL agent calls through that hook silently fail. After creating or renaming any hook file, ALWAYS verify: (1) the filename matches the command in settings.json or agent frontmatter, (2) the hook runs: `echo '{}' | bun <path>`. This is the same class of bug as the earlier expertence.hook.ts typo — exact-match filenames are a recurring failure mode."
   - "PARALLEL PreToolUse HOOKS MUST NOT CLOBBER updatedInput — when multiple PreToolUse hooks fire in parallel and both return `allow`, the JSON output from one can overwrite the other's `updatedInput`. Specifically: enforce-agent-access.ts returned `{permissionDecision: 'allow'}` (no updatedInput), which overrode enforce-agentrack-token.ts's `{permissionDecision: 'allow', updatedInput: {command: 'AGT_USER_TOKEN=... ...'}}`. The fix: access hook now exits 0 silently (no JSON output) for `allow` decisions instead of outputting a JSON allow. Only `deny` decisions produce JSON output. This ensures hooks that modify `updatedInput` (token injection) aren't clobbered by hooks that just `allow`."
   - "`claude agents` requires an interactive TTY — when running from a tool/non-interactive context, use `claude agents --json` instead to get a machine-readable listing. Plain `claude agents` will fail with exit code 1."

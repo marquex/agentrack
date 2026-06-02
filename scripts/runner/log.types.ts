@@ -13,7 +13,200 @@ export type AgentSessionLogEntry =
   | AssistantLogEntry
   | UserLogEntry
   | SystemLogEntry
-  | ResultLogEntry;
+  | ResultLogEntry
+  | ObservableAgentLogEntry;
+
+// ---------------------------------------------------------------------------
+// Observable-agent raw log types (SDK / hook-driver sessions)
+// ---------------------------------------------------------------------------
+
+export type ObservableAgentLogEntry =
+  | ObservableAgentSettingLogEntry
+  | ObservableQueueOperationLogEntry
+  | ObservableAttachmentLogEntry
+  | ObservableLastPromptLogEntry
+  | ObservableAssistantLogEntry
+  | ObservableUserLogEntry
+  | ObservableModeLogEntry
+  | ObservablePermissionModeLogEntry
+  | ObservableFileHistorySnapshotLogEntry
+  | ObservableSystemLogEntry
+  | ObservableStreamingAssistantLogEntry
+  | ObservableStreamingToolLogEntry
+  | ObservableStreamingToolResultLogEntry;
+
+export interface ObservableAgentSettingLogEntry {
+  type: "agent-setting";
+  agentSetting: string;
+  sessionId: string;
+}
+
+export interface ObservableQueueOperationLogEntry {
+  type: "queue-operation";
+  operation: "enqueue" | "dequeue";
+  timestamp: string;
+  sessionId: string;
+  content?: string;
+}
+
+export type ObservableAttachmentLogEntry =
+  | ObservableHookSuccessAttachment
+  | ObservableHookAdditionalContextAttachment
+  | ObservableHookBlockingErrorAttachment
+  | ObservableHookSystemMessageAttachment;
+
+export interface ObservableBaseAttachment {
+  parentUuid: string | null;
+  isSidechain: boolean;
+  attachment: JsonObject;
+}
+
+export interface ObservableHookSuccessAttachment {
+  parentUuid: string | null;
+  isSidechain: boolean;
+  attachment: {
+    type: "hook_success";
+    hookName: string;
+    toolUseID: string;
+    hookEvent: string;
+    content: string;
+    stdout: string;
+    stderr?: string;
+    exitCode?: number;
+  };
+}
+
+export interface ObservableHookAdditionalContextAttachment {
+  parentUuid: string | null;
+  isSidechain: boolean;
+  attachment: {
+    type: "hook_additional_context";
+    hookName: string;
+    toolUseID: string;
+    content: string | JsonObject[];
+  };
+}
+
+export interface ObservableHookBlockingErrorAttachment {
+  parentUuid: string | null;
+  isSidechain: boolean;
+  attachment: {
+    type: "hook_blocking_error";
+    hookName: string;
+    toolUseID: string;
+    hookEvent?: string;
+    blockingError: {
+      blockingError: string;
+      command: string;
+    };
+  };
+}
+
+export interface ObservableHookSystemMessageAttachment {
+  parentUuid: string | null;
+  isSidechain: boolean;
+  attachment: {
+    type: "hook_system_message";
+    hookName: string;
+    toolUseID: string;
+    content: string;
+  };
+}
+
+export interface ObservableLastPromptLogEntry {
+  type: "last-prompt";
+  lastPrompt?: string;
+  leafUuid: string;
+  sessionId: string;
+}
+
+export interface ObservableModeLogEntry {
+  type: "mode";
+  mode: string;
+  sessionId: string;
+}
+
+export interface ObservablePermissionModeLogEntry {
+  type: "permission-mode";
+  permissionMode: string;
+  sessionId: string;
+}
+
+export interface ObservableFileHistorySnapshotLogEntry {
+  type: "file-history-snapshot";
+  messageId: string;
+  snapshot: JsonObject;
+  isSnapshotUpdate: boolean;
+}
+
+export interface ObservableSystemLogEntry {
+  type: "system";
+  subtype: string;
+  parentUuid?: string | null;
+  isSidechain?: boolean;
+  [key: string]: JsonValue | string | null | boolean | undefined;
+}
+
+/**
+ * Streaming assistant placeholder — `message` is a plain string like
+ * `"thinking..."` rather than a full message object.
+ */
+export interface ObservableStreamingAssistantLogEntry {
+  type: "assistant";
+  message: string;
+}
+
+/**
+ * Streaming tool call — simple marker with the tool name.
+ */
+export interface ObservableStreamingToolLogEntry {
+  type: "tool";
+  name: string;
+}
+
+/**
+ * Streaming tool result — simple success/failure marker.
+ */
+export interface ObservableStreamingToolResultLogEntry {
+  type: "tool_result";
+  success: boolean;
+}
+
+/**
+ * Observable assistant entries share the same `message.content[]` structure as
+ * the regular session format but carry additional metadata at the root level.
+ */
+export interface ObservableAssistantLogEntry {
+  type: "assistant";
+  parentUuid: string | null;
+  isSidechain: boolean;
+  message: AssistantMessage;
+}
+
+/**
+ * Observable user entries can have either string content (human messages) or
+ * an array of tool_result content items, plus SDK-specific metadata.
+ */
+export interface ObservableUserLogEntry {
+  type: "user";
+  parentUuid: string | null;
+  isSidechain: boolean;
+  promptId?: string;
+  message: {
+    role: "user";
+    content: string | ObservableUserContentItem[];
+  };
+  uuid?: string;
+  timestamp?: string;
+  permissionMode?: string;
+  userType?: string;
+  entrypoint?: string;
+  cwd?: string;
+  sessionId?: string;
+  version?: string;
+}
+
+export type ObservableUserContentItem = ToolResultContent;
 
 export type SystemLogEntry =
   | SystemHookStartedLogEntry
@@ -531,3 +724,106 @@ export interface CompactToolResultLogEntry
     "tool_result",
     Omit<ToolResultContent, "type">
   > {}
+
+// ---------------------------------------------------------------------------
+// Compact observable-agent log output types
+// ---------------------------------------------------------------------------
+
+export type CompactObservableLogEntry =
+  | CompactObservableAgentSettingLogEntry
+  | CompactObservableQueueEnqueueLogEntry
+  | CompactObservableQueueDequeueLogEntry
+  | CompactObservableHookResponseLogEntry
+  | CompactObservableHookAdditionalContextLogEntry
+  | CompactObservableHookBlockingErrorLogEntry
+  | CompactObservableHookSystemMessageLogEntry
+  | CompactObservableLastPromptLogEntry
+  | CompactAssistantLogEntry
+  | CompactUserTextLogEntry
+  | CompactToolResultLogEntry;
+
+export interface CompactObservableAgentSettingLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "agent_setting",
+    Omit<ObservableAgentSettingLogEntry, "type">
+  > {}
+
+export interface CompactObservableQueueEnqueueLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "queue_enqueue",
+    Omit<ObservableQueueOperationLogEntry, "type" | "operation">
+  > {}
+
+export interface CompactObservableQueueDequeueLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "queue_dequeue",
+    Omit<ObservableQueueOperationLogEntry, "type" | "operation">
+  > {}
+
+export interface CompactObservableHookResponseLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "hook_response",
+    Omit<ObservableHookSuccessAttachment, "parentUuid" | "isSidechain"> & {
+      parentUuid?: string | null;
+      isSidechain?: boolean;
+    }
+  > {}
+
+export interface CompactObservableHookAdditionalContextLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "hook_additional_context",
+    Omit<ObservableHookAdditionalContextAttachment, "parentUuid" | "isSidechain"> & {
+      parentUuid?: string | null;
+      isSidechain?: boolean;
+    }
+  > {}
+
+export interface CompactObservableHookBlockingErrorLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "hook_blocking_error",
+    Omit<ObservableHookBlockingErrorAttachment, "parentUuid" | "isSidechain"> & {
+      parentUuid?: string | null;
+      isSidechain?: boolean;
+    }
+  > {}
+
+export interface CompactObservableHookSystemMessageLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "hook_system_message",
+    Omit<ObservableHookSystemMessageAttachment, "parentUuid" | "isSidechain"> & {
+      parentUuid?: string | null;
+      isSidechain?: boolean;
+    }
+  > {}
+
+export interface CompactObservableLastPromptLogEntry
+  extends CompactBaseLogEntry<
+    "system",
+    "last_prompt",
+    Omit<ObservableLastPromptLogEntry, "type">
+  > {}
+
+export interface CompactUserTextLogEntry
+  extends CompactBaseLogEntry<
+    "user",
+    "text",
+    { text: string }
+  > {}
+
+// Generic compact entry for observable-agent subtypes that don't need
+// dedicated interfaces. Keeps the normalizer extensible for new log shapes.
+export interface GenericCompactEntry<
+  TType extends "system" | "assistant" | "user",
+  TSubtype extends string,
+> {
+  type: TType;
+  subtype: TSubtype;
+  content: Record<string, unknown>;
+}
