@@ -35,7 +35,7 @@ hooks:
   Stop:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/update-expertise.hook.ts"
         - type: command
           command: "bun .claude/hooks/observable-agent.ts"
 ---

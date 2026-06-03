@@ -110,10 +110,17 @@ function filterChunk(chunk: string): string[] {
 
         // If the entry carries an `attachment`, emit only the attachment.
         if (typeof entry.attachment === 'object' && entry.attachment !== null) {
+            const {attachment} = entry;
+            const type = attachment.type as string;
+
+            if (IGNORE_SYSTEM_TYPES.includes(type)) {
+                continue;
+            }
+
             const systemEntry = {
                 role: 'system',
-                type: entry.attachment!.type,
-                data: cleanObject( entry.attachment, ['type'])
+                type: type,
+                data: cleanSystemMessage(attachment)
             }
             output.push(JSON.stringify(systemEntry));
             continue;
@@ -132,7 +139,7 @@ function filterChunk(chunk: string): string[] {
                 type: content.type,
                 data: isPrompt ? 
                     {type: 'prompt', content} :
-                    cleanObject( content, ['type'] )
+                    cleanMessageContent(content)
             }
             output.push(JSON.stringify(messageEntry));
             continue;
@@ -142,6 +149,44 @@ function filterChunk(chunk: string): string[] {
     }
 
     return output;
+}
+
+const IGNORE_SYSTEM_TYPES = ['hook_additional_context'];
+
+function cleanSystemMessage( attachment: Record<string, unknown> ): Record<string, unknown> {
+      if ( attachment.stdout && typeof attachment.stdout === 'string' ){
+          if( attachment.stdout.length > 100 ){
+              attachment.stdout = attachment.stdout.slice(0,100) + '...';
+              attachment.stdout_truncated = true;
+          }
+          else {
+              attachment.stdout_truncated = false;
+          }
+      }
+      if (typeof attachment.content === 'string' ){
+          if( attachment.content.length > 100 ){
+              attachment.content = attachment.content.slice(0,100) + '...';
+              attachment.truncated = true;
+          }
+          else {
+              attachment.truncated = false;
+          }
+      }
+
+      return cleanObject( attachment, ['type', 'toolUseID', 'hookName']);
+  }
+
+function cleanMessageContent(content: Record<string, unknown>): Record<string, unknown> {
+    if( typeof content.content === 'string' ) {
+        if( content.content.length > 100 ){
+            content.content = content.content.slice(0,100) + '...';
+            content.truncated = true;
+        }
+        else {
+            content.truncated = false;
+        }
+    }
+    return cleanObject( content, ['type'] );
 }
 
 function cleanObject( obj: Object, attrs: string[] ) {

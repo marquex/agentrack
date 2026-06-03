@@ -11,7 +11,11 @@
  *   Stop / SubagentStop — writes a stop signal; the tail exits when idle
  *
  * Output logs are stored at:
- *   $OBSERVABLE_AGENT_LOGS_PATH/<sessionId>.jsonl
+ *   $OBSERVABLE_AGENT_LOGS_PATH/<session_id>.jsonl
+ *
+ * The log filename uses Claude's session_id directly, making the path
+ * deterministic from any hook that has the session_id. No state lookup
+ * needed to compute the log path.
  *
  * Falls back to the Claude process CWD when OBSERVABLE_AGENT_LOGS_PATH is
  * not defined (can be set in .env).
@@ -41,16 +45,10 @@ interface HookInput {
 
 interface ObservableState {
     sourcePath: string;
-    outputPath: string;
-    observableSessionId: string;
     tailPid: number;
 }
 
 // ── helpers ──────────────────────────────────────────────────────────
-
-function generateSessionId(): string {
-    return Date.now().toString(36);
-}
 
 const STATE_DIR = join(tmpdir(), 'claude-observable-agent');
 
@@ -71,6 +69,11 @@ function getLogsBasePath(cwd: string): string {
         return envPath;
     }
     return cwd;
+}
+
+/** Compute the observable log path directly from session_id. */
+function getLogPath(sessionId: string, cwd: string): string {
+    return join(getLogsBasePath(cwd), `${sessionId}.jsonl`);
 }
 
 async function readStdin(): Promise<HookInput | null> {
@@ -112,9 +115,7 @@ function handleSessionStart(input: HookInput): void {
         }
     }
 
-    const observableSessionId = generateSessionId();
-    const logsBasePath = getLogsBasePath(cwd);
-    const outputPath = join(logsBasePath, `${observableSessionId}.jsonl`);
+    const outputPath = getLogPath(session_id, cwd);
 
     // Ensure the output directory exists.
     mkdirSync(dirname(outputPath), { recursive: true });
@@ -138,11 +139,9 @@ function handleSessionStart(input: HookInput): void {
 
     const tailPid = child.pid!;
 
-    // Persist state so the Stop hook can write the signal file.
+    // Persist state so the Stop hook can verify and resume dedup works.
     const state: ObservableState = {
         sourcePath: transcript_path,
-        outputPath,
-        observableSessionId,
         tailPid,
     };
     writeFileSync(sPath, JSON.stringify(state, null, 2));
