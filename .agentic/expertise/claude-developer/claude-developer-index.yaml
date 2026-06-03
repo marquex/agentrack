@@ -189,6 +189,21 @@ architecture:
           lets them capture those observations without stopping their current work.
           NOTE: No longer in any agent's frontmatter skills list. Still exists on disk. The agentrack-workflow skill
           now covers idea capture at a higher level.
+      - name: summarize-logs
+        purpose: Read and summarize observable agent session logs into a human-readable narrative
+        has_scripts: true
+        scripts: [summarize-logs.ts]
+        assigned_to: [all agents that need to read session logs]
+        script_location: .claude/skills/summarize-logs/scripts/summarize-logs.ts
+        notes: |
+          Parses JSONL session logs produced by observable-agent hook. Outputs stats + chronological narrative.
+          Extracts: hooks called, user prompt, tool calls + results, agent thinking, agent text responses.
+          Tool calls are buffered until their matching result arrives, then emitted as a single combined block.
+          Orphaned calls (no result) are flushed at session end with "(no result received)".
+          Supports --compact flag for truncated output (shorter thinking blocks and tool results).
+          Entry types handled: hook_success, prompt, thinking, tool_use, tool_result, text, process_end.
+          Unknown entry types are included for completeness with a JSON preview.
+          allowed-tools: Bash(bun *) — only needs bun to run the script.
       - name: playwright-cli
         purpose: Browser automation and Playwright test interaction via the playwright-cli tool
         has_scripts: false
@@ -382,6 +397,8 @@ patterns:
   - "Observable session ID generation: Date.now().toString(36) gives short, unique, sortable IDs (e.g. mpveil94). Base-36 is compact and naturally ordered by time."
   - "File tailing with byte offsets is more efficient than line-counting for large JSONL files — statSync().size to check for growth, then readSync(fd, buffer, 0, bytesToRead, byteOffset) to read only new content."
   - "Multiple hooks on the same event in agent frontmatter are additive: adding observable-agent.ts alongside expertise.hook.ts on SessionStart means both fire. They run in parallel and both contribute their output."
+  - "Observable session log entry types (JSONL produced by observable-agent-tail.ts): hook_success (role:system) — hooks called with command/exit/duration; prompt (role:user, data.type=prompt) — user's task; thinking (role:assistant, type=thinking) — agent reasoning; tool_use (role:assistant, type=tool_use) — tool call with id/name/input; tool_result (role:user, type=tool_result) — result with content/is_error/tool_use_id/truncated; text (role:assistant, type=text) — agent's visible response; process_end (role:system) — session termination marker. The summarize-logs skill parses these into a human-readable narrative."
+  - "When building skills that process structured data (JSONL, JSON, CSV), provide both full and compact output modes. The --compact flag pattern lets agents choose between detailed analysis (full) and quick scanning (compact) depending on their task."
   - "import.meta.dir in Bun gives the directory of the current file — use this in hooks to resolve sibling script paths (e.g. join(import.meta.dir, 'other-script.ts')) instead of relying on CWD which may differ at hook execution time."
   - "process.kill(pid, 0) sends signal 0 which checks if a process exists without actually signaling it — useful for deduplication logic that needs to verify whether a previously spawned background process is still alive."
   - "Background process end marker pattern: when a detached background process writes to a file that consumers monitor, always write a terminal marker (e.g. {role: 'system', type: 'process_end', data: {}}) as the very last line before exiting. This lets consumers reliably distinguish between 'process is still running' and 'process has finished'. Write the marker on ALL exit paths (SIGTERM, SIGINT, timeout, graceful stop) via a shared writeProcessEnd() helper."

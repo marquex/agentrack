@@ -1,2 +1,0 @@
-{"role":"system","type":"hook_success","data":{"hookEvent":"SessionStart","content":"","stdout":"{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"Observable session logs: ...","stderr":"","exitCode":0,"command":"bun .claude/hooks/observable-agent.ts","durationMs":219,"stdout_truncated":true,"truncated":false}}
-{"role":"user","data":{"type":"prompt","content":"ping"}}

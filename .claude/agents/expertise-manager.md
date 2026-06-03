@@ -5,6 +5,8 @@ model: opus
 access:
   - path: .agentic/expertise/**
     permissions: [read, write, delete]
+  - path: .agentic/agent_logs/**
+    permissions: [read, write, delete]
 tools: Read, Grep, Glob, Edit, Write, Delete
 hooks:
   PreToolUse:
