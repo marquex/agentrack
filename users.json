@@ -34,6 +34,16 @@
       "name": "webapp-styler",
       "token": "tk_x3ie7fyp",
       "registeredAt": "2026-05-29T17:27:56.695Z"
+    },
+    {
+      "name": "product-owner",
+      "token": "tk_b7a2bd8f",
+      "registeredAt": "2026-06-04T00:00:00.000Z"
+    },
+    {
+      "name": "project-manager",
+      "token": "tk_acdfd28b",
+      "registeredAt": "2026-06-04T00:00:00.000Z"
     }
   ]
 }
