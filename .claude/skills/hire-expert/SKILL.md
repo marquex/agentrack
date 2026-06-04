@@ -8,15 +8,6 @@ argument-hint: "<expert-description>"
 
 Use this skill to create a new expert agent for the project. The skill guides you through gathering all required information and creating the agent file following the expert agent template.
 
-## Agent Hierarchy
-
-Agents are organized in a manager-subordinate hierarchy. Task assignment flows through agentrack issues — managers create and assign issues, subordinates pick them up and work on them.
-
-- Every agent can have a **manager** (an agent that assigns work to it via agentrack issues).
-- Every agent can have **subordinates** (agents it can assign work to via agentrack issues).
-- An agent at the top of the hierarchy has no manager.
-- A leaf agent has no subordinates.
-- The hierarchy can have many levels.
 
 ## Required Information
 
@@ -25,9 +16,7 @@ Before creating the agent, you need to gather the following:
 1. **Name** — a kebab-case identifier (e.g., `code-reviewer`, `data-analyst`). Used as the agent file name and expertise folder name.
 2. **Role description** — a clear description of the agent's purpose, what domain it specializes in, and when to use it. This becomes the `description` field in the frontmatter and the core of the system prompt.
 3. **Folder access** — the folders the agent needs to access (read-only or read-write). These become `access` rules. The agent's own expertise folder (`.agentic/expertise/{name}/**`) is always included with read/write/delete.
-4. **Manager** — which existing agent is this agent's manager. If specified, the manager agent will be updated to include this new agent as a subordinate. If not specified, this agent is a top-level agent.
-5. **Subordinates** — which existing agents this agent can assign work to. If specified, the agent's system prompt will include a "Coordinating Work" section with instructions for creating agentrack issues for subordinates. If not specified, this is a leaf agent.
-6. **Model** (optional) — the model for the agent. Defaults to `sonnet` if not specified.
+6. **Model** (optional) — the model for the agent. Defaults to `opus` if not specified.
 
 ## Steps
 
@@ -42,29 +31,11 @@ The user provides a description of the expert they want to hire. Extract from it
 If any required information is missing from the description, ask the user follow-up questions to gather it. Be specific about what you need. Group related questions together to minimize back-and-forth.
 
 Information that can be inferred or defaulted does not need to be asked:
-- If no model is specified, default to `sonnet`.
+- If no model is specified, default to `opus`.
 - If the role description is clear enough, derive the folder access from it (e.g., a `code-reviewer` likely needs access to source files, a `data-analyst` needs access to data files). However, if it's ambiguous, ask.
 
-For manager and subordinates:
-- If neither manager nor subordinates are mentioned, ask about both: "Who is this agent's manager? And who are its subordinates (if any)?"
-- If a manager is mentioned but no subordinates, ask: "What agents can {name} assign work to? Or is it a leaf agent with no subordinates?"
-- If subordinates are mentioned but no manager, ask: "Who is {name}'s manager? Which agent assigns work to it?"
-- If both are mentioned, no need to ask further about the hierarchy.
-- You can also suggest a hierarchy position based on the role description (e.g., a "CEO" agent should be at the top, a "code-reviewer" likely reports to a "tech-lead" or "project-manager").
 
-### Step 3: Confirm with the user
-
-Before creating the agent, present a summary of the agent configuration to the user for confirmation:
-- Name
-- Description
-- Folder access rules (with permissions)
-- Manager (or "top-level agent" if none)
-- Subordinates (or "leaf agent" if none)
-- Model
-
-Wait for the user to confirm or request changes.
-
-### Step 4: Create the agent file
+### Step 3: Create the agent file
 
 Create the agent file at `.claude/agents/{name}.md` following this template:
 
@@ -72,13 +43,10 @@ Create the agent file at `.claude/agents/{name}.md` following this template:
 ---
 name: {name}
 description: {description — concise, explains domain, purpose, and when to use it}
-tools: Read, Grep, Glob
-model: {model — defaults to sonnet}
+tools: Read, Edit, Write, Grep, Glob
+model: {model — defaults to opus}
 skills:
-  - agent-expertise
   - agentrack
-  - agentrack-implement
-subordinates: {list of subordinate agent names, or omit if none}
 access:
   - path: .agentic/expertise/{name}/**
     permissions: [read, write, delete]
@@ -94,15 +62,19 @@ hooks:
   SessionStart:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
   Stop:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/update-expertise.hook.ts"
+        - type: command
+          command: "bun .claude/hooks/observable-agent.ts"
 ---
 
 {System prompt — sets the agent's direction and goals. Should NOT include specific step-by-step instructions. Instead, describe the agent's purpose, what it should aim to achieve, and let the agent learn how to achieve it through its expertise.}
@@ -111,22 +83,30 @@ hooks:
 
 ## Coordinating Work
 
-You coordinate work by creating agentrack issues and assigning them to your subordinate agents. The agent runner will automatically pick up the issues and launch the agents.
-
-To assign work to a subordinate:
-```bash
-AGENTRACK_TOKEN="$TOKEN" agt create "Task description" --assignee <agent-name> --status todo --priority 2
-```
-
-{if has a manager, add:}
-
-Your manager is `{manager-name}` — you receive assigned tasks from it.
-
-## Using agentrack as the issue tracker
-
-You manage your work through agentrack issues. Use the `agentrack` skill to create, update, and monitor issues. Follow the issue flow outlined in the `agentrack-implement` skill for best practices on how to pick up, execute, report, and hand back issues effectively.
+The project uses agentrack as the issue tracker. You are usually prompted to work in a specific issue. Use the `agentrack` skill to manage issues.
 
 IMPORTANT: Your agentrack token is `<token-here>`.
+
+There is a `project-manager` that assigns issues to you. 
+
+When you start working on an issue, update its status to `in-progress`. When you complete an issue, add a comment with the results, update the status to `todo` again and assign it back to the `project-manager` for review.
+
+The success comment should include a summary with details that are interesting for the project manager to know, skip any technical details that are not relevant for the project manager.
+  
+If you experience some issues during the execution of the task that prevent you from completing it, update the issue with a comment describing the problem, update the status to `todo` and assign it back to the `project-manager` so it can reassign or resolve the issue.
+
+The commment for problems should be detailed, and include technical details, so the project manager can understand the problem and decide how to resolve it.
+
+If you detect some work that needs to be done that is outside of the scope of the current issue, create a new issue describing the work, set the status to `idea` and assign it to the `project-manager` for triage.
+
+## Reporting
+
+After completing your work, finish your session reporting the results. Include in the report:
+
+- What you did? Did you complete the task successfully? If not, what was the issue that prevented you from completing it?
+- Anything interesting you found during the work
+- Did you needed to solve any unexpected problems to complete the task? If so, describe the problem and how you solved it.
+- Any open questions or unresolved issues that you in the future might need to address
 
 ## Restricted domain
 
@@ -137,15 +117,17 @@ You have access to the following folders:
 
 Key rules for the agent file:
 - The system prompt should be directional, not prescriptive. Let the agent build expertise on how to achieve its goals.
-- Always include the `agent-expertise`, `agentrack`, and `agentrack-implement` skills. Manager agents should also include `issue`.
+- Always include them`agentrack` skill.
 - Only include `Write` and `Edit` in the `tools` list if the agent needs to write to files outside its expertise folder. Most expert agents only need read access to their domain files.
 - Always include the `PreToolUse` hook for `enforce-agent-access.ts`.
-- Always include the `SessionStart`, `UserPromptSubmit`, and `Stop` hooks for `expertise.hook.ts`. These handle expertise injection at session start and expertise update reminders at session end. The hook uses flag-based dedup so double-firing is safe.
+- Always include the `SessionStart`, `UserPromptSubmit` hooks for `new-expertise.hook.ts`. That will inject the expertise related to the current hand.
+- Always include the `Stop` hook for `update-expertise.hook.ts`. These will trigger expertise updates after each session to keep the expertise up to date with the agent's latest learnings.
 - Always include the `<!-- ACCESS_RULES -->` marker in the Restricted domain section. The PostToolUse hook `inject-agent-markers.ts` expands it at runtime when the file is read — the marker stays in the file on disk and is never replaced with hardcoded content. The frontmatter `access` block is the single source of truth.
 - NEVER hardcode the access rules in the system prompt. Always use the marker. The frontmatter is the single source of truth.
 - The token enforcement hook (`enforce-agentrack-token.ts`) and issue cleanup hook (`enforce-issue-cleanup.ts`) are registered project-wide in `.claude/settings.json`, so they don't need to be added to individual agent frontmatter.
+- Register the new agent in agentrack to get their token and include it in the system prompt. Replace the `<token-here>` placeholder with the actual token.
 
-### Step 5: Register the agent in agentrack
+### Step 4: Register the agent in agentrack
 
 After creating the agent file, register the agent as a agentrack user:
 
@@ -159,42 +141,6 @@ This returns a token. Add it to the agent file's system prompt in the format:
 IMPORTANT: Your agentrack token is `<token>`.
 ```
 
-### Step 6: Update the manager agent (if a manager was specified)
+### Step 5: Create the expertise folder
 
-If the new agent has a manager, you must update the manager's agent file to include the new agent as a subordinate:
-
-1. Read the manager's agent file at `.claude/agents/{manager-name}.md`.
-2. In the YAML frontmatter:
-   - Add the new agent to the `subordinates` list (create the list if it doesn't exist).
-3. In the system prompt:
-   - If there is already a `## Coordinating Work` section, no change needed — the agent already knows how to assign issues.
-   - If there is no `## Coordinating Work` section, add one before the `## Restricted domain` section with instructions for creating agentrack issues for subordinates.
-4. Write the updated manager file.
-
-### Step 7: Update the subordinates' manager reference (if subordinates were specified)
-
-If the new agent has subordinates, you should check each subordinate agent's file to see if it references its manager. If a subordinate's system prompt mentions its old manager (or no manager), update it to reference the new agent as its manager. This keeps the hierarchy documentation consistent across all agent files.
-
-### Step 8: Create the expertise folder
-
-Create the expertise folder and index file at `.agentic/expertise/{name}/{name}-index.yaml` with this initial content:
-
-```yaml
-# {Name} Expertise Index
-# Agent: {name}
-# Domain: {brief domain description}
-
-hierarchy:
-  manager: {manager name, or "none — top-level agent"}
-  subordinates: [{list of subordinate names, or "none — leaf agent"}]
-
-expertise_status: "New agent — no expertise accumulated yet. Start building expertise from the first session."
-```
-
-### Step 9: Validate
-
-After creating the agent and updating any related agents:
-1. Read back all modified files to confirm the content is correct and well-formed.
-2. Verify the YAML frontmatter is valid in each modified agent file.
-3. Verify the hierarchy is consistent — if A is B's manager, then B should appear in A's subordinates list, and A should be mentioned as B's manager.
-4. Test the new hook scripts execute without errors: `echo '{}' | bun .claude/hooks/enforce-agentrack-token.ts`
+Create the expertise folder and an empty index file at `.agentic/expertise/{name}/{name}-index.md`

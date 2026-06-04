@@ -11,7 +11,6 @@ subordinates:
   - webapp-validator
   - webapp-styler
 skills:
-  - agent-expertise
   - agentrack
   - agentrack-workflow
 access:
@@ -34,17 +33,17 @@ hooks:
   SessionStart:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
         - type: command
           command: "bun .claude/hooks/observable-agent.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
   Stop:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/update-expertise.hook.ts"
         - type: command
           command: "bun .claude/hooks/observable-agent.ts"
 ---

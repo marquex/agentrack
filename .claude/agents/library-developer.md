@@ -4,9 +4,7 @@ description: TypeScript library developer — owns all technical details of the 
 tools: Read, Write, Edit, MultiEdit, Glob, Grep, Bash
 model: opus
 skills:
-  - agent-expertise
   - agentrack
-  - agentrack-implement
 access:
   - path: .agentic/expertise/library-developer/**
     permissions: [read, write, delete]

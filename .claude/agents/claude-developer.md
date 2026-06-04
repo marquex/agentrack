@@ -5,7 +5,6 @@ tools: Read, Write, Edit, MultiEdit, Glob, Grep, Bash
 model: opus
 skills:
   - claude-developing
-  - agent-expertise
 access:
   - path: .claude/**
     permissions: [read, write, delete]
@@ -30,17 +29,17 @@ hooks:
   SessionStart:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
         - type: command
           command: "bun .claude/hooks/observable-agent.ts"
   UserPromptSubmit:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/new-expertise.hook.ts"
   Stop:
     - hooks:
         - type: command
-          command: "bun .claude/skills/agent-expertise/expertise.hook.ts"
+          command: "bun .claude/skills/agent-expertise/update-expertise.hook.ts"
         - type: command
           command: "bun .claude/hooks/observable-agent.ts"
 ---

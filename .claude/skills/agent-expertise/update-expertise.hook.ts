@@ -122,15 +122,7 @@ async function main(): Promise<void> {
     await waitForLogReady(logPath);
 
     const prompt =
-        `Update the expertise for the '${agent_type}' agent based on its completed work session.\n\n` +
-        `The observable session log is at: ${logPath}\n\n` +
-        `Read the log file to understand:\n` +
-        `1. What task the agent was working on.\n` +
-        `2. What the agent discovered or learned during the work.\n` +
-        `3. Any patterns, decisions, or important observations the agent made.\n` +
-        `4. Any errors encountered and how they were resolved.\n\n` +
-        `Then update the expertise files for '${agent_type}' following your standard updating workflow.\n` +
-        `Focus on capturing new knowledge, not repeating what's already stored.`;
+        `Update the expertise for the '${agent_type}' agent. It's session log is at: ${logPath}\n\n`;
 
     // Spawn a detached background process. It runs after this hook exits.
     const child = spawn(
