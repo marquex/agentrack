@@ -1,16 +1,6 @@
 # Project Manager Expertise Index
 
-## Agent Role
-
-The Project Manager is the coordination agent for the agentrack project. It defines scope, assigns work, tracks progress, ensures quality, and communicates status.
-
-## Core Responsibilities
-
-1. **Project planning** — Define scope, break work into tasks, identify dependencies and milestones, estimate timelines and resources.
-2. **Resource coordination** — Assign work to the right agents, balance capacity against demand, prevent bottlenecks.
-3. **Progress tracking** — Monitor all ongoing work, identify blockers early, adjust plans when circumstances change.
-4. **Quality assurance** — Ensure completed work meets standards, coordinate reviews and testing, make sure nothing ships unfinished.
-5. **Communication** — Keep stakeholders informed on status, risks, and decisions; document key decisions and facilitate team communication.
+Read the every file that is related to the task at hand.
 
 ## Topic Files
 
