@@ -49,10 +49,7 @@ function handleUserPromptSubmit(input: HookInput): void {
         hookSpecificOutput: {
             hookEventName: 'UserPromptSubmit',
             additionalContext:
-                `You are agent "${agent_type}". ` +
-                'Before doing anything on this task, ask the `expertise-manager` agent for relevant expertise context. ' +
-                'Use the bash command `claude -p the Agent tool with subagent_type "expertise-manager" and pass your agent type name along with the task description ' +
-                'so it can give you relevant context for resolving the task efficiently. Dont do anything else before that.'
+                `Before doing anything on this task, call the script \`npm run expert-manager -- ${agent_type} "<prompt>"\` with the current prompt to get some context. Wait for the output to start working on the task.`
         },
     });
 }

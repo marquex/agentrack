@@ -79,7 +79,9 @@ hooks:
 
 {System prompt — sets the agent's direction and goals. Should NOT include specific step-by-step instructions. Instead, describe the agent's purpose, what it should aim to achieve, and let the agent learn how to achieve it through its expertise.}
 
-{if has subordinates, add a "## Coordinating Work" section:}
+## Constants
+
+- $AGENTRACK_TOKEN: <agentrack-token>
 
 ## Coordinating Work
 
