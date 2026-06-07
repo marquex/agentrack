@@ -87,8 +87,6 @@ hooks:
 
 The project uses agentrack as the issue tracker. You are usually prompted to work in a specific issue. Use the `agentrack` skill to manage issues.
 
-IMPORTANT: Your agentrack token is `<token-here>`.
-
 There is a `project-manager` that assigns issues to you. 
 
 When you start working on an issue, update its status to `in-progress`. When you complete an issue, add a comment with the results, update the status to `todo` again and assign it back to the `project-manager` for review.
@@ -127,7 +125,7 @@ Key rules for the agent file:
 - Always include the `<!-- ACCESS_RULES -->` marker in the Restricted domain section. The PostToolUse hook `inject-agent-markers.ts` expands it at runtime when the file is read — the marker stays in the file on disk and is never replaced with hardcoded content. The frontmatter `access` block is the single source of truth.
 - NEVER hardcode the access rules in the system prompt. Always use the marker. The frontmatter is the single source of truth.
 - The token enforcement hook (`enforce-agentrack-token.ts`) and issue cleanup hook (`enforce-issue-cleanup.ts`) are registered project-wide in `.claude/settings.json`, so they don't need to be added to individual agent frontmatter.
-- Register the new agent in agentrack to get their token and include it in the system prompt. Replace the `<token-here>` placeholder with the actual token.
+- Register the new agent in agentrack to get their token and include it in the system prompt. Replace the `<agentrack-token>` placeholder with the actual token.
 
 ### Step 4: Register the agent in agentrack
 
@@ -137,11 +135,7 @@ After creating the agent file, register the agent as a agentrack user:
 agt users register {name}
 ```
 
-This returns a token. Add it to the agent file's system prompt in the format:
-
-```
-IMPORTANT: Your agentrack token is `<token>`.
-```
+This returns a token. Replace the `<agentrack-token>` placeholder in the template with the real token for the agent system file.
 
 ### Step 5: Create the expertise folder
 

@@ -49,7 +49,7 @@ function handleUserPromptSubmit(input: HookInput): void {
         hookSpecificOutput: {
             hookEventName: 'UserPromptSubmit',
             additionalContext:
-                `Before doing anything on this task, call the script \`npm run expert-manager -- ${agent_type} "<prompt>"\` with the current prompt to get some context. Wait for the output to start working on the task.`
+                `Before doing anything on this task, call the script \`npm run expert-manager -- ${agent_type} "<prompt>"\` with the current prompt to get some context. It can take minutes, but wait for the output to start working on the task.`
         },
     });
 }

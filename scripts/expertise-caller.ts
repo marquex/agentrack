@@ -27,7 +27,7 @@ const progressTimer = setInterval(() => {
   }
 }, progressIntervalMs);
 
-const managerPrompt = `The agent "${agentName}" is asking for: \n\n ${prompt}`;
+const managerPrompt = `Retrieve expertise from the "${agentName}" agent to handle the following task: \n\n ${prompt}`;
 
 const proc = spawn(["claude", "--agent", "expertise-manager", "-p", managerPrompt], {
   cwd: ROOT,

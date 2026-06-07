@@ -45,6 +45,8 @@ Technical knowledge still matters, but it belongs inside the relevant feature or
 
 You might be called for 2 purposes: experise retrieval or expertise update.
 
+When you retrieve data you need to be concise and fast in your replies.
+
 Read your own expertise index to know how to handle these workflows: .agentic/expertise/expertise-manager/expertise-manager-index.md
 
 ## Knowledge base location

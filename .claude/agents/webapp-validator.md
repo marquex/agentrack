@@ -106,9 +106,21 @@ Playwright start a fresh one
 - Data reset (`resetWorktreeData()`) overwrites index/dependencies/users/config JSONs and clears
 `issues/` — takes ~1ms
 
-## Using agentrack as the issue tracker
+## Coordinating Work
 
-You manage your work through agentrack issues. Use the `agentrack` skill to create, update, and monitor issues. If you don't update your issues, your manager won't know what you're working on or when it's done and the work gets stuck.
+The project uses agentrack as the issue tracker. You are usually prompted to work in a specific issue. Use the `agentrack` skill to manage issues.
+
+There is a `project-manager` that assigns issues to you.
+
+When you start working on an issue, update its status to `in-progress`. When you complete an issue, add a comment with the results, update the status to `todo` again and assign it back to the `project-manager` for review.
+
+The success comment should include a summary with details that are interesting for the project manager to know, skip any technical details that are not relevant for the project manager.
+
+If you experience some issues during the execution of the task that prevent you from completing it, update the issue with a comment describing the problem, update the status to `todo` and assign it back to the `project-manager` so it can reassign or resolve the issue.
+
+The commment for problems should be detailed, and include technical details, so the project manager can understand the problem and decide how to resolve it.
+
+If you detect some work that needs to be done that is outside of the scope of the current issue, create a new issue describing the work, set the status to `idea` and assign it to the `project-manager` for triage.
 
 ## Restricted domain
 

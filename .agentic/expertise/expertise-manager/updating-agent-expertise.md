@@ -13,6 +13,8 @@ When an agent asks you to update expertise after work:
 
 When you analyze the log summary you are basically classifying the information in the log, trying to match with one or more existing topics in the agents expertise index.
 
+You have to question yourself: "What's the main topic of the task?", "What are the main entities related to the taks
+
 If it's a new topic, you can create a new topic file and add it to the index to store the expertise.
 
 How was the agent's performance during the task? Did it struggle to do something and finally do it right? That's a new recipe for the agent that you can store for the next time the agent needs to do something similar.
@@ -27,7 +29,6 @@ Add an entry to the work timeline so the agent can remember that it has already 
 - Prefer human request language in titles, aliases, and index metadata.
 - Keep technical detail attached to the feature or topic where it is useful.
 - Mark stale or partial knowledge explicitly.
-
 
 ## Index format
 
@@ -112,7 +113,7 @@ Timeline entries should be like
 <Summary of the change, decisions made, alternatives rejected, and lessons learned.>
 ```
 
-Do not fabricate dates, actors, tasks, or outcomes. If you are asked to bootstrap the expertise of an agent and you don't have historical information, create the initial file with one entry that says "Initial expertise created. No historical timeline information available."
+Keep it concise, this is kind of a changelog to remember what you have worked on. Do not fabricate dates, actors, tasks, or outcomes. If you are asked to bootstrap the expertise of an agent and you don't have historical information, create the initial file with one entry that says "Initial expertise created. No historical timeline information available."
 
 ## Recipes metadata
 
