@@ -9,8 +9,8 @@ An agent creates a vague `idea` issue. The PM routes it to the product-owner, wh
 ## Initial Conditions
 
 - **agentrack state:**
-  - Issue #100: "Make the UI more responsive" — status: `idea`, created by `webapp-developer`, assignee: none
-  - No other issues matching "responsive" or "UI" in status `idea`, `todo`, `in-progress`, or `closed` with `idea` tag
+  - Issue #100: "Make the checkout flow faster" — status: `idea`, created by `android-developer`, assignee: none
+  - No other issues matching "checkout" or "faster" or "performance" in status `idea`, `todo`, `in-progress`, or `closed` with `idea` tag
 
 ### Team Context
 
@@ -19,13 +19,13 @@ An agent creates a vague `idea` issue. The PM routes it to the product-owner, wh
 | Agent | Relevance |
 |---|---|
 | `product-owner` | **Product decision-maker** — reviews the idea and decides if it needs more info |
-| `webapp-developer` | Source of the idea — the product-owner may ask them for specifics |
+| `android-developer` | Source of the idea — the product-owner may ask them for specifics |
 
 ## User Story
 
 1. The PM picks up Issue #100 from the ideas queue.
 2. The PM checks for duplicates — none found.
-3. The PM determines: this is a product-related idea (UI improvement) → route to product-owner.
+3. The PM determines: this is a product-related idea (checkout UX improvement) → route to product-owner.
 4. The PM creates a review task for the product-owner + sync tracker for itself.
 5. The product-owner needs more info and asks the creator for clarification.
 6. The PM sees the "needs refinement" decision and resets the idea for future re-triage.
@@ -37,13 +37,13 @@ An agent creates a vague `idea` issue. The PM routes it to the product-owner, wh
 The PM should:
 
 1. View Issue #100 and determine routing type (technical vs product, creator identity)
-2. Search for duplicates: list issues with status `idea`, `todo`, `in-progress`, and `closed` with `idea` tag matching "responsive" or "UI" → no duplicates found
-3. Determine routing: the idea is product-related (UI/UX improvement) → route to `product-owner`
+2. Search for duplicates: list issues with status `idea`, `todo`, `in-progress`, and `closed` with `idea` tag matching "checkout" or "faster" or "performance" → no duplicates found
+3. Determine routing: the idea is product-related (checkout UX/performance improvement) → route to `product-owner`
 4. Create review children:
    ```
-   Issue #100: "Make the UI more responsive" (status: in-progress, assigned: project-manager)
-   ├── Task: "Review: Make the UI more responsive" (tag: task, assigned: product-owner, status: todo)
-   └── Task: "Check review decision on responsive UI idea" (tag: task,sync, assigned: project-manager, status: todo)
+   Issue #100: "Make the checkout flow faster" (status: in-progress, assigned: project-manager)
+   ├── Task: "Review: Make the checkout flow faster" (tag: task, assigned: product-owner, status: todo)
+   └── Task: "Check review decision on checkout flow idea" (tag: task,sync, assigned: project-manager, status: todo)
        └── Blocked by review task
    ```
 5. Add a comment: "Routed to product-owner for product decision. This is a product/UX idea."
@@ -52,7 +52,7 @@ The PM should:
 
 6. Work loop picks up the review task, wakes `product-owner`
 7. Product-owner reviews, finds it too vague
-8. Product-owner adds comment mentioning the creator: "@webapp-developer I like the direction but need more specifics. Which pages need responsive improvements? Are we targeting mobile, tablet, or both? What's the expected user impact?"
+8. Product-owner adds comment mentioning the creator: "@android-developer I like the direction but need more specifics. Are you referring to screen load time, API response latency, or the number of steps in the checkout flow? Are we targeting a specific time threshold? What metrics are we measuring against?"
 9. Product-owner marks review task as `done` with decision: "needs refinement"
 10. System auto-resolves blockage on sync tracker
 
@@ -64,12 +64,12 @@ The PM should:
 14. PM resets Issue #100:
     - Status → `idea` (so it can be picked up again in a future ideas loop cycle)
     - Keep assignee as `project-manager`
-    - Add comment: "Product-owner needs more details from @webapp-developer. Resetting to `idea` status. Will re-triage once the creator responds with specifics."
+    - Add comment: "Product-owner needs more details from @android-developer. Resetting to `idea` status. Will re-triage once the creator responds with specifics."
 15. PM does NOT create any implementation children
 
 ### What happens next (not part of this story)
 
-16. `webapp-developer` responds to the product-owner's question with specifics (e.g., "Target: mobile breakpoints for the dashboard and issue list pages")
+16. `android-developer` responds to the product-owner's question with specifics (e.g., "Target: reduce checkout from 4 screens to 2, and improve screen transition time by pre-fetching payment methods after address confirmation")
 17. Next ideas loop cycle, PM picks up Issue #100 again (it's back in `idea` status)
 18. PM checks for duplicates again → none found
 19. PM routes to product-owner again for a fresh review with the new information

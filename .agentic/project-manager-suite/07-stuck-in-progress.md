@@ -9,12 +9,12 @@ An agent completed work on an issue but forgot to update the status from `in-pro
 ## Initial Conditions
 
 - **agentrack state:**
-  - Issue #42: "Implement search functionality" — status: `in-progress`, assignee: `library-developer`
-  - Issue #42 has a comment from `library-developer` saying: "Search functionality implemented and tested locally. All edge cases covered."
-  - Issue #43: "Validate search functionality" — status: `todo`, assignee: `library-validator`
+  - Issue #42: "Implement data normalization pipeline for backtesting engine" — status: `in-progress`, assignee: `platform-developer`
+  - Issue #42 has a comment from `platform-developer` saying: "Data normalization pipeline implemented and tested locally. Handles OHLCV, tick, and order book data. All edge cases covered."
+  - Issue #43: "Validate data normalization pipeline" — status: `todo`, assignee: `platform-validator`
     - Blocked by Issue #42
   - No new activity on Issue #42 for over an hour (stale)
-  - The `library-developer` is not currently working on any issue
+  - The `platform-developer` is not currently working on any issue
 
 ### Team Context
 
@@ -22,8 +22,8 @@ An agent completed work on an issue but forgot to update the status from `in-pro
 
 | Agent | Current state |
 |---|---|
-| `library-developer` | Available but idle — finished the work on #42, didn't update status |
-| `library-validator` | Blocked — waiting on #42 to be marked done so blockage clears |
+| `platform-developer` | Available but idle — finished the work on #42, didn't update status |
+| `platform-validator` | Blocked — waiting on #42 to be marked done so blockage clears |
 
 ## User Story
 
@@ -37,15 +37,15 @@ An agent completed work on an issue but forgot to update the status from `in-pro
 The PM should:
 
 1. View Issue #42 and read its comments
-2. Confirm the work appears complete based on the comment content ("implemented and tested locally")
+2. Confirm the work appears complete based on the comment content ("implemented and tested locally", "all edge cases covered")
 3. Update Issue #42 status to `done`
 4. Add a comment: "Status updated to done. Developer completed implementation but forgot to update status."
 5. The blockage on Issue #43 is automatically resolved by the system
-6. Issue #43 becomes actionable — the `library-validator` will be picked up by the work loop
+6. Issue #43 becomes actionable — the `platform-validator` will be picked up by the work loop
 
 **Key behaviors:**
 - The PM doesn't just blindly change status — it reads comments to verify completion
-- It recognizes the `library-developer`'s comment indicates the work is done (implementation complete, edge cases covered)
+- It recognizes the `platform-developer`'s comment indicates the work is done (implementation complete, edge cases covered)
 - If the comment were ambiguous, the PM should mention the developer to ask for confirmation
 - The PM documents its intervention with a comment
 - **This is a status loop exception** — normally the PM never touches child issue statuses (agents drive `todo` → `in-progress` → `done`). But during the status loop, the PM is authorized to fix stuck issues directly.

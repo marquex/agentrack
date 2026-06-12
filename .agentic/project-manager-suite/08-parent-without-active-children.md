@@ -9,13 +9,13 @@ A parent issue (Feature, Epic, or Initiative) is `in-progress` but none of its c
 ## Initial Conditions
 
 - **agentrack state:**
-  - Issue #50 (Feature): "Add user authentication" — status: `in-progress`, assignee: `project-manager`
-  - Issue #51 (Task): "Plan auth system" — status: `done`, assignee: `library-architect`
-  - Issue #52 (Task): "Implement auth system" — status: `todo`, assignee: `library-developer`, blocked by #51
-  - Issue #53 (Task): "Validate auth system" — status: `todo`, assignee: `library-validator`, blocked by #52
-  - Issue #54 (Task): "Release auth system" — status: `todo`, assignee: `library-releaser`, blocked by #53
+  - Issue #50 (Feature): "Add payment processing API" — status: `in-progress`, assignee: `project-manager`
+  - Issue #51 (Task): "Design payment processing API" — status: `done`, assignee: `backend-architect`
+  - Issue #52 (Task): "Implement payment processing API" — status: `todo`, assignee: `backend-developer`, blocked by #51
+  - Issue #53 (Task): "Validate payment processing API" — status: `todo`, assignee: `backend-validator`, blocked by #52
+  - Issue #54 (Task): "Release payment processing API" — status: `todo`, assignee: `devops-engineer`, blocked by #53
   - Issue #51 was `done` hours ago
-  - Issue #52 is `todo` but `library-developer` is available and not working on anything
+  - Issue #52 is `todo` but `backend-developer` is available and not working on anything
   - The work loop should have picked up #52, but something went wrong
 
 ### Team Context
@@ -24,10 +24,10 @@ A parent issue (Feature, Epic, or Initiative) is `in-progress` but none of its c
 
 | Agent | Current state |
 |---|---|
-| `library-architect` | Idle — completed #51 |
-| `library-developer` | Available but not picked up by work loop — should be working on #52 |
-| `library-validator` | Blocked — waiting for #52 |
-| `library-releaser` | Blocked — waiting for #53 |
+| `backend-architect` | Idle — completed #51 |
+| `backend-developer` | Available but not picked up by work loop — should be working on #52 |
+| `backend-validator` | Blocked — waiting for #52 |
+| `devops-engineer` | Blocked — waiting for #53 |
 
 ## User Story
 
@@ -45,7 +45,7 @@ The PM should:
    - #52 is blocked by #51 — but #51 is `done`. Blockage should be resolved. → **This is the problem.**
    - #53 is blocked by #52 — #52 is still `todo`. This is expected.
    - #54 is blocked by #53 — #53 is still `todo`. This is expected.
-4. Check that #52's assignee (`library-developer`) is a valid agent and exists — yes, it does.
+4. Check that #52's assignee (`backend-developer`) is a valid agent and exists — yes, it does.
 5. Conclusion: #52 is `todo`, blockages are resolved, assignee is valid. The work loop should pick it up. This may just be a timing gap — the PM should wait and check again next cycle.
 6. If after another cycle #52 is still not picked up, the PM should investigate further (is the agent overloaded? is there a work loop issue?).
 

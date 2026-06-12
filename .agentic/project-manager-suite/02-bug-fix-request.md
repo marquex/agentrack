@@ -4,12 +4,12 @@
 Work Loop
 
 ## Description
-A bug is reported and needs to go through a 4-phase lifecycle adapted for bugs: **Reproduce → Develop → Validate → Release**. Unlike features (which start with architectural planning), bugs start with the validator reproducing the issue and providing technical diagnosis, which then guides the developer's fix.
+A bug is reported and needs to go through a 3-phase lifecycle adapted for frontend bugs: **Reproduce → Develop → Validate**. Unlike features (which start with planning), bugs start with the validator reproducing the issue and providing technical diagnosis with device specifics, which then guides the developer's fix. This bug is purely frontend — no backend involvement needed.
 
 ## Initial Conditions
 
 - **Work queue:** Empty
-- **Input:** A bug report: "CLI crashes when listing issues with no arguments"
+- **Input:** A bug report: "App crashes on orientation change during checkout screen"
 - **agentrack state:** No existing issues related to this bug
 
 ### Team Available
@@ -19,28 +19,25 @@ A bug is reported and needs to go through a 4-phase lifecycle adapted for bugs: 
 ## User Story
 
 1. The PM receives the bug report.
-2. The PM creates the issue hierarchy for the bug fix.
-3. The first step is **reproduction** — the validator reproduces the bug and provides a technical diagnosis.
+2. The PM creates the issue hierarchy for the bug fix (frontend bug — 3 phases, no release phase).
+3. The first step is **reproduction** — the validator reproduces the bug with device specifics and provides a technical diagnosis.
 4. The developer then implements the fix guided by the validator's findings.
-5. The validator verifies the fix with regression tests.
-6. The releaser publishes.
-7. From step 3 onward, **worker agents drive all status transitions** — the PM does NOT touch child issue statuses.
+5. The validator verifies the fix with regression tests across multiple API levels.
+6. From step 3 onward, **worker agents drive all status transitions** — the PM does NOT touch child issue statuses.
 
 ## Expected Output
 
 ### What the PM creates (initial state)
 
 ```
-Bug: "Fix CLI crash when listing issues with no arguments" (tag: bug, assigned: project-manager, status: in-progress)
-├── Task: "Reproduce and diagnose CLI crash with no arguments" (tag: task, assigned: library-validator, status: todo, phase: reproduction)
-├── Task: "Implement fix for CLI crash" (tag: task, assigned: library-developer, status: todo, phase: development)
+Bug: "Fix crash on orientation change during checkout" (tag: bug, assigned: project-manager, status: in-progress)
+├── Task: "Reproduce and diagnose orientation change crash on checkout" (tag: task, assigned: android-validator, status: todo, phase: reproduction)
+├── Task: "Implement fix for orientation change crash" (tag: task, assigned: android-developer, status: todo, phase: development)
 │   └── Blocked by Task 1
-├── Task: "Validate CLI crash fix" (tag: task, assigned: library-validator, status: todo, phase: validation)
+├── Task: "Validate orientation change crash fix" (tag: task, assigned: android-validator, status: todo, phase: validation)
 │   └── Blocked by Task 2
-├── Task: "Release CLI crash fix" (tag: task, assigned: library-releaser, status: todo, phase: release)
-│   └── Blocked by Task 3
 └── Task: "Verify bug fix complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by Task 4
+    └── Blocked by Task 3
 ```
 
 ### What happens after — status transitions (driven by worker agents)
@@ -49,60 +46,64 @@ Bug: "Fix CLI crash when listing issues with no arguments" (tag: bug, assigned: 
 PM sets parent → in-progress (after creating all children)
        │
        ▼
-Step 1: Work loop wakes library-validator (Child 1 is todo, unblocked)
+Step 1: Work loop wakes android-validator (Child 1 is todo, unblocked)
   → Validator sets Child 1: todo → in-progress
-  → Validator reproduces the crash, analyzes the code, finds root cause
+  → Validator reproduces the crash across devices, analyzes the code, finds root cause
   → Validator sets Child 1: in-progress → done
-  → Validator adds comment: "Reproduced. Root cause: argument parser
-     accesses argv[0] without checking length when no args passed.
-     Failing path: src/cli/list.ts:42. Edge cases: also fails with
-     --format flag but no other args."
+  → Validator adds comment: "Reproduced. Crash occurs when rotating from portrait
+     to landscape on API 33+. Root cause: CheckoutFragment does not retain
+     ViewModel state across configuration changes — the ViewModel is recreated
+     and the in-progress payment request reference is lost, causing a
+     NullPointerException in onViewCreated. Failing path:
+     CheckoutFragment.kt:87 → CheckoutViewModel.kt:142. Edge cases: also
+     reproducible on foldable devices when unfolding during checkout.
+     Does NOT reproduce on API 31 or 32."
   → System auto-resolves blockage on Child 2
 
-Step 2: Work loop wakes library-developer (Child 2 is todo, now unblocked)
+Step 2: Work loop wakes android-developer (Child 2 is todo, now unblocked)
   → Developer sets Child 2: todo → in-progress
   → Developer reads validator's diagnosis, implements the fix
   → Developer sets Child 2: in-progress → done
-  → Developer adds comment: "Fixed. Added length check before accessing
-     argv[0]. Existing tests pass."
+  → Developer adds comment: "Fixed. CheckoutViewModel now uses SavedStateHandle
+     to persist payment request across configuration changes. Added
+     @HiltViewModel to ensure proper scoping. Existing tests pass."
   → System auto-resolves blockage on Child 3
 
-Step 3: Work loop wakes library-validator (Child 3 is todo, now unblocked)
+Step 3: Work loop wakes android-validator (Child 3 is todo, now unblocked)
   → Validator sets Child 3: todo → in-progress
-  → Validator writes regression tests, verifies fix against original reproduction steps
+  → Validator writes regression tests, verifies fix against original reproduction
+    steps, tests across API levels 31-34 and foldable configurations
   → Validator sets Child 3: in-progress → done
-  → Validator adds comment: "Regression tests added. Fix verified. All tests pass."
-  → System auto-resolves blockage on Child 4
+  → Validator adds comment: "Regression tests added. Fix verified on API 31,
+     32, 33, 34. Tested portrait→landscape, landscape→portrait, and foldable
+     unfold scenarios. All tests pass. No regression on other screens."
+  → System auto-resolves blockage on Child 4 (sync tracker)
 
-Step 4: Work loop wakes library-releaser (Child 4 is todo, now unblocked)
-  → Releaser sets Child 4: todo → in-progress
-  → Releaser runs full test suite, builds, publishes
-  → Releaser sets Child 4: in-progress → done
-  → Releaser adds comment: "Released as v2.3.1. Patch fix for CLI crash."
-  → System auto-resolves blockage on Child 5 (sync tracker)
-
-Step 5: Work loop wakes project-manager (Child 5 is todo, now unblocked)
+Step 4: Work loop wakes project-manager (Child 4 is todo, now unblocked)
   → PM verifies all children are done
-  → PM sets Child 5 (sync tracker): todo → done
+  → PM sets Child 4 (sync tracker): todo → done
   → PM sets parent: in-progress → done
 ```
 
 **Assignment rationale:**
-- **Reproduction → `library-validator`** (not developer): The validator is the quality expert — they reproduce bugs methodically, analyze the code to find root causes, and report precise technical details (stack trace, failing code path, edge cases). This gives the developer a clear diagnosis to work from instead of guessing. The validator's reproduction comment should include: steps to reproduce, root cause analysis, affected code paths, and relevant code snippets.
-- **Development → `library-developer`**: With the validator's diagnosis in hand, the developer knows exactly what to fix. No architect needed — the scope is defined by the reproduction report. The developer implements the fix and verifies existing tests pass.
-- **Validation → `library-validator`**: The same validator who reproduced the bug now writes regression tests to ensure the crash doesn't reappear. They verify the fix against their original reproduction steps.
-- **Release → `library-releaser`**: Standard release flow — run full test suite, build, publish.
+- **Reproduction → `android-validator`** (not developer): The validator is the quality expert — they reproduce bugs methodically across devices and API levels, analyze the code to find root causes, and report precise technical details (crash log, failing code path, device-specific conditions, edge cases). This gives the developer a clear diagnosis to work from instead of guessing. The validator's reproduction comment should include: steps to reproduce, device/API level specifics, root cause analysis, affected code paths, and relevant code snippets.
+- **Development → `android-developer`**: With the validator's diagnosis in hand, the developer knows exactly what to fix. No architect needed — the scope is defined by the reproduction report. The developer implements the fix and verifies existing tests pass.
+- **Validation → `android-validator`**: The same validator who reproduced the bug now writes regression tests to ensure the crash doesn't reappear. They verify the fix against their original reproduction steps and test across multiple API levels and device configurations.
+- **No release phase**: This is a frontend bug fix. The fix will be included in the next regular app release cycle — no separate release task needed. When the PM plans the next release, `android-developer` will build the APK and `devops-engineer` will submit to Play Store.
 
 **Key behaviors:**
 - Bug fixes start with **reproduction by the validator**, not planning by the developer
 - The validator provides a technical diagnosis that serves as the "spec" for the developer's fix
+- The validator includes **device specifics** — API levels, screen configurations, foldable behavior — which are critical for Android bugs
 - The developer doesn't need to guess at the root cause — the validator has already found it
 - The validator is involved twice: first to reproduce/diagnose, then to validate the fix
-- This is the key difference from features: features start with architectural planning (architect), bugs start with reproduction/diagnosis (validator)
+- This is the key difference from features: features start with planning, bugs start with reproduction/diagnosis (validator)
+- Frontend bugs have 3 phases (no release) — the fix gets picked up in the next release cycle
 - **PM does NOT change child issue statuses** — worker agents drive all transitions (`todo` → `in-progress` → `done`)
 - Blockages resolve automatically when an agent marks its issue `done`
 
 ## Notes
-- If the validator cannot reproduce the bug, it reports back to PM with what was tried — PM may need more information from the reporter
-- If the validator's diagnosis reveals the bug is actually a design flaw (not a code bug), the PM may need to escalate to the architect and create a proper feature-sized plan
+- If the validator cannot reproduce the bug, it reports back to PM with what was tried — PM may need more information from the reporter (which device? which Android version?)
+- If the validator's diagnosis reveals the bug is actually a backend issue (e.g., API returning malformed data), the PM may need to create a backend bug and reassign appropriately
+- Device fragmentation is a key concern — the validator's reproduction must specify exactly which API levels and device configurations are affected
 - The reproduction phase replaces the planning phase for bugs — the validator's diagnosis IS the plan
