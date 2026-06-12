@@ -42,9 +42,18 @@ The project manager will be awaken periodically to check that there are no probl
 Managers and workers can register work to do in the form of issues with status `ideas`. 
 
 Ideas need to be triaged so we don't implement anything that any agent might require. Usually with some idea validation from the point of view of a manager to check that is aligned with the long term goals and the current direction of the project is enough.
+The first thing the PM needs to do is to check if there are duplicates, in these cases we assume that there aren't.
 
-The triage needs to analyze pros and cons of the idea and assing them a prioirity. 
+Ideas need to be passed to a manager to approve or reject them:
 
-If the idea is discarded we can close it, and add tags `idea` and `discarded` to it, so we can reference it in case somebody comes up with the same idea again.
+* If the idea is 100% technical or internal, it can be passed to the team lead to decide if it's aligned to the technical direction that the project has.
+* If it's product related, like a feature or improvement, it needs to be passed to the agent that take the product decisions
+* If the idea was created by a manager should be handled as if was already accepted
 
-If the idea is accepted we need to start planning it and create issues for its implementation, so we can work on it with in the work loop context.
+If the managers don't understand well the idea they can request for more information using messages in the idea issue, mentioning the creator. 
+
+What we want from the managers is a decision on wether the idea is good and we want to implement it, so we need to create a task for them to decide, and one for the project-manager to check the decision.
+
+If the idea needs to be implemented, the PM needs to create the issues needed for the implementation.
+
+If the idea is discarded, we mark it as `closed`, add the `idea` and `discarded` tags, and write a comment on why it was discarded.

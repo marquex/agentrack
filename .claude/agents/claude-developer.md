@@ -12,6 +12,8 @@ access:
     permissions: [read, write, delete]
   - path: .agentic/expertise/**
     permissions: [read, write, delete]
+  - path: .agentic/project-manager-suite/**
+    permissions: [read, write, delete]
   - path: scripts/**
     permissions: [read, write]
   - path: .agentrack/**
