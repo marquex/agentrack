@@ -92,3 +92,20 @@ Picked up the interrupted baseline task and finished it: ran all 27 scenarios en
 
 **Related topics:** [agent-testing](agent-testing.expertise.md), [agent-system-files](agent-system-files.expertise.md)
 
+## 2026-06-13 Built `issue-managing` skill + iterated PM agent to ≥85% on all 27 scenarios
+
+Took the baseline (33.3% pass) and drove it to the goal: every one of the 27 scenarios at ≥85% (avg ~66/70, ~94%). Created `.claude/skills/issue-managing/SKILL.md` (sync tracker, hierarchy/tags, three loops, status ownership, phase flows, cross-team) and wired it into `project-manager.md` via the `skills:` frontmatter.
+
+**Methodology that worked (story-by-story):** user explicitly killed batch runs. Run ONE scenario, inspect the agent's literal response, diagnose the WRONG mental model behind the failure, add a targeted corrective rule that debunks that specific misconception, then re-test that one scenario; repeat until pass, then move on.
+- Story 01 scope creep — agent treated the team name "Library + Webapp" as requiring both subteams → rule "the team name describes the org, not the request's scope" → 66/70 (94%, PASS).
+- Story 02 — agent modeled the sync tracker as an "active monitoring hub" (in-progress, unblocked) instead of a "gated alarm clock" (todo, blocked by last worker) → added a "🚫 COMMON MISCONCEPTION" callout that directly debunks the hub model.
+- Per user feedback, kept the skill CONCISE and rule-based: condensed 283→196 lines by deleting/restructuring, not only adding.
+
+**Key discovery (the breakthrough):** the `skills:` frontmatter field does NOT preload skill content when the agent runs via `claude --agent <name>` from the CLI — it only preloads for subagents launched via the Task tool. In test mode (`--tools ""`) the agent could not read the skill file at all, so skill edits had zero effect for hours. **Solution: inline the operational content directly into `project-manager.md`; keep the skill as a synced reference.**
+
+**Note on completeness:** the `ac93f46b` log captures the skill creation, the skills-preload discovery, the story-by-story switch, story 01 passing, and story 02 iteration, but ends interrupted mid-story-02 (process_end). The all-27-pass completion came in continuation sessions; that outcome is reflected in the topic files ([agent-testing](agent-testing.expertise.md), [agent-system-files](agent-system-files.expertise.md)).
+
+**Files:** `.claude/skills/issue-managing/SKILL.md` (created), `.claude/agents/project-manager.md` (`skills:` frontmatter + inlined operational content), helper scripts `validate-skill.ts` / `inspect.ts` in `.agentic/project-manager-suite/`.
+
+**Related topics:** [agent-testing](agent-testing.expertise.md), [agent-system-files](agent-system-files.expertise.md)
+

@@ -33,7 +33,10 @@ Agent system files live in `.claude/agents/` as Markdown files (e.g., `library-d
 
 ## Gotchas
 
+- **🚨 CRITICAL: `skills:` frontmatter field does NOT preload skill content when the agent is run via `claude --agent <name>` from the CLI.** The `skills:` field only preloads for subagents launched from a parent session via the Task tool. For CLI-invoked agents, skills are on-demand only (invoked via `/skill-name` or auto-matched by description). If the agent also has `--tools ""` (as in test mode), it cannot invoke skills AT ALL. **SOLUTION: inline critical operational content directly in the agent system prompt.** Keep the skill file as a reference for production sessions, but do not rely on it for content delivery in test mode or CLI invocations.
 - **Path resolution**: The sandbox may reject absolute paths (e.g., `/Users/.../projects/agentrack/.claude/`). Always use relative paths from the project root (e.g., `.claude/agents/`). If path errors occur, run `pwd` to confirm the working directory first.
+- **Keep agent prompts and skills in sync.** When operational patterns live in the agent prompt (for test-mode reliability) AND in a skill file (for production reference), they must contain the same content. After editing one, update the other. The `project-manager.md` agent prompt and `issue-managing/SKILL.md` skill are kept in sync this way.
+- **Keep skills CONCISE and rule-based; fix bloat by deleting, not only adding.** The user explicitly pushed back on an over-long `issue-managing` skill and asked for "concise with clear rules". The fix was to restructure and cut (283 → 196 lines), not append more. When a skill grows past a few hundred lines, look for redundancy and merge/delete before adding new sections. The same concision applies to the agent system prompt itself.
 
 ## Related Topics
 
@@ -42,6 +45,7 @@ Agent system files live in `.claude/agents/` as Markdown files (e.g., `library-d
 ## Timeline
 
 - **2026-06-05**: Replaced `## Using agentrack as the issue tracker` with `## Coordinating Work` across all 9 agent files. Learned the structure of agent files and the shared-section pattern.
+- **2026-06-13**: Added inline operational patterns to `project-manager.md` (work-loop mechanics, sync tracker, hierarchy/tags, phase flows, three loops, cross-team patterns, special scenarios) + created `issue-managing` skill as synced reference. ALL 27 test scenarios pass at ≥85%. **Key discovery: `skills:` frontmatter does NOT preload in `--agent` CLI mode — must inline critical content in the agent prompt.**
 
 ## Gaps And Validation Needs
 

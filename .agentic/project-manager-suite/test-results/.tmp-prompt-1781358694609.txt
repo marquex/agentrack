@@ -1,0 +1,62 @@
+# TEST SCENARIO: Story 06: Parallel Independent Tasks
+
+Team: Library + Webapp
+Loop: Work Loop
+
+---
+
+Available Agents (Library + Webapp Team):
+
+Library Sub-team:
+- library-architect: Planning phase — designs architecture, creates specs, API design
+- library-developer: Development phase — implements features from specs, fixes bugs
+- library-validator: Validation phase — writes tests, quality checks, bug reproduction
+- library-releaser: Release phase — runs tests, generates docs, builds, publishes to npm
+
+Webapp Sub-team:
+- webapp-developer: Planning + Development — implements frontend features, handles API integration
+- webapp-styler: Styling phase — visual polish AFTER developer builds the feature
+- webapp-validator: Validation — tests the webapp, E2E tests, quality checks, bug reproduction
+
+Phase Flows:
+- Features: Plan → Dev → Validate → Release
+- Bugs: Reproduce → Dev → Validate → Release
+
+---
+
+## Current Tracker State
+
+- **Work queue:** Empty
+- **Input:** Two unrelated requests:
+  1. "Add pagination to the issue list CLI command"
+  2. "Fix the dark mode toggle on the webapp"
+- **agentrack state:** No existing issues
+
+### Team Available
+
+> See [Team Roster](00-team-roster.md) for all agent roles and capabilities.
+
+## Trigger / Situation
+
+1. The PM receives two independent requests.
+2. The PM identifies they have no dependencies between them and involve different codebases.
+3. The PM creates two separate parent issues, each with their own 4-phase lifecycle.
+4. No blockages are created between the two features — they can run in parallel.
+
+---
+
+## Your Task
+
+Analyze this situation and produce a complete, detailed action plan. For each step:
+
+1. Show the exact `agt` command you would run
+2. Explain your reasoning
+
+Show the COMPLETE issue hierarchy you would create (or modify), including:
+- Every issue with its title, tags, assignee, and status
+- Parent-child relationships (indented tree)
+- All blockages between issues
+- All comments you would add
+- All status changes you would make
+
+Use the Library + Webapp team's agents for assignments. Follow the correct phase flow for the issue type (feature, bug, chore, strategy).

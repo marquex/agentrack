@@ -1,0 +1,77 @@
+# TEST SCENARIO: Story 02: Bug Fix Request — Full Lifecycle
+
+Team: AndroidApp
+Loop: Work Loop
+
+---
+
+Available Agents (AndroidApp — Mobile App):
+
+Backend Team:
+- backend-architect: Planning phase + team lead — designs API contracts, database schemas. Technical ideas route here.
+- backend-developer: Development phase — implements endpoints, business logic
+- backend-validator: Validation phase — API tests, load tests, bug reproduction
+- devops-engineer: Release phase — deploys services, CI/CD, Play Store submissions, incident response
+
+Frontend (Android) Team:
+- android-developer: Planning + Development — builds screens, integrates APIs, handles device compatibility, builds release APKs
+- android-designer: Styling phase — Material Design, animations, accessibility (AFTER developer builds)
+- android-validator: Validation — UI tests, cross-device testing, bug reproduction
+
+Leadership:
+- product-owner: Product decisions, feature prioritization, acceptance reviews. Product ideas route here.
+
+Phase Flows:
+- Backend Features: Plan → Dev → Validate → Release
+- Backend Bugs: Reproduce → Dev → Validate → Release
+- Frontend Features: Plan → Dev → Style → Validate (release via android-developer APK → devops Play Store)
+- Frontend Bugs: Reproduce → Dev → Validate (no separate release)
+
+Idea Routing:
+- Backend technical idea → backend-architect
+- Product idea → product-owner
+- Idea from a manager → Auto-accept (skip review)
+
+Key Rules:
+- Frontend blocked on API contract definition, NOT full backend implementation
+- Play Store rejections require non-standard workflow
+- Backend deploys independently; Android goes through Play Store review
+
+---
+
+## Current Tracker State
+
+- **Work queue:** Empty
+- **Input:** A bug report: "App crashes on orientation change during checkout screen"
+- **agentrack state:** No existing issues related to this bug
+
+### Team Available
+
+> See [Team Roster](00-team-roster.md) for all agent roles and capabilities.
+
+## Trigger / Situation
+
+1. The PM receives the bug report.
+2. The PM creates the issue hierarchy for the bug fix (frontend bug — 3 phases, no release phase).
+3. The first step is **reproduction** — the validator reproduces the bug with device specifics and provides a technical diagnosis.
+4. The developer then implements the fix guided by the validator's findings.
+5. The validator verifies the fix with regression tests across multiple API levels.
+6. From step 3 onward, **worker agents drive all status transitions** — the PM does NOT touch child issue statuses.
+
+---
+
+## Your Task
+
+Analyze this situation and produce a complete, detailed action plan. For each step:
+
+1. Show the exact `agt` command you would run
+2. Explain your reasoning
+
+Show the COMPLETE issue hierarchy you would create (or modify), including:
+- Every issue with its title, tags, assignee, and status
+- Parent-child relationships (indented tree)
+- All blockages between issues
+- All comments you would add
+- All status changes you would make
+
+Use the AndroidApp team's agents for assignments. Follow the correct phase flow for the issue type (feature, bug, chore, strategy).

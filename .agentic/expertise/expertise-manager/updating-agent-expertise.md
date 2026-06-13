@@ -3,12 +3,13 @@
 When an agent asks you to update expertise after work:
 
 1. Read the agent expertise index to know what are the existing topics
-2. Don't read the log file directly. Use the `summarize-logs` skill to get a summary of the log file and work with that instead.
+2. Read the agent's `timeline.expertise.md` and match it against the session **before** extracting anything. Many update requests arrive for sessions that were already processed (e.g., an interrupted run later completed in a follow-up). If the task, outcome, and date of the current log already have a matching timeline entry, the session is already captured — report that back instead of writing a duplicate entry. (Match on task + outcome + key details, not just the date, since several sessions can share a day.)
+3. Don't read the log file directly. Use the `summarize-logs` skill to get a summary of the log file and work with that instead.
    - **Fallback if `summarize-logs` is not available** (it may not be exposed as a callable tool): the JSONL log is still readable directly. Use `Grep` with `output_mode: count` on role markers (`"role":"assistant"`, `"type":"prompt"`) to gauge size, then `Grep` with `output_mode: content` to pull the user prompts and assistant `text`/`tool_use`/`thinking` lines. Skip raw `tool_result` lines unless a specific one needs verifying. This gives an effective summary without loading every byte of a large log.
-3. If the log file is about a very simple task that is straightforward finish. There is nothing to learn from a task that the agent already knows how to do.
-4. If the log file has meaningful information follow the instructions in the `Extracting expertise` section below.
-5. Update exisiting topic files, or create new ones as needed. If you create new ones, add them to the index to be found the next time.
-6. Now reflect on your own expertise. Were the expertise reports that you given useful to the agent? Did you miss something? Can you improve the way you extract expertise from the logs? If so, update your own expertise files to improve over time.
+4. If the log file is about a very simple task that is straightforward finish. There is nothing to learn from a task that the agent already knows how to do.
+5. If the log file has meaningful information follow the instructions in the `Extracting expertise` section below.
+6. Update exisiting topic files, or create new ones as needed. If you create new ones, add them to the index to be found the next time.
+7. Now reflect on your own expertise. Were the expertise reports that you given useful to the agent? Did you miss something? Can you improve the way you extract expertise from the logs? If so, update your own expertise files to improve over time.
 
 ### Extracting expertise
 
