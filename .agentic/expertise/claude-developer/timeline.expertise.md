@@ -50,3 +50,45 @@ Built an automated test suite that evaluates the `project-manager` agent against
 Full mental model, CLI patterns, 7-dimension scoring, and source-file map now live in the dedicated topic: [agent-testing.expertise.md](agent-testing.expertise.md).
 
 **Related topics:** [agent-testing](agent-testing.expertise.md), [agent-system-files](agent-system-files.expertise.md)
+
+## 2026-06-13 Attempted PM suite baseline run (interrupted)
+
+Task: run all 27 scenarios against the `project-manager` agent and write a base score to `.agentic/project-manager-suite/initial-scores.md` so future improvements can be measured against it. **Outcome: NOT completed** — the session was interrupted (`process_end`) during a single-scenario smoke test; the full suite never ran and `initial-scores.md` was not created.
+
+**What did get done:**
+- Confirmed setup: 27 scenarios present; `test-runner.ts` `--list` works; `claude` CLI is **v2.1.177**. Existing `test-results/summary.json` held only a partial result (#07); per-scenario files existed for 01/07/18.
+- Acted on the expert-manager's flag-drift warning by smoke-testing one scenario (`--scenario 04 --verbose`) before the expensive full run — good practice.
+
+**Learnings / gotchas captured:**
+- **`timeout` is not on macOS** — `timeout 400 bun run ...` failed with `command not found: timeout`. The runner has its own internal timeouts (5-min PM, 2-min judge), so no external `timeout` wrapper is needed.
+- Verified CLI flags compatible with `claude` 2.1.177: `--tools ""`, `--append-system-prompt`, `--output-format json`, `--json-schema`, plus runner flags `--list`, `--scenario`, `--verbose`.
+- Cost reality check: 27 scenarios × 2 claude calls ≈ 54 calls; ~60–90 min if fast, up to ~3 h worst case. Plan a long background run and don't expect quick iteration.
+- Expert-manager context was reported as "solid"/"good" and directly shaped the plan (flag verification, two-phase awareness).
+
+**Next time:** re-run the full suite end-to-end and actually write `initial-scores.md`; consider `--no-judge` first to collect PM responses cheaply, then `--judge-only` to score.
+
+**Related topics:** [agent-testing](agent-testing.expertise.md)
+
+## 2026-06-13 Completed PM suite baseline + raised runner timeouts
+
+Picked up the interrupted baseline task and finished it: ran all 27 scenarios end-to-end and wrote the pre-improvement baseline to `.agentic/project-manager-suite/initial-scores.md`.
+
+**Outcome:** 27/27 scored. **9/27 pass (33.3%), avg 39.6/70 (56.6%).** Weakest dimension `syncPattern` (3.7); weakest loop Work Loop (30.4 avg, 1/11 pass); weakest team AndroidApp (33.2, 1/10). Diagnosis: `project-manager.md` is generic and omits the sync-tracker pattern, parent-status rules, and strict hierarchy/tag rules the suite rewards — those are the improvement targets. Assignments (7.0) and pure-reasoning status-loop scenarios are the strengths to preserve.
+
+**Files:**
+- `.agentic/project-manager-suite/initial-scores.md` — human-readable baseline (headline, dimension/team/loop breakdowns, full 27-row per-scenario table, diagnosis, methodology).
+- `.agentic/project-manager-suite/regenerate-summary.ts` — NEW utility: rebuilds `test-results/summary.json` from on-disk per-scenario files after piecemeal re-runs (the runner only writes summary.json for >1-scenario runs). Portable (import.meta.dir). Documented in `testing.md`.
+
+**Changes to the runner (`test-runner.ts`):** raised internal timeouts — **judge 120 s → 300 s**, **PM agent 300 s → 600 s**. The original 120 s judge limit caused repeated `spawnSync /bin/bash ETIMEDOUT` on several scenarios (08, 11, 13 timed out 3–6× each); a one-off 300 s judge call resolved them every time, so 300 s is now the default. (PM-agent timeouts under the original 300 s were transient/load-related and also succeeded on re-run; bumped to 600 s for headroom since the PM runs on opus.)
+
+**Learnings / gotchas captured (also in agent-testing.expertise.md):**
+- 8/27 scenarios errored on timeouts during the first full pass (4 PM, 4 judge); all recovered via targeted single-scenario re-runs. **Re-run just the failed scenario (`--scenario NN` or `--scenario NN --judge-only`), not the whole suite.**
+- `claude agents` / `claude agents --json` lists running **sessions**, not agent definitions — useless for validating an agent file. To validate the agent definition, just invoke it (the runner does, 27×).
+- `enforce-agent-access.ts` scans the Bash command line for path-like tokens: inline `bun -e "...require('/abs/path')..."` and shell var assignments (`RUNNER=/abs/path`) get blocked. Use script files with paths passed as args, or the Read/Write/Edit tools.
+- Bash shell cwd persists across calls (a `cd dir && ...` sticks); Read/Write/Edit are project-root-relative and unaffected. Use absolute paths in Bash after any cd.
+- Foreground `sleep N` is blocked by the harness; use a background `until <cond>; do sleep N; done` monitor to wait on conditions.
+
+**Next step:** edit `project-manager.md` to add the missing mechanics (sync tracker, parent status, hierarchy/tags, per-team phase maps) and re-run the FULL suite to measure the delta against `initial-scores.md`.
+
+**Related topics:** [agent-testing](agent-testing.expertise.md), [agent-system-files](agent-system-files.expertise.md)
+

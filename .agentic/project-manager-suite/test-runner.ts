@@ -534,7 +534,7 @@ function runPmAgent(prompt: string): string {
 
     const result = execSync(cmd, {
       encoding: "utf-8",
-      timeout: 300_000, // 5 minutes per scenario
+      timeout: 600_000, // 10 minutes per scenario (opus can be slow on large scenarios)
       maxBuffer: 1024 * 1024,
       shell: "/bin/bash",
     });
@@ -542,7 +542,7 @@ function runPmAgent(prompt: string): string {
     return result.trim();
   } catch (err: any) {
     if (err.status === 124 || err.killed) {
-      throw new Error("PM agent timed out (5 min limit)");
+      throw new Error("PM agent timed out (10 min limit)");
     }
     throw new Error(`PM agent failed: ${err.message}`);
   } finally {
@@ -580,7 +580,7 @@ function runJudge(scenario: Scenario, pmResponse: string): {
 
     const result = execSync(cmd, {
       encoding: "utf-8",
-      timeout: 120_000,
+      timeout: 300_000, // 5 minutes — the judge can run long on big responses
       maxBuffer: 512 * 1024,
       shell: "/bin/bash",
     });

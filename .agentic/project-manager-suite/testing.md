@@ -147,6 +147,16 @@ Each result file contains:
 }
 ```
 
+### Regenerating `summary.json` after piecemeal runs
+
+The runner only writes `summary.json` when you run **more than one scenario** in a single invocation. If you re-run individual scenarios (`--scenario N`) or re-judge a few (`--judge-only --scenario N`), the per-scenario `*-result.json` files update but `summary.json` goes stale. Rebuild it from the on-disk results:
+
+```bash
+bun run .agentic/project-manager-suite/regenerate-summary.ts
+```
+
+This rewrites `summary.json` and prints the headline stats (pass rate, averages, per-dimension, per-team/loop) so you can check the current state of the suite without re-running anything.
+
 ## Scenario Catalog
 
 | # | Title | Team | Loop |

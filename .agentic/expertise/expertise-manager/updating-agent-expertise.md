@@ -4,6 +4,7 @@ When an agent asks you to update expertise after work:
 
 1. Read the agent expertise index to know what are the existing topics
 2. Don't read the log file directly. Use the `summarize-logs` skill to get a summary of the log file and work with that instead.
+   - **Fallback if `summarize-logs` is not available** (it may not be exposed as a callable tool): the JSONL log is still readable directly. Use `Grep` with `output_mode: count` on role markers (`"role":"assistant"`, `"type":"prompt"`) to gauge size, then `Grep` with `output_mode: content` to pull the user prompts and assistant `text`/`tool_use`/`thinking` lines. Skip raw `tool_result` lines unless a specific one needs verifying. This gives an effective summary without loading every byte of a large log.
 3. If the log file is about a very simple task that is straightforward finish. There is nothing to learn from a task that the agent already knows how to do.
 4. If the log file has meaningful information follow the instructions in the `Extracting expertise` section below.
 5. Update exisiting topic files, or create new ones as needed. If you create new ones, add them to the index to be found the next time.

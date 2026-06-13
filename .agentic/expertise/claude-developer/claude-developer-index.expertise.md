@@ -21,5 +21,5 @@ Domain: General-purpose development agent for the agentrack project.
 ### Agent Testing
 
 - File: [agent-testing.expertise.md](agent-testing.expertise.md)
-- Prompts: "test an agent", "evaluate agent", "run the PM test suite", "automated testing", "claude CLI test mode", "LLM judge scoring", "add a scenario to the test runner", "two-phase test run"
-- Covers: How to build and run automated test suites that evaluate a Claude agent headlessly via the `claude` CLI — testing mode (`--tools ""`), `structured_output` parsing, two-phase `--no-judge`/`--judge-only` workflow, 7-dimension scoring, and the `project-manager` suite (scenarios 01–27, test-runner.ts) as the worked example.
+- Prompts: "test an agent", "evaluate agent", "run the PM test suite", "automated testing", "claude CLI test mode", "LLM judge scoring", "add a scenario to the test runner", "two-phase test run", "establish a baseline score", "run all scenarios", "initial-scores.md", "list scenarios", "smoke test a scenario"
+- Covers: How to build and run automated test suites that evaluate a Claude agent headlessly via the `claude` CLI — testing mode (`--tools ""`), `structured_output` parsing, two-phase `--no-judge`/`--judge-only` workflow, 7-dimension scoring, operational runner flags (`--list`/`--scenario`/`--verbose`), the baseline-scoring workflow, and the `project-manager` suite (scenarios 01–27, test-runner.ts) as the worked example.
