@@ -35,3 +35,18 @@ Created stories for two new teams (QuantEdge and AndroidApp) in `.agentic/projec
 - The `more-teams.md` file contains the planning rationale and story proposals that were implemented as stories 20-27
 
 **Related topics:** Project manager training suite
+
+## 2026-06-13 Created PM agent test suite (test-runner.ts)
+
+Built an automated test suite that evaluates the `project-manager` agent against the 27-scenario catalog in `.agentic/project-manager-suite/`. Originated from a task to make the PM agent master the issue tracker for any team project; the suite enables systematic, scored evaluation so the PM agent file can be iteratively improved.
+
+**New files:**
+- `.agentic/project-manager-suite/test-runner.ts` — Bun/TypeScript test runner
+- `.agentic/project-manager-suite/testing.md` — Usage documentation
+- `.agentic/project-manager-suite/test-results/` — per-scenario results + summary
+
+**Learnings:** testing mode via `--tools ""` (agent returns a plan, no agentrack side effects); `structured_output` (not `result`) holds parsed JSON under `--json-schema`; judge must demand pure JSON; two-phase `--no-judge`/`--judge-only` workflow to iterate on judge criteria cheaply.
+
+Full mental model, CLI patterns, 7-dimension scoring, and source-file map now live in the dedicated topic: [agent-testing.expertise.md](agent-testing.expertise.md).
+
+**Related topics:** [agent-testing](agent-testing.expertise.md), [agent-system-files](agent-system-files.expertise.md)
