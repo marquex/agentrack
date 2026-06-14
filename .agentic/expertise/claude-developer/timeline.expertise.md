@@ -109,3 +109,19 @@ Took the baseline (33.3% pass) and drove it to the goal: every one of the 27 sce
 
 **Related topics:** [agent-testing](agent-testing.expertise.md), [agent-system-files](agent-system-files.expertise.md)
 
+## 2026-06-14 Restructured PM agent file vs. issue-managing skill (remove duplication)
+
+Task: the `project-manager.md` agent file and `.claude/skills/issue-managing/SKILL.md` were ~90% verbatim duplicates; restructure so the agent file holds only personality/responsibility and the skill is the single source of rules. The work spanned multiple sessions (the first session, `0707fb36`, was interrupted during the initial file-investigation phase before any edits).
+
+**Final architecture:** lean agent file (personality + "load the `issue-managing` skill" + constants); `SKILL.md` = full rulebook; **the test runner was modified to inject the skill** via `--append-system-prompt` (`loadIssueManagingSkill()`/`buildAppendSystemPrompt()` in `test-runner.ts`), because test mode (`--tools ""`) can't read files and `skills:` doesn't preload in `--agent` mode. An intermediate "canonical agent file + checklist skill" design was rejected as still-duplicative.
+
+**Regression & fix:** moving rules out of the rich agent-file context made the model follow injected skill rules MORE LITERALLY and exploit a loophole in the status-loop rule (Story 08: agent inferred "auto-clear failed" from circumstantial evidence and wrongly resolved blockages). Fix: tightened the rule wording ("never infer auto-clear failure from circumstantial evidence; only manually resolve when the scenario EXPLICITLY states the blockage failed to auto-clear") rather than re-inlining.
+
+**Outcome:** suite holds at 27/27 pass, avg 95.3% (66.7/70), every scenario ≥86%.
+
+**Key lessons:** (1) a lean agent file makes the model follow injected rules more literally — tighten wording to close loopholes; (2) `opus` and `sonnet` aliases both map to `glm-5.2[1m]` in this project's settings, so model-swap is NOT a speed lever.
+
+**Full detail (architecture, decisions, rejected designs, canary verification) lives in the topic file:** [agent-system-files.expertise.md](agent-system-files.expertise.md) (Timeline + Gotchas).
+
+**Related topics:** [agent-system-files](agent-system-files.expertise.md), [agent-testing](agent-testing.expertise.md)
+
