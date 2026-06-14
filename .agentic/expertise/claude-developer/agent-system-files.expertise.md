@@ -46,6 +46,7 @@ Agent system files live in `.claude/agents/` as Markdown files (e.g., `library-d
 
 - **2026-06-05**: Replaced `## Using agentrack as the issue tracker` with `## Coordinating Work` across all 9 agent files. Learned the structure of agent files and the shared-section pattern.
 - **2026-06-13**: Added inline operational patterns to `project-manager.md` (work-loop mechanics, sync tracker, hierarchy/tags, phase flows, three loops, cross-team patterns, special scenarios) + created `issue-managing` skill as synced reference. ALL 27 test scenarios pass at ≥85%. **Key discovery: `skills:` frontmatter does NOT preload in `--agent` CLI mode — must inline critical content in the agent prompt.**
+- **2026-06-14**: Refactored the issue hierarchy model from "cross-team always 4 levels / never skip levels" to **bottom-up grouping with a strict no-single-child-parent rule** (a parent exists only to group 2+ related issues). The 3 cross-team stories (03/20/27) collapsed from Initiative→Epic(per team)→Feature→Task to Epic→Feature→Task. Propagated across **8 files**: agent prompt, skill, 3 stories, `00-team-roster.md`, `README.md`, and the judge's hierarchy criterion in `test-runner.ts`. All 3 re-scored at 91–100%; suite holds at 27/27 pass (avg 95%). **Lesson reinforced: a single hierarchy rule is duplicated across the agent prompt AND the skill (verbatim), and the judge prompt encodes its own copy — all three plus the scenario Expected Outputs must be edited in lockstep.**
 
 ## Gaps And Validation Needs
 

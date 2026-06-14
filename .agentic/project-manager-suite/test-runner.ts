@@ -272,7 +272,7 @@ You will receive:
 
 Score the agent's response on these 7 dimensions (0-10 each):
 
-1. hierarchy — Issue hierarchy levels (Initiative/Epic/Feature/Bug/Chore/Task), correct tags, no skipped levels
+1. hierarchy — Issue hierarchy levels (Initiative/Epic/Feature/Bug/Chore/Task), correct tags, no single-child parents (a parent must group 2+ related issues; never wrap one deliverable in its own Epic)
 2. assignments — Right worker agent for each task, correct phase-to-agent mapping
 3. dependencies — Correct blockages between tasks, sequential dependencies, cross-team dependencies
 4. syncPattern — Sync tracker created (child assigned to project-manager, blocked by last worker child)

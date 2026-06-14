@@ -129,22 +129,22 @@ PM sets parent → in-progress (work is happening via children)
 
 Every issue the PM creates must be tagged with its level in the hierarchy. This helps agents understand what kind of issue they're working on and how it fits into the bigger picture.
 
-### The strict hierarchy (never skip levels)
+### Build the hierarchy bottom-up
 
 ```
 Task ← Feature/Bug/Chore ← Epic ← Initiative
 ```
 
-Levels are always in this order from bottom to top. You don't need every level, but you can never skip:
+Hierarchy exists to **group related issues**. Build it from the bottom up and only add a parent when there are 2+ related issues to group — a parent with a single child is overhead, never create one:
 
 ```
-✅ Feature → Tasks                              (standalone)
-✅ Epic → Features → Tasks                      (grouped features)
-✅ Initiative → Epics → Features → Tasks        (full hierarchy)
+✅ Task                                        (one thing to do — no parent)
+✅ Feature → Tasks                              (one deliverable, multiple phases)
+✅ Epic → Features → Tasks                      (2+ related deliverables)
+✅ Initiative → Epics → Features → Tasks        (2+ related epics, long-term goal)
 
-❌ Epic → Tasks           (skipped Feature/Bug/Chore level)
-❌ Initiative → Features  (skipped Epic level)
-❌ Initiative → Tasks     (skipped two levels)
+❌ Epic → 1 Feature       (single-child parent — overhead)
+❌ Initiative → 1 Epic    (single-child parent — overhead)
 ```
 
 ### Hierarchy levels
@@ -159,19 +159,21 @@ Levels are always in this order from bottom to top. You don't need every level, 
 | **Task** | `task` | Worker agent | Individual phase work (Plan, Dev, Validate, Release, Reproduce, Style). | "Implement search" |
 | **Sync** | `task,sync` | PM | Notification — PM's alarm clock for when children complete. | "Verify search complete" |
 
-### When to use each depth
+### When to use each depth (decide bottom-up)
 
+- **One thing to do**: 1 Task (no parent)
 - **Standalone deliverable**: Feature/Bug/Chore → Tasks (2 levels)
 - **Related deliverables**: Epic → Features/Bugs/Chores → Tasks (3 levels)
-- **Multi-team or large effort**: Initiative → Epics → Features/Bugs/Chores → Tasks (4 levels)
+- **Long-term multi-phase goal** (2+ epics): Initiative → Epics → Features/Bugs/Chores → Tasks (4 levels)
 
 ### Key rules
 
-1. **Never skip hierarchy levels** — Tasks are always inside Features/Bugs/Chores, which are always inside Epics (when grouped), which are always inside Initiatives (when grouped).
+1. **Never create a parent for a single child** — a parent groups 2+ related issues; one with a single child organizes nothing. Build bottom-up.
 2. **Every issue gets a tag** — no untagged issues.
-3. **Related issues must be linked** — if features depend on each other or belong to the same goal, wrap them in an Epic. If epics are related, wrap in an Initiative.
-4. **Tags use `agt create --tags`** — e.g., `agt create "Fix crash" --tags bug`
-5. **Sync trackers use both tags** — `--tags task,sync`
+3. **Related issues must be linked** — if 2+ deliverables depend on each other or belong to the same goal, wrap them in an Epic. If 2+ epics are related, wrap in an Initiative.
+4. **Teams are assignment, not hierarchy** — two teams each contributing one deliverable share a single Epic (3 levels), never a per-team wrapper around a lone deliverable.
+5. **Tags use `agt create --tags`** — e.g., `agt create "Fix crash" --tags bug`
+6. **Sync trackers use both tags** — `--tags task,sync`
 
 ## Phase-to-Agent Mapping (Quick Reference)
 
@@ -269,16 +271,16 @@ Ensures each team covers all major PM skills:
 #### Work Loop Stories
 - [01-new-feature-request.md](01-new-feature-request.md) — Feature → Tasks (2 levels) — Library+Webapp
 - [02-bug-fix-request.md](02-bug-fix-request.md) — Bug → Tasks (2 levels) — AndroidApp
-- [03-multi-team-feature.md](03-multi-team-feature.md) — Initiative → Epics → Features → Tasks (4 levels) — QuantEdge
+- [03-multi-team-feature.md](03-multi-team-feature.md) — Epic → Features → Tasks (3 levels, cross-team) — QuantEdge
 - [04-single-agent-task.md](04-single-agent-task.md) — Feature → Tasks (2 levels, styler only) — Library+Webapp
 - [05-blocked-task-chain.md](05-blocked-task-chain.md) — Epic → Chore + 2 Features → Tasks (3 levels) — AndroidApp
 - [06-parallel-independent-tasks.md](06-parallel-independent-tasks.md) — 2 standalone: Feature → Tasks, Bug → Tasks — Library+Webapp
-- [20-consumer-to-provider-request.md](20-consumer-to-provider-request.md) — Initiative → Epics → Features → Tasks (bottom-up routing) — QuantEdge
+- [20-consumer-to-provider-request.md](20-consumer-to-provider-request.md) — Epic → Features → Tasks (bottom-up routing, cross-team) — QuantEdge
 - [21-api-contract-joint-planning.md](21-api-contract-joint-planning.md) — Epic → Features → Tasks (contract-level deps) — AndroidApp
 - [22-strategy-validation-not-bug.md](22-strategy-validation-not-bug.md) — Bug → Tasks (domain-specific routing) — QuantEdge
 - [23-device-specific-bug-triage.md](23-device-specific-bug-triage.md) — Bug → Tasks (frontend-only, device-specific) — AndroidApp
 - [25-play-store-rejection.md](25-play-store-rejection.md) — Bug → Tasks (external blocker, non-standard flow) — AndroidApp
-- [27-backend-first-dependency.md](27-backend-first-dependency.md) — Initiative → Epics → Features → Tasks (live service deps) — AndroidApp
+- [27-backend-first-dependency.md](27-backend-first-dependency.md) — Epic → Features → Tasks (3 levels, live service deps) — AndroidApp
 
 #### Project Status Loop Stories
 - [07-stuck-in-progress.md](07-stuck-in-progress.md) — Developer forgot to move issue to `done` — QuantEdge

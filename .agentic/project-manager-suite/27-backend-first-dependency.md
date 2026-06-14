@@ -29,48 +29,43 @@ The app needs a "real-time order tracking" feature using WebSockets. Unlike REST
 ### What the PM creates (initial state)
 
 ```
-Initiative: "Add real-time order tracking" (tag: initiative, assigned: project-manager, status: in-progress)
+Epic: "Add real-time order tracking" (tag: epic, assigned: project-manager, status: in-progress)
 │
-├── Epic: "Backend real-time order tracking service" (tag: epic, assigned: project-manager, status: in-progress)
-│   │
-│   └── Feature: "WebSocket order tracking API" (tag: feature, assigned: project-manager, status: in-progress)
-│       ├── Task: "Design WebSocket order tracking architecture" (tag: task, assigned: backend-architect, status: todo, phase: planning)
-│       ├── Task: "Review WebSocket architecture for Android integration" (tag: task, assigned: android-developer, status: todo)
-│       │   └── Blocked by "Design" task (can't review until architect produces the architecture)
-│       ├── Task: "Verify WebSocket architecture agreed" (tag: task,sync, assigned: project-manager, status: todo)
-│       │   └── Blocked by "Review" task (PM reads review to check for issues)
-│       ├── Task: "Implement WebSocket order tracking service" (tag: task, assigned: backend-developer, status: todo, phase: development)
-│       │   └── Blocked by "Verify architecture agreed" task (can't implement until consumer agrees)
-│       ├── Task: "Validate WebSocket order tracking service" (tag: task, assigned: backend-validator, status: todo, phase: validation)
-│       │   └── Blocked by "Implement" task
-│       ├── Task: "Deploy order tracking service to staging" (tag: task, assigned: devops-engineer, status: todo, phase: release)
-│       │   └── Blocked by "Validate" task
-│       └── Task: "Verify backend order tracking service deployed" (tag: task,sync, assigned: project-manager, status: todo)
-│           └── Blocked by "Deploy" task
+├── Feature: "WebSocket order tracking API" (tag: feature, assigned: project-manager, status: in-progress)
+│   ├── Task: "Design WebSocket order tracking architecture" (tag: task, assigned: backend-architect, status: todo, phase: planning)
+│   ├── Task: "Review WebSocket architecture for Android integration" (tag: task, assigned: android-developer, status: todo)
+│   │   └── Blocked by "Design" task (can't review until architect produces the architecture)
+│   ├── Task: "Verify WebSocket architecture agreed" (tag: task,sync, assigned: project-manager, status: todo)
+│   │   └── Blocked by "Review" task (PM reads review to check for issues)
+│   ├── Task: "Implement WebSocket order tracking service" (tag: task, assigned: backend-developer, status: todo, phase: development)
+│   │   └── Blocked by "Verify architecture agreed" task (can't implement until consumer agrees)
+│   ├── Task: "Validate WebSocket order tracking service" (tag: task, assigned: backend-validator, status: todo, phase: validation)
+│   │   └── Blocked by "Implement" task
+│   ├── Task: "Deploy order tracking service to staging" (tag: task, assigned: devops-engineer, status: todo, phase: release)
+│   │   └── Blocked by "Validate" task
+│   └── Task: "Verify backend order tracking service deployed" (tag: task,sync, assigned: project-manager, status: todo)
+│       └── Blocked by "Deploy" task
 │
-├── Epic: "Android real-time order tracking screen" (tag: epic, assigned: project-manager, status: in-progress)
-│   │
-│   └── Feature: "Order tracking screen with live updates" (tag: feature, assigned: project-manager, status: in-progress)
-│       ├── Task: "Plan Android WebSocket integration for order tracking" (tag: task, assigned: android-developer, status: todo, phase: planning)
-│       │   └── Blocked by Backend Epic's sync tracker (can't plan until backend is DEPLOYED TO STAGING —
-│       │        WebSocket integration requires a running backend, not just a contract)
-│       ├── Task: "Implement order tracking screen with WebSocket" (tag: task, assigned: android-developer, status: todo, phase: development)
-│       │   └── Blocked by "Plan" task
-│       ├── Task: "Polish order tracking screen" (tag: task, assigned: android-designer, status: todo, phase: styling)
-│       │   └── Blocked by "Implement" task
-│       ├── Task: "Validate order tracking screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
-│       │   └── Blocked by "Polish" task
-│       └── Task: "Verify Android order tracking complete" (tag: task,sync, assigned: project-manager, status: todo)
-│           └── Blocked by "Validate" task
+├── Feature: "Order tracking screen with live updates" (tag: feature, assigned: project-manager, status: in-progress)
+│   ├── Task: "Plan Android WebSocket integration for order tracking" (tag: task, assigned: android-developer, status: todo, phase: planning)
+│   │   └── Blocked by backend Feature's sync tracker (can't plan until backend is DEPLOYED TO STAGING —
+│   │        WebSocket integration requires a running backend, not just a contract)
+│   ├── Task: "Implement order tracking screen with WebSocket" (tag: task, assigned: android-developer, status: todo, phase: development)
+│   │   └── Blocked by "Plan" task
+│   ├── Task: "Polish order tracking screen" (tag: task, assigned: android-designer, status: todo, phase: styling)
+│   │   └── Blocked by "Implement" task
+│   ├── Task: "Validate order tracking screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
+│   │   └── Blocked by "Polish" task
+│   └── Task: "Verify Android order tracking complete" (tag: task,sync, assigned: project-manager, status: todo)
+│       └── Blocked by "Validate" task
 │
 └── Task: "Verify order tracking initiative complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by both epic sync trackers (both epics must complete)
+    └── Blocked by both feature sync trackers (both features must complete)
 ```
 
-**4-level hierarchy: Initiative → Epic → Feature → Task**
-- **Initiative** groups the two team-level epics
-- **Epic** groups each team's work — one per team (Backend and Frontend)
-- **Feature** is the deliverable with a full lifecycle per team
+**3-level hierarchy: Epic → Feature → Task**
+- **Epic** groups the two related deliverables (backend service + Android screen). No Initiative and no per-team Epic — each team contributes one deliverable, so a per-team wrapper would be a single-child parent (overhead).
+- **Feature** is each team's deliverable with its own full lifecycle
 - **Task** is individual phase work assigned to worker agents
 
 **The critical distinction from Story 21 (API Contract Joint Planning):**
@@ -105,7 +100,7 @@ Story 27 (WebSocket — Live service dependency):
 
 **Assignment rationale:**
 
-*Backend Epic:*
+*Backend Feature:*
 - **Planning → `backend-architect`**: WebSocket architecture is complex — connection management, message format, subscription model, scalability, reconnection handling, authentication. The architect designs the full system.
 - **Review → `android-developer`**: The consumer validates the WebSocket architecture — confirms the message format, subscription model, and reconnection behavior work for the Android integration. Consumer check: "Can I build a reliable Android WebSocket client with this architecture?"
 - **Sync → `project-manager`**: PM reads the developer's architecture review. If issues found (wrong message format, missing subscription events), creates fix tasks for architect + re-review for developer and loops until agreed.
@@ -113,7 +108,7 @@ Story 27 (WebSocket — Live service dependency):
 - **Validation → `backend-validator`**: Tests WebSocket behavior — connection establishment, message delivery, ordering, concurrent connections, reconnection after disconnect, load testing.
 - **Deploy to staging → `devops-engineer`**: Deploys the WebSocket service to the staging environment so the frontend can connect to it. This is a release to staging, not production.
 
-*Frontend Epic:*
+*Frontend Feature:*
 - **Planning → `android-developer`**: Plans the Android WebSocket integration — client library selection, connection lifecycle management, reconnection strategy, UI state management for live updates. Blocked until backend is deployed to staging — the developer needs to understand the actual server behavior during planning.
 - **Development → `android-developer`**: Builds the order tracking screen with live WebSocket updates, handles connection states (connecting, connected, disconnected, reconnecting).
 - **Styling → `android-designer`**: Polishes the live tracking UI — real-time status indicators, animations for state transitions, responsive layout.
@@ -124,12 +119,12 @@ Story 27 (WebSocket — Live service dependency):
 - **The frontend developer reviews the WebSocket architecture before the backend implements it** — both teams must agree on the protocol (message format, subscription model, reconnection behavior)
 - **The PM reads the developer's review** — if issues found, creates fix tasks for architect + re-review tasks for developer and loops until agreement is total
 - The PM does NOT decide the architecture is agreed by itself — the consumer's review determines agreement
-- The frontend epic is blocked by the **backend's staging deployment** (via the backend epic's sync tracker), not by the architecture agreement
+- The frontend Feature is blocked by the **backend's staging deployment** (via the backend Feature's sync tracker), not by the architecture agreement
 - Even though the frontend needs a running backend, the architecture is still agreed first — wrong protocol would waste the backend team's time
 - This is a strict sequential chain — backend must be running before frontend can even start planning
 - The backend deployment is to STAGING (for frontend integration), not production
 - The PM explicitly notes this is different from Story 21's contract-only dependency — but both stories require joint agreement before implementation
-- The 4-level hierarchy (Initiative → Epic → Feature → Task) properly models the cross-team effort
+- The 3-level hierarchy (Epic → Feature → Task) properly models the cross-team effort
 
 ## Notes
 - This story is the counterpoint to Story 21 — it tests whether the PM understands that not all frontend work can start with just a contract, while still requiring joint agreement on the architecture

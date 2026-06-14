@@ -620,32 +620,38 @@ This creates a unique PM dynamic: **contract-driven coordination**, where both t
 Every issue the PM creates must be tagged. The hierarchy is:
 
 ```
-The strict hierarchy (never skip levels):
+Build the hierarchy bottom-up — only add a parent when there are 2+ related
+issues to group. A parent with a single child is overhead; never create one.
 
 Task ← Feature/Bug/Chore ← Epic ← Initiative
 
-✅ Feature → Tasks                              (standalone)
-✅ Epic → Features → Tasks                      (grouped features)
-✅ Initiative → Epics → Features → Tasks        (full hierarchy)
+✅ Task                                        (one thing to do — no parent)
+✅ Feature → Tasks                              (one deliverable, multiple phases)
+✅ Epic → Features → Tasks                      (2+ related deliverables)
+✅ Initiative → Epics → Features → Tasks        (2+ related epics, long-term goal)
 
-❌ Epic → Tasks           (skipped Feature/Bug/Chore level)
-❌ Initiative → Features  (skipped Epic level)
+❌ Epic → 1 Feature       (a parent with a single child — overhead)
+❌ Epic → Tasks           (tasks always live inside a Feature/Bug/Chore)
+❌ Initiative → 1 Epic    (a parent with a single child — overhead)
 ```
 
 | Tag | Level | Who works it | When to use |
 |---|---|---|---|
-| `initiative` | Top | PM only | Groups related Epics. Use when 2+ epics share a strategic goal. |
-| `epic` | Mid | PM only | Groups related Features/Bugs/Chores. Use when 2+ deliverables share a goal. |
+| `initiative` | Top | PM only | Groups 2+ related Epics. Long-term, multi-phase goals only. |
+| `epic` | Mid | PM only | Groups 2+ related Features/Bugs/Chores that share a goal. |
 | `feature` | Deliverable | PM only | New capability with Plan→Dev→Validate→Release. |
 | `bug` | Deliverable | PM only | Fix for broken behavior with Reproduce→Dev→Validate→Release. |
 | `chore` | Deliverable | PM only | Technical maintenance without user-facing changes. |
 | `task` | Leaf | Worker agent | Individual phase work. The only level assigned to worker agents. |
 | `task,sync` | Leaf | PM | Sync tracker — PM's alarm clock for completion notification. |
 
-**When to use each depth:**
-- Standalone deliverable: Feature/Bug/Chore → Tasks (2 levels)
-- Related deliverables: Epic → Features/Bugs/Chores → Tasks (3 levels)
-- Multi-team or large effort: Initiative → Epics → Features/Bugs/Chores → Tasks (4 levels)
+**When to use each depth (decide bottom-up):**
+- One thing to do: 1 Task (no parent)
+- One deliverable, multiple phases: Feature/Bug/Chore → Tasks (2 levels)
+- 2+ related deliverables: Epic → Features/Bugs/Chores → Tasks (3 levels)
+- 2+ related epics (long-term phased goal): Initiative → Epics → Features/Bugs/Chores → Tasks (4 levels)
+
+Teams are represented by **assignment**, not hierarchy levels — two teams each contributing one deliverable share a single Epic (3 levels), never a per-team wrapper.
 
 ## Who Changes Issue Statuses
 

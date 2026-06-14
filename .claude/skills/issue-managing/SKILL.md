@@ -33,7 +33,7 @@ While the last worker is still `todo`/`in-progress`, the sync tracker is blocked
 1. **Every parent gets a sync tracker child — always, in addition to the phase tasks.** The sync tracker is not a phase; it is the "+1" child. **Child count = (# phase tasks) + 1.** A "3-phase" request means 3 phase tasks + 1 sync tracker = 4 children. No exceptions — not for bugs, not for single-agent tasks, not for trivial work.
 2. **Set every parent to `in-progress` immediately after creating its children.** Never leave a parent at `todo`.
 3. **One task per phase — never collapse.** Even when one agent does two phases (e.g., the styler does a Plan task AND a Style task — two separate issues).
-4. **Never skip a hierarchy level:** Task ← Feature/Bug/Chore ← Epic ← Initiative.
+4. **Never create a parent for a single child.** A parent exists to group 2+ related issues — one with a single child organizes nothing and is pure overhead. Build the hierarchy bottom-up (see Hierarchy & tags).
 5. **You set parent + sync-tracker statuses only.** Workers drive their own children (`todo`→`in-progress`→`done`). The only exception is the status loop (fixing stuck issues) or cancelling (`closed`).
 6. **Plan exactly what is asked — no scope creep.** The team name describes the org, not the request's scope. "Library + Webapp" does NOT mean every feature uses both sub-teams. Identify the ONE component the request refers to and plan only that. Do not add a second track unless the request explicitly names two components or uses words like "screen", "page", "UI".
    - **Scope heuristic for mixed teams:** data/API requests (issues, search, filtering, data models, business logic) are **library** features — the library owns the data layer. Requests about screens, pages, or UI interactions are **webapp** features. When unsure, ask: is this about data/logic (library) or presentation/UI (webapp)? "Add search to the issue list" is a library feature — the issue list is library data, so it uses library agents and the library phase flow (Plan→Dev→Validate→Release).
@@ -80,19 +80,27 @@ agt update <P> --status in-progress          # flip parent LAST
 
 **Android frontend features complete at Validate** — no separate release/build tasks inside the feature. Play Store submission is a separate release process, not part of the feature lifecycle. (Frontend bugs also have no release phase.)
 
-## Hierarchy & tags
+## Hierarchy & tags — build bottom-up
+
+Hierarchy exists for one purpose: **to group related issues**. Build it from the bottom up and only add a parent when there are 2+ related issues to group. A parent with a single child organizes nothing — it is overhead, never create one.
 
 ```
 Task  ←  Feature/Bug/Chore  ←  Epic  ←  Initiative
 ```
 
-- **Initiative** — top, groups 2+ epics (multi-team effort).
-- **Epic** — mid, groups 2+ deliverables.
-- **Feature / Bug / Chore** — a single deliverable, assigned to you. `feature` = new user-facing capability; `bug` = broken behavior; `chore` = technical infrastructure/maintenance with NO new user-facing capability (e.g., caching layer, refactor, dependency upgrade).
 - **Task** — leaf, individual phase work, assigned to a worker.
+- **Feature / Bug / Chore** — a single deliverable, assigned to you. Groups the phase tasks for ONE deliverable. `feature` = new user-facing capability; `bug` = broken behavior; `chore` = technical infrastructure/maintenance with NO new user-facing capability (e.g., caching layer, refactor, dependency upgrade).
+- **Epic** — groups 2+ related deliverables (features/bugs/chores) that share a goal.
+- **Initiative** — groups 2+ related epics. Reserve for long-term, multi-phase goals where each phase is its own epic with multiple deliverables.
 - **task,sync** — sync tracker, assigned to you.
 
-Choose depth by scope: standalone deliverable (2 levels), related deliverables → Epic (3 levels), multi-team → Initiative (4 levels). Never skip a level.
+**How deep? Decide bottom-up, never top-down:**
+- One thing to do → **1 task** (no parent).
+- One deliverable with multiple phases → **Feature/Bug/Chore** over its phase tasks (+ sync tracker).
+- 2+ related deliverables → **Epic** grouping them.
+- 2+ related epics (long-term phased goal) → **Initiative** grouping them.
+
+Teams are represented by **assignment**, not by hierarchy levels — never insert an Epic "per team" around a lone deliverable. Two teams each contributing one deliverable to the same goal → one Epic over the two deliverables (3 levels), not four.
 
 ## Status ownership
 
@@ -121,7 +129,7 @@ You do NOT evaluate ideas. Duplicate check first → then route:
 Create a Review task (tag `task`, routed manager) + a "Check review decision" sync tracker (tag `task,sync`, you) blocked by the Review. **Set the idea itself to `in-progress`, assigned to `project-manager`** — this prevents the work loop from re-waking you on it.
 
 After the manager decides (sync tracker wakes you):
-- **Accepted** → mark sync tracker `done`; retag the idea as the appropriate top-level container: `feature`/`bug`/`chore` for single-team work, or `initiative` for cross-team work (the idea itself becomes the initiative — do NOT create a separate initiative). Create implementation children under it. **The implementation follows ALL the same patterns as direct work** — if the deliverable involves a provider/consumer relationship, include the joint design agreement.
+- **Accepted** → mark sync tracker `done`; retag the idea as the deliverable tag (`feature`/`bug`/`chore`) and create implementation children under it. If the accepted work spans **2+ deliverables**, group them under an Epic (the idea itself can become that Epic) — but never create a parent for a single deliverable. **The implementation follows ALL the same patterns as direct work** — if the deliverable involves a provider/consumer relationship, include the joint design agreement.
 - **Needs refinement** → mark sync tracker `done`; reset the idea to `idea` status for re-triage later. Do NOT create implementation children and do NOT discard.
 - **Discarded** → mark sync tracker `done`; close with `idea,discarded` tags + comment.
 
@@ -145,14 +153,14 @@ You are triggered when an issue looks sick/stuck. **First diagnose by checking b
 
 Always document your intervention with a comment. Never reassign work to the wrong domain (strategy work stays with researchers, platform bugs stay with platform team).
 
-## Cross-team work (Initiative → Epics → Features → Tasks)
+## Cross-team work
 
-When a deliverable spans two teams, **ALWAYS use 4 levels: Initiative → Epic (one per team) → Feature → Task.** Never skip the Epic level — each team gets its own Epic as a grouping container. (A single team with multiple related deliverables uses 3 levels: Epic → Feature/Chore → Task.)
-- **Each deliverable** (feature/bug/chore) gets its own sync tracker blocked by its last worker task.
-- **The top-level container** (Epic or Initiative) gets a sync tracker blocked by ALL deliverable sync trackers beneath it. Mid-level containers (epics under an initiative) do NOT get their own sync trackers — the top-level sync covers them.
-- **Cross-team blockage:** the consumer feature's first task is blocked by the **provider's release task** (or the provider feature's sync tracker — either is acceptable). When a deliverable depends on milestones in MULTIPLE other deliverables, block by the specific tasks (e.g., backend Release AND frontend Validate), never by their sync trackers — sync trackers are your alarm clocks, not dependency anchors for other work.
+When a goal spans two teams, each team's contribution is its own deliverable (Feature/Bug/Chore with its own lifecycle + sync tracker). Group those deliverables under one **Epic** — do NOT insert a per-team Epic around each lone deliverable (a parent with one child is overhead). Two related deliverables = one Epic over both = 3 levels.
+- **Each deliverable** gets its own sync tracker blocked by its last worker task.
+- **The Epic** (top-level container) gets a sync tracker blocked by ALL deliverable sync trackers beneath it.
+- **Cross-team blockage:** the consumer deliverable's first task is blocked by the **provider's release task** (or the provider's sync tracker — either is acceptable). When a deliverable depends on milestones in MULTIPLE other deliverables, block by the specific tasks (e.g., backend Release AND frontend Validate), never by their sync trackers — sync trackers are your alarm clocks, not dependency anchors for other work.
 
-**Joint design agreement — MANDATORY for every provider/consumer cross-team initiative.** When one team BUILDS something the other team USES (platform builds a tool → research uses it; backend builds an API → frontend uses it), the consumer MUST review the provider's design *before* implementation begins. This is not optional — skipping it means the provider might build the wrong thing. The review is done by the **consumer team's worker who will actually use the output** (e.g., `quant-researcher`, not `head-of-research`).
+**Joint design agreement — MANDATORY for every provider/consumer cross-team effort.** When one team BUILDS something the other team USES (platform builds a tool → research uses it; backend builds an API → frontend uses it), the consumer MUST review the provider's design *before* implementation begins. This is not optional — skipping it means the provider might build the wrong thing. The review is done by the **consumer team's worker who will actually use the output** (e.g., `quant-researcher`, not `head-of-research`).
 
 Inside the provider's feature, insert this sequence after Design:
 
