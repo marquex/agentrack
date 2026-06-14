@@ -5,7 +5,9 @@ description: "How the project manager organizes, assigns, and tracks work throug
 
 # Issue Managing — How the PM Drives Work Through Agentrack
 
-You don't do the work — you **structure issues** in agentrack so that other agents do the work and the system flows. Get the structure right and work runs itself; get it wrong and work silently stalls. For the `agt` command reference, see the `agentrack` skill.
+> **This skill is the PM's canonical operational rulebook.** The `project-manager` agent file holds only the role's personality and responsibility; the rules below are what the agent actually follows. They are injected automatically when the PM runs as a subagent, read from this file by the PM in normal sessions, and injected by the test harness in testing mode. For the `agt` command syntax, see the `agentrack` skill.
+
+You don't do the work yourself — you **structure issues** in agentrack so that other agents do the work and the system flows. Get the structure right and work runs itself; get it wrong and work silently stalls.
 
 ## How agentrack drives work
 
@@ -130,19 +132,33 @@ Create a Review task (tag `task`, routed manager) + a "Check review decision" sy
 
 After the manager decides (sync tracker wakes you):
 - **Accepted** → mark sync tracker `done`; retag the idea as the deliverable tag (`feature`/`bug`/`chore`) and create implementation children under it. If the accepted work spans **2+ deliverables**, group them under an Epic (the idea itself can become that Epic) — but never create a parent for a single deliverable. **The implementation follows ALL the same patterns as direct work** — if the deliverable involves a provider/consumer relationship, include the joint design agreement.
-- **Needs refinement** → mark sync tracker `done`; reset the idea to `idea` status for re-triage later. Do NOT create implementation children and do NOT discard.
+- **Needs refinement** → mark sync tracker `done`; reset the idea to `idea` status for re-triage later. Do NOT create implementation children and do not discard.
 - **Discarded** → mark sync tracker `done`; close with `idea,discarded` tags + comment.
 
 **Routing gotchas:** platform tool from a researcher → `platform-architect` (not `head-of-research`). Product/UX idea → `product-owner` (not a tech lead). Strategy validation failure → `quant-researcher` (not a platform bug).
 
 ### Status loop — diagnose, then act only if needed
-You are triggered when an issue looks sick/stuck. **First diagnose by checking blockages on children and reading comments.** Not every suspicious-looking state needs action:
+You are triggered when an issue looks sick/stuck. **First diagnose by checking blockages on children and reading comments.** Not every suspicious-looking state needs action — **the most common outcome is WAITING, not acting.**
 
-**Parent `in-progress` with no children being worked** — check each `todo` child's blockages:
-- Child has no unresolved blockages + valid assignee → **TIMING GAP. The work loop simply hasn't picked it up yet. WAIT and re-check next cycle.** Do NOT resolve blockages, create issues, or take action. If still stuck after another cycle, investigate further.
-- Child blocked by an issue that's already `done` (stale blockage that should have auto-resolved) → manually resolve the stale blockage (`agt blockages resolve <child> --by <done-issue>`) — this is the status-loop exception to the "never resolve" rule.
-- Child blocked legitimately (upstream still `todo`/`in-progress`) → nothing to do, waiting on upstream.
+**The auto-clear is immediate and reliable.** Marking an issue `done` clears every blockage it was causing, right then. So if a child's blocker is `done`, the blockage is GONE — the child is effectively unblocked, full stop. **Never infer "the auto-clear must have failed" from circumstantial evidence** (e.g., "hours elapsed", "the developer is free", "the loop should have picked it up"). Those facts describe a timing gap, not a failed auto-clear.
+
+**Parent `in-progress` with no children being worked** — for each `todo` child:
+- Blocker is `done` → blockage already cleared → child is effectively unblocked → **TIMING GAP. WAIT** and re-check next cycle. Do NOT run `agt blockages resolve`, create issues, reassign, or change statuses.
+- Blocker is `todo`/`in-progress` → legitimately blocked, waiting on upstream → nothing to do.
+- No blockages + valid assignee → **TIMING GAP. WAIT.**
 - Invalid/missing assignee → reassign.
+- **The ONLY time you manually resolve a blockage** (`agt blockages resolve <child> --by <done-issue>`) is when the scenario **EXPLICITLY states** the blockage failed to auto-clear (e.g., literal wording like "the blockage wasn't auto-resolved" / "still blocked despite the blocker being done"). A child merely being *described as* "blocked by a done issue" is NOT that — the blockage is already cleared.
+
+**The status loop does NOT restructure issues.** Do not create sync trackers, parents, or tasks here — even if a hierarchy looks like it's missing one. Structural fixes belong to the work loop, not the status loop.
+
+If a `in-progress` issue is stale (agent crashed) — check for a comment first:
+- **No comment** → reset to `todo`, same assignee; add a comment documenting the reset.
+- **Comment found** → interpret and act: blocker reported → handle the blocker (route to right team); partial completion → note progress, reset to `todo`, same assignee (may split remaining work); fatal error/design flaw → create a redesign/replan task for the right agent, block the stuck issue until redesign is done.
+
+**Agent forgot `done` but work is complete** → verify via their comment, set `done` + audit comment.
+**Abandoned/stale issue past deadline** → close with comment.
+
+Always document your intervention with a comment. Never reassign work to the wrong domain (strategy work stays with researchers, platform bugs stay with platform team).
 
 **Stale `in-progress` issue** (agent process aborted/crashed) — check for a comment first:
 - **No comment** → reset to `todo`, same assignee. The work loop will re-wake them. Add a comment documenting the reset.
@@ -160,9 +176,12 @@ When a goal spans two teams, each team's contribution is its own deliverable (Fe
 - **The Epic** (top-level container) gets a sync tracker blocked by ALL deliverable sync trackers beneath it.
 - **Cross-team blockage:** the consumer deliverable's first task is blocked by the **provider's release task** (or the provider's sync tracker — either is acceptable). When a deliverable depends on milestones in MULTIPLE other deliverables, block by the specific tasks (e.g., backend Release AND frontend Validate), never by their sync trackers — sync trackers are your alarm clocks, not dependency anchors for other work.
 
-**Joint design agreement — MANDATORY for every provider/consumer cross-team effort.** When one team BUILDS something the other team USES (platform builds a tool → research uses it; backend builds an API → frontend uses it), the consumer MUST review the provider's design *before* implementation begins. This is not optional — skipping it means the provider might build the wrong thing. The review is done by the **consumer team's worker who will actually use the output** (e.g., `quant-researcher`, not `head-of-research`).
+### Joint design agreement — MANDATORY for every provider/consumer cross-team effort
+When one team BUILDS something the other team USES (platform builds a tool → research uses it; backend builds an API → frontend uses it), the consumer MUST review the provider's design *before* implementation begins. This is not optional — skipping it means the provider might build the wrong thing. The review is done by the **consumer team's worker who will actually use the output** (e.g., `quant-researcher`, not `head-of-research`).
 
-Inside the provider's feature, insert this sequence after Design:
+**The agreement is a gate, NEVER a phase replacement.** Every feature keeps its full phase flow. Two shapes:
+
+**Shape A — design inside the provider's feature** (consumer depends on the provider's release). Insert this sequence after the provider's design:
 
 ```
 Task "Design …"            (provider architect)      ← unblocked first
@@ -171,7 +190,9 @@ Task "Verify design agreed" (task,sync, YOU)         ← blocked by Review   ←
 Task "Implement …"         (provider developer)      ← blocked by "Verify agreed" (NOT by Design!)
 ```
 
-**Implement is blocked by *agreement*** (the sync tracker), NOT by the raw design. You read the consumer's review via that sync tracker; you do NOT decide agreement yourself — the consumer's review determines it. If they found issues, create fix tasks (architect) + re-review tasks (consumer worker) and loop until both agree.
+Here the Design task IS the plan (architect, `phase: planning`). Implement is the dev task. **Implement is blocked by *agreement*** (the sync tracker), NOT by the raw design. You read the consumer's review via that sync tracker; you do NOT decide agreement yourself — the consumer's review determines it. If they found issues, create fix tasks (architect) + re-review tasks (consumer worker) and loop until both agree.
+
+**Shape B — separate contract feature** (two or more teams implement against the same interface in parallel — e.g., backend API + frontend screen). The contract feature holds Design + Review + sync ONLY. Each downstream implementation feature then has its OWN full flow starting with a **Plan task** (the developer reads the agreed contract and plans their build) — Plan → Dev → Validate → Release. Do NOT skip the Plan task because "the contract is the plan": the contract is the spec, the developer still plans their own implementation. The downstream features' first tasks are blocked by the contract feature's sync tracker (the agreement), not by each other's implementation.
 
 ## Assignment principles
 

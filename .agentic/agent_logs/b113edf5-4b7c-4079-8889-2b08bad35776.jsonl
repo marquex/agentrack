@@ -1,0 +1,8 @@
+{"role":"system","type":"hook_success","data":{"hookEvent":"SessionStart","content":"","stdout":"{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"Observable session logs: ...","stderr":"","exitCode":0,"command":"bun .claude/hooks/observable-agent.ts","durationMs":43,"stdout_truncated":true,"truncated":false}}
+{"role":"user","data":{"type":"prompt","content":"ping"}}
+{"role":"system","type":"opened_file_in_ide","data":{"filename":"/Users/javi/projects/agentrack/.claude/settings.json"}}
+{"role":"assistant","type":"thinking","data":{"thinking":"The user just said \"ping\". Let me respond simply.","signature":""}}
+{"role":"assistant","type":"text","data":{"text":"pong"}}
+{"role":"system","type":"hook_cancelled","data":{"hookEvent":"Stop","command":"bun .claude/skills/agent-expertise/update-expertise.hook.ts","durationMs":3815}}
+{"role":"user","type":"text","data":{"text":"[Request interrupted by user]"}}
+{"role":"system","type":"process_end","data":{}}

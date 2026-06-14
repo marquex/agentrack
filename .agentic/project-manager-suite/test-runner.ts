@@ -490,8 +490,27 @@ Show the COMPLETE issue hierarchy you would create (or modify), including:
 Use the ${teamLabel} team's agents for assignments. Follow the correct phase flow for the issue type (feature, bug, chore, strategy).`;
 }
 
+// Path to the canonical issue-managing skill (the PM's rulebook). The runner
+// injects this because skills: frontmatter does NOT preload when an agent runs
+// via `claude --agent ...`, and test mode (`--tools ""`) cannot read files.
+function loadIssueManagingSkill(): string {
+  const candidates = [
+    join(process.cwd(), ".claude/skills/issue-managing/SKILL.md"),
+    join(__dirname, "../../.claude/skills/issue-managing/SKILL.md"),
+  ];
+  for (const p of candidates) {
+    if (existsSync(p)) {
+      const raw = readFileSync(p, "utf-8");
+      // strip YAML frontmatter, keep only the rulebook body
+      const body = raw.replace(/^---\n[\s\S]*?\n---\n/, "");
+      return `# ISSUE-MANAGING SKILL (your operational rulebook — follow these rules exactly)\n${body}`;
+    }
+  }
+  return "";
+}
+
 function buildAppendSystemPrompt(): string {
-  return TESTING_MODE_PROMPT + "\n\n" + AGENTRACK_CLI_REF;
+  return TESTING_MODE_PROMPT + "\n\n" + loadIssueManagingSkill() + "\n\n" + AGENTRACK_CLI_REF;
 }
 
 function buildJudgePrompt(scenario: Scenario, pmResponse: string): string {

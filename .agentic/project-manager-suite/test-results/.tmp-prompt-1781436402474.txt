@@ -1,0 +1,78 @@
+# TEST SCENARIO: Story 11: Idea Accepted — Cross-Team Idea Routed to Platform Team Lead
+
+Team: QuantEdge
+Loop: Ideas Loop
+
+---
+
+Available Agents (QuantEdge — Algorithmic Trading):
+
+Development Team:
+- platform-architect: Planning phase + team lead — designs platform architecture, APIs. Technical ideas route here.
+- platform-developer: Development phase — builds platform tools and infrastructure
+- platform-validator: Validation phase — tests platform, performance benchmarks, bug reproduction
+- platform-releaser: Release phase — deploys platform updates
+
+Research Team:
+- head-of-research: Research team lead — research direction decisions, strategy priorities. Research direction ideas route here.
+- quant-researcher: Planning + Development — designs and implements trading strategies
+- strategy-validator: Validation — backtests, Monte Carlo simulations, overfitting detection
+
+Leadership:
+- cto: Cross-team priority conflicts, build-vs-buy decisions. Escalations only.
+
+Phase Flows:
+- Platform Features: Plan → Dev → Validate → Release
+- Platform Bugs: Reproduce → Dev → Validate → Release
+- Strategy Work: Plan → Dev → Validate (no release phase)
+
+Idea Routing:
+- Platform technical idea → platform-architect
+- Research direction idea → head-of-research
+- Cross-team idea or conflict → cto
+- Idea from a manager → Auto-accept (skip review)
+
+Key Rules:
+- Platform feature requests from researchers route to platform-architect, NOT head-of-research
+- Strategy validation failures are NOT platform bugs → route to quant-researcher
+- Platform bugs in production trading take priority over scheduled research work
+
+---
+
+## Current Tracker State
+
+- **agentrack state:**
+  - Issue #80: "Add risk-adjusted performance metric to backtesting engine" — status: `idea`, created by `quant-researcher`, assignee: none
+  - No other issues matching "risk-adjusted performance metric" in status `idea`, `todo`, `in-progress`, or `closed` with `idea` tag
+
+### Team Available
+
+> See [Team Roster](00-team-roster.md) for all agent roles and capabilities.
+
+## Trigger / Situation
+
+1. The PM picks up Issue #80 from the ideas queue.
+2. The PM checks for duplicates — searches issues in `idea`, `todo`, `in-progress`, and `closed` with `idea` tag.
+3. No duplicates found.
+4. The PM determines: this is a platform tool idea (new metric in the backtesting engine) → route to platform team lead (`platform-architect`), NOT to `head-of-research`.
+5. The PM creates a review task for the platform architect + sync tracker for itself.
+6. The platform architect reviews and accepts.
+7. The PM creates the implementation plan.
+
+---
+
+## Your Task
+
+Analyze this situation and produce a complete, detailed action plan. For each step:
+
+1. Show the exact `agt` command you would run
+2. Explain your reasoning
+
+Show the COMPLETE issue hierarchy you would create (or modify), including:
+- Every issue with its title, tags, assignee, and status
+- Parent-child relationships (indented tree)
+- All blockages between issues
+- All comments you would add
+- All status changes you would make
+
+Use the QuantEdge team's agents for assignments. Follow the correct phase flow for the issue type (feature, bug, chore, strategy).
