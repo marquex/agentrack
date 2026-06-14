@@ -1,3 +1,0 @@
-{"role":"system","type":"hook_success","data":{"hookEvent":"SessionStart","content":"","stdout":"{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"Observable session logs: ...","stderr":"","exitCode":0,"command":"bun .claude/hooks/observable-agent.ts","durationMs":89,"stdout_truncated":true,"truncated":false}}
-{"role":"user","data":{"type":"prompt","content":"Retrieve expertise from the \"claude-developer\" agent to handle the following task: \n\n Update all agents that have a '## Using agentrack as the issue tracker' section in their system file. Replace that section with the section '## Coordinating Work' like the one explained in .claude/skills/hire-expert/SKILL.md"}}
-{"role":"system","type":"process_end","data":{}}
