@@ -1,0 +1,53 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:00:39.766Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:00:39.766Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Fix BUG-1: regenerate token returns 401 in open auth mode",
+      "description": "Phase 4 validation found that POST /api/users/:name/regenerate returns 401 in open auth mode, so the 'Can regenerate a token' acceptance criterion is only partially met (frontend works, backend rejects).\n\nROOT CAUSE (in webapp server, packages/webapp/server/routes/users.ts:54):\nThe route calls tracker.usersRegenerate(name) but does not forward/authenticate the user token. The library's resolveAuthor returns 'anonymous' in open mode, which does not match the target user name, so usersRegenerate rejects with 401 (self-service auth requires resolved author == target user).\n\nThis is a webapp server bug, not a library bug. The fix should live in the webapp server (e.g. forward the authenticated user context, or adjust how regenerate is invoked in open auth mode).\n\nCurrently 'documented' only as a code comment in e2e/phase4-validation.spec.ts (BUG-1) and the tests assert the 401 — so the bug is locked in as passing. When fixed, those tests must be updated to assert success (201 with new token).",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:11:05.385Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:11:05.424Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqe1jhvz1c",
+      "content": "Ideas-loop triage. Dedup: no existing issue covers regenerate-token/401/open-auth — unique. Routing: this is a technical webapp-server bug surfaced during Phase 4 validation (creator 'anonymous'); not manager-originated, so no auto-accept. Routed to the CTO (org technical lead) for a review decision. Created Review task mqe1imi4lg (assignee cto) + sync tracker mqe1im1zwi (blocked by the review). Idea set to in-progress so the work loop won't re-wake me. Awaiting decision — on accept I'll plan implementation children; on discard I'll close with idea,discarded."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:28:54.632Z",
+    "author": "project-manager",
+    "content": {
+      "tags": [
+        "epic"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:30:33.985Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe28il482",
+      "content": "CTO accepted BUG-1 as a real bug. Planned as a cross-team Epic with two deliverables:\n\nLIBRARY CHORE (mqe26nou8f) — provider side. Adds a backward-compatible token override to usersRegenerate so the webapp can forward an authenticated user's context. Includes joint design agreement: library-developer designs → webapp-developer reviews → I verify agreement → implement → validate → release.\n\nWEBAPP BUG (mqe26n00jo) — consumer side. Fixes the regenerate route (users.ts:54) to forward auth context using the new library API, and flips the e2e test assertion from 401 to 201. Reproduce can start immediately (bug exists now); Implement is blocked by the library release.\n\nEpic sync tracker (mqe27hts2g) is blocked by both deliverables' sync trackers — it wakes me when everything is done.\n\nKey decisions per CTO review (mqe1imi4lg): primary approach is the library API addition + webapp forwarding. The Design task also weighs the alternative (relaxing the self-service check in open mode) — if the library-developer and webapp-developer agree that's better, the webapp Implement task simplifies to just the e2e test update. Do NOT use process.env.AGT_USER_TOKEN (not concurrency-safe)."
+    }
+  }
+]

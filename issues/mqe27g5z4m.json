@@ -1,0 +1,38 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:45.058Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:45.058Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Implement: fix regenerate route to forward auth context",
+      "description": "Fix the webapp regenerate route (packages/webapp/server/routes/users.ts:54) to forward the authenticated user's token using the new library API (usersRegenerate(name, { token }) or the agreed interface). Look up the target user's token and pass it so resolveAuthor resolves to the correct user instead of 'anonymous'.\n\nALSO update e2e/packages/webapp/e2e/phase4-validation.spec.ts:197-216 to assert success (201 + new token) instead of 401 — the test currently locks the bug in as passing and MUST be flipped as part of the fix.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqe26n00jo",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.449Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe27g2g7o"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.450Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe27481sa"
+    }
+  }
+]

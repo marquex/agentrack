@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:33:18.283Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:18.283Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Isolate flaky shared-state backend e2e test",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "webapp",
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:54.042Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:56:02.962Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe35a0c9q",
+      "content": "Verified complete. Both worker children are done:\n- Isolate (mqe0745gy7): done — applied playwright.config.ts serialization (workers:1 + fullyParallel:false).\n- Validate (mqe074zvth): done — webapp-validator confirmed all 3 criteria PASS:\n  1. Previously-flaky tests deterministic: 30+ executions of both target tests, zero failures.\n  2. No regressions: 6 full-suite runs (152 tests), the only failure was a known unrelated frontend timing bug (mqe1drwrck).\n  3. Isolation does not mask real failures: verified via code review (pure scheduling change, no retries/skips/mocks) + a bug-injection probe that correctly tripped the assertion + negative-path tests still asserting.\n\nFix is correct, deterministic, and safe. Marking Deliverable C done.\n\nNote (non-blocking): validator observed a transient bunx ESM-loader hiccup during runs that resolved by switching to npx. Flagged for awareness; not tracked here."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:56:33.363Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  }
+]

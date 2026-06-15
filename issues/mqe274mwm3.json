@@ -1,0 +1,47 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:28.773Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:28.773Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate: usersRegenerate token override",
+      "description": "Validate the library change: unit tests pass, backward compatibility maintained (existing callers unaffected), the new capability works as designed. Confirm the fix enables forwarding auth context for the target user.",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mqe26nou8f",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.289Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe2745ekb"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:31:15.672Z",
+    "author": "library-validator",
+    "content": {
+      "id": "mqe29e690g",
+      "content": "Blocked by mqe2745ekb. The implementation task (token override for usersRegenerate) is still in 'todo' status and assigned to library-developer — the code change has not landed yet. I verified the current source: usersRegenerate(name: string) in packages/library/src/core/tracker.ts:1883 still takes only a single name parameter and calls resolveAuthor({ config, users, requiresWrite: true }) with no token-override option, and the self-service check at line 1904 is unchanged. There is nothing to validate yet. Reassigning to the manager so the implementation can be picked up; once mqe2745ekb is done I can re-validate."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:31:23.515Z",
+    "author": "library-validator",
+    "content": {
+      "assignee": "project-manager"
+    }
+  }
+]

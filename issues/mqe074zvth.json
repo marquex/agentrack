@@ -1,0 +1,90 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:33:29.489Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:29.489Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate backend test isolation",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "webapp-developer",
+      "parentId": "mqe06v82ul",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:42.027Z",
+    "author": "project-manager",
+    "content": {
+      "description": "Validate the backend test isolation fix:\n- Run the backend e2e suite multiple times (at least 5 runs) to confirm the previously-flaky test ('defaults status to idea' or 'search is case-insensitive') no longer fails intermittently.\n- Confirm no regressions across the full e2e suite.\n- Verify the isolation approach doesn't mask real failures (tests still catch actual bugs).\n\nReport pass/fail with details. Do NOT fix issues yourself — report them."
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T16:33:42.204Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe0745gy7"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:41:45.823Z",
+    "author": "project-manager",
+    "content": {
+      "assignee": "webapp-validator"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T16:42:01.797Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe0i3i7zd",
+      "content": "Status-loop fix: this is a Validate task but was assigned to webapp-developer. Validation must go to the validator, never the developer who built it. Reassigning to webapp-validator. (Task remains blocked by the Isolate task, as expected.)"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:06:49.124Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe0745gy7",
+      "reason": "Blocker issue mqe0745gy7 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:22:57.509Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:53:42.381Z",
+    "author": "webapp-validator",
+    "content": {
+      "id": "mqe3295su8",
+      "content": "Validation complete. The backend test isolation fix (playwright.config.ts: workers:1 + fullyParallel:false) is CONFIRMED EFFECTIVE.\n\n## Results\n\n**Criterion 1 — Previously-flaky tests are deterministic (PASS)**\n- 'defaults status to idea': 10/10 isolated runs passed. Also passed in all 6 full-suite runs.\n- 'search is case-insensitive': 10/10 isolated runs passed. Also passed in all 6 full-suite runs.\n- Combined: 30+ executions of the two target tests, ZERO failures.\n\n**Criterion 2 — No regressions across the full e2e suite (PASS)**\n6 full-suite runs (152 tests each):\n- Run 1: 152 passed / 0 failed\n- Run 2: 152 passed / 0 failed\n- Run 3: 151 passed / 1 failed\n- Run 4: 152 passed / 0 failed\n- Run 5: 152 passed / 0 failed\n- Run 6: 152 passed / 0 failed\nThe single failure in run 3 was 'Frontend Parent Selector changes an existing parent' — a KNOWN intermittent frontend timing bug tracked separately (mqe1drwrck, waitForResponse timeout). It has a different root cause from this fix and is NOT a regression.\n\n**Criterion 3 — Isolation does not mask real failures (PASS)**\nVerified three ways:\n1. Code review: the fix is purely a scheduling change (serialize via 1 worker). No retries added (retries:0 unchanged), no skips, no mocks, no try/catch wrappers. By construction it cannot mask failures.\n2. Empirical bug-injection probe: I wrote a throwaway test that corrupts the status field (returns 'done' instead of 'idea') and ran the same assertion as the real test. The assertion FIRED as expected (test failed), proving the mechanism catches real bugs. A control test against the real backend passed. Probe file was deleted after the check.\n3. Negative-path backend tests ('returns 400 when title missing/empty/non-string') continue to correctly assert error responses across all runs, confirming the suite is not blanket-passing.\n\n## Conclusion\nThe isolation fix is correct, deterministic, and does not hide real bugs. Recommend marking the parent deliverable (mqe06v82ul) complete.\n\n## Side observation (not a blocker, not fixed by me)\nDuring validation, 'bunx playwright test' became unable to load test files after a lockfile re-save (repeated 'bun: protocol not supported by ESM loader' errors, then 'No tests found'). Switching to 'npx playwright test' resolved it immediately (152/152 passed). This appears to be a bun module-resolution hiccup, not related to the isolation fix. Flagging in case the team wants to standardize on npx for the e2e runner or investigate the bunx cache."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:53:47.373Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

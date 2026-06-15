@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:28.387Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:28.387Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Design: token override for usersRegenerate",
+      "description": "Design the programmatic auth override for usersRegenerate. CTO review (mqe1imi4lg) recommends adding an optional { token } param to usersRegenerate that forwards into resolveAuthor, so callers can act on behalf of a named user without setting process.env (not concurrency-safe).\n\nALTERNATIVE to weigh: relax the self-service check in open auth mode (tracker.ts:1904) — register/revoke already trust the caller in open mode, so making regenerate consistent is arguably correct. This is library-only (no webapp change) but changes security semantics.\n\nProduce a short design decision: chosen approach, exact API shape, affected files, backward-compatibility note. The webapp-developer will review before implementation.",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mqe26nou8f",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:37:39.755Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:38:35.308Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqe2iugxzk",
+      "content": "## Design Decision: token override for usersRegenerate\n\n### Chosen approach: Option A — add optional `{ token }` param (REJECTED the alternative of relaxing the open-mode self-service check)\n\n### Rationale\n\nOption A fixes the **root cause for all auth modes**, not just open mode. Today the only way for a programmatic caller (e.g. the webapp acting on behalf of an authenticated user) to assert identity is `process.env.AGT_USER_TOKEN` — but the tracker is a process singleton, so two concurrent webapp requests would race on that env var. `resolveAuthor` already supports an explicit `token` (auth.ts:25, 28-38); `usersRegenerate` simply never exposes it. Closing that gap is a one-line, surgical change.\n\nThe alternative (skip the self-service check at tracker.ts:1904 when `config.auth.mode === \"open\"`) was **rejected** because:\n1. It only patches open mode — it does nothing for the strict-mode concurrency problem, which is the actual general bug.\n2. It weakens security semantics: in open mode any caller could regenerate *anyone's* token. Option A preserves the proof-of-ownership model (you may regenerate a token only if you present it).\n3. It introduces a mode-based exception, which is less principled than an explicit identity override that already exists one layer down.\n\n### Exact API shape\n\n```typescript\nasync usersRegenerate(\n  name: string,\n  options?: { token?: string },\n): Promise<UsersRegenerateResult>\n```\n\nThe only logic change is forwarding the token into the existing `resolveAuthor` call (tracker.ts:1895):\n\n```typescript\nconst authResult = resolveAuthor({\n  config,\n  users,\n  requiresWrite: true,\n  token: options?.token,\n});\n```\n\nThe self-service check (tracker.ts:1904) stays exactly as-is. With a token supplied, `resolveAuthor` validates it and returns `author = token owner`; the self-service check then confirms owner == target name. With no token, behavior is identical to today (env var / default user).\n\n### Affected files\n- `packages/library/src/core/tracker.ts` — method signature (line 1883), `resolveAuthor` call (line 1895), JSDoc.\n- No type changes: `UsersRegenerateResult` (types/api.ts:198) is unchanged.\n- No CLI changes: `usersRegenerateAction` (cli/commands/users.ts:73) calls without options, identical behavior.\n\n### Backward compatibility\nFully backward compatible. The new param is optional; existing callers passing only `name` get byte-identical behavior. The public signature widens (added optional param), which is a non-breaking widening for consumers of the generated `.d.ts`. The `agt users regenerate <name>` CLI command is unchanged.\n\n### Flag for the webapp (child mqe2743x4q)\nIn **open mode** there is no incoming user token, so the webapp must obtain the target user's current token to pass into the override. The library intentionally does not expose token lookups (`usersList` strips tokens). The webapp, as the trusted boundary in open mode, should read the token from `users.json` directly (it already has filesystem access via the tracker dir). This is a webapp-side decision and out of scope for the library change. In strict mode the webapp simply forwards the authenticated user's token from the request — no lookup needed.\n\n### Net change size: ~3 lines in tracker.ts + JSDoc."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:38:41.831Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

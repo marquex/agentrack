@@ -1,0 +1,22 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:44.969Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:44.969Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Reproduce: regenerate returns 401 in open auth mode (BUG-1)",
+      "description": "Reproduce BUG-1: POST /api/users/:name/regenerate returns 401 in open auth mode. Confirm the root cause — the webapp server route (packages/webapp/server/routes/users.ts:54) calls tracker.usersRegenerate(name) without forwarding auth context, so resolveAuthor returns the default user ('anonymous') which fails the self-service check in usersRegenerate (callerName !== targetName). Note: e2e/packages/webapp/e2e/phase4-validation.spec.ts:197-216 currently asserts this 401 (locking the bug in as passing).",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqe26n00jo",
+      "tags": [
+        "task"
+      ]
+    }
+  }
+]

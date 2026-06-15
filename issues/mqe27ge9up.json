@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:45.141Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:45.141Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate: regenerate fix in open auth mode",
+      "description": "Validate the fix end-to-end: POST /api/users/:name/regenerate returns 201 with a new token in open auth mode. Run the full webapp e2e suite (phase4-validation.spec.ts now asserts success). Confirm no regressions in register/revoke routes. Confirm the 'Can regenerate a token' acceptance criterion (Phase 4) is fully met.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqe26n00jo",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.483Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe27g5z4m"
+    }
+  }
+]

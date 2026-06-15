@@ -1,0 +1,38 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:31:56.212Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:31:56.212Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify A complete",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe04tpyqc",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:32:27.402Z",
+    "author": "project-manager",
+    "content": {
+      "description": "Sync tracker for Deliverable A (mqe04tpyqc). Blocked by the Validate task (mqe054vy4l). When this wakes the PM, verify the validation results and mark A done, then check whether the Epic sync tracker can proceed."
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T16:32:27.651Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe054vy4l"
+    }
+  }
+]

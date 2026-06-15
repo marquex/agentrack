@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:50:04.892Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:50:04.892Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate sync push/pull end-to-end",
+      "description": "Validate the BUG-2 fix for sync push/pull (depends on the Dev task completing first).\n\nVerify:\n1. Library unit tests for pushWorktree/pullWorktree pass (project root resolution + custom branch/dir).\n2. Run the full phase4 e2e suite (e2e/phase4-validation.spec.ts) — all push/pull tests must pass with the new success assertions (200, synced:true / updated).\n3. Verify push/pull work end-to-end in the e2e config: AGENTRACK_CWD set to the worktree dir (validation/.e2edata), custom branch (_e2edata), custom dir (.e2edata).\n\nReport any failures — do NOT fix them yourself. If failures are found, report the diagnosis and the PM will route a fix task.",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:50:13.971Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe2xmq47c"
+    }
+  }
+]

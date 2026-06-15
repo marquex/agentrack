@@ -1,0 +1,53 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:00:39.846Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:00:39.846Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Fix BUG-2: sync push/pull returns 500 (passes worktree dir instead of project root)",
+      "description": "Phase 4 validation found that POST /api/sync/push and POST /api/sync/pull return 500 (NOT_INITIALIZED), so the 'Push button syncs changes' and 'Pull button fetches changes' acceptance criteria are only partially met (frontend triggers the calls correctly, backend fails).\n\nROOT CAUSE (in webapp server, packages/webapp/server/routes/sync.ts:4,11,21):\nconst cwd = process.env.AGENTRACK_CWD || process.cwd();\npushWorktree(cwd) / pullWorktree(cwd) are called with cwd directly. But pushWorktree/pullWorktree expect the PROJECT ROOT (where .agentrack.json lives), not the tracker/worktree directory. In the e2e environment AGENTRACK_CWD points to validation/.e2edata/ (the worktree), so the functions cannot find .agentrack.json and return NOT_INITIALIZED -> 500.\n\nThe fix should resolve the project root (e.g. via resolveTrackerDir or walking up to find .agentrack.json) instead of passing cwd verbatim.\n\nNOTE: In normal production usage (AGENTRACK_CWD unset, cwd = process.cwd() = project root) sync likely works; the bug manifests whenever AGENTRACK_CWD points at the worktree/tracker dir rather than the project root. The e2e tests cannot validate push/pull end-to-end until this is fixed.\n\nCurrently 'documented' only as a code comment in e2e/phase4-validation.spec.ts (BUG-2) and the tests assert the 500 — so the bug is locked in as passing. When fixed, those tests must be updated to assert success.",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:11:05.505Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:11:05.542Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqe1jh8ull",
+      "content": "Ideas-loop triage. Dedup: no existing issue covers sync push/pull 500/NOT_INITIALIZED/project-root — unique. Routing: technical webapp-server bug surfaced during Phase 4 validation (creator 'anonymous'); not manager-originated, so no auto-accept. Routed to the CTO (org technical lead) for a review decision. Created Review task mqe1imzt2i (assignee cto) + sync tracker mqe1imrj5n (blocked by the review). Idea set to in-progress so the work loop won't re-wake me. Awaiting decision — on accept I'll plan implementation children; on discard I'll close with idea,discarded."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:49:49.657Z",
+    "author": "project-manager",
+    "content": {
+      "tags": [
+        "bug"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:50:23.068Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe2y0s23k",
+      "content": "Implementation planned (idea ACCEPTED as library bug).\n\nDECISION: Library-level fix (reviewer's preferred approach — robust, benefits CLI too). The root cause is in the library (pushWorktree/pullWorktree don't resolve the project root), so the fix belongs there.\n\nPHASES (reproduction skipped — the review mqe1imzt2i already contains a code-verified reproduction confirmed by the existing phase4 e2e tests asserting the 500):\n1. Dev (mqe2xmq47c, library-developer): Fix pushWorktree/pullWorktree to resolve project root + read branch pointer for {branch, dir} opts. Also flip phase4 test assertions from 500 to success.\n2. Validate (mqe2xmdugp, library-validator): Run phase4 e2e suite + library unit tests, verify end-to-end.\n3. Release (mqe2xmprgj, library-releaser): Version bump + publish.\n4. Sync (mqe2xmxeiv, project-manager): Verify + close.\n\nThe dev task description includes the reviewer's CRITICAL refinement: resolveTrackerDir returns the data dir, not the project root, and the worktree uses a custom branch/dir (_e2edata/.e2edata) — so the fix must resolve the project root AND read the branch pointer, not just call resolveTrackerDir."
+    }
+  }
+]

@@ -1,0 +1,31 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:45.223Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:45.223Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify complete: webapp regenerate route fix (BUG-1)",
+      "description": "Sync tracker — verify the webapp bug deliverable is complete (reproduced, fixed, validated, e2e test updated).",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe26n00jo",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.521Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe27ge9up"
+    }
+  }
+]

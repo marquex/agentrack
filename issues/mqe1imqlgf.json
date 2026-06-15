@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:10:26.122Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:10:26.122Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Check review decision: flaky frontend e2e tests",
+      "description": "Sync tracker — wakes the PM when the CTO's review of idea mqe1drwrck (flaky frontend e2e) lands. Do not activate until unblocked.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:10:37.611Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe1im9n14"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:14:31.007Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe1im9n14",
+      "reason": "Blocker issue mqe1im9n14 transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:19:36.375Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe1ufa7vb",
+      "content": "Review decision landed: ACCEPT as a chore (test-hygiene, no product behavior change). The CTO confirmed both flake sites are real and distinct from the backend shared-state fix (mqe0745gy7), with specific fix recommendations. Acting on the accept: retagging the idea as `chore` and creating implementation children (Dev → Validate → sync tracker)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:19:36.457Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  }
+]

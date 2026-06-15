@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:10:25.642Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:10:25.642Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: regenerate token returns 401 in open auth mode (BUG-1)",
+      "description": "Triage decision needed for idea mqe162cmbi (BUG-1). Phase 4 validation found POST /api/users/:name/regenerate returns 401 in open auth mode — the webapp server route (packages/webapp/server/routes/users.ts:54) calls tracker.usersRegenerate(name) without forwarding the authenticated user context, so resolveAuthor returns 'anonymous' which != target user. See the idea for full root cause. Please decide: ACCEPT (fix as a webapp bug), NEEDS REFINEMENT, or DISCARD. If accept, note the scope/owner so the PM can plan implementation children.",
+      "status": "todo",
+      "assignee": "cto",
+      "parentId": "mqe162cmbi",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:17:50.266Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:18:04.425Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqe1sgum9m",
+      "content": "TRIAGE DECISION: ACCEPT — fix as a real bug.\n\nRoot cause confirmed by code review:\n- The webapp regenerate route (packages/webapp/server/routes/users.ts:54) calls tracker.usersRegenerate(name) without forwarding any user token.\n- usersRegenerate (packages/library/src/core/tracker.ts:1883) runs resolveAuthor(..., requiresWrite: true), and resolveAuthor (packages/library/src/core/auth.ts:60-75) returns config.auth.defaultUser in open mode (\"anonymous\" in the validation env).\n- usersRegenerate then enforces a self-service check (tracker.ts:1904: callerName !== lowerName). Since caller resolves to the default user, not the target :name, it returns INVALID_TOKEN -> 401.\n- This is asymmetric vs register/revoke, which have no self-service check and therefore work fine in open mode.\n\nScope/owner:\n- Primary owner: webapp-developer. The fix must let the webapp authenticate the regenerate on behalf of the named user.\n- IMPORTANT nuance for planning: this is NOT a pure webapp-only fix. usersRegenerate has no programmatic auth override — it only reads process.env.AGT_USER_TOKEN or the default user (resolveAuthor supports options.token but usersRegenerate does not expose it). The clean fix is a small, backward-compatible library addition — e.g. usersRegenerate(name, { token }) that forwards into resolveAuthor({ token }) — plus the webapp looking up the target user's token and passing it. Do NOT fix it by setting process.env.AGT_USER_TOKEN around the call (not concurrency-safe — the tracker is a process singleton). So plan it as webapp-developer + library-developer coordination.\n- Alternative worth weighing during planning: relax the self-service check in open mode (the webapp is the trusted boundary in open mode, and register/revoke already trust the caller there). This is library-only but changes security semantics — flag for review.\n\nAcceptance:\n- e2e/packages/webapp/e2e/phase4-validation.spec.ts:197-216 currently asserts the 401 and must be flipped to assert success (201 + new token). That test currently locks the bug in as passing, so updating it is part of the fix, not optional.\n- Backend 'Can regenerate a token' (Phase 4) should then be fully met, not partial.\n\nHanding back to PM to plan implementation children."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:18:09.122Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

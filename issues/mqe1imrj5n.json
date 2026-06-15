@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:10:25.930Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:10:25.930Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Check review decision: sync push/pull 500 fix (BUG-2)",
+      "description": "Sync tracker — wakes the PM when the CTO's review of idea mqe162svv5 (BUG-2) lands. Do not activate until unblocked.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:10:37.527Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe1imzt2i"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:24:42.864Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe1imzt2i",
+      "reason": "Blocker issue mqe1imzt2i transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:49:49.568Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe2xaqpf6",
+      "content": "Review decision: ACCEPT — fix as a library bug. The reviewer (mqe1imzt2i) verified the root cause against code with exact line numbers and provided a critical refinement: the fix must resolve the project root AND read the branch pointer for {branch, dir} opts (resolveTrackerDir returns the data dir, not the project root — do not confuse them). Proceeding to create implementation children under the parent. Reproduction phase is skipped — the review already contains a thorough, code-verified reproduction confirmed by the existing phase4 e2e tests asserting the 500."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:50:04.698Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  }
+]

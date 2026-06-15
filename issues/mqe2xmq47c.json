@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:50:04.798Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:50:04.798Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Fix pushWorktree/pullWorktree project root resolution + update phase4 tests",
+      "description": "Fix the root cause of BUG-2: pushWorktree/pullWorktree (packages/library/src/core/worktree.ts:469,550) treat cwd as the PROJECT ROOT, but when AGENTRACK_CWD points at the worktree/data dir they cannot find .agentrack.json -> NOT_INITIALIZED -> 500.\n\nREAD the review comment on mqe1imzt2i FIRST — it contains the verified root cause and a CRITICAL refinement. The idea's proposed fix (just resolve project root) is INSUFFICIENT. The fix must:\n1. Resolve the project root by walking up from cwd to find .agentrack.json. NOTE: resolveTrackerDir returns the DATA DIR, not the project root — do NOT confuse them.\n2. Read the branch pointer (via readBranchPointer + dirFromBranch) to get {branch, dir} matching the real worktree. On disk: validation/.agentrack.json -> { branch: '_e2edata' }, worktree is validation/.e2edata (dir .e2edata), NOT the default .agentrack. So even passing the correct project root with DEFAULT opts would STILL fail.\n3. Make pushWorktree/pullWorktree accept cwd as either project root or data dir and auto-resolve opts internally (mirror how Tracker resolves via resolveTrackerDir + readBranchPointer).\n\nPreferred approach (per review): library-level fix so all callers (CLI + webapp) benefit. If the library auto-resolves opts, sync.ts (packages/webapp/server/routes/sync.ts:4,11,21) should need no changes — verify this.\n\nALSO update e2e/phase4-validation.spec.ts push/pull tests (lines 222-242 and 626-657, currently assert 500) to assert success (200, synced:true / updated). These tests lock in the bug as passing — they MUST be flipped when the fix lands.\n\nAcceptance criteria:\n- pushWorktree/pullWorktree work when cwd is the worktree/data dir, not just project root.\n- Custom branch/dir configs work (e.g., _e2edata branch, .e2edata dir).\n- phase4 push/pull test assertions flipped to success.",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:55:05.261Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

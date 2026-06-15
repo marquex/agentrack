@@ -75,5 +75,48 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:00:00.797Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T16:00:00.836Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqdz02x5tk",
+      "content": "Status-loop reset: this task was in-progress since 2026-05-30 with no further activity for ~15 days and no worker comment documenting progress or a blocker. The worker process appears to have aborted after claiming the task. Resetting to `todo` with the same assignee (webapp-developer) so the work loop re-wakes it. No work was reported as complete, so the full Phase 4 scope (backend endpoints + user management UI + sync controls) still applies."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:02:43.276Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T16:17:08.592Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqdzm3odba",
+      "content": "Done. Phase 4 (Users & sync) is complete — all 38 Phase 4 e2e validation tests pass.\n\n## What was the situation\nA previous worker had built most of Phase 4 (backend endpoints, API clients, hooks, UsersPage, sync controls in Header) but aborted without reporting completion. The code was in place but had 2 bugs causing 10 of the 38 Phase 4 e2e tests to fail.\n\n## What I fixed\n1. **Duplicate header (root cause of most failures):** App.tsx wrapped all routes in AppLayout, but each page (IssuesPage, IssueDetailPage, UsersPage) ALSO rendered its own AppLayout. This created duplicate headers on every page — two 'agentrack' title links, two sets of Push/Pull buttons — causing Playwright strict-mode violations. Fixed by removing the redundant AppLayout wrapper from App.tsx (each page already manages its own layout).\n\n2. **Missing 'Back to issues' navigation on Users page:** The cross-page navigation tests expected a 'Back to issues' link on the Users page. Added it to the UsersPage.\n\n## Validation results\n- **Phase 4: 38/38 tests pass** — covers user registration, revoke with confirmation, token regeneration, token copy, sync Push/Pull buttons, loading/success/error states, and cross-page navigation.\n- **Phase 1-3: no regressions** — 8 pre-existing failures remain (identical on baseline before my changes). Created follow-up issue mqdzlo4ia8 to track them.\n- **Typecheck/build:** frontend tsc + vite build pass clean.\n\n## Known documented bugs (from test file, outside Phase 4 frontend scope)\n- BUG-1: regenerate token returns 401 in open auth mode (server doesn't forward user token). Test documents and expects this.\n- BUG-2: sync push/pull returns 500 in e2e because AGENTRACK_CWD points to the worktree dir. Test documents and expects this. Both are backend concerns noted in the test file for future work."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:17:15.673Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
   }
 ]

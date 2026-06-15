@@ -1,0 +1,63 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:33:54.121Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:54.121Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify all Phase 1-3 e2e fixes complete",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T16:34:05.919Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe054quhm"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T16:34:06.004Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe06bszo6"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T16:34:06.085Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe074qctj"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:34:20.046Z",
+    "author": "project-manager",
+    "content": {
+      "description": "Epic-level sync tracker for mqdzlo4ia8. Blocked by all three deliverable sync trackers (A: mqe054quhm, B: mqe06bszo6, C: mqe074qctj). When this wakes the PM, all three deliverables have been verified — close the Epic."
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:56:24.341Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe074qctj",
+      "reason": "Blocker issue mqe074qctj transitioned to done"
+    }
+  }
+]

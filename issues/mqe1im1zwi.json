@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:10:25.737Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:10:25.737Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Check review decision: regenerate token 401 fix (BUG-1)",
+      "description": "Sync tracker — wakes the PM when the CTO's review of idea mqe162cmbi (BUG-1) lands. Do not activate until unblocked.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe162cmbi",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:10:37.443Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe1imi4lg"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:18:09.124Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe1imi4lg",
+      "reason": "Blocker issue mqe1imi4lg transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:28:54.468Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe26djxim",
+      "content": "Sync tracker triggered. CTO review (mqe1imi4lg) decision: ACCEPT. The fix spans two teams — library adds a programmatic auth override to usersRegenerate, webapp uses it to forward auth context in the regenerate route. This is a provider/consumer cross-team effort requiring a joint design agreement. Planning as an Epic with two deliverables (library chore + webapp bug) under the idea."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:28:54.550Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  }
+]

@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:19:57.755Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:19:57.755Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: Fix pre-existing Phase 1-3 e2e test failures",
+      "description": "Review and decide on idea mqdzlo4ia8: 'Fix pre-existing Phase 1-3 e2e test failures'.\n\nContext: 8 pre-existing e2e test failures in the Phase 1-3 validation suites were discovered while completing Phase 4 (mppqswn3jl). They reproduce on the baseline (before any Phase 4 changes), so they are Phase 1-3 implementation gaps, not regressions:\n\n- phase1 'renders the agentrack header' — Header renders 'agentrack' as a Link, not a heading; the only h1 is the page title.\n- phase2 'navigates from list to detail page' / 'navigates back from detail to list' / 'displays issue title and ID' / 'inline edit title' — IssueDetailPage only renders 'Back to issues' in the error/not-found branch, not in the main render.\n- phase3 'displays empty state when no comments' / 'adds a comment via the form' — comments-section rendering gaps.\n- 1 flaky backend test (varies: 'defaults status to idea' or 'search is case-insensitive') due to shared-state ordering in the e2e worktree.\n\nAs the webapp team's technical lead, decide whether to:\n- ACCEPT — agree these are real Phase 1-3 bugs worth fixing now (and indicate scope: a single bug deliverable vs. splitting by phase/layer).\n- REFINE — the idea needs more detail/re-scoping before a decision.\n- DISCARD — not worth fixing (e.g., tests are wrong, not the implementation; or behavior is intentional).\n\nPlease add a comment with your decision and reasoning.",
+      "status": "todo",
+      "assignee": "cto",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:21:10.448Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T16:25:31.780Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqdzwvhlyo",
+      "content": "Decision: ACCEPT (with scope refined by root cause, not by phase)\n\nI verified all 8 against current source. These are real, baseline-red failures (not Phase 4 regressions), and a red baseline defeats the e2e suite's purpose as a regression gate — exactly why they surfaced during Phase 4. Worth fixing now. But they are NOT one homogeneous deliverable, and \"split by phase\" is the wrong axis. They split into three distinct root causes:\n\n== Category A: Real implementation gaps (fix the CODE) ==\n1. phase2 \"navigates from list to detail page\" — IssueDetailPage main render has no \"Back to issues\" link (only the error branch does, IssueDetailPage.tsx:60-61). Breadcrumbs don't substitute; an explicit back affordance is expected UX.\n2. phase2 \"navigates back from detail to list\" — same missing \"Back to issues\" link.\n3. phase2 \"displays issue title and ID\" — title renders fine (AppLayout h1), but the raw issue ID is never shown in the DOM. Genuinely missing on the detail page.\n4. phase2 \"inline edit title\" — description has inline edit (editingDescription state) but title editing is unimplemented; test clicks the h1 expecting an input. Asymmetric with description editing.\n\n== Category B: Test/impl spec drift (fix the TESTS, not the code) ==\n5. phase1 \"renders the agentrack header\" — Header renders \"agentrack\" as a Link, not a heading (Header.tsx:65). A brand link is a valid, common pattern; the implementation is fine. The test over-specifies a heading role. Update the test to match the actual header landmark.\n6. phase3 \"displays empty state when no comments\" — copy mismatch. Impl says \"No comments yet\" / \"Be the first to add a comment\" (CommentsSection.tsx:206-207); test asserts \"No comments yet. Add the first comment below.\" Impl copy is fine — update the test.\n7. phase3 \"adds a comment via the form\" — same copy mismatch; fails on the first empty-state assertion before reaching the form.\n\n== Category C: Flakiness, not a defect ==\n8. Flaky backend test (\"defaults status to idea\" or \"search is case-insensitive\") — shared-state ordering in the e2e worktree, not a Phase 1-3 implementation bug. Separate test-isolation fix, lowest priority.\n\n== Recommendation to the manager ==\nSplit into three child issues rather than one:\n- (A) webapp bug: detail page back link + issue ID display + inline title edit — real feature/UX gaps, assign to webapp-developer.\n- (B) test fix: align phase1 header + phase3 comments e2e assertions with the built (and acceptable) UI — assign to webapp-validator.\n- (C) test flakiness: isolate the shared-state backend test — assign to webapp-validator, low priority.\n\nCategory A is the only one that changes product behavior; B and C are test-suite hygiene. Prioritize A so the baseline goes green, then B, then C. I am NOT implementing here — this is the triage decision; the manager should create the scoped children."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:25:58.877Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

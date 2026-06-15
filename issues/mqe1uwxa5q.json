@@ -1,0 +1,39 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:19:59.018Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:19:59.018Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate frontend e2e test stability",
+      "description": "Validate that the two previously-flaky frontend e2e tests are now stable after the dev fixes, and that nothing regressed.\\n\\n(1) phase3 parent-selector 'changes an existing parent' (phase3-validation.spec.ts ~line 1287) — previously intermittent waitForResponse timeout.\\n(2) phase4 copy-token 'copy button changes to check icon after register' (phase4-validation.spec.ts ~line 748) — previously intermittent clipboard/check-icon failure.\\n\\nApproach: run the full serial e2e suite multiple times; both target tests must pass reliably with no intermittent waitForResponse timeouts and no clipboard/check-icon failures. Confirm no regressions in the surrounding describe blocks. Both flake sites are distinct from the backend shared-state fix in mqe0745gy7 (workers:1 serialization), which must remain in place. If flakes persist, report the specific failure mode so the developer can iterate.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:20:08.957Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe1uwxw8c"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:43:44.226Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe1uwxw8c",
+      "reason": "Blocker issue mqe1uwxw8c transitioned to done"
+    }
+  }
+]

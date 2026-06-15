@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:50:04.981Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:50:04.981Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Release library fix",
+      "description": "Release the library fix for BUG-2 (pushWorktree/pullWorktree project root resolution). The fix is in packages/library/src/core/worktree.ts. Version bump + publish the library package per the standard release process. Gate on tests — if validation found failures, release stops.",
+      "status": "todo",
+      "assignee": "library-releaser",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:50:14.053Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe2xmdugp"
+    }
+  }
+]

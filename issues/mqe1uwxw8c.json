@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:19:58.919Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:19:58.919Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Stabilize flaky parent-selector and copy-token e2e tests",
+      "description": "The CTO's review (mqe1im9n14) confirmed both flake sites are real and distinct from the backend shared-state fix (mqe0745gy7), and provided specific fix recommendations. Implement BOTH fixes — they are low-risk, test-only:\\n\\nTask A — Stabilize parent-selector test (phase3-validation.spec.ts, 'changes an existing parent', ~line 1287). The waitForResponse (~line 1347) is attached AFTER searchInput.fill() (~line 1344) with a loose matcher (url includes '/api/issues' + 'search='), causing an attach-order race that latches onto a stale/debounced prior search response — worse when >100 issues clutter the response. Fix: scope the waitForResponse matcher to the specific request (method + the unique search term / parent2Id) AND set up the response promise before the triggering action; alternatively assert on the result-row selector (button hasText parent2Id) rather than the network response. Removes the stale-response race.\\n\\nTask B — Stabilize copy-token test (phase4-validation.spec.ts, 'copy button changes to check icon', ~line 748). The suite grants NO clipboard permissions anywhere; handleCopyToken (frontend/src/pages/UsersPage.tsx:64) calls navigator.clipboard.writeText() unguarded, which can throw/reject under headless Chromium and abort the handler before setTokenCopied(true), so the check icon never appears. Compounded by the suite's shortest assertion timeout (3000ms, ~line 793). Fix: grant clipboard permission (test.use({ permissions: { clipboard: {} } }) on the test, or in the chromium project in playwright.config.ts) and bump the check-icon assertion timeout to the suite standard (>=5000ms). Optional hardening: guard handleCopyToken against a missing navigator.clipboard (defensive, not required).\\n\\nRead the full root-cause analysis in the comment on mqe1im9n14.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:30:49.270Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:43:36.549Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqe2pafpug",
+      "content": "Done. Both flaky frontend e2e tests are stabilized with low-risk, test-only fixes (no product behavior change).\n\nTask A — parent-selector (phase3, 'changes an existing parent'): the waitForResponse was attached AFTER the search fill with a loose matcher, an attach-order race that could miss an already-fired response or latch onto a stale or unrelated one (worse once more than 100 issues clutter the index). Fix: create the response promise BEFORE the fill, and scope the matcher to the exact search term via URL parsing plus a GET method pin.\n\nTask B — copy-token (phase4, 'copy button changes to check icon'): the suite granted NO clipboard permission, so the unguarded clipboard write in the handler could throw under headless Chromium and abort before the check-icon state was set, compounded by the suite's shortest assertion timeout (3000ms). Fix: grant clipboard permission on the describe and bump the assertion timeout to 5000ms.\n\nVerification: both target tests pass in isolation. The full serial suite passes all 152 tests across 4 consecutive runs with zero flakes. Frontend typecheck (tsc -b) clean. No regressions.\n\nOne correction worth flagging: the Playwright permissions option (v1.60) is an array of strings such as clipboard-read and clipboard-write, NOT the object form the original recommendation suggested. I verified the shape against the installed type definitions.\n\nUpdated webapp-known-gaps, webapp-e2e-validation, and the timeline expertise files to mark these flakes resolved. The mqe1drwrck flaky-test family is now complete."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:43:44.224Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

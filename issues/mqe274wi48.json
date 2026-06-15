@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:28.583Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:28.583Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify design agreed: usersRegenerate token override",
+      "description": "Sync tracker — verify that library-developer and webapp-developer agree on the usersRegenerate API design. Read the review comment. If agreed, unblock implementation. If concerns were raised, create fix+re-review tasks and loop until both agree.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe26nou8f",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.219Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe2743x4q"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:50:51.922Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe2743x4q",
+      "reason": "Blocker issue mqe2743x4q transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:53:23.935Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe31vatyc",
+      "content": "## Design agreement: VERIFIED — AGREED ✅\n\nBoth sides of the joint design concur. Implementation is unblocked.\n\n**Provider design (mqe274dj8z):** Option A — add optional `{ token }` param to `usersRegenerate`, forwarding into the existing `resolveAuthor` call (tracker.ts:1895). The self-service check stays as-is; with a token supplied, resolveAuthor validates it and returns the owner, then the self-service check confirms owner == target. Fully backward compatible, ~3 lines + JSDoc. Rejected the alternative (relaxing the open-mode self-service check) because it only patches open mode and weakens security.\n\n**Consumer review (mqe2743x4q, webapp-developer):** APPROVE — 'Implementation can proceed. Green light from the consumer side.' Endorsed the options-object form, confirmed the webapp's existing result/error handling needs no changes, and validated that error handling (wrong token → 401) is preserved.\n\nThe consumer's two notes — open-mode token lookup coupling and the Phase 4 e2e assertion flip (197–216) — are explicitly scoped as **webapp-side implementation** planning concerns for the sibling webapp deliverable, NOT objections to this library API. They do not block agreement.\n\nMarking this sync tracker done → auto-clears the blockage on the Implement task (mqe2745ekb). Reassigning Implement to library-developer so the now-unblocked work flows to the correct role."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:53:27.170Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  }
+]

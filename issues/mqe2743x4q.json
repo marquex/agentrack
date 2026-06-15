@@ -1,0 +1,65 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:28.483Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:28.483Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review: library API design for usersRegenerate token override",
+      "description": "Review the library-developer's design for the usersRegenerate token override (see the Design task comment). As the consumer who will call this API from the webapp regenerate route, confirm the API shape works for forwarding an authenticated user's token. Note any concerns about the interface, error handling, or the alternative open-mode approach. Your review determines whether implementation proceeds.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqe26nou8f",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.183Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe274dj8z"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:38:41.834Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe274dj8z",
+      "reason": "Blocker issue mqe274dj8z transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:47:46.598Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:50:37.134Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqe2ybtx7d",
+      "content": "## Webapp consumer review: APPROVE\n\nVerdict: Option A (usersRegenerate with an optional token param) works cleanly for the webapp. Implementation can proceed.\n\n### API shape fits\nThe proposed signature drops into the existing webapp regenerate route at server routes users.ts line 54 as a one-line change. I endorse the options-object form over a positional arg because it is extensible for future params. Backward compatibility holds: UsersRegenerateResult is unchanged, so the route's existing result-and-message error handling needs no changes.\n\n### Error handling preserved\nKeeping the self-service check rather than relaxing it is the right call. With a token supplied, resolveAuthor returns the token owner and the self-service check confirms owner equals the target name. Passing the wrong token still 401s, which is the defensive behavior we want. The webapp's existing error propagation continues to work unchanged.\n\n### One webapp-side implication to plan for — open mode\nThe design correctly notes that in open mode there is no incoming user token to forward, so the webapp must look up the target user's current token and pass it in. Accepted, with one coupling caveat: the library intentionally does not expose token lookups (usersList strips tokens), so the webapp will have to read the users store directly from the tracker dir. That works, since the webapp already holds the cwd via the tracker singleton, but it couples the webapp to the library's storage format. I accept that tradeoff because the alternatives (a skipAuth flag) reintroduce the security weakening the design rejected. Flagging it so the webapp implementation task is scoped to include that lookup, not just the one-line token forwarding.\n\n### Test acceptance\nThe Phase 4 e2e at phase4-validation.spec.ts lines 197 to 216 currently locks in the 401. The webapp implementation task will need to flip that assertion to 201 plus a new token. Noting it so it is not missed in planning.\n\n### Net\nDesign is sound, minimal, and backward-compatible. Green light from the consumer side. The only downstream planning note is that the webapp implementation is slightly more than just passing the token — it also owns the open-mode token lookup and the e2e assertion flip."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:50:51.920Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

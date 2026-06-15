@@ -1,0 +1,31 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:50:05.067Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:50:05.067Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify complete",
+      "description": "Sync tracker — wakes the PM when the library fix for BUG-2 is released and validated. Do not activate until unblocked.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:50:14.135Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe2xmprgj"
+    }
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:45.308Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:45.308Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify BUG-1 fully resolved",
+      "description": "Epic-level sync tracker — verify both deliverables (library token override + webapp regenerate route fix) are complete and BUG-1 is fully resolved. Backend 'Can regenerate a token' (Phase 4) should be fully met.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe162cmbi",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.604Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe2745bhi"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.604Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe27h6jl1"
+    }
+  }
+]

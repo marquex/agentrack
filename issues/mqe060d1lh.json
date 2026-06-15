@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:32:37.943Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:32:37.943Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Align e2e assertions with actual webapp UI (header landmark, comments copy)",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "webapp",
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:18.202Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

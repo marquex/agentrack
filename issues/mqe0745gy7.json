@@ -1,0 +1,73 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:33:29.400Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:29.400Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Isolate shared-state backend e2e test",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "webapp-validator",
+      "parentId": "mqe06v82ul",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:41.940Z",
+    "author": "project-manager",
+    "content": {
+      "description": "Fix the flaky backend e2e test caused by shared-state ordering in the e2e worktree. Per the cto's review (comment mqdzwvhlyo on mqdzppxnai):\n\nThe flaky test varies between runs — either 'defaults status to idea' or 'search is case-insensitive' fails. Root cause is shared-state ordering in the e2e worktree (tests interfere with each other's data), NOT a Phase 1-3 implementation bug.\n\nInvestigate and isolate the shared state (e.g., ensure each test uses its own data fixture, reset state between tests, or enforce test ordering independence). The goal is deterministic test runs."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:41:45.743Z",
+    "author": "project-manager",
+    "content": {
+      "assignee": "webapp-developer"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T16:42:01.710Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe0i3upfg",
+      "content": "Status-loop fix: this is Dev work (isolating the shared-state backend e2e test) but was assigned to webapp-validator. Validators never fix — development goes to the developer. Reassigning to webapp-developer. This task is unblocked, so the work loop should pick it up for the developer now."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:44:22.730Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:06:07.211Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqe1d255xg",
+      "content": "Investigation + fix done.\n\nRoot cause: the 4 phase spec files ran in PARALLEL by default (Playwright uses half the CPU cores = 6 workers here), all sharing ONE backend server and ONE validation/.e2edata/ file store. The agentrack store does unlocked read-modify-write on index.json / issue files, so two concurrent POST /api/issues calls (from different phase files hitting the shared store at once) would race on the write, intermittently dropping a create. That surfaced as the flaky 'defaults status to idea' / 'search is case-insensitive' backend tests — both create an issue then immediately read it back, so a lost write fails them.\n\nConfirmed the diagnosis: both tests pass in isolation and under a single worker; they only flake under default parallel execution.\n\nFix: serialize the suite via 'workers: 1' + 'fullyParallel: false' in playwright.config.ts (with a comment explaining the shared-store constraint). This removes all concurrency against the file store.\n\nVerification:\n- Both backend tests pass deterministically: 3/3 isolated runs + 4 full serial suite runs.\n- The 7 pre-existing Category A/B failures (phase1 header, phase2 navigation/detail x4, phase3 comments x2) are unchanged — those are tracked by sibling issues, out of scope here.\n- Build (tsc -b) passes; no type errors.\n\nTrade-off: full suite goes ~32s to ~1.4min. Determinism over speed is the right call for a regression gate.\n\nNote: while validating, I also saw two OTHER flaky frontend tests (phase3 'changes an existing parent' — waitForResponse timeout; phase4 'copy button changes to check icon' — clipboard timing). These have different root causes (frontend timing, not backend shared state) and are independent of this change. Filing a separate idea issue for them."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:06:49.122Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

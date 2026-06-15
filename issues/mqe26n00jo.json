@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:07.147Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:07.147Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Webapp: Fix regenerate route to forward auth context (BUG-1)",
+      "description": "Bug deliverable — fix POST /api/users/:name/regenerate returning 401 in open auth mode. Root cause: the webapp server route (packages/webapp/server/routes/users.ts:54) calls tracker.usersRegenerate(name) without forwarding auth context, so resolveAuthor returns 'anonymous' which fails the self-service check. The fix uses the new library API (usersRegenerate with token override) to forward the target user's token. Also update e2e/packages/webapp/e2e/phase4-validation.spec.ts:197-216 to assert success (201) instead of 401. This is the consumer side of the cross-team fix for BUG-1 (parent epic mqe162cmbi).",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe162cmbi",
+      "tags": [
+        "bug"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:30:23.428Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

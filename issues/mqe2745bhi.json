@@ -1,0 +1,31 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:28.964Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:28.964Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify complete: library token override",
+      "description": "Sync tracker — verify the library chore deliverable is complete (design agreed, implemented, validated, released).",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe26nou8f",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.362Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe27481sa"
+    }
+  }
+]

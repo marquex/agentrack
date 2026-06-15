@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:10:25.836Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:10:25.836Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: sync push/pull returns 500 — passes worktree dir instead of project root (BUG-2)",
+      "description": "Triage decision needed for idea mqe162svv5 (BUG-2). Phase 4 validation found POST /api/sync/push and /api/sync/pull return 500 (NOT_INITIALIZED) — the webapp server (packages/webapp/server/routes/sync.ts:4,11,21) passes AGENTRACK_CWD/process.cwd() directly to pushWorktree/pullWorktree, which expect the project root (where .agentrack.json lives), not the worktree dir. See the idea for full root cause. Please decide: ACCEPT (fix as a webapp bug), NEEDS REFINEMENT, or DISCARD. If accept, note the scope/owner so the PM can plan implementation children.",
+      "status": "todo",
+      "assignee": "cto",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:20:25.309Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:24:36.392Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqe20uj1yz",
+      "content": "TRIAGE DECISION: ACCEPT — fix as a webapp bug (real, not just a test artifact).\n\nI verified the root cause against the code; it's accurate.\n\nVERIFIED ROOT CAUSE:\n- packages/webapp/server/routes/sync.ts:4 computes cwd = AGENTRACK_CWD || process.cwd() and passes it verbatim to pushWorktree(cwd)/pullWorktree(cwd) (lines 11, 21).\n- pushWorktree/pullWorktree (packages/library/src/core/worktree.ts:469,550) treat `cwd` as the PROJECT ROOT: they compute worktreeDir = join(cwd, opts.dir) and gate on isWorktreeInitialized(cwd, opts) (worktree.ts:254), which runs `git worktree list` in cwd and looks for join(cwd, opts.dir).\n- In the isolated/e2e config, AGENTRACK_CWD = validation/.e2edata/ — the worktree/data dir itself, NOT the project root. So isWorktreeInitialized looks for validation/.e2edata/.agentrack (which doesn't exist) -> returns false -> NOT_INITIALIZED -> 500. Confirmed by phase4-validation.spec.ts:222-242 and 626-657 asserting the 500.\n\nWHY IT'S A REAL BUG: The Tracker class is immune because it resolves the data dir via resolveTrackerDir() (walks up to .agentrack.json) + readBranchPointer(). The sync route bypasses that resolution entirely. Any deployment that sets AGENTRACK_CWD to the data dir for isolation (the documented pattern, per playwright.config.ts) hits the 500. NOTE: the idea's caveat that production \"likely works\" is correct only because AGENTRACK_CWD is unset there — the bug is latent in production too whenever cwd != project root.\n\nIMPORTANT REFINEMENT (the idea's proposed fix is underspecified — implementer must not stop at half a fix):\n\"resolve the project root via resolveTrackerDir\" is only half the fix. resolveTrackerDir returns the DATA DIR, not the project root; and pushWorktree/pullWorktree also need opts.{branch,dir} matching the real worktree. Confirmed on disk: validation/.agentrack.json -> { branch: \"_e2edata\" }, and the worktree is validation/.e2edata (dir .e2edata), NOT the default .agentrack. So even passing the correct project root with DEFAULT opts would STILL fail. The fix must: (1) resolve project root by walking up from cwd to .agentrack.json, (2) read the branch pointer to get {branch, dir} (via readBranchPointer + dirFromBranch), (3) pass those as opts.\n\nRECOMMENDED APPROACH (PM's call on breakdown):\n- Preferred (robust, benefits CLI too): library-level fix — make pushWorktree/pullWorktree internally call resolveTrackerDir + readBranchPointer (mirror how Tracker resolves), so cwd may be either project root or data dir and opts auto-resolve. Owner: library-developer; then webapp-developer wires sync.ts + updates tests.\n- Alternative (smaller blast radius): webapp-only fix in routes/sync.ts — resolve project root + read branch pointer, pass {branch, dir} opts. Owner: webapp-developer.\n\nSCOPE (must include):\n1. Fix dir/opts resolution so push/pull succeed in the isolated AGENTRACK_CWD + custom-branch config.\n2. Update phase4-validation.spec.ts push/pull tests (currently assert 500) to assert success (200, synced:true / updated).\n3. Verify push/pull work end-to-end in the e2e config (re-run phase4 suite green).\n\nOWNER: webapp-developer if webapp-only; library-developer + webapp-developer if library-level. Priority 3 is appropriate.\n\nHanding back to PM to plan implementation children."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:24:42.862Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

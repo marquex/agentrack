@@ -1,0 +1,47 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:28.872Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:28.872Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Release: library token override",
+      "description": "Release the library change. Version bump if the new API surface warrants it. Ensure CI passes and the package is publishable.",
+      "status": "todo",
+      "assignee": "library-releaser",
+      "parentId": "mqe26nou8f",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:30:03.325Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqe274mwm3"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T17:32:03.575Z",
+    "author": "library-releaser",
+    "content": {
+      "id": "mqe2afeee6",
+      "content": "Blocked by mqe274mwm3 (\"Validate: usersRegenerate token override\") which is still in `todo` status. I cannot cut the release until the library change has been validated — unit tests confirmed, backward compatibility checked, and the new capability verified. Reassigning to the project-manager so the validation can be scheduled/picked up; once it's resolved I can proceed with the version bump, build, and publish."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:32:03.670Z",
+    "author": "library-releaser",
+    "content": {
+      "assignee": "project-manager"
+    }
+  }
+]

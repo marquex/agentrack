@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:29:07.058Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:29:07.058Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Library: Add token override to usersRegenerate",
+      "description": "Chore deliverable — add a backward-compatible programmatic auth override to usersRegenerate so the webapp can forward an authenticated user's token. The CTO's review (mqe1imi4lg) recommends usersRegenerate(name, { token }) forwarding into resolveAuthor. This is the provider side of the cross-team fix for BUG-1 (parent epic mqe162cmbi).",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe162cmbi",
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:30:23.343Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

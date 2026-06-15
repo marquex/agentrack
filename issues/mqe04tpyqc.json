@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:31:42.546Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:31:42.546Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Fix IssueDetailPage UX gaps: back link, issue ID display, inline title edit",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "webapp",
+        "bug"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:32:37.862Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

@@ -1,0 +1,31 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T17:19:59.104Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T17:19:59.104Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Verify e2e stabilization complete",
+      "description": "Sync tracker — wakes the PM when validation of the e2e stabilization chore (Dev → Validate) completes. Do not activate until unblocked.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T17:20:09.039Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe1uwxa5q"
+    }
+  }
+]

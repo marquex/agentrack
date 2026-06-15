@@ -1,0 +1,63 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-14T16:32:52.367Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:32:52.367Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate e2e assertion alignment",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqe060d1lh",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:33:09.278Z",
+    "author": "project-manager",
+    "content": {
+      "description": "Validate the e2e assertion fixes:\n- Run the full phase1 + phase3 e2e suites — the 3 previously-failing tests ('renders the agentrack header', 'displays empty state when no comments', 'adds a comment via the form') must now pass.\n- Confirm the implementation was NOT changed (only tests) and that the assertions now match the actual UI behavior.\n- Confirm no regressions across the full e2e suite.\n\nReport pass/fail with details. Do NOT fix issues yourself — report them."
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-14T16:33:09.448Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqe06bbvql"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-14T16:41:45.659Z",
+    "author": "project-manager",
+    "content": {
+      "assignee": "webapp-validator"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-14T16:42:01.613Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqe0i3dqpu",
+      "content": "Status-loop fix: this is a Validate task but was assigned to webapp-developer. Validation must go to the validator, never the developer who built it. Reassigning to webapp-validator. (Task remains blocked by the Fix task, as expected.)"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-14T17:14:57.619Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe06bbvql",
+      "reason": "Blocker issue mqe06bbvql transitioned to done"
+    }
+  }
+]
