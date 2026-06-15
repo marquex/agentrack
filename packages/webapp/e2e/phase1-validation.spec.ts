@@ -38,7 +38,8 @@ test.describe("Phase 1 Validation", () => {
   test.describe("Frontend: Page Rendering", () => {
     test("renders the agentrack header", async ({ page }) => {
       await page.goto("/");
-      const header = page.getByRole("heading", { name: /agentrack/i });
+      // "agentrack" is rendered as a brand Link (not a heading) — a valid brand-link pattern.
+      const header = page.getByRole("link", { name: /agentrack/i });
       await expect(header).toBeVisible();
     });
 

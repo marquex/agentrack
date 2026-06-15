@@ -3,9 +3,10 @@
 When an agent asks you to update expertise after work:
 
 1. Read the agent expertise index to know what are the existing topics
+   - **If no index exists yet (brand-new agent):** this is a bootstrap. Skip the timeline-match step below and build the initial expertise set from the log: an index, a compact set of topic files (overview/mental model, the feature(s) the session touched, any recipes the work justifies, a known-gaps file if real gaps were found, and a `timeline.expertise.md` seeded with one entry). Mirror the structure of sibling agents' folders for consistency.
 2. Read the agent's `timeline.expertise.md` and match it against the session **before** extracting anything. Many update requests arrive for sessions that were already processed (e.g., an interrupted run later completed in a follow-up). If the task, outcome, and date of the current log already have a matching timeline entry, the session is already captured — report that back instead of writing a duplicate entry. (Match on task + outcome + key details, not just the date, since several sessions can share a day.)
 3. Don't read the log file directly. Use the `summarize-logs` skill to get a summary of the log file and work with that instead.
-   - **Fallback if `summarize-logs` is not available** (it may not be exposed as a callable tool): the JSONL log is still readable directly. Use `Grep` with `output_mode: count` on role markers (`"role":"assistant"`, `"type":"prompt"`) to gauge size, then `Grep` with `output_mode: content` to pull the user prompts and assistant `text`/`tool_use`/`thinking` lines. Skip raw `tool_result` lines unless a specific one needs verifying. This gives an effective summary without loading every byte of a large log.
+   - **Fallback if `summarize-logs` is not available** (it may not be exposed as a callable tool): the JSONL log is still readable directly. **Start with a size check**: `Grep` with `output_mode: count` on role markers (`"role":"assistant"`, `"type":"prompt"`, `"process_end"`). If the count is tiny (roughly ≤ ~10–15 lines) and the only assistant actions are the initial context-gathering tool calls (expert-manager lookup, `agt view`/comments/blockages) with no `tool_result` lines following, the session was interrupted before any work happened — report that back and stop. Otherwise, continue with `Grep` `output_mode: content` to pull the user prompts and assistant `text`/`tool_use`/`thinking` lines. Skip raw `tool_result` lines unless a specific one needs verifying. This gives an effective summary without loading every byte of a large log.
 4. If the log file is about a very simple task that is straightforward finish. There is nothing to learn from a task that the agent already knows how to do.
 5. If the log file has meaningful information follow the instructions in the `Extracting expertise` section below.
 6. Update exisiting topic files, or create new ones as needed. If you create new ones, add them to the index to be found the next time.
@@ -24,6 +25,10 @@ How was the agent's performance during the task? Did it struggle to do something
 Did the agent do something wrong that it should not do again? That's a key learning opportunity. You can create a "gotcha" topic with the description of what the agent should not do and why.
 
 Add an entry to the work timeline so the agent can remember that it has already worked on this topic and what happened that time.
+
+### Verifying facts you cannot access
+
+You are restricted to the expertise folders and cannot read product code. During bootstrap especially, any concrete values (ports, file paths, env vars, command output) come from what the working agent read in its session, not from your own verification. When you store such facts, attach a "verify if the relevant config/source changes" note in the topic's `Gaps And Validation Needs` section and name the source file the next agent should re-read. Prefer this honest marking over weakening or omitting the fact.
 
 ## Quality rules
 

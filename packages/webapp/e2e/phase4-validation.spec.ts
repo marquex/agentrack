@@ -745,6 +745,13 @@ test.describe("Frontend: Cross-page Navigation", () => {
 // ═══════════════════════════════════════════════════════════════════════
 
 test.describe("Frontend: Copy Token", () => {
+  // Grant clipboard permission so navigator.clipboard.writeText() doesn't
+  // throw under headless Chromium and abort the handler before the
+  // tokenCopied state (and therefore the check icon) is set. The rest of the
+  // suite grants no clipboard permissions, which is why this test was flaky
+  // in headless mode.
+  test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+
   test("copy button changes to check icon after register", async ({
     page,
   }) => {
@@ -789,6 +796,6 @@ test.describe("Frontend: Copy Token", () => {
     // Should switch to check icon
     await expect(
       page.locator("svg.lucide.lucide-check.text-green-600")
-    ).toBeVisible({ timeout: 3000 });
+    ).toBeVisible({ timeout: 5000 });
   });
 });

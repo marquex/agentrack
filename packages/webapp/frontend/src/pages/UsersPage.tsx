@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Key, Trash2, Copy, Check, UserPlus } from "lucide-react";
+import { Link } from "react-router";
+import { Key, Trash2, Copy, Check, UserPlus, ArrowLeft } from "lucide-react";
 import { useUsers, useRegisterUser, useRevokeUser, useRegenerateToken } from "@/hooks/use-users";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,6 +76,17 @@ export function UsersPage() {
       ]}
     >
       <div className="space-y-6">
+        {/* Back to issues link */}
+        <div>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to issues
+          </Link>
+        </div>
+
         {/* Register button */}
         <div className="flex items-center justify-end">
           <Button

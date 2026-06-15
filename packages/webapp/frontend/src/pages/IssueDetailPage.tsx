@@ -19,8 +19,10 @@ import {
 import { useUsers } from "@/hooks/use-users";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { ArrowLeft } from "lucide-react";
 import type { IssueStatus } from "@/types";
 
 const STATUS_OPTIONS: IssueStatus[] = ["idea", "todo", "in-progress", "done", "closed"];
@@ -42,6 +44,9 @@ export function IssueDetailPage() {
 
   const [editingDescription, setEditingDescription] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState("");
+
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleValue, setTitleValue] = useState("");
 
   if (isLoading) {
     return (
@@ -86,20 +91,71 @@ export function IssueDetailPage() {
     setEditingDescription(false);
   }
 
+  function handleTitleSave() {
+    if (issue && titleValue.trim() && titleValue !== issue.title) {
+      updateIssue.mutate({ id: id!, data: { title: titleValue.trim() } });
+    }
+    setEditingTitle(false);
+  }
+
+  function handleTitleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleTitleSave();
+    } else if (e.key === "Escape") {
+      setEditingTitle(false);
+    }
+  }
+
   function handleTagsChange(tags: string[]) {
     updateIssue.mutate({ id: id!, data: { tags } });
   }
 
   return (
     <AppLayout
-      pageTitle={issue.title}
+      titleContent={
+        <div>
+          {editingTitle ? (
+            <Input
+              className="text-xl h-auto py-1 font-bold text-slate-900"
+              value={titleValue}
+              onChange={(e) => setTitleValue(e.target.value)}
+              onKeyDown={handleTitleKeyDown}
+              onBlur={() => setEditingTitle(false)}
+              autoFocus
+            />
+          ) : (
+            <h1
+              className="cursor-text text-2xl font-bold text-slate-900"
+              title="Click to edit title"
+              onClick={() => {
+                setTitleValue(issue.title);
+                setEditingTitle(true);
+              }}
+            >
+              {issue.title}
+            </h1>
+          )}
+          <p className="mt-1 font-mono text-xs text-slate-400">{issue.id}</p>
+        </div>
+      }
       breadcrumbs={[
         { label: "Dashboard", href: "/" },
         { label: "Issues", href: "/issues" },
-        { label: issue.title }
       ]}
     >
       <div className="space-y-6">
+        {/* Back to issues link */}
+        <div>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to issues
+          </Link>
+        </div>
+
         {/* Properties row */}
         <div className="flex flex-wrap items-center gap-4">
           {/* Status */}

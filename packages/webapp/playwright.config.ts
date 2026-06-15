@@ -17,6 +17,18 @@ export default defineConfig({
   timeout: 30_000,
   retries: 0,
   globalSetup: globalSetupPath,
+  // Serialize all tests through a single worker.
+  //
+  // The agentrack backend persists to a shared file store (validation/.e2edata/)
+  // and performs unlocked read-modify-write cycles on index.json / issue files.
+  // When the phase files ran in parallel (default = half the CPU cores), two
+  // specs issuing POST /api/issues at the same moment would race on those
+  // writes, intermittently dropping a create and surfacing as a flaky failure
+  // in the backend tests that create-then-read-back ("defaults status to
+  // 'idea'", "search is case-insensitive"). Running through one worker removes
+  // all concurrency against the shared store and makes the suite deterministic.
+  fullyParallel: false,
+  workers: 1,
   use: {
     baseURL: "http://localhost:5174",
     headless: true,

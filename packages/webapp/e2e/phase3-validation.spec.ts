@@ -580,7 +580,7 @@ test.describe("Frontend: Comments Section", () => {
     await gotoIssueDetail(page, id);
 
     await expect(
-      page.getByText("No comments yet. Add the first comment below.")
+      page.getByText("No comments yet", { exact: true })
     ).toBeVisible({ timeout: 10000 });
   });
 
@@ -611,7 +611,7 @@ test.describe("Frontend: Comments Section", () => {
 
     // Wait for comments to load
     await expect(
-      page.getByText("No comments yet. Add the first comment below.")
+      page.getByText("No comments yet", { exact: true })
     ).toBeVisible({ timeout: 10000 });
 
     // Type a comment
@@ -1315,13 +1315,24 @@ test.describe("Frontend: Parent Selector", () => {
       'input[placeholder="Search for parent issue..."]'
     );
     await expect(searchInput).toBeVisible({ timeout: 5000 });
-    await searchInput.fill("New Parent");
 
-    // Wait for search results
-    await page.waitForResponse(
-      (resp) => resp.url().includes("/api/issues") && resp.url().includes("search="),
+    // Set up the search-response wait BEFORE the fill that triggers it. The
+    // previous ordering attached the listener after the action, so a fast
+    // search response could resolve before the listener registered and the
+    // wait would hang waiting for the next (possibly stale/debounced prior)
+    // response — worse once >100 issues clutter the index. The matcher is also
+    // scoped to the exact search term via URLSearchParams so it can't latch
+    // onto an unrelated GET /api/issues?search=... call.
+    const searchResponsePromise = page.waitForResponse(
+      (resp) => {
+        if (resp.request().method() !== "GET") return false;
+        if (!resp.url().includes("/api/issues")) return false;
+        return new URL(resp.url()).searchParams.get("search") === "New Parent";
+      },
       { timeout: 10000 }
     );
+    await searchInput.fill("New Parent");
+    await searchResponsePromise;
 
     // Click on the new parent
     const patchPromise = page.waitForResponse(
