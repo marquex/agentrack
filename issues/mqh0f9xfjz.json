@@ -1,0 +1,19 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:03:07.461Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:07.461Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Tag Display Test 1781636587460-mjulpf",
+      "tags": [
+        "alpha-tag",
+        "beta-tag"
+      ]
+    }
+  }
+]

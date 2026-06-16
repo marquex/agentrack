@@ -1,0 +1,24 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:03:00.959Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:00.959Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Desc Edit Test Unique",
+      "description": "Original description for editing test"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:01.224Z",
+    "author": "anonymous",
+    "content": {
+      "description": "Updated description via E2E test"
+    }
+  }
+]

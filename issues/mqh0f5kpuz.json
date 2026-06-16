@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:03:02.418Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:02.418Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Next Issue Test 1781636582418-tdybnp",
+      "status": "todo",
+      "assignee": "next-tester-1781636582418-ofxmmp"
+    }
+  }
+]

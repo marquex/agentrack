@@ -1,0 +1,23 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:03:02.343Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:02.343Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Blocked Issue 1781636582343-hyr4g6"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T19:03:02.345Z",
+    "author": "tester",
+    "content": {
+      "blockerId": "mqh0f5hohj"
+    }
+  }
+]
