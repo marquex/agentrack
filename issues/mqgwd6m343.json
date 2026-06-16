@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:09:31.861Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:09:31.861Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Done Issue",
+      "status": "done",
+      "assignee": "alice"
+    }
+  }
+]

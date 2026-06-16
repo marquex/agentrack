@@ -1,11 +1,11 @@
 {
   "open": [
     {
-      "id": "mqgwb7arwv",
-      "title": "Test",
-      "path": "issues/mqgwb7arwv.json",
-      "status": "idea",
-      "assignee": null,
+      "id": "mqgwd6m343",
+      "title": "Done Issue",
+      "path": "issues/mqgwd6m343.json",
+      "status": "done",
+      "assignee": "alice",
       "parentId": null,
       "tags": [],
       "priority": 3

@@ -1,14 +1,3 @@
 {
-  "users": [
-    {
-      "name": "alice",
-      "token": "tk_8nxo7w2q",
-      "registeredAt": "2026-06-16T17:07:59.882Z"
-    },
-    {
-      "name": "bob",
-      "token": "tk_l5ro3v3e",
-      "registeredAt": "2026-06-16T17:07:59.904Z"
-    }
-  ]
+  "users": []
 }
