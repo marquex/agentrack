@@ -9,6 +9,16 @@
       "parentId": null,
       "tags": [],
       "priority": 3
+    },
+    {
+      "id": "mqgw9qvaln",
+      "title": "Test Issue",
+      "path": "issues/mqgw9qvaln.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
     }
   ],
   "closed": [],
