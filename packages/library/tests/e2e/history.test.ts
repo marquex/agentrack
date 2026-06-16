@@ -1,5 +1,5 @@
 /**
- * E2E: history — Type B tests (tracker operations)
+ * E2E: events list — Type B tests (tracker operations)
  */
 import { unlinkSync } from "node:fs";
 import { join } from "node:path";
@@ -15,7 +15,7 @@ import {
   runAgt,
 } from "./setup";
 
-describe("E2E: history", () => {
+describe("E2E: events list", () => {
   beforeAll(async () => {
     await ensureE2EWorktree(E2E_DATA_BRANCH);
   });
@@ -27,7 +27,7 @@ describe("E2E: history", () => {
   test("returns raw event array", async () => {
     const issueId = extractId(await runAgt(["create", "History Test"]));
 
-    const result = await runAgt(["history", issueId]);
+    const result = await runAgt(["events", "list", issueId]);
 
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
@@ -43,7 +43,7 @@ describe("E2E: history", () => {
     const issueId = extractId(await runAgt(["create", "Test"]));
     await runAgt(["update", issueId, "--title", "Updated"]);
 
-    const result = await runAgt(["history", issueId]);
+    const result = await runAgt(["events", "list", issueId]);
 
     expect(result.exitCode).toBe(0);
 
@@ -53,7 +53,7 @@ describe("E2E: history", () => {
   });
 
   test("prints NOT_FOUND for non-existent id", async () => {
-    const result = await runAgt(["history", "missing12345"]);
+    const result = await runAgt(["events", "list", "missing12345"]);
 
     assertError(result, "NOT_FOUND", 5);
   });
@@ -68,7 +68,7 @@ describe("E2E: history", () => {
     );
     unlinkSync(issuePath);
 
-    const result = await runAgt(["history", issueId]);
+    const result = await runAgt(["events", "list", issueId]);
 
     assertError(result, "ISSUE_MISSING", 6);
   });

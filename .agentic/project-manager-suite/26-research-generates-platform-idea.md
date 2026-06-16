@@ -99,7 +99,7 @@ The PM should:
 21. PM tags Issue #265 as `feature` and creates implementation children:
 
 ```
-Issue #265: "Build automated data normalization pipeline" (tag: feature, status: in-progress, assigned: project-manager)
+Issue #265: "Build automated data normalization pipeline" (tag: feature, status: todo, assigned: project-manager)
 ├── Task: "Review: ..." (status: done) ← completed during review
 ├── Task: "Check review decision" (status: done) ← completed
 ├── Task: "Design data normalization pipeline" (tag: task, assigned: platform-architect, status: todo, phase: planning)

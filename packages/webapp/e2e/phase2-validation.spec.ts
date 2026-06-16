@@ -15,6 +15,13 @@
  * - Error handling and edge cases
  */
 import { test, expect } from "@playwright/test";
+import { cleanupE2ESeeds } from "./setup.js";
+
+// Self-healing: remove every e2e-seed issue created by this spec so leftover
+// data never accumulates in the shared isolated worktree.
+test.afterAll(async () => {
+  await cleanupE2ESeeds();
+});
 
 /**
  * Helper: navigate to page and wait for the issues API to respond.
@@ -35,25 +42,25 @@ test.describe("Phase 2 Validation", () => {
 
   test.describe("Backend: GET /api/issues", () => {
     test("returns 200 with array", async ({ request }) => {
-      const response = await request.get("http://localhost:3001/api/issues");
+      const response = await request.get("http://localhost:5001/api/issues");
       expect(response.status()).toBe(200);
       const body = await response.json();
       expect(Array.isArray(body)).toBe(true);
     });
 
     test("returns issues with correct shape", async ({ request }) => {
-      const createRes = await request.post("http://localhost:3001/api/issues", {
+      const createRes = await request.post("http://localhost:5001/api/issues", {
         data: {
           title: "Phase2 Test: Issue shape validation",
           status: "todo",
           priority: 3,
-          tags: ["test", "phase2"],
+          tags: ["e2e-seed", "test", "phase2"],
         },
       });
       expect(createRes.status()).toBe(201);
       const created = await createRes.json();
 
-      const response = await request.get("http://localhost:3001/api/issues");
+      const response = await request.get("http://localhost:5001/api/issues");
       const issues = await response.json();
       expect(issues.length).toBeGreaterThan(0);
 
@@ -70,7 +77,7 @@ test.describe("Phase 2 Validation", () => {
 
     test("filters by status", async ({ request }) => {
       const response = await request.get(
-        "http://localhost:3001/api/issues?status=todo"
+        "http://localhost:5001/api/issues?status=todo"
       );
       expect(response.status()).toBe(200);
       const issues = await response.json();
@@ -81,7 +88,7 @@ test.describe("Phase 2 Validation", () => {
 
     test("filters by 'open' status (non-closed)", async ({ request }) => {
       const response = await request.get(
-        "http://localhost:3001/api/issues?status=open"
+        "http://localhost:5001/api/issues?status=open"
       );
       expect(response.status()).toBe(200);
       const issues = await response.json();
@@ -92,7 +99,7 @@ test.describe("Phase 2 Validation", () => {
 
     test("filters by assignee", async ({ request }) => {
       const response = await request.get(
-        "http://localhost:3001/api/issues?assignee=nonexistent-user"
+        "http://localhost:5001/api/issues?assignee=nonexistent-user"
       );
       expect(response.status()).toBe(200);
       const issues = await response.json();
@@ -101,13 +108,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("filters by search (title substring)", async ({ request }) => {
       const uniqueTitle = `SearchTest-${Date.now()}`;
-      const createRes = await request.post("http://localhost:3001/api/issues", {
-        data: { title: uniqueTitle },
+      const createRes = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: uniqueTitle },
       });
       await createRes.json();
 
       const response = await request.get(
-        `http://localhost:3001/api/issues?search=${uniqueTitle}`
+        `http://localhost:5001/api/issues?search=${uniqueTitle}`
       );
       expect(response.status()).toBe(200);
       const issues = await response.json();
@@ -117,13 +124,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("search is case-insensitive", async ({ request }) => {
       const uniqueTitle = `CaseTest-${Date.now()}`;
-      const createRes = await request.post("http://localhost:3001/api/issues", {
-        data: { title: uniqueTitle },
+      const createRes = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: uniqueTitle },
       });
       await createRes.json();
 
       const response = await request.get(
-        `http://localhost:3001/api/issues?search=${uniqueTitle.toLowerCase()}`
+        `http://localhost:5001/api/issues?search=${uniqueTitle.toLowerCase()}`
       );
       const issues = await response.json();
       expect(issues.length).toBeGreaterThanOrEqual(1);
@@ -133,7 +140,7 @@ test.describe("Phase 2 Validation", () => {
       request,
     }) => {
       const response = await request.get(
-        "http://localhost:3001/api/issues?parentId=null"
+        "http://localhost:5001/api/issues?parentId=null"
       );
       expect(response.status()).toBe(200);
       const issues = await response.json();
@@ -144,13 +151,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("filters by tags", async ({ request }) => {
       const uniqueTag = `tag-${Date.now()}`;
-      const createRes = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Tagged issue", tags: [uniqueTag] },
+      const createRes = await request.post("http://localhost:5001/api/issues", {
+        data: { title: "Tagged issue", tags: ["e2e-seed", uniqueTag] },
       });
       await createRes.json();
 
       const response = await request.get(
-        `http://localhost:3001/api/issues?tags=${uniqueTag}`
+        `http://localhost:5001/api/issues?tags=${uniqueTag}`
       );
       expect(response.status()).toBe(200);
       const issues = await response.json();
@@ -165,8 +172,8 @@ test.describe("Phase 2 Validation", () => {
 
   test.describe("Backend: POST /api/issues", () => {
     test("creates an issue with required fields only", async ({ request }) => {
-      const response = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Phase2 Test: Minimal issue" },
+      const response = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Phase2 Test: Minimal issue" },
       });
       expect(response.status()).toBe(201);
       const body = await response.json();
@@ -176,13 +183,13 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("creates an issue with all fields", async ({ request }) => {
-      const response = await request.post("http://localhost:3001/api/issues", {
+      const response = await request.post("http://localhost:5001/api/issues", {
         data: {
           title: "Phase2 Test: Full issue",
           description: "This is a test description",
           status: "in-progress",
           assignee: "webapp-validator",
-          tags: ["test", "phase2", "full"],
+          tags: ["e2e-seed", "test", "phase2", "full"],
           priority: 1,
         },
       });
@@ -191,7 +198,7 @@ test.describe("Phase 2 Validation", () => {
       expect(body.id).toBeDefined();
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${body.id}`
+        `http://localhost:5001/api/issues/${body.id}`
       );
       const issue = await viewRes.json();
       expect(issue.title).toBe("Phase2 Test: Full issue");
@@ -203,7 +210,7 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("returns 400 when title is missing", async ({ request }) => {
-      const response = await request.post("http://localhost:3001/api/issues", {
+      const response = await request.post("http://localhost:5001/api/issues", {
         data: {},
       });
       expect(response.status()).toBe(400);
@@ -213,15 +220,15 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("returns 400 when title is empty string", async ({ request }) => {
-      const response = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "   " },
+      const response = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "   " },
       });
       expect(response.status()).toBe(400);
     });
 
     test("returns 400 when title is not a string", async ({ request }) => {
-      const response = await request.post("http://localhost:3001/api/issues", {
-        data: { title: 123 },
+      const response = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: 123 },
       });
       expect(response.status()).toBe(400);
     });
@@ -229,26 +236,26 @@ test.describe("Phase 2 Validation", () => {
     test("defaults status to 'idea' when not provided", async ({
       request,
     }) => {
-      const response = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Phase2 Test: Default status" },
+      const response = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Phase2 Test: Default status" },
       });
       const body = await response.json();
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${body.id}`
+        `http://localhost:5001/api/issues/${body.id}`
       );
       const issue = await viewRes.json();
       expect(issue.status).toBe("idea");
     });
 
     test("defaults priority to 3 when not provided", async ({ request }) => {
-      const response = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Phase2 Test: Default priority" },
+      const response = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Phase2 Test: Default priority" },
       });
       const body = await response.json();
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${body.id}`
+        `http://localhost:5001/api/issues/${body.id}`
       );
       const issue = await viewRes.json();
       expect(issue.priority).toBe(3);
@@ -260,9 +267,9 @@ test.describe("Phase 2 Validation", () => {
   test.describe("Backend: GET /api/issues/:id", () => {
     test("returns full issue detail", async ({ request }) => {
       const createRes = await request.post(
-        "http://localhost:3001/api/issues",
+        "http://localhost:5001/api/issues",
         {
-          data: {
+          data: { tags: ["e2e-seed"],
             title: "Phase2 Test: Detail view",
             description: "Detailed description here",
           },
@@ -271,7 +278,7 @@ test.describe("Phase 2 Validation", () => {
       const { id } = await createRes.json();
 
       const response = await request.get(
-        `http://localhost:3001/api/issues/${id}`
+        `http://localhost:5001/api/issues/${id}`
       );
       expect(response.status()).toBe(200);
       const issue = await response.json();
@@ -286,7 +293,7 @@ test.describe("Phase 2 Validation", () => {
 
     test("returns 404 for non-existent issue", async ({ request }) => {
       const response = await request.get(
-        "http://localhost:3001/api/issues/nonexistent123"
+        "http://localhost:5001/api/issues/nonexistent123"
       );
       expect(response.status()).toBe(404);
       const body = await response.json();
@@ -301,9 +308,9 @@ test.describe("Phase 2 Validation", () => {
 
     test.beforeAll(async ({ request }) => {
       const createRes = await request.post(
-        "http://localhost:3001/api/issues",
+        "http://localhost:5001/api/issues",
         {
-          data: { title: "Phase2 Test: Update target" },
+          data: { tags: ["e2e-seed"], title: "Phase2 Test: Update target" },
         }
       );
       const body = await createRes.json();
@@ -312,7 +319,7 @@ test.describe("Phase 2 Validation", () => {
 
     test("updates status", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
+        `http://localhost:5001/api/issues/${testIssueId}`,
         { data: { status: "in-progress" } }
       );
       expect(response.status()).toBe(200);
@@ -320,7 +327,7 @@ test.describe("Phase 2 Validation", () => {
       expect(body.result).toBe("OK");
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${testIssueId}`
+        `http://localhost:5001/api/issues/${testIssueId}`
       );
       const issue = await viewRes.json();
       expect(issue.status).toBe("in-progress");
@@ -328,13 +335,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("updates priority", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
+        `http://localhost:5001/api/issues/${testIssueId}`,
         { data: { priority: 1 } }
       );
       expect(response.status()).toBe(200);
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${testIssueId}`
+        `http://localhost:5001/api/issues/${testIssueId}`
       );
       const issue = await viewRes.json();
       expect(issue.priority).toBe(1);
@@ -342,13 +349,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("updates assignee", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
+        `http://localhost:5001/api/issues/${testIssueId}`,
         { data: { assignee: "test-user" } }
       );
       expect(response.status()).toBe(200);
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${testIssueId}`
+        `http://localhost:5001/api/issues/${testIssueId}`
       );
       const issue = await viewRes.json();
       expect(issue.assignee).toBe("test-user");
@@ -356,13 +363,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("updates title", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
-        { data: { title: "Updated title by test" } }
+        `http://localhost:5001/api/issues/${testIssueId}`,
+        { data: { tags: ["e2e-seed"], title: "Updated title by test" } }
       );
       expect(response.status()).toBe(200);
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${testIssueId}`
+        `http://localhost:5001/api/issues/${testIssueId}`
       );
       const issue = await viewRes.json();
       expect(issue.title).toBe("Updated title by test");
@@ -370,13 +377,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("updates description", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
+        `http://localhost:5001/api/issues/${testIssueId}`,
         { data: { description: "New description" } }
       );
       expect(response.status()).toBe(200);
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${testIssueId}`
+        `http://localhost:5001/api/issues/${testIssueId}`
       );
       const issue = await viewRes.json();
       expect(issue.description).toBe("New description");
@@ -384,13 +391,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("updates tags", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
+        `http://localhost:5001/api/issues/${testIssueId}`,
         { data: { tags: ["updated", "tags"] } }
       );
       expect(response.status()).toBe(200);
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${testIssueId}`
+        `http://localhost:5001/api/issues/${testIssueId}`
       );
       const issue = await viewRes.json();
       expect(issue.tags).toEqual(["updated", "tags"]);
@@ -398,13 +405,13 @@ test.describe("Phase 2 Validation", () => {
 
     test("can clear assignee (set to null)", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
+        `http://localhost:5001/api/issues/${testIssueId}`,
         { data: { assignee: null } }
       );
       expect(response.status()).toBe(200);
 
       const viewRes = await request.get(
-        `http://localhost:3001/api/issues/${testIssueId}`
+        `http://localhost:5001/api/issues/${testIssueId}`
       );
       const issue = await viewRes.json();
       expect(issue.assignee).toBeNull();
@@ -412,7 +419,7 @@ test.describe("Phase 2 Validation", () => {
 
     test("returns 400 when no fields provided", async ({ request }) => {
       const response = await request.patch(
-        `http://localhost:3001/api/issues/${testIssueId}`,
+        `http://localhost:5001/api/issues/${testIssueId}`,
         { data: {} }
       );
       expect(response.status()).toBe(400);
@@ -423,8 +430,8 @@ test.describe("Phase 2 Validation", () => {
 
     test("returns 404 for non-existent issue", async ({ request }) => {
       const response = await request.patch(
-        "http://localhost:3001/api/issues/nonexistent123",
-        { data: { title: "Nope" } }
+        "http://localhost:5001/api/issues/nonexistent123",
+        { data: { tags: ["e2e-seed"], title: "Nope" } }
       );
       expect(response.status()).toBe(404);
     });
@@ -434,14 +441,14 @@ test.describe("Phase 2 Validation", () => {
 
   test.describe("Backend: GET /api/users", () => {
     test("returns 200 with array", async ({ request }) => {
-      const response = await request.get("http://localhost:3001/api/users");
+      const response = await request.get("http://localhost:5001/api/users");
       expect(response.status()).toBe(200);
       const body = await response.json();
       expect(Array.isArray(body)).toBe(true);
     });
 
     test("returns users with correct shape", async ({ request }) => {
-      const response = await request.get("http://localhost:3001/api/users");
+      const response = await request.get("http://localhost:5001/api/users");
       const users = await response.json();
       for (const user of users) {
         expect(user).toHaveProperty("name");
@@ -463,8 +470,8 @@ test.describe("Phase 2 Validation", () => {
     test("shows issues in the list as clickable rows", async ({ page }) => {
       // Ensure at least one issue exists via direct API call
       const request = page.context().request;
-      await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Phase2 E2E: List visible test" },
+      await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Phase2 E2E: List visible test" },
       });
 
       await gotoAndWaitForIssues(page);
@@ -476,8 +483,8 @@ test.describe("Phase 2 Validation", () => {
 
     test("displays status badges on issue rows", async ({ page }) => {
       const request = page.context().request;
-      await request.post("http://localhost:3001/api/issues", {
-        data: {
+      await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"],
           title: "Phase2 E2E: Badge test",
           status: "todo",
         },
@@ -544,8 +551,8 @@ test.describe("Phase 2 Validation", () => {
     test("search input filters issues by title", async ({ page }) => {
       const uniqueTitle = `FilterTest-${Date.now()}`;
       const request = page.context().request;
-      await request.post("http://localhost:3001/api/issues", {
-        data: { title: uniqueTitle },
+      await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: uniqueTitle, status: "todo" },
       });
 
       await gotoAndWaitForIssues(page);
@@ -568,12 +575,11 @@ test.describe("Phase 2 Validation", () => {
     test("status dropdown is present and interactive", async ({ page }) => {
       await gotoAndWaitForIssues(page);
 
-      // The status filter Select — base-ui renders a button with text "all"
-      // There are two selects (status, assignee), both defaulting to "all"
-      // Use the first select trigger (status is first in the filter bar)
-      const selectTriggers = page.locator("button").filter({ hasText: /^all/ });
-      await expect(selectTriggers.first()).toBeVisible({ timeout: 10000 });
-      await selectTriggers.first().click();
+      // The status filter Select defaults to "Open" (the dashboard default).
+      // Target it directly via its id to avoid ambiguity with the assignee Select.
+      const statusTrigger = page.locator("#status-filter");
+      await expect(statusTrigger).toBeVisible({ timeout: 10000 });
+      await statusTrigger.click();
 
       // The dropdown should open with status options
       const options = page.locator("[role='option']");
@@ -733,9 +739,9 @@ test.describe("Phase 2 Validation", () => {
       const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const apiRequest = page.context().request;
       const createRes = await apiRequest.post(
-        "http://localhost:3001/api/issues",
+        "http://localhost:5001/api/issues",
         {
-          data: { title: `NavTest-${uniqueId}` },
+          data: { tags: ["e2e-seed"], title: `NavTest-${uniqueId}`, status: "todo" },
         }
       );
       const { id: issueId } = await createRes.json();
@@ -761,9 +767,9 @@ test.describe("Phase 2 Validation", () => {
       const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const apiRequest = page.context().request;
       const createRes = await apiRequest.post(
-        "http://localhost:3001/api/issues",
+        "http://localhost:5001/api/issues",
         {
-          data: { title: `BackNavTest-${uniqueId}` },
+          data: { tags: ["e2e-seed"], title: `BackNavTest-${uniqueId}`, status: "todo" },
         }
       );
       const { id: issueId } = await createRes.json();
@@ -801,13 +807,13 @@ test.describe("Phase 2 Validation", () => {
 
   test.describe("Frontend: Issue Detail Page", () => {
     test("displays issue title and ID", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
+      const res = await request.post("http://localhost:5001/api/issues", {
         data: {
           title: "Detail Display Test Unique",
           description: "Testing detail page display",
           status: "todo",
           priority: 2,
-          tags: ["display-test-unique"],
+          tags: ["e2e-seed", "display-test-unique"],
           assignee: "test-bot",
         },
       });
@@ -828,8 +834,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("displays description", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: {
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"],
           title: "Desc Display Test Unique",
           description: "Unique description content here 12345",
         },
@@ -849,8 +855,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("displays status badge", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Status Badge Test Unique", status: "todo" },
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Status Badge Test Unique", status: "todo" },
       });
       const { id: testIssueId } = await res.json();
 
@@ -867,8 +873,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("displays timestamps", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Timestamp Test Unique" },
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Timestamp Test Unique" },
       });
       const { id: testIssueId } = await res.json();
 
@@ -884,10 +890,10 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("displays tags", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
+      const res = await request.post("http://localhost:5001/api/issues", {
         data: {
           title: "Tag Display Test Unique",
-          tags: ["unique-tag-display-test"],
+          tags: ["e2e-seed", "unique-tag-display-test"],
         },
       });
       const { id: testIssueId } = await res.json();
@@ -905,8 +911,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("inline edit title", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Title Edit Test Original Unique" },
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Title Edit Test Original Unique" },
       });
       const { id: testIssueId } = await res.json();
 
@@ -952,8 +958,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("inline edit description", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: {
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"],
           title: "Desc Edit Test Unique",
           description: "Original description for editing test",
         },
@@ -1001,8 +1007,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("change status via dropdown", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Status Change Test Unique", status: "todo" },
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Status Change Test Unique", status: "todo" },
       });
       const { id: testIssueId } = await res.json();
 
@@ -1044,8 +1050,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("change priority via dropdown", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Priority Change Test Unique", priority: 3 },
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Priority Change Test Unique", priority: 3 },
       });
       const { id: testIssueId } = await res.json();
 
@@ -1086,8 +1092,8 @@ test.describe("Phase 2 Validation", () => {
     });
 
     test("change assignee via dropdown", async ({ request, page }) => {
-      const res = await request.post("http://localhost:3001/api/issues", {
-        data: { title: "Assignee Change Test Unique", assignee: null },
+      const res = await request.post("http://localhost:5001/api/issues", {
+        data: { tags: ["e2e-seed"], title: "Assignee Change Test Unique", assignee: null },
       });
       const { id: testIssueId } = await res.json();
 

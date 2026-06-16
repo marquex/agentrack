@@ -91,7 +91,6 @@ const validationDir = join(projectRoot, "validation");
 {
   command: "bun run dev:server",
   port: 3000,
-  reuseExistingServer: true,
   timeout: 10_000,
   env: { AGENTRACK_CWD: validationDir },
 },

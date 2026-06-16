@@ -25,7 +25,7 @@ A small styling task that only needs the webapp styler. The PM still enforces th
 ## Expected Output
 
 ```
-Feature: "Polish login page button styles" (tag: feature, assigned: project-manager, status: in-progress)
+Feature: "Polish login page button styles" (tag: feature, assigned: project-manager, status: todo)
 ├── Task: "Review and plan button style improvements" (tag: task, assigned: webapp-styler, status: todo, phase: planning)
 ├── Task: "Implement button style improvements" (tag: task, assigned: webapp-styler, status: todo, phase: styling)
 │   └── Blocked by "Review" task
@@ -45,7 +45,7 @@ Feature: "Polish login page button styles" (tag: feature, assigned: project-mana
 - The styler handles both planning and implementation since this is their domain
 - Validation is still assigned to the validator — the styler doesn't write tests
 - The PM should NOT collapse all phases into a single issue — phases ensure quality
-- **PM sets parent to `in-progress`** after creating children — no verification child is created. The status loop completes the parent once validation (the last phase) is `done`. See Story 01 for the full lifecycle explanation.
+- **PM leaves the parent at `todo`** after creating children — the PM does NOT flip it to `in-progress`. The status loop auto-promotes it to `in-progress` when a child starts. No verification child is created. The status loop completes the parent once validation (the last phase) is `done`. See Story 01 for the full lifecycle explanation.
 
 ## Notes
 - The PM correctly recognizes that `webapp-developer` is NOT needed here — the feature is already built

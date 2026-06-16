@@ -27,8 +27,11 @@ interface IssueTreeRowProps {
 function IssueTreeRow({ issue, depth }: IssueTreeRowProps) {
   const [expanded, setExpanded] = useState(false);
 
+  // Always query children by parentId, but keep the query disabled while
+  // collapsed so collapsed rows never trigger an all-issues fetch.
   const { data: children } = useIssues(
-    expanded ? { parentId: issue.id } : {}
+    { parentId: issue.id },
+    { enabled: expanded }
   );
   const hasChildren = expanded && children && children.length > 0;
 

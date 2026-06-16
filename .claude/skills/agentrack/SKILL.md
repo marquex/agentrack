@@ -123,6 +123,17 @@ Manage registered users and their tokens.
 | `agt users revoke <name>` | Revoke (remove) a user |
 | `agt users regenerate <name>` | Regenerate a user's token |
 
+## Validation Directory — Test Isolation
+
+**Never create test issues or run exploratory `agt` commands from the project root.** The root `.agentrack/` is the real project tracker with real production data. Test data pollutes the project and confuses other agents.
+
+When you need to exercise `agt` commands for testing, validation, or exploration:
+1. `cd validation` — the `.agentrack.json` pointer there resolves to `validation/.e2edata/`, an isolated tracker instance (open auth mode, no token needed).
+2. Run all test `agt` commands from there.
+3. Clean up before finishing.
+
+This does NOT apply to real coordination work (reporting bugs, filing ideas, updating assigned issues) — that goes to the real `.agentrack/`.
+
 ## Workflow Guidelines
 
 The whole project work needs to be tracked in issues. Use the CLI to manage your issues and coordinate with other agents.

@@ -8,7 +8,8 @@ const pkg = JSON.parse(readFileSync(join(__dirname, "../../package.json"), "utf-
 describe("Package Configuration", () => {
   test("package.json has all required fields", () => {
     expect(pkg.name).toBe("agentrack");
-    expect(pkg.version).toBe("0.1.0");
+    // Version is managed by the release process; just sanity-check it's a semver.
+    expect(pkg.version).toMatch(/^\d+\.\d+\.\d+/);
     expect(pkg.type).toBe("module");
     expect(pkg.main).toBe("./dist/index.cjs");
     expect(pkg.module).toBe("./dist/index.js");
@@ -73,6 +74,6 @@ describe("Package Configuration", () => {
       // Commander throws after printing version — expected
     }
 
-    expect(versionOutput.trim()).toBe("0.1.0");
+    expect(versionOutput.trim()).toBe(pkg.version);
   });
 });

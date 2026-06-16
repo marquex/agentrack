@@ -31,19 +31,19 @@ The product owner requests a "user profile" feature requiring a new backend API 
 ### What the PM creates (initial state)
 
 ```
-Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: in-progress)
+Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: todo)
 │
-├── Feature: "Define user profile API contract" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Define user profile API contract" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Design user profile API contract" (tag: task, assigned: backend-architect, status: todo, phase: planning)
 │   ├── Task: "Review API contract for frontend consumption" (tag: task, assigned: android-developer, status: todo)
 │   │   └── Blocked by "Design" task (can't review until architect produces the contract)
 │   └── Task: "Verify API contract review" (tag: task,sync, assigned: project-manager, status: todo)
 │       └── Blocked by "Review" task (PM reads the review to check for issues)
 │
-├── Feature: "Implement user profile backend API" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Implement user profile backend API" (tag: feature, assigned: project-manager, status: todo)
 │   └── (tasks blocked by Contract Feature — cannot start until contract is agreed)
 │
-├── Feature: "Build user profile Android screen" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Build user profile Android screen" (tag: feature, assigned: project-manager, status: todo)
 │   └── (tasks blocked by Contract Feature — cannot start until contract is agreed)
 │
 └── (Epic completed by the status loop once all three Features are done)
@@ -96,7 +96,7 @@ Once the PM confirms agreement is total (no outstanding issues), it marks the co
 12. The system auto-clears the blockages that the contract Feature was causing — the backend and frontend Features' first tasks become unblocked:
 
 ```
-├── Feature: "Implement user profile backend API" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Implement user profile backend API" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Plan user profile backend implementation" (tag: task, assigned: backend-developer, status: todo, phase: planning)
 │   │   └── Blocked by Contract Feature (auto-clears once the Contract Feature is marked done = agreed)
 │   ├── Task: "Implement user profile API endpoints" (tag: task, assigned: backend-developer, status: todo, phase: development)
@@ -106,7 +106,7 @@ Once the PM confirms agreement is total (no outstanding issues), it marks the co
 │   └── Task: "Deploy user profile API" (tag: task, assigned: devops-engineer, status: todo, phase: release)
 │       └── Blocked by "Validate" task
 │
-├── Feature: "Build user profile Android screen" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Build user profile Android screen" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Plan user profile screen from API contract" (tag: task, assigned: android-developer, status: todo, phase: planning)
 │   │   └── Blocked by Contract Feature (auto-clears once the Contract Feature is marked done = agreed)
 │   ├── Task: "Implement user profile screen" (tag: task, assigned: android-developer, status: todo, phase: development)

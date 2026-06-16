@@ -61,9 +61,9 @@ The PM should:
 14. PM tags Issue #200 as `epic` and creates the cross-team plan:
 
 ```
-Issue #200: "Add iceberg order type support to backtesting engine" (tag: epic, status: in-progress, assigned: project-manager)
+Issue #200: "Add iceberg order type support to backtesting engine" (tag: epic, status: todo, assigned: project-manager)
 │
-├── Feature: "Iceberg order type support" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Iceberg order type support" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Design iceberg order model for backtesting engine" (tag: task, assigned: platform-architect, status: todo, phase: planning)
 │   ├── Task: "Review iceberg order design for strategy needs" (tag: task, assigned: quant-researcher, status: todo)
 │   │   └── Blocked by "Design" task (can't review until architect produces the design)
@@ -76,7 +76,7 @@ Issue #200: "Add iceberg order type support to backtesting engine" (tag: epic, s
 │   ├── Task: "Release iceberg order type" (tag: task, assigned: platform-releaser, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
 │
-├── Feature: "Iceberg liquidity strategy" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Iceberg liquidity strategy" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Design iceberg liquidity strategy model" (tag: task, assigned: quant-researcher, status: todo, phase: planning)
 │   │   └── Blocked by platform Feature's "Release" task (can't plan strategy until platform feature is released)
 │   ├── Task: "Implement iceberg liquidity strategy" (tag: task, assigned: quant-researcher, status: todo, phase: development)

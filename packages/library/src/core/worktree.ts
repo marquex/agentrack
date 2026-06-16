@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { join, normalize, resolve } from "node:path";
+import { dirname, join, normalize, resolve } from "node:path";
 import type { WorktreeInitResult, WorktreePullResult, WorktreeSyncResult } from "../types";
 import { AgentrackError, ErrorCodes } from "./errors";
-import type { WorktreeOptions } from "./branch-config";
+import { resolveWorktreeOptions, type WorktreeOptions } from "./branch-config";
+import { resolveTrackerDir } from "./resolution";
 
 /** Default branch name used for the agentrack data worktree. */
 export const DEFAULT_BRANCH = "_agentrack";
@@ -462,16 +463,44 @@ export function commitWorktreeData(cwd: string, message: string, opts?: Worktree
 }
 
 /**
+ * Resolve the project root and worktree options for push/pull operations.
+ *
+ * `cwd` may be either the PROJECT ROOT (where `.agentrack.json` lives) or the
+ * DATA DIR (the worktree itself, e.g. `.agentrack/` or `.e2edata/`). This
+ * function walks up from `cwd` to locate the agentrack data directory, then
+ * derives the project root as its parent. When no data directory is found, it
+ * falls back to `cwd` itself (preserving the legacy "cwd is the project root"
+ * behavior so existing callers keep working).
+ *
+ * When `opts` is not provided, the branch/dir are resolved from the pointer
+ * file at the project root (via `resolveWorktreeOptions`), so callers do not
+ * need to know whether a custom branch (e.g. `_e2edata`) is configured.
+ *
+ * @internal
+ */
+function resolveWorktreeContext(
+  cwd: string,
+  opts?: WorktreeOptions,
+): { projectRoot: string; opts: WorktreeOptions } {
+  const trackerDir = resolveTrackerDir(cwd);
+  const projectRoot = trackerDir ? dirname(trackerDir) : resolve(cwd);
+  const worktreeOpts = opts ?? resolveWorktreeOptions(projectRoot);
+  return { projectRoot, opts: worktreeOpts };
+}
+
+/**
  * Stage all changes, auto-commit, and push to remote.
  *
- * When opts is not provided, resolves branch from pointer file or defaults.
+ * `cwd` may be either the project root or the worktree/data directory; the
+ * project root and active branch are resolved automatically. When `opts` is
+ * provided it takes precedence over the pointer file.
  */
 export function pushWorktree(cwd: string, message?: string, opts?: WorktreeOptions): WorktreeSyncResult {
-  const worktreeOpts = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
-  const worktreeDir = join(cwd, worktreeOpts.dir);
+  const { projectRoot, opts: worktreeOpts } = resolveWorktreeContext(cwd, opts);
+  const worktreeDir = join(projectRoot, worktreeOpts.dir);
 
   // Verify worktree is initialized
-  if (!isWorktreeInitialized(cwd, worktreeOpts)) {
+  if (!isWorktreeInitialized(projectRoot, worktreeOpts)) {
     throw new AgentrackError(
       ErrorCodes.NOT_INITIALIZED.result,
       "Agentrack not initialized. Run `agt init` first.",
@@ -523,7 +552,7 @@ export function pushWorktree(cwd: string, message?: string, opts?: WorktreeOptio
   }
 
   // Push to remote
-  if (hasRemote(cwd)) {
+  if (hasRemote(projectRoot)) {
     try {
       gitExec(worktreeDir, ["push"]);
     } catch (err) {
@@ -545,14 +574,16 @@ export function pushWorktree(cwd: string, message?: string, opts?: WorktreeOptio
 /**
  * Pull latest from remote into the worktree.
  *
- * When opts is not provided, resolves branch from pointer file or defaults.
+ * `cwd` may be either the project root or the worktree/data directory; the
+ * project root and active branch are resolved automatically. When `opts` is
+ * provided it takes precedence over the pointer file.
  */
 export function pullWorktree(cwd: string, opts?: WorktreeOptions): WorktreePullResult {
-  const worktreeOpts = opts ?? { branch: DEFAULT_BRANCH, dir: DEFAULT_DIR };
-  const worktreeDir = join(cwd, worktreeOpts.dir);
+  const { projectRoot, opts: worktreeOpts } = resolveWorktreeContext(cwd, opts);
+  const worktreeDir = join(projectRoot, worktreeOpts.dir);
 
   // Verify worktree is initialized
-  if (!isWorktreeInitialized(cwd, worktreeOpts)) {
+  if (!isWorktreeInitialized(projectRoot, worktreeOpts)) {
     throw new AgentrackError(
       ErrorCodes.NOT_INITIALIZED.result,
       "Agentrack not initialized. Run `agt init` first.",

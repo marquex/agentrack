@@ -45,7 +45,7 @@ The PM should:
 1. Acknowledge the critical production issue
 2. Create the hotfix bug:
    ```
-   Bug: "Fix execution engine double-submitting orders in production" (tag: bug, assigned: project-manager, status: in-progress)
+   Bug: "Fix execution engine double-submitting orders in production" (tag: bug, assigned: project-manager, status: todo)
    ├── Task: "Reproduce and diagnose double order submission" (tag: task, assigned: platform-validator, status: todo, phase: reproduction)
    │   Comment: "CRITICAL — production issue. Execution engine is double-submitting orders
    │   to the exchange. Reproduce in test environment and find root cause."

@@ -280,7 +280,7 @@ Score the agent's response on these 7 dimensions (0-10 each):
 2. assignments — Right worker agent for each task, correct phase-to-agent mapping
 3. dependencies — Correct blockages between tasks, sequential dependencies, cross-team dependencies
 4. syncPattern — Completion pattern correct: NO "verify complete" child created for parent completion (the status loop completes parents); gate trackers (task,sync assigned to project-manager, blocked by a review task) created ONLY where a collaborative review/decision gate is required (joint design agreement, idea review); for status-loop scenarios, parents completed correctly (done if has parent, closed + close children if top-level)
-5. statusManagement — Parent set to in-progress after children, correct status transitions
+5. statusManagement — Parent LEFT at 'todo' after creating children (PM must NOT flip it to in-progress — the status loop auto-promotes it when a child starts); correct status transitions on worker children
 6. behavioralAccuracy — Scenario-specific key behaviors met
 7. completeness — All expected actions covered, nothing critical missing
 

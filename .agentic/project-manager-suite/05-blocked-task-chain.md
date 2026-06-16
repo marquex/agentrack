@@ -27,9 +27,9 @@ Multiple features must be completed in a strict sequence — the frontend depend
 ## Expected Output
 
 ```
-Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: in-progress)
+Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: todo)
 │
-├── Feature: "Add user profiles API" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Add user profiles API" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Design user profiles API contract" (tag: task, assigned: backend-architect, status: todo, phase: planning)
 │   ├── Task: "Review API contract for frontend needs" (tag: task, assigned: android-developer, status: todo)
 │   │   └── Blocked by "Design" task (can't review until architect produces the contract)
@@ -42,7 +42,7 @@ Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: 
 │   ├── Task: "Release user profiles API" (tag: task, assigned: devops-engineer, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
 │
-├── Feature: "Build user profile screen (Android)" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Build user profile screen (Android)" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Plan user profile screen from API contract" (tag: task, assigned: android-developer, status: todo, phase: planning)
 │   │   └── Blocked by backend "Verify contract agreed" task (can't plan frontend until API contract is agreed by both teams)
 │   ├── Task: "Implement user profile screen" (tag: task, assigned: android-developer, status: todo, phase: development)
@@ -52,7 +52,7 @@ Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: 
 │   └── Task: "Validate user profile screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
 │       └── Blocked by "Polish" task
 │
-├── Chore: "Add caching layer for user profile data" (tag: chore, assigned: project-manager, status: in-progress)
+├── Chore: "Add caching layer for user profile data" (tag: chore, assigned: project-manager, status: todo)
 │   ├── Task: "Design caching strategy for user profiles" (tag: task, assigned: backend-architect, status: todo, phase: planning)
 │   │   └── Blocked by backend Feature "Release" task AND frontend Feature "Validate" task (needs both sides to be stable)
 │   ├── Task: "Implement caching layer" (tag: task, assigned: backend-developer, status: todo, phase: development)

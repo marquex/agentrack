@@ -31,7 +31,7 @@ The latest app release was rejected by the Play Store for violating a new policy
 ### What the PM creates (initial state)
 
 ```
-Bug: "Resolve Play Store rejection — missing in-app purchase disclosure" (tag: bug, assigned: project-manager, status: in-progress)
+Bug: "Resolve Play Store rejection — missing in-app purchase disclosure" (tag: bug, assigned: project-manager, status: todo)
 ├── Task: "Add in-app purchase pricing disclosure screen" (tag: task, assigned: android-developer, status: todo, phase: development)
 │   Comment: "Play Store rejected the app for violating In-App Purchase disclosure policy.
 │   Add a disclosure screen that shows pricing and terms BEFORE the purchase button.
@@ -47,11 +47,11 @@ Bug: "Resolve Play Store rejection — missing in-app purchase disclosure" (tag:
 ### What happens after — status transitions (driven by worker agents)
 
 ```
-PM sets parent → in-progress (after creating all children)
+Parent stays at todo (PM does NOT flip it)
        │
        ▼
 Step 1: Work loop wakes android-developer (Child 1 is todo, unblocked)
-  → Developer sets Child 1: todo → in-progress
+  → Developer sets Child 1: todo → in-progress (status loop auto-promotes the Bug parent todo → in-progress)
   → Developer adds a disclosure screen showing pricing and terms before the purchase button
   → Developer sets Child 1: in-progress → done
   → Developer adds comment: "Added disclosure screen. Shows itemized pricing,

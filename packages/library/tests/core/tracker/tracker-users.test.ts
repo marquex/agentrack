@@ -202,5 +202,81 @@ describe("Tracker", () => {
         expect(usersData.users[0].token).not.toBe(regResult.token);
       });
     });
+
+    // ─── Token override (BUG-1 fix) ──────────────────────────────────
+    describe("usersRegenerate token override", () => {
+      test("succeeds with explicit token in open mode (no env var)", async () => {
+        // Reproduces the BUG-1 scenario: webapp forwards the user's token
+        // programmatically while AGT_USER_TOKEN is absent.
+        const regResult = await tracker.usersRegister("alice");
+        if (regResult.result !== "OK") throw new Error("Register failed");
+        const oldToken = regResult.token;
+
+        // No env var set — only the explicit token identifies the caller.
+        const result = await tracker.usersRegenerate("alice", {
+          token: oldToken,
+        });
+
+        expect(result.result).toBe("OK");
+        if (result.result === "OK") {
+          expect(result.name).toBe("alice");
+          expect(result.token).toMatch(/^tk_[a-z0-9]{8}$/);
+          expect(result.token).not.toBe(oldToken);
+        }
+      });
+
+      test("explicit token takes precedence over conflicting env var", async () => {
+        const aliceResult = await tracker.usersRegister("alice");
+        const bobResult = await tracker.usersRegister("bob");
+        if (aliceResult.result !== "OK" || bobResult.result !== "OK") {
+          throw new Error("Register failed");
+        }
+
+        // Env var points to bob, but the explicit token authenticates alice.
+        process.env.AGT_USER_TOKEN = bobResult.token;
+        const result = await tracker.usersRegenerate("alice", {
+          token: aliceResult.token,
+        });
+
+        expect(result.result).toBe("OK");
+        if (result.result === "OK") {
+          expect(result.name).toBe("alice");
+        }
+      });
+
+      test("rejects with INVALID_TOKEN when explicit token belongs to another user", async () => {
+        const aliceResult = await tracker.usersRegister("alice");
+        await tracker.usersRegister("bob");
+        if (aliceResult.result !== "OK") throw new Error("Register failed");
+
+        // Alice forwards her token but asks to regenerate bob — must be refused.
+        const result = await tracker.usersRegenerate("bob", {
+          token: aliceResult.token,
+        });
+
+        expect(result.result).toBe("INVALID_TOKEN");
+        if (result.result === "INVALID_TOKEN") {
+          expect(result.message).toBeTruthy();
+        }
+      });
+
+      test("throws INVALID_TOKEN when explicit token does not match any user", async () => {
+        await tracker.usersRegister("alice");
+
+        expect(() =>
+          tracker.usersRegenerate("alice", { token: "tk_deadbeef" }),
+        ).toThrow(/Invalid authentication token/);
+      });
+
+      test("omitting params preserves backward-compatible behavior", async () => {
+        const regResult = await tracker.usersRegister("alice");
+        if (regResult.result !== "OK") throw new Error("Register failed");
+        process.env.AGT_USER_TOKEN = regResult.token;
+
+        // Call with no second argument — pre-existing behavior must hold.
+        const result = await tracker.usersRegenerate("alice");
+        expect(result.result).toBe("OK");
+      });
+    });
   });
 });

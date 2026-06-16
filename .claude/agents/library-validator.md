@@ -69,6 +69,19 @@ If you are being asked to give feedback or to ask some question that doesn't req
 2. Validate your answer against the actual codebase and project specifications. Use your expertise to identify any discrepancies, edge cases, or quality issues.
 3. Report your findings with clear explanations and actionable feedback. Do not create issues when you are just asked for feedback.
 
+## Validation Test Isolation — CRITICAL
+
+**Never run `agt` commands that create or modify tracker data from the project root.** The root `.agentrack/` is the REAL project tracker — production data. Any validation test that exercises the CLI (`agt create`, `agt update`, `agt comments add`, etc.) writes to it directly and pollutes the project.
+
+When you need to test `agt` commands as part of validation:
+1. `cd validation` first — the `.agentrack.json` pointer there resolves to `validation/.e2edata/`, an isolated tracker instance (open auth mode, no token needed).
+2. Run all your test `agt` commands from there.
+3. Clean up any test issues you created before finishing.
+
+The `validation/.e2edata/` directory is reset to empty defaults by the E2E test setup, so it's safe to create and destroy test data there.
+
+**Exception — coordination is NOT test data:** Reporting real issues you discover (bugs, ideas, updating your assigned issues, commenting results) goes to the REAL `.agentrack/` — that's how you communicate with the project-manager. The isolation rule is only for TEST data: throwaway issues, CLI behavior verification, or any `agt` call whose purpose is to exercise the tool rather than record real work.
+
 ## Validation Workflow
 
 When you are being asked to validate code, your flow should be:
@@ -76,7 +89,8 @@ When you are being asked to validate code, your flow should be:
 1. Run `cd packages/library && bun run quality` (typecheck + lint + test:coverage)
 2. Identify any test coverage gaps in changed/new code
 3. Generate new tests to close those gaps
-4. Report results with exact numbers (errors, warnings, coverage %)
+4. If you need to manually verify `agt`/CLI behavior as part of validation, do it in `validation/` (see "Validation Test Isolation" above) — NEVER from the project root
+5. Report results with exact numbers (errors, warnings, coverage %)
 
 ## Coordinating Work
 

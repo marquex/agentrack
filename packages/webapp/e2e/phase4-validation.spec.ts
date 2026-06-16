@@ -13,11 +13,11 @@
  *   target user name). Server doesn't forward user token. The Tracker's
  *   resolveAuthor returns "anonymous" in open mode which doesn't match the
  *   target user name.
- * - BUG-2: POST /api/sync/push and /api/sync/pull fail with NOT_INITIALIZED
- *   because the sync route passes AGENTRACK_CWD (the worktree directory)
- *   directly to pushWorktree/pullWorktree instead of resolving the project
- *   root via resolveTrackerDir. The worktree functions expect the project
- *   root where .agentrack.json lives, not the worktree directory itself.
+ * - BUG-2 (FIXED): POST /api/sync/push and /api/sync/pull previously failed
+ *   with NOT_INITIALIZED because the sync route passed AGENTRACK_CWD (the
+ *   worktree directory) directly to pushWorktree/pullWorktree instead of
+ *   resolving the project root. Fixed in mqe2xmq47c; these tests now assert
+ *   the success behavior.
  *
  * Also validates:
  * - Backend validation and error handling
@@ -26,7 +26,7 @@
  */
 import { test, expect } from "@playwright/test";
 
-const BASE = "http://localhost:3001";
+const BASE = "http://localhost:5001";
 
 /**
  * Helper: generate a unique ID for test isolation.
@@ -220,24 +220,30 @@ test.describe("Backend: POST /api/users/:name/regenerate", () => {
 // ═══════════════════════════════════════════════════════════════════════
 
 test.describe("Backend: POST /api/sync/push", () => {
-  test("returns 500 with NOT_INITIALIZED — BUG-2", async ({ request }) => {
+  test("pushes worktree changes successfully — BUG-2 fixed", async ({
+    request,
+  }) => {
     const response = await request.post(`${BASE}/api/sync/push`);
-    // BUG-2: sync route passes AGENTRACK_CWD (worktree dir) to pushWorktree
-    // which expects the project root. This causes NOT_INITIALIZED.
-    expect(response.status()).toBe(500);
+    // BUG-2 fixed: the sync route now resolves the project root correctly,
+    // so pushWorktree runs against the agentrack repo and succeeds.
+    expect(response.status()).toBe(200);
     const body = await response.json();
-    expect(body.code).toBe("NOT_INITIALIZED");
+    expect(body.synced).toBe(true);
   });
 });
 
 test.describe("Backend: POST /api/sync/pull", () => {
-  test("returns 500 with NOT_INITIALIZED — BUG-2", async ({ request }) => {
+  test("pulls remote changes successfully — BUG-2 fixed", async ({
+    request,
+  }) => {
     const response = await request.post(`${BASE}/api/sync/pull`);
-    // BUG-2: Same root cause — AGENTRACK_CWD is the worktree dir
-    // but pullWorktree expects the project root.
-    expect(response.status()).toBe(500);
+    // BUG-2 fixed: the sync route now resolves the project root correctly,
+    // so pullWorktree runs against the agentrack repo and succeeds.
+    // `updated` reflects whether remote had new commits; false is a valid
+    // success (worktree already up-to-date).
+    expect(response.status()).toBe(200);
     const body = await response.json();
-    expect(body.code).toBe("NOT_INITIALIZED");
+    expect(typeof body.updated).toBe("boolean");
   });
 });
 
@@ -623,7 +629,7 @@ test.describe("Frontend: Sync Buttons", () => {
     ).toBeVisible({ timeout: 10000 });
   });
 
-  test("Push button triggers sync push API call — BUG-2 causes failure", async ({
+  test("Push button triggers sync push API call — succeeds (BUG-2 fixed)", async ({
     page,
   }) => {
     await gotoAndWaitForIssues(page);
@@ -635,12 +641,14 @@ test.describe("Frontend: Sync Buttons", () => {
     await page.getByRole("button", { name: /Push/ }).click();
     const pushResponse = await pushPromise;
 
-    // BUG-2: Sync returns 500 because AGENTRACK_CWD is the worktree
-    // directory, not the project root.
-    expect(pushResponse.status()).toBe(500);
+    // BUG-2 fixed: the sync route resolves the project root correctly,
+    // so push succeeds.
+    expect(pushResponse.status()).toBe(200);
+    const pushBody = await pushResponse.json();
+    expect(pushBody.synced).toBe(true);
   });
 
-  test("Pull button triggers sync pull API call — BUG-2 causes failure", async ({
+  test("Pull button triggers sync pull API call — succeeds (BUG-2 fixed)", async ({
     page,
   }) => {
     await gotoAndWaitForIssues(page);
@@ -652,17 +660,21 @@ test.describe("Frontend: Sync Buttons", () => {
     await page.getByRole("button", { name: /Pull/ }).click();
     const pullResponse = await pullPromise;
 
-    // BUG-2: Same root cause as push.
-    expect(pullResponse.status()).toBe(500);
+    // BUG-2 fixed: same root cause as push, now resolved.
+    // `updated` may be false when the worktree is already up-to-date,
+    // which is still a successful pull.
+    expect(pullResponse.status()).toBe(200);
+    const pullBody = await pullResponse.json();
+    expect(typeof pullBody.updated).toBe("boolean");
   });
 
-  test("buttons re-enable after failed sync", async ({ page }) => {
+  test("buttons re-enable after successful sync", async ({ page }) => {
     await gotoAndWaitForIssues(page);
 
     const pushBtn = page.getByRole("button", { name: /Push/ });
     const pullBtn = page.getByRole("button", { name: /Pull/ });
 
-    // Click push — will fail
+    // Click push — succeeds now that BUG-2 is fixed
     const pushPromise = page.waitForResponse(
       (resp) => resp.url().includes("/api/sync/push"),
       { timeout: 10000 }
@@ -670,7 +682,7 @@ test.describe("Frontend: Sync Buttons", () => {
     await pushBtn.click();
     await pushPromise;
 
-    // After error clears (3s timeout in Header), buttons should be enabled
+    // After sync completes, buttons should re-enable
     await expect(pushBtn).toBeEnabled({ timeout: 5000 });
     await expect(pullBtn).toBeEnabled({ timeout: 5000 });
   });

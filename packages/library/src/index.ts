@@ -46,6 +46,7 @@ export type {
   ComputedIssue,
   ConfigFile,
   CreationEvent,
+  CustomEvent,
   DependenciesFile,
   Event,
   IndexEntry,
@@ -57,11 +58,13 @@ export type {
   MentionResult,
   MentionsFile,
   MentionViewResult,
+  ReservedEventType,
   UpdateEvent,
   UserEntry,
   UserInfo,
   UsersFile,
 } from "./types";
+export { RESERVED_EVENT_TYPES, isReservedEventType } from "./types";
 // All response types
 export type {
   BlockagesAddParams,
@@ -80,6 +83,10 @@ export type {
   CommentUpdateResult,
   CreateParams,
   CreateResult,
+  EventsAddParams,
+  EventsAddResult,
+  EventsListParams,
+  EventsListResult,
   HistoryResult,
   InitResult,
   IssueDeleteParams,
@@ -95,6 +102,7 @@ export type {
   UpdateParams,
   UpdateResult,
   UsersListResult,
+  UsersRegenerateParams,
   UsersRegenerateResult,
   UsersRegisterResult,
   UsersRevokeResult,

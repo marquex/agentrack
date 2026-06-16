@@ -27,9 +27,9 @@ A feature spans both the platform dev team and the quant research team. The PM m
 ## Expected Output
 
 ```
-Epic: "Add crypto data feed and crypto trading strategy" (tag: epic, assigned: project-manager, status: in-progress)
+Epic: "Add crypto data feed and crypto trading strategy" (tag: epic, assigned: project-manager, status: todo)
 │
-├── Feature: "Crypto market data feed" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Crypto market data feed" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Design crypto data feed architecture" (tag: task, assigned: platform-architect, status: todo, phase: planning)
 │   ├── Task: "Review data feed design for strategy needs" (tag: task, assigned: quant-researcher, status: todo)
 │   │   └── Blocked by "Design" task (can't review until architect produces the design)
@@ -42,7 +42,7 @@ Epic: "Add crypto data feed and crypto trading strategy" (tag: epic, assigned: p
 │   ├── Task: "Release crypto data feed" (tag: task, assigned: platform-releaser, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
 │
-├── Feature: "Crypto trading strategy" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Crypto trading strategy" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Plan crypto trading strategy" (tag: task, assigned: quant-researcher, status: todo, phase: planning)
 │   │   └── Blocked by platform feature "Release" task (can't plan strategy until data feed is available)
 │   ├── Task: "Implement crypto trading strategy" (tag: task, assigned: quant-researcher, status: todo, phase: development)
@@ -89,7 +89,7 @@ Teams are reflected by **assignment** (platform agents vs. research agents), not
 - Each team follows its own phase structure independently after the design is agreed
 - The platform release must complete before research can start planning the strategy
 - Research work has no release phase — strategies go through plan→dev→validate only
-- **PM sets the Epic and both Features to `in-progress`** after creating all children — prevents re-waking. No completion children are created; the status loop completes each Feature when its phase tasks are done, then completes the Epic when both Features are done. See Story 01 for the single-feature lifecycle example.
+- **PM leaves the Epic and both Features at `todo`** after creating all children — the PM does NOT flip them to `in-progress`. The status loop auto-promotes each parent to `in-progress` the moment any of its children starts. No completion children are created; the status loop completes each Feature when its phase tasks are done, then completes the Epic when both Features are done. See Story 01 for the single-feature lifecycle example.
 - Blockages resolve automatically when an agent marks its issue `done`, cascading through the chain across both teams
 
 ## Notes

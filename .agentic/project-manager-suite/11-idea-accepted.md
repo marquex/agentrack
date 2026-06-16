@@ -59,7 +59,7 @@ The PM should:
 13. PM tags Issue #80 as `feature` (it's a new capability)
 14. PM creates implementation children under Issue #80:
     ```
-    Issue #80: "Add risk-adjusted performance metric to backtesting engine" (tag: feature, status: in-progress, assigned: project-manager)
+    Issue #80: "Add risk-adjusted performance metric to backtesting engine" (tag: feature, status: todo, assigned: project-manager)
     ├── Task: "Review: ..." (status: done) ← completed during review
     ├── Task: "Check review decision" (status: done) ← completed
     ├── Task: "Design metric API" (tag: task, assigned: platform-architect, status: todo, phase: planning)

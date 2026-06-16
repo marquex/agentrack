@@ -22,6 +22,21 @@ Read every file related to the task at hand.
 - Prompts: "users page", "register user", "revoke user", "regenerate token", "sync push", "sync pull", "Phase 4"
 - Covers: User management UI + endpoints, sync controls in the Header, known BUG-1/BUG-2.
 
+### Webapp server ports & runtime config
+- File: [webapp-server-ports.expertise.md](webapp-server-ports.expertise.md)
+- Prompts: "which port does the webapp run on", "e2e port", "playwright baseURL", "PORT", "VITE_PORT", "API_PORT", "port 5000 blocked", "AirPlay", "change a webapp port"
+- Covers: Dev vs e2e port layout (dev 3001/3000, e2e 5001/5000), env vars, the macOS AirPlay/port-5000 gotcha that blocks the e2e suite, and the invariants for changing ports.
+
+### Webapp styling, fonts, and theme tokens
+- File: [webapp-styling-and-theme.expertise.md](webapp-styling-and-theme.expertise.md)
+- Prompts: "change the font", "wire up Geist", "fontsource", "font-family", "update theme colors", "shadcn theme tokens", "the UI looks unpolished"
+- Covers: Where base styles live (`index.css` `@layer base`, `main.tsx` side-effect imports), the shadcn theme-token layer, and the pending decision to wire up `@fontsource-variable/geist` (issue `mqh1he4m3q`, child `mqh1hkjvso`).
+
+### Webapp e2e data isolation
+- File: [webapp-e2e-isolation.expertise.md](webapp-e2e-isolation.expertise.md)
+- Prompts: "how does e2e data stay separate from real data", "e2e worktree", "AGENTRACK_CWD", "validation/.e2edata", "resetWorktreeData", "seeds leaked into .agentrack", "tag e2e seeds", "delete seed issues", "isolation hardening", "health cwd", "Layer A / Layer B / Layer C", "cleanupE2ESeeds", "afterAll cleanup", "DELETE issue route", "e2e README"
+- Covers: How the `AGENTRACK_CWD` env var + per-run `resetWorktreeData()` isolate test data, plus the **implemented (2026-06-16, `mqh3ss1nfh`)** three-layer hardening: startup health-cwd assertion (Layer A), self-healing `e2e-seed` tags + `cleanupE2ESeeds()` per-file `test.afterAll` + `DELETE /api/issues/:id` route (Layer B), and `e2e/README.md` invariants (Layer C). Includes the `test.afterAll`-not-a-named-export gotcha.
+
 ### Webapp e2e validation workflow
 - File: [webapp-e2e-validation.expertise.md](webapp-e2e-validation.expertise.md)
 - Prompts: "run e2e tests", "validate a phase", "playwright", "test regression", "baseline comparison", "flaky test", "workers", "parallel", "serialize the suite"

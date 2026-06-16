@@ -93,7 +93,7 @@ The PM should:
 23. PM marks sync tracker as `done`
 24. Based on the agreed solution, PM creates the prerequisite Feature:
     ```
-    Feature: "Add slippage model to backtesting engine" (tag: feature, assigned: project-manager, status: in-progress)
+    Feature: "Add slippage model to backtesting engine" (tag: feature, assigned: project-manager, status: todo)
     ├── Task: "Design slippage model architecture" (tag: task, assigned: platform-architect, status: todo, phase: planning)
     ├── Task: "Implement slippage model" (tag: task, assigned: platform-developer, status: todo, phase: development)
     │   └── Blocked by "Design" task
@@ -123,7 +123,7 @@ The PM should:
 - It uses the same review task + sync tracker pattern: ask the expert, validate with the consumer, then act
 - It communicates clearly at every step — the researcher knows what's happening with their blocker
 - It sets up proper blockages so the original issue will resume automatically after the prerequisite is done
-- **PM sets new Feature to `in-progress`** after creating children + sync tracker
+- **PM leaves the new Feature at `todo`** after creating children + sync tracker — the status loop promotes it to `in-progress` when a child starts
 
 ## Notes
 - The PM should trust the researcher's assessment that the backtesting bias is a platform limitation

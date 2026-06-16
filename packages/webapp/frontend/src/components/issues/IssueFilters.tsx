@@ -13,12 +13,15 @@ import { Button } from "@/components/ui/button";
 
 interface IssueFiltersProps {
   filters: Filters;
-  onFiltersChange: (filters: Filters) => void;
+  searchInput: string;
+  onSetFilters: (partial: Filters) => void;
+  onSearchChange: (value: string) => void;
+  onClearFilters: () => void;
 }
 
 const STATUS_OPTIONS: { value: string; label: string }[] = [
-  { value: "all", label: "All statuses" },
   { value: "open", label: "Open" },
+  { value: "all", label: "All statuses" },
   { value: "idea", label: "Idea" },
   { value: "todo", label: "Todo" },
   { value: "in-progress", label: "In Progress" },
@@ -26,16 +29,23 @@ const STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "closed", label: "Closed" },
 ];
 
-export function IssueFilters({ filters, onFiltersChange }: IssueFiltersProps) {
+const STATUS_LABEL: Record<string, string> = Object.fromEntries(
+  STATUS_OPTIONS.map((opt) => [opt.value, opt.label]),
+);
+
+export function IssueFilters({
+  filters,
+  searchInput,
+  onSetFilters,
+  onSearchChange,
+  onClearFilters,
+}: IssueFiltersProps) {
   const { data: users } = useUsers();
 
-  function hasActiveFilters(): boolean {
-    return !!filters.status || !!filters.assignee || !!filters.search;
-  }
-
-  function clearFilters() {
-    onFiltersChange({});
-  }
+  const hasActiveFilters =
+    !!filters.search ||
+    !!filters.assignee ||
+    (!!filters.status && filters.status !== "open");
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -48,10 +58,8 @@ export function IssueFilters({ filters, onFiltersChange }: IssueFiltersProps) {
         <Input
           id="search-filter"
           placeholder="Search issues..."
-          value={filters.search ?? ""}
-          onChange={(e) =>
-            onFiltersChange({ ...filters, search: e.target.value || undefined })
-          }
+          value={searchInput}
+          onChange={(e) => onSearchChange(e.target.value)}
           aria-label="Search issues"
           className="h-8 w-56 pl-8"
         />
@@ -64,16 +72,18 @@ export function IssueFilters({ filters, onFiltersChange }: IssueFiltersProps) {
         </label>
         <Select
           id="status-filter"
-          value={filters.status ?? "all"}
+          value={filters.status ?? "open"}
           onValueChange={(value) =>
-            onFiltersChange({
-              ...filters,
-              status: !value || value === "all" ? undefined : value,
+            onSetFilters({
+              status:
+                !value || value === "open"
+                  ? undefined
+                  : value,
             })
           }
         >
           <SelectTrigger className="w-40">
-            <SelectValue />
+            <SelectValue>{(value: string) => STATUS_LABEL[value] ?? value}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {STATUS_OPTIONS.map((opt) => (
@@ -94,14 +104,15 @@ export function IssueFilters({ filters, onFiltersChange }: IssueFiltersProps) {
           id="assignee-filter"
           value={filters.assignee ?? "all"}
           onValueChange={(value) =>
-            onFiltersChange({
-              ...filters,
+            onSetFilters({
               assignee: !value || value === "all" ? undefined : value,
             })
           }
         >
           <SelectTrigger className="w-40">
-            <SelectValue />
+            <SelectValue>
+              {(value: string) => (value === "all" ? "All assignees" : value)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All assignees</SelectItem>
@@ -115,8 +126,8 @@ export function IssueFilters({ filters, onFiltersChange }: IssueFiltersProps) {
       </div>
 
       {/* Clear filters */}
-      {hasActiveFilters() && (
-        <Button variant="ghost" size="sm" onClick={clearFilters}>
+      {hasActiveFilters && (
+        <Button variant="ghost" size="sm" onClick={onClearFilters}>
           <X className="mr-1 h-3 w-3" />
           Clear
         </Button>

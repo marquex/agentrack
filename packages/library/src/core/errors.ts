@@ -67,4 +67,6 @@ export const ErrorCodes = {
   MENTION_NOT_FOUND: { result: "MENTION_NOT_FOUND", exitCode: 20 },
   /** Authenticated user is not the mentioned user (for read/unread commands). */
   MENTION_ACCESS_DENIED: { result: "MENTION_ACCESS_DENIED", exitCode: 21 },
+  /** Custom event type collides with a reserved agentrack event type. */
+  RESERVED_EVENT_TYPE: { result: "RESERVED_EVENT_TYPE", exitCode: 22 },
 } as const;

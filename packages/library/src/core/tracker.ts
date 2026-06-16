@@ -20,6 +20,10 @@ import type {
   CreateResult,
   DependenciesFile,
   Event,
+  EventsAddParams,
+  EventsAddResult,
+  EventsListParams,
+  EventsListResult,
   HistoryResult,
   IndexEntry,
   IndexFile,
@@ -43,11 +47,13 @@ import type {
   UserEntry,
   UsersFile,
   UsersListResult,
+  UsersRegenerateParams,
   UsersRegenerateResult,
   UsersRegisterResult,
   UsersRevokeResult,
   ViewResult,
 } from "../types";
+import { isReservedEventType, isUpdateEvent } from "../types";
 import { resolveAuthor } from "./auth";
 import { ErrorCodes, AgentrackError } from "./errors";
 import { appendEvent, computeComments, computeState, replayEvents } from "./events";
@@ -808,7 +814,7 @@ export class Tracker {
           );
           for (const promo of promotions) {
             const promoEntry = findEntry(updatedIndex, promo.issueId);
-            if (promoEntry && promo.event.type === "update" && promo.event.content.status) {
+            if (promoEntry && isUpdateEvent(promo.event) && promo.event.content.status) {
               await appendEvent(join(trackerDir, promoEntry.path), promo.event);
               updatedIndex = updateEntry(updatedIndex, promo.issueId, {
                 status: promo.event.content.status,
@@ -839,7 +845,7 @@ export class Tracker {
           );
           for (const promo of promotions) {
             const promoEntry = findEntry(updatedIndex, promo.issueId);
-            if (promoEntry && promo.event.type === "update" && promo.event.content.status) {
+            if (promoEntry && isUpdateEvent(promo.event) && promo.event.content.status) {
               await appendEvent(join(trackerDir, promoEntry.path), promo.event);
               updatedIndex = updateEntry(updatedIndex, promo.issueId, {
                 status: promo.event.content.status,
@@ -887,26 +893,29 @@ export class Tracker {
   }
 
   /**
-   * Get the raw event history for an issue.
+   * Get the raw events for an issue, optionally filtered by type.
    *
-   * Returns the complete array of events stored in the issue file,
-   * in chronological order from creation to latest.
+   * Returns the complete array of events stored in the issue file in
+   * chronological order. When `params.type` is provided, the result is filtered
+   * to events whose `type` equals it exactly (reserved or custom).
    *
    * @param id - The issue ID to look up
-   * @returns Array of events, or a AgentrackError
+   * @param params - Optional parameters
+   * @param params.type - Optional exact-match type filter
+   * @returns Array of events, or an AgentrackError
    * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
    * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
    * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
    *
    * @example
    * ```typescript
-   * const events = await tracker.history("abc123def4");
+   * const events = await tracker.eventsList("abc123def4", { type: "comment" });
    * if (Array.isArray(events)) {
    *   for (const event of events) console.log(event.type, event.timestamp);
    * }
    * ```
    */
-  async history(id: IssueId): Promise<HistoryResult> {
+  async eventsList(id: IssueId, params: EventsListParams = {}): Promise<EventsListResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
       throw new AgentrackError(
@@ -942,7 +951,127 @@ export class Tracker {
       );
     }
 
-    return replayEvents(issueFilePath);
+    const events = await replayEvents(issueFilePath);
+    if (params.type !== undefined) {
+      return events.filter((event) => event.type === params.type);
+    }
+    return events;
+  }
+
+  /**
+   * Append a custom event to an issue's event log.
+   *
+   * The event `type` must be a non-empty string that does not collide with a
+   * reserved agentrack event type (see {@link RESERVED_EVENT_TYPES}). The
+   * `content` must be a plain JSON object. Agentrack auto-attaches the
+   * `timestamp` (ISO 8601) and the resolved `author`. Custom events are never
+   * interpreted by state computation, but they DO bump `updatedAt`.
+   *
+   * @param id - The issue ID to append to
+   * @param params - Event parameters
+   * @param params.type - Caller-chosen event type; must not be reserved
+   * @param params.content - Arbitrary JSON object payload
+   * @param params.author - Override author (resolved by auth layer if not provided)
+   * @returns `{ result: "OK" }` on success, or an AgentrackError
+   * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
+   * @throws {AgentrackError} NOT_FOUND if issue ID is not in the index
+   * @throws {AgentrackError} ISSUE_MISSING if index entry exists but file is missing
+   *
+   * @example
+   * ```typescript
+   * await tracker.eventsAdd("abc123def4", {
+   *   type: "label.added",
+   *   content: { label: "bug" },
+   * });
+   * ```
+   */
+  async eventsAdd(id: IssueId, params: EventsAddParams): Promise<EventsAddResult> {
+    const trackerDir = resolveTrackerDir(this.cwd);
+    if (!trackerDir) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_INITIALIZED.result,
+        "No .agentrack/ directory found. Run `agt init` first.",
+        ErrorCodes.NOT_INITIALIZED.exitCode,
+      );
+    }
+
+    const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
+    const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
+    const authResult = resolveAuthor({ config, users, requiresWrite: true });
+    if (authResult instanceof AgentrackError) return authResult;
+    const author = params.author ?? authResult.author;
+
+    const index = await readIndex(trackerDir);
+    const entry = findEntry(index, id);
+    if (!entry) {
+      throw new AgentrackError(
+        ErrorCodes.NOT_FOUND.result,
+        `Issue \`${id}\` not found in index.`,
+        ErrorCodes.NOT_FOUND.exitCode,
+      );
+    }
+
+    const issueFilePath = join(trackerDir, entry.path);
+    if (!existsSync(issueFilePath)) {
+      throw new AgentrackError(
+        ErrorCodes.ISSUE_MISSING.result,
+        `Issue file for \`${id}\` is missing.`,
+        ErrorCodes.ISSUE_MISSING.exitCode,
+      );
+    }
+
+    // Validate type
+    if (typeof params.type !== "string" || params.type.trim().length === 0) {
+      return new AgentrackError(
+        ErrorCodes.INVALID_PARAMS.result,
+        "Event `type` must be a non-empty string.",
+        ErrorCodes.INVALID_PARAMS.exitCode,
+      );
+    }
+    if (isReservedEventType(params.type)) {
+      return new AgentrackError(
+        ErrorCodes.RESERVED_EVENT_TYPE.result,
+        `Event type \`${params.type}\` is reserved by agentrack. Choose a non-reserved, namespaced type (e.g. \`label.added\`).`,
+        ErrorCodes.RESERVED_EVENT_TYPE.exitCode,
+      );
+    }
+
+    // Validate content — must be a plain object (not null, not array)
+    if (
+      typeof params.content !== "object" ||
+      params.content === null ||
+      Array.isArray(params.content)
+    ) {
+      return new AgentrackError(
+        ErrorCodes.INVALID_PARAMS.result,
+        "Event `content` must be a plain JSON object.",
+        ErrorCodes.INVALID_PARAMS.exitCode,
+      );
+    }
+
+    const customEvent = {
+      type: params.type,
+      timestamp: new Date().toISOString(),
+      author,
+      content: params.content,
+    };
+
+    await appendEvent(issueFilePath, customEvent);
+
+    return { result: "OK" };
+  }
+
+  /**
+   * Get the raw event history for an issue.
+   *
+   * @deprecated Use {@link Tracker.eventsList} instead. This is a back-compat
+   * alias that delegates to `eventsList` with no type filter.
+   *
+   * @param id - The issue ID to look up
+   * @returns Array of events, or an AgentrackError
+   */
+  async history(id: IssueId): Promise<HistoryResult> {
+    return this.eventsList(id);
   }
 
   /**
@@ -1869,18 +1998,27 @@ export class Tracker {
    * Self-service only — the authenticated caller must be the target user.
    * Generates a new token and replaces the old one in the users file.
    *
+   * In open-auth mode the ambient `AGT_USER_TOKEN` env var is typically absent,
+   * so the caller should pass an explicit `token` to prove identity and avoid
+   * the self-service check failing against the default ("anonymous") user.
+   *
    * @param name - The user name whose token to regenerate (case-insensitive)
+   * @param params - Optional parameters
+   * @param params.token - Explicit token to authenticate the caller (overrides `AGT_USER_TOKEN`)
    * @returns `{ result: "OK", name, token }` with the new token, or an error result
    * @throws {AgentrackError} NOT_INITIALIZED if no `.agentrack/` directory
    * @throws {AgentrackError} TOKEN_REQUIRED if no token provided
    *
    * @example
    * ```typescript
-   * const result = await tracker.usersRegenerate("alice");
+   * const result = await tracker.usersRegenerate("alice", { token: "tk_abc12345" });
    * if ("token" in result) console.log("New token:", result.token);
    * ```
    */
-  async usersRegenerate(name: string): Promise<UsersRegenerateResult> {
+  async usersRegenerate(
+    name: string,
+    params?: UsersRegenerateParams,
+  ): Promise<UsersRegenerateResult> {
     const trackerDir = resolveTrackerDir(this.cwd);
     if (!trackerDir) {
       throw new AgentrackError(
@@ -1892,7 +2030,12 @@ export class Tracker {
 
     const config = await readJSON<ConfigFile>(join(trackerDir, "config.json"));
     const users = await readJSON<UsersFile>(join(trackerDir, "users.json"));
-    const authResult = resolveAuthor({ config, users, requiresWrite: true });
+    const authResult = resolveAuthor({
+      config,
+      users,
+      requiresWrite: true,
+      ...(params?.token !== undefined ? { token: params.token } : {}),
+    });
     if (authResult instanceof AgentrackError) {
       throw authResult;
     }

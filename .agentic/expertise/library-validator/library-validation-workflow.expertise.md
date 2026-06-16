@@ -26,12 +26,35 @@ On `/work-issue`, if the implementation sibling is still `todo`/`in-progress`, t
 
 Once the implementation sibling is `done`, validate by:
 - Reading the implementation issue's comments for what was delivered and any caveats.
-- Reading the changed source to confirm the signature/behavior matches the design.
-- Running the library's unit tests (verify exact command in the repo; the library shares code with the CLI in `packages/library/`).
+- Reading the changed source (`git diff <file>` plus reading the file) to confirm the signature/behavior matches the design.
+- Running the library's quality checks: **typecheck, lint, then tests** (commands below).
 - Checking backward compatibility — existing callers/signatures must still work.
 - Reporting results in a comment, setting `done` on success (reassign to manager) or reporting issues.
 
-> Note: the command for running library tests and the full test layout should be re-verified from the repo on the first unblocked validation; this expertise was bootstrapped from a session that never reached the unblocked state.
+### Library quality-check commands
+
+Run from inside `packages/library/` (the scripts live in `packages/library/package.json`):
+
+- Tests: `bun test` (script `test`). Also `test:coverage` = `bun test --coverage`, and `test:watch`.
+- Typecheck: `bun run typecheck` → runs `tsc --noEmit`.
+- Lint: `bun run lint` → runs `eslint src/ tests/`.
+
+A normal unblocked validation runs all three: typecheck, lint, `bun test`. Demonstrated 2026-06-16 (typecheck + lint clean; the test run started but the session was interrupted before results — see timeline).
+
+### Pitfall: shell cwd persists across Bash calls
+
+The Bash tool keeps the working directory across calls within a session. If you `cd packages/library && ...` once, a later `cd packages/library && ...` fails with `no such file or directory: packages/library` because you're already there.
+
+Recovery shown 2026-06-16: run `pwd && ls` to confirm where you are, then drop the `cd` prefix on subsequent commands. Prefer checking `pwd` once at the start of the quality-check phase rather than prefixing every command with `cd packages/library`.
+
+### Inspecting the real dogfood `.agentrack/` tracker
+
+Sometimes a human asks the library-validator an advisory question about the real dogfood tracker (e.g. "did you create test data in `.agentrack/`?"). To answer, you must inspect the live tracker — but there are access and CLI constraints to know about first.
+
+- **`library-validator` has no access rule covering `.agentrack/`.** A direct `ls .agentrack/...` / file read returns `agent 'library-validator' has no access rule covering '.agentrack'`. Don't treat this as a dead end: route through the `agt` CLI instead, which the agent is allowed to run.
+- Useful inspection commands: `agt list` (JSON issue list), `agt users list` (JSON user list), `agt me` (current resolved user). Pipe through `head`/`python3 -c`/`grep` to slice the JSON.
+- **`agt list` has no `--limit` flag** (`error: unknown option '--limit'`). Use `agt list | head -N` to bound output. Run `agt <command> --help` if unsure which flags exist.
+- This agent's own validation work does **not** seed fixture data into the real tracker — library tests run via `bun test` in `packages/library/` with isolated fixtures. So if you see test pollution in `.agentrack/`, it almost certainly came from another agent/suite (observed 2026-06-16: webapp E2E test data was the source — see timeline).
 
 ## Auth & user model in the library
 
@@ -49,9 +72,11 @@ The validator has already needed to reason about the auth/user subsystem. Key pi
 ## Timeline
 
 - 2026-06-14: Bootstrapped from a blocked validation session. The agent verified `usersRegenerate` had no token-override option in code, reported the active blockage against `mqe2745ekb`, and reassigned to `project-manager`. See timeline for details.
+- 2026-06-16: First **unblocked** validation (`mqe2xmdugp`, worktree sync push/pull). Captured the real quality-check commands (typecheck/lint/`bun test`) and the persistent-shell-cwd pitfall. Session was interrupted during the test run before completion. See timeline for details.
+- 2026-06-16: Advisory session on dogfood-tracker pollution. Captured the `.agentrack/` access restriction (use `agt` CLI, not direct file reads) and the `agt list --limit` invalid-flag gotcha. See timeline for details.
 
 ## Gaps And Validation Needs
 
-- **Exact test command for the library is not yet known.** The bootstrapping session was blocked and never ran tests. On the first unblocked validation, capture the real command (likely under `packages/library/`) and update this file.
 - **Line numbers for `usersRegenerate` / `resolveAuthor` are point-in-time (2026-06-14).** Re-read `packages/library/src/core/tracker.ts` and `packages/library/src/core/auth.ts` before citing them.
 - **Token override design details** (exact option shape, whether open-mode relaxes the self-service check) should be confirmed against the implementation issue comments and the landed code, not assumed from this pre-implementation session.
+- **The 2026-06-16 worktree-sync validation was interrupted before `bun test` returned.** The full test result for that change is unknown — the next run should re-run `bun test` and confirm the sync push/pull behavior end-to-end (the dev task also noted phase4 tests still needed updating by `webapp-developer`).

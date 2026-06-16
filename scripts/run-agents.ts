@@ -13,6 +13,10 @@
  * real session id (prefix) in the TUI.
  *
  * Displays a live TUI showing each agent's status.
+ *
+ * Press `q` for a graceful stop: the loops stop taking new work, but running
+ * agents finish on their own, and once all are free the runner exits. Press
+ * Ctrl+C to hard-kill running agents immediately and exit at once.
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -202,6 +206,8 @@ function launchAgent(
     agent.process = null;
     if (finishedSessionId) killObservableTail(finishedSessionId);
     render();
+    // If we're draining and this was the last busy agent, the runner is done.
+    maybeFinishAfterDrain();
   });
 }
 
@@ -280,9 +286,16 @@ function render(): void {
 
   lines.push("");
   lines.push(sep);
-  lines.push(
-    `  Next poll in ${Math.max(0, Math.ceil((nextPollAt - now) / 1000))}s  |  Status in ${formatCountdown(nextStatusAt, now)}  |  Ideas in ${formatCountdown(nextIdeasAt, now)}  |  Ctrl+C to stop`,
-  );
+  if (draining) {
+    const busyCount = agents.filter((a) => a.status === "busy").length;
+    lines.push(
+      `  \x1b[33mDraining\x1b[0m — no new work taken, waiting for ${busyCount} agent(s) to finish  |  Ctrl+C to force-kill`,
+    );
+  } else {
+    lines.push(
+      `  Next poll in ${Math.max(0, Math.ceil((nextPollAt - now) / 1000))}s  |  Status in ${formatCountdown(nextStatusAt, now)}  |  Ideas in ${formatCountdown(nextIdeasAt, now)}  |  q graceful stop  |  Ctrl+C force-kill`,
+    );
+  }
   lines.push("");
 
   process.stdout.write(lines.join("\n"));
@@ -292,9 +305,17 @@ function render(): void {
 // Poll loop
 // ---------------------------------------------------------------------------
 
+/**
+ * Graceful-drain flag. Set by pressing `q` (see the raw stdin handler in Main):
+ * the work/status/ideas loops stop taking new work, but running agents are left
+ * alone to finish. Once every agent is free again, the runner exits cleanly.
+ */
+let draining = false;
+
 let nextPollAt = Date.now();
 
 async function poll(): Promise<void> {
+  if (draining) return; // graceful drain: stop taking new work
   for (const agent of agents) {
     if (agent.status === "busy") continue;
 
@@ -346,9 +367,44 @@ function getProjectManager(): AgentState {
   return pm;
 }
 
+/**
+ * Promote `todo` parents to `in-progress` once any of their children has started
+ * (status `in-progress` or `done`). A parent parked in `todo` while its children
+ * are already underway is stale — move it along so the queue reflects reality.
+ *
+ * Handled in-process (no agent spawn): the index already exposes each child's
+ * `parentId`, so this is just two list() calls and a set intersection.
+ */
+async function moveParentsToInProgress(): Promise<void> {
+  // Collect the parent ids of every child already underway or finished.
+  const activeParentIds = new Set<string>();
+  for (const status of ["in-progress", "done"] as const) {
+    const children = await tracker.list({ status });
+    if (!Array.isArray(children)) continue;
+    for (const child of children) {
+      if (child.parentId) activeParentIds.add(child.parentId);
+    }
+  }
+  if (activeParentIds.size === 0) return;
+
+  // Promote any `todo` parent that owns an active child.
+  const todo = await tracker.list({ status: "todo" });
+  if (!Array.isArray(todo)) return;
+  for (const parent of todo) {
+    if (activeParentIds.has(parent.id)) {
+      await tracker.update(parent.id, { status: "in-progress" });
+    }
+  }
+}
+
 /** Wake the PM to fix sick in-progress issues. Gated on a cheap pre-check + PM free. */
 async function runStatusLoop(): Promise<void> {
+  if (draining) return; // graceful drain: skip PM status wake-ups
   nextStatusAt = Date.now() + STATUS_INTERVAL_MS;
+
+  // Promote stale todo parents whose children have already started. Pure library
+  // work — no agent needed, so it runs every status tick regardless of PM state.
+  await moveParentsToInProgress();
 
   // Cheap pre-check: only in-progress issues can become sick. Empty list => skip the spawn.
   const inProgress = await tracker.list({ status: "in-progress" });
@@ -369,6 +425,7 @@ async function runStatusLoop(): Promise<void> {
 
 /** Wake the PM to triage idea-status issues. Gated on a cheap pre-check + PM free. */
 async function runIdeasLoop(): Promise<void> {
+  if (draining) return; // graceful drain: skip PM ideas wake-ups
   nextIdeasAt = Date.now() + IDEAS_INTERVAL_MS;
 
   // Cheap pre-check: only wake the PM if there are ideas to triage.
@@ -419,21 +476,74 @@ const agents: AgentState[] = users.map((u) => ({
 // Hide cursor
 process.stdout.write("\x1b[?25l");
 
-// Show cursor on exit
-process.on("SIGINT", () => {
-  process.stdout.write("\x1b[?25h\n");
-  // Kill each running agent's claude process AND its observable-agent tail (the
-  // tail is detached, so it would otherwise outlive the runner and leak).
+// Interval handles, so a graceful exit can stop all the timers cleanly.
+const intervalHandles: ReturnType<typeof setInterval>[] = [];
+
+/** Kill every running agent's claude process AND its observable-agent tail. */
+function killAllAgents(): void {
   for (const agent of agents) {
-    if (agent.process) {
-      agent.process.kill();
-    }
-    if (agent.sessionId) {
-      killObservableTail(agent.sessionId);
-    }
+    if (agent.process) agent.process.kill();
+    if (agent.sessionId) killObservableTail(agent.sessionId);
   }
+}
+
+/** Hard stop: restore the cursor, kill everything, exit immediately. */
+function forceExit(): void {
+  process.stdout.write("\x1b[?25h\n");
+  killAllAgents();
   process.exit(0);
-});
+}
+
+/** Graceful exit: stop timers, restore the cursor, exit. Assumes no busy agents. */
+function finishGracefully(): void {
+  for (const handle of intervalHandles) clearInterval(handle);
+  process.stdout.write("\x1b[?25h\n");
+  process.exit(0);
+}
+
+/**
+ * Called whenever the drain state may have advanced. If we're draining and no
+ * agent is busy anymore, the runner has nothing left to wait on — exit cleanly.
+ */
+function maybeFinishAfterDrain(): void {
+  if (!draining) return;
+  if (agents.every((a) => a.status === "free")) finishGracefully();
+}
+
+/**
+ * Begin a graceful drain: loops stop taking new work, running agents keep going.
+ * Pressing `q` again while already draining is a no-op.
+ */
+function gracefulStop(): void {
+  if (draining) return;
+  draining = true;
+  render();
+  maybeFinishAfterDrain(); // nothing was busy — we're already done
+}
+
+// Hard stop on SIGINT (fallback for when stdin isn't a raw TTY — e.g. piped —
+// where the raw-mode keypress handler below never sees the Ctrl+C byte).
+process.on("SIGINT", forceExit);
+
+// Read keys in raw mode so we can bind `q` (graceful drain) and still honor
+// Ctrl+C (0x03) as a hard kill. Raw mode disables ISIG, so Ctrl+C arrives as a
+// byte here rather than raising SIGINT — handle it explicitly to keep the old
+// behavior alongside the new gentle one.
+if (process.stdin.isTTY && typeof process.stdin.setRawMode === "function") {
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  process.stdin.setEncoding("utf-8");
+  process.stdin.on("data", (data: string) => {
+    for (const ch of data) {
+      const code = ch.codePointAt(0);
+      if (ch === "q" || ch === "Q") {
+        gracefulStop();
+      } else if (code === 0x03) {
+        forceExit();
+      }
+    }
+  });
+}
 
 // Initial poll
 await poll();
@@ -445,12 +555,12 @@ await runStatusLoop();
 render();
 
 // Re-render every second (for duration counter updates)
-setInterval(render, 1000);
+intervalHandles.push(setInterval(render, 1000));
 
 // Poll for new work every POLL_INTERVAL_MS
-setInterval(poll, POLL_INTERVAL_MS);
+intervalHandles.push(setInterval(poll, POLL_INTERVAL_MS));
 
 // PM-only periodic loops: status fixes and ideas triage. Both gate on a cheap
 // pre-check + PM being free, so they never collide with the work loop or each other.
-setInterval(runStatusLoop, STATUS_INTERVAL_MS);
-setInterval(runIdeasLoop, IDEAS_INTERVAL_MS);
+intervalHandles.push(setInterval(runStatusLoop, STATUS_INTERVAL_MS));
+intervalHandles.push(setInterval(runIdeasLoop, IDEAS_INTERVAL_MS));

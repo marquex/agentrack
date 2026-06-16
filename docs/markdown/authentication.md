@@ -158,6 +158,8 @@ Output:
 
 Only the user themselves can regenerate their token (the `AGT_USER_TOKEN` must match the user's current token).
 
+> **Library API:** When calling `tracker.usersRegenerate(name, params?)` programmatically in open-auth mode (no `AGT_USER_TOKEN` set), pass `{ token: "tk_…" }` as the second argument to prove the caller's identity. The explicit token overrides the ambient environment variable. This is how the webapp forwards the authenticated session's token.
+
 ## Author field in events
 
 Every mutating action generates an event with an `author` field containing the resolved user name:

@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { issuesApi } from "@/api/issues";
 import type { IssueFilters, CreateIssueData, UpdateIssueData } from "@/types";
 
-export function useIssues(filters: IssueFilters) {
+export function useIssues(filters: IssueFilters, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["issues", filters],
     queryFn: () => issuesApi.list(filters),
+    enabled: options?.enabled ?? true,
   });
 }
 

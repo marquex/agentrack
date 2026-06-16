@@ -18,6 +18,10 @@ export type {
   CommentUpdateResult,
   CreateParams,
   CreateResult,
+  EventsAddParams,
+  EventsAddResult,
+  EventsListParams,
+  EventsListResult,
   HistoryResult,
   InitResult,
   IssueDeleteParams,
@@ -33,6 +37,7 @@ export type {
   UpdateParams,
   UpdateResult,
   UsersListResult,
+  UsersRegenerateParams,
   UsersRegenerateResult,
   UsersRegisterResult,
   UsersRevokeResult,
@@ -57,8 +62,19 @@ export type {
   CommentEvent,
   CommentUpdateEvent,
   CreationEvent,
+  CustomEvent,
   Event,
+  ReservedEventType,
   UpdateEvent,
+} from "./event";
+export {
+  RESERVED_EVENT_TYPES,
+  isCommentDeleteEvent,
+  isCommentEvent,
+  isCommentUpdateEvent,
+  isCreationEvent,
+  isReservedEventType,
+  isUpdateEvent,
 } from "./event";
 // Index file types
 export type { IndexEntry, IndexFile } from "./index-file";

@@ -326,14 +326,14 @@ describe("CLI commands", () => {
     });
   });
 
-  describe("history", () => {
+  describe("events list", () => {
     test("returns raw event array", async () => {
       await runCLI("init");
 
       const createResult = JSON.parse((await runCLI("create", "History Test")).stdout.trim());
       const issueId = createResult.id;
 
-      const { stdout, stderr, exitCode } = await runCLI("history", issueId);
+      const { stdout, stderr, exitCode } = await runCLI("events", "list", issueId);
 
       expect(exitCode).toBe(0);
       expect(stderr).toBe("");
@@ -353,7 +353,7 @@ describe("CLI commands", () => {
 
       await runCLI("update", issueId, "--title", "Updated");
 
-      const { stdout, exitCode } = await runCLI("history", issueId);
+      const { stdout, exitCode } = await runCLI("events", "list", issueId);
 
       expect(exitCode).toBe(0);
 
@@ -365,7 +365,7 @@ describe("CLI commands", () => {
     test("prints NOT_FOUND error for non-existent id", async () => {
       await runCLI("init");
 
-      const { stderr, exitCode } = await runCLI("history", "missing12345");
+      const { stderr, exitCode } = await runCLI("events", "list", "missing12345");
 
       expect(exitCode).toBe(5);
 
@@ -382,12 +382,214 @@ describe("CLI commands", () => {
       const issuePath = join(testDir, ".agentrack", "issues", `${issueId}.json`);
       unlinkSync(issuePath);
 
-      const { stderr, exitCode } = await runCLI("history", issueId);
+      const { stderr, exitCode } = await runCLI("events", "list", issueId);
 
       expect(exitCode).toBe(6);
 
       const result = JSON.parse(stderr.trim());
       expect(result.result).toBe("ISSUE_MISSING");
+    });
+
+    test("--type flag filters events by exact type match", async () => {
+      await runCLI("init");
+
+      const createResult = JSON.parse((await runCLI("create", "Filter Test")).stdout.trim());
+      const issueId = createResult.id;
+      // Add two comments + an update to create a mix of event types
+      await runCLI("comments", "add", issueId, "--content", "first");
+      await runCLI("comments", "add", issueId, "--content", "second");
+      await runCLI("update", issueId, "--title", "Updated");
+
+      const { stdout, stderr, exitCode } = await runCLI(
+        "events",
+        "list",
+        issueId,
+        "--type",
+        "comment",
+      );
+
+      expect(exitCode).toBe(0);
+      expect(stderr).toBe("");
+
+      const result = JSON.parse(stdout.trim());
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(2);
+      for (const event of result) expect(event.type).toBe("comment");
+    });
+  });
+
+  describe("events add", () => {
+    test("appends a custom event and round-trips it via events list", async () => {
+      await runCLI("init");
+
+      const createResult = JSON.parse((await runCLI("create", "Custom Test")).stdout.trim());
+      const issueId = createResult.id;
+
+      const { stdout, stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        issueId,
+        '{"type":"label.added","content":{"label":"bug"}}',
+      );
+
+      expect(exitCode).toBe(0);
+      expect(stderr).toBe("");
+
+      const result = JSON.parse(stdout.trim());
+      expect(result).toEqual({ result: "OK" });
+
+      // The custom event is readable via events list
+      const listResult = JSON.parse(
+        (await runCLI("events", "list", issueId, "--type", "label.added")).stdout.trim(),
+      );
+      expect(listResult).toHaveLength(1);
+      expect(listResult[0].type).toBe("label.added");
+      expect(listResult[0].content).toEqual({ label: "bug" });
+      expect(listResult[0].author).toBeDefined();
+      expect(typeof listResult[0].timestamp).toBe("string");
+    });
+
+    test("rejects a reserved type with RESERVED_EVENT_TYPE (exit 22)", async () => {
+      await runCLI("init");
+
+      const createResult = JSON.parse((await runCLI("create", "Res Test")).stdout.trim());
+      const issueId = createResult.id;
+
+      const { stdout, stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        issueId,
+        '{"type":"creation","content":{"x":1}}',
+      );
+
+      expect(exitCode).toBe(22);
+      expect(stdout).toBe("");
+
+      const result = JSON.parse(stderr.trim());
+      expect(result.result).toBe("RESERVED_EVENT_TYPE");
+    });
+
+    test("rejects invalid JSON with INVALID_PARAMS (exit 10)", async () => {
+      await runCLI("init");
+
+      const createResult = JSON.parse((await runCLI("create", "Bad Json")).stdout.trim());
+      const issueId = createResult.id;
+
+      const { stdout, stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        issueId,
+        "not-json",
+      );
+
+      expect(exitCode).toBe(10);
+      expect(stdout).toBe("");
+
+      const result = JSON.parse(stderr.trim());
+      expect(result.result).toBe("INVALID_PARAMS");
+    });
+
+    test("rejects missing type with INVALID_PARAMS (exit 10)", async () => {
+      await runCLI("init");
+
+      const createResult = JSON.parse((await runCLI("create", "No Type")).stdout.trim());
+      const issueId = createResult.id;
+
+      const { stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        issueId,
+        '{"content":{}}',
+      );
+
+      expect(exitCode).toBe(10);
+
+      const result = JSON.parse(stderr.trim());
+      expect(result.result).toBe("INVALID_PARAMS");
+    });
+
+    test("rejects array content with INVALID_PARAMS (exit 10)", async () => {
+      await runCLI("init");
+
+      const createResult = JSON.parse((await runCLI("create", "Arr Content")).stdout.trim());
+      const issueId = createResult.id;
+
+      const { stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        issueId,
+        '{"type":"x","content":[1,2,3]}',
+      );
+
+      expect(exitCode).toBe(10);
+
+      const result = JSON.parse(stderr.trim());
+      expect(result.result).toBe("INVALID_PARAMS");
+    });
+
+    test("rejects a non-object payload with INVALID_PARAMS (exit 10)", async () => {
+      await runCLI("init");
+
+      const createResult = JSON.parse((await runCLI("create", "Str Payload")).stdout.trim());
+      const issueId = createResult.id;
+
+      const { stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        issueId,
+        '"a-string"',
+      );
+
+      expect(exitCode).toBe(10);
+
+      const result = JSON.parse(stderr.trim());
+      expect(result.result).toBe("INVALID_PARAMS");
+    });
+
+    test("prints NOT_FOUND when adding to a non-existent issue", async () => {
+      await runCLI("init");
+
+      const { stdout, stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        "missing12345",
+        '{"type":"x","content":{}}',
+      );
+
+      expect(exitCode).toBe(5);
+      expect(stdout).toBe("");
+
+      const result = JSON.parse(stderr.trim());
+      expect(result.result).toBe("NOT_FOUND");
+    });
+
+    test("prints error when not initialized", async () => {
+      const { stdout, stderr, exitCode } = await runCLI(
+        "events",
+        "add",
+        "abc1234567",
+        '{"type":"x","content":{}}',
+      );
+
+      expect(exitCode).toBe(1);
+      expect(stdout).toBe("");
+
+      const result = JSON.parse(stderr.trim());
+      expect(result.result).toBe("NOT_INITIALIZED");
+    });
+  });
+
+  describe("history (removed)", () => {
+    test("agt history is no longer a recognized command", async () => {
+      await runCLI("init");
+
+      const { stdout, stderr, exitCode } = await runCLI("history", "abc1234567");
+
+      // commander reports unknown command/description on stderr; non-zero exit.
+      expect(exitCode).not.toBe(0);
+      // It must NOT look like a successful event array on stdout.
+      expect(stdout.trim() === "" || !stdout.trim().startsWith("[")).toBe(true);
+      expect(stderr.length).toBeGreaterThan(0);
     });
   });
 

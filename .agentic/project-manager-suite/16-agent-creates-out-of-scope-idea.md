@@ -64,7 +64,7 @@ The PM should:
 12. PM tags Issue #131 as `chore` (technical improvement, no new user-facing feature — accessibility is an enhancement to existing features)
 13. PM creates implementation children:
     ```
-    Issue #131: "Add screen reader support to all screens" (tag: chore, status: in-progress, assigned: project-manager)
+    Issue #131: "Add screen reader support to all screens" (tag: chore, status: todo, assigned: project-manager)
     ├── Task: "Review: ..." (status: done)
     ├── Task: "Check review decision" (status: done)
     ├── Task: "Plan screen reader support for priority screens" (tag: task, assigned: android-developer, status: todo, phase: planning)

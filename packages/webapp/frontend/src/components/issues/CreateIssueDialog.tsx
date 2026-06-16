@@ -40,7 +40,10 @@ export function CreateIssueDialog({
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<IssueStatus>("idea");
+  // Default to "todo" so newly-created issues appear in the dashboard's default
+  // Open view (todo + in-progress + done). "idea" is hidden by default, which
+  // would make every newly-created issue vanish from the dashboard.
+  const [status, setStatus] = useState<IssueStatus>("todo");
   const [assignee, setAssignee] = useState<string>("__none__");
   const [tags, setTags] = useState("");
   const [priority, setPriority] = useState("3");
@@ -55,7 +58,7 @@ export function CreateIssueDialog({
   function resetForm() {
     setTitle("");
     setDescription("");
-    setStatus("idea");
+    setStatus("todo");
     setAssignee("__none__");
     setTags("");
     setPriority("3");

@@ -29,9 +29,9 @@ The app needs a "real-time order tracking" feature using WebSockets. Unlike REST
 ### What the PM creates (initial state)
 
 ```
-Epic: "Add real-time order tracking" (tag: epic, assigned: project-manager, status: in-progress)
+Epic: "Add real-time order tracking" (tag: epic, assigned: project-manager, status: todo)
 │
-├── Feature: "WebSocket order tracking API" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "WebSocket order tracking API" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Design WebSocket order tracking architecture" (tag: task, assigned: backend-architect, status: todo, phase: planning)
 │   ├── Task: "Review WebSocket architecture for Android integration" (tag: task, assigned: android-developer, status: todo)
 │   │   └── Blocked by "Design" task (can't review until architect produces the architecture)
@@ -44,7 +44,7 @@ Epic: "Add real-time order tracking" (tag: epic, assigned: project-manager, stat
 │   ├── Task: "Deploy order tracking service to staging" (tag: task, assigned: devops-engineer, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
 │
-├── Feature: "Order tracking screen with live updates" (tag: feature, assigned: project-manager, status: in-progress)
+├── Feature: "Order tracking screen with live updates" (tag: feature, assigned: project-manager, status: todo)
 │   ├── Task: "Plan Android WebSocket integration for order tracking" (tag: task, assigned: android-developer, status: todo, phase: planning)
 │   │   └── Blocked by backend Feature's "Deploy" task (can't plan until backend is DEPLOYED TO STAGING —
 │   │        WebSocket integration requires a running backend, not just a contract)

@@ -15,7 +15,12 @@ Read every file related to the task at hand.
 ### usersRegenerate token override
 - File: [users-regenerate-token-override.expertise.md](users-regenerate-token-override.expertise.md)
 - Prompts: "usersRegenerate", "regenerate token", "token override", "add token option to usersRegenerate", "resolveAuthor token", "regenerate returns 401", "open auth mode", "BUG-1"
-- Covers: The agreed (not-yet-implemented) design for adding a `token` option to `usersRegenerate` that forwards into `resolveAuthor`, and its link to the open-auth 401 bug.
+- Covers: The `token` option on `usersRegenerate` (now implemented) that forwards into `resolveAuthor`, fixing the open-auth 401 bug. Source files, issue chain, and remaining test/CLI/webapp follow-ups.
+
+### Library gotchas (TS strictness, access scope)
+- File: [library-gotchas.expertise.md](library-gotchas.expertise.md)
+- Prompts: "exactOptionalPropertyTypes", "TS2379 optional field", "token undefined typecheck", "no access to packages/cli", "sandbox /dev/null"
+- Covers: Reusable traps — the `exactOptionalPropertyTypes` conditional-spread pattern for forwarding optional params, library-developer's access scope (only `packages/library/src`), and the `/dev/null` sandbox rejection.
 
 ### Work timeline
 - File: [timeline.expertise.md](timeline.expertise.md)

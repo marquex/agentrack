@@ -30,7 +30,7 @@ A bug is reported and needs to go through a 3-phase lifecycle adapted for fronte
 ### What the PM creates (initial state)
 
 ```
-Bug: "Fix crash on orientation change during checkout" (tag: bug, assigned: project-manager, status: in-progress)
+Bug: "Fix crash on orientation change during checkout" (tag: bug, assigned: project-manager, status: todo)
 ├── Task: "Reproduce and diagnose orientation change crash on checkout" (tag: task, assigned: android-validator, status: todo, phase: reproduction)
 ├── Task: "Implement fix for orientation change crash" (tag: task, assigned: android-developer, status: todo, phase: development)
 │   └── Blocked by Task 1
@@ -41,11 +41,11 @@ Bug: "Fix crash on orientation change during checkout" (tag: bug, assigned: proj
 ### What happens after — status transitions (driven by worker agents)
 
 ```
-PM sets parent → in-progress (after creating all children)
+Parent stays at todo (PM does NOT flip it)
        │
        ▼
 Step 1: Work loop wakes android-validator (Child 1 is todo, unblocked)
-  → Validator sets Child 1: todo → in-progress
+  → Validator sets Child 1: todo → in-progress (status loop auto-promotes the Bug parent todo → in-progress)
   → Validator reproduces the crash across devices, analyzes the code, finds root cause
   → Validator sets Child 1: in-progress → done
   → Validator adds comment: "Reproduced. Crash occurs when rotating from portrait

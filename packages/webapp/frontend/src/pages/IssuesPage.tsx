@@ -3,10 +3,11 @@ import { IssueList } from "@/components/issues/IssueList";
 import { IssueFilters } from "@/components/issues/IssueFilters";
 import { CreateIssueDialog } from "@/components/issues/CreateIssueDialog";
 import { AppLayout } from "@/components/layout/AppLayout";
-import type { IssueFilters as Filters } from "@/types";
+import { useIssueFilters } from "@/hooks/use-issue-filters";
 
 export function IssuesPage() {
-  const [filters, setFilters] = useState<Filters>({});
+  const { filters, setFilters, setSearch, searchInput, clearFilters } =
+    useIssueFilters();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   return (
@@ -24,7 +25,13 @@ export function IssuesPage() {
             onOpenChange={setShowCreateDialog}
           />
         </div>
-        <IssueFilters filters={filters} onFiltersChange={setFilters} />
+        <IssueFilters
+          filters={filters}
+          onSetFilters={setFilters}
+          onSearchChange={setSearch}
+          searchInput={searchInput}
+          onClearFilters={clearFilters}
+        />
         <IssueList filters={filters} onCreateIssue={() => setShowCreateDialog(true)} />
       </div>
     </AppLayout>

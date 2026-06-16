@@ -130,4 +130,18 @@ issues.patch("/:id", async (c) => {
   return c.json({ result: "OK" });
 });
 
+// DELETE /api/issues/:id — hard-delete an issue and its descendants.
+// Used by the E2E self-healing seed cleanup; the library's issueDelete is the
+// same primitive that powers `agt delete`.
+issues.delete("/:id", async (c) => {
+  const id = c.req.param("id");
+  const result = await tracker.issueDelete(id);
+
+  if ("result" in result && "message" in result && result.result !== "OK") {
+    throw Object.assign(new Error((result as { message: string }).message), result);
+  }
+
+  return c.json(result);
+});
+
 export default issues;

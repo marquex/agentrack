@@ -113,3 +113,52 @@ export function ensureE2EWorktree(): void {
     });
   }
 }
+
+/**
+ * The tag stamped on every E2E-created issue so the suite can self-heal:
+ * leftover seeds from an interrupted run are discovered and deleted rather
+ * than accumulating in the shared worktree. See packages/webapp/e2e/README.md.
+ */
+export const E2E_SEED_TAG = "e2e-seed";
+
+/**
+ * Backend base URL. Playwright always boots the backend on port 5001
+ * (see playwright.config.ts) — distinct from the dev port 3001.
+ */
+const E2E_BACKEND_URL =
+  process.env.E2E_BACKEND_URL ?? "http://localhost:5001";
+
+/**
+ * Remove every issue tagged with the e2e-seed tag from the isolated worktree.
+ *
+ * Self-healing: invoked from per-spec `afterAll` hooks so that a failed or
+ * interrupted spec does not leave stale seeds behind for the next spec.
+ * Tolerates already-deleted ids (HTTP 404 / non-OK) since the global-setup
+ * reset may have wiped them at run start.
+ */
+export async function cleanupE2ESeeds(): Promise<void> {
+  let listRes: Response;
+  try {
+    listRes = await fetch(
+      `${E2E_BACKEND_URL}/api/issues?tags=${encodeURIComponent(E2E_SEED_TAG)}`,
+    );
+  } catch {
+    // Backend may already be torn down (e.g. global teardown); nothing to do.
+    return;
+  }
+  if (!listRes.ok) return;
+
+  const seeds = (await listRes.json()) as Array<{ id: string }>;
+  await Promise.all(
+    seeds.map(async (seed) => {
+      try {
+        await fetch(`${E2E_BACKEND_URL}/api/issues/${seed.id}`, {
+          method: "DELETE",
+        });
+      } catch {
+        // Swallow: the global-setup reset is the authoritative wipe; this
+        // helper is best-effort defense-in-depth.
+      }
+    }),
+  );
+}

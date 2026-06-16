@@ -4,6 +4,31 @@
 
 export type IssueStatus = "idea" | "todo" | "in-progress" | "done" | "closed";
 
+/**
+ * Status values selectable from the dashboard filter.
+ * - `open`: meta-status mapping to todo + in-progress + done (idea excluded client-side).
+ * - `all`: show every status (including idea and closed).
+ * - concrete IssueStatus values are forwarded as-is.
+ */
+export type DashboardStatus = "open" | "all" | IssueStatus;
+
+export const DASHBOARD_STATUS_VALUES: DashboardStatus[] = [
+  "open",
+  "all",
+  "idea",
+  "todo",
+  "in-progress",
+  "done",
+  "closed",
+];
+
+export function isDashboardStatus(value: string | null): value is DashboardStatus {
+  return (
+    value !== null &&
+    (DASHBOARD_STATUS_VALUES as string[]).includes(value)
+  );
+}
+
 export interface Issue {
   id: string;
   title: string;

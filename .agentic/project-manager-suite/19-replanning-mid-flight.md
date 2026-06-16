@@ -43,7 +43,7 @@ The PM should:
 4. Keep Issue #151 (done, researcher's momentum strategy plan) as `done` — the research thinking may be useful as reference.
 5. Create a **new** Feature issue for the volatility strategy work:
    ```
-   Feature: "Implement volatility-based strategy" (tag: feature, assigned: project-manager, status: in-progress)
+   Feature: "Implement volatility-based strategy" (tag: feature, assigned: project-manager, status: todo)
    ├── Task: "Plan volatility strategy" (tag: task, assigned: quant-researcher, status: todo, phase: planning)
    ├── Task: "Implement volatility strategy" (tag: task, assigned: quant-researcher, status: todo, phase: development)
    │   └── Blocked by "Plan" task

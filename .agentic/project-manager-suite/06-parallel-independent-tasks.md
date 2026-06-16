@@ -28,7 +28,7 @@ Two unrelated features need to be worked on simultaneously. They have no depende
 ## Expected Output
 
 ```
-Feature: "Add pagination to issue list CLI" (tag: feature, assigned: project-manager, status: in-progress)
+Feature: "Add pagination to issue list CLI" (tag: feature, assigned: project-manager, status: todo)
 ├── Task: "Plan pagination implementation" (tag: task, assigned: library-developer, status: todo, phase: planning)
 ├── Task: "Implement pagination" (tag: task, assigned: library-developer, status: todo, phase: development)
 │   └── Blocked by "Plan" task
@@ -38,7 +38,7 @@ Feature: "Add pagination to issue list CLI" (tag: feature, assigned: project-man
     └── Blocked by "Validate" task
     No blockages to or from Bug below
 
-Bug: "Fix dark mode toggle on webapp" (tag: bug, assigned: project-manager, status: in-progress)
+Bug: "Fix dark mode toggle on webapp" (tag: bug, assigned: project-manager, status: todo)
 ├── Task: "Reproduce and diagnose dark mode issue" (tag: task, assigned: webapp-validator, status: todo, phase: reproduction)
 ├── Task: "Implement dark mode fix" (tag: task, assigned: webapp-developer, status: todo, phase: development)
 │   └── Blocked by "Reproduce" task
@@ -72,7 +72,7 @@ Bug: "Fix dark mode toggle on webapp" (tag: bug, assigned: project-manager, stat
 - Each feature follows the 4-phase structure independently
 - The PM correctly recognizes pagination is simple enough for the developer to plan (no architect needed)
 - The PM correctly recognizes the dark mode fix is a bug, not a styling task (no styler needed)
-- **PM sets each parent to `in-progress`** after creating children — no verification child on either. Each parent is completed independently by the status loop once its children are all `done`. See Story 01 for the full lifecycle explanation.
+- **PM leaves each parent at `todo`** after creating children — the PM does NOT flip them to `in-progress`. The status loop auto-promotes each parent to `in-progress` when a child starts. No verification child on either. Each parent is completed independently by the status loop once its children are all `done`. See Story 01 for the full lifecycle explanation.
 - **Bug fix in Parent B** starts with reproduction by the validator (see Story 02), not planning by the developer.
 
 ## Notes

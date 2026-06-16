@@ -6,7 +6,11 @@ import type { Issue, IssueDetail, IssueFilters, CreateIssueData, UpdateIssueData
  */
 function buildQueryString(filters: IssueFilters): string {
   const params = new URLSearchParams();
-  if (filters.status) params.set("status", filters.status);
+  // "all" means no status filtering (backend returns everything). "open" is
+  // a real meta-status the backend understands. Other values are forwarded.
+  if (filters.status && filters.status !== "all") {
+    params.set("status", filters.status);
+  }
   if (filters.assignee) params.set("assignee", filters.assignee);
   if (filters.tags && filters.tags.length > 0) params.set("tags", filters.tags.join(","));
   if (filters.parentId !== undefined) params.set("parentId", filters.parentId === null ? "null" : filters.parentId);
@@ -16,8 +20,17 @@ function buildQueryString(filters: IssueFilters): string {
 }
 
 export const issuesApi = {
-  list(filters: IssueFilters = {}): Promise<Issue[]> {
-    return apiClient<Issue[]>(`/issues${buildQueryString(filters)}`);
+  async list(filters: IssueFilters = {}): Promise<Issue[]> {
+    const issues = await apiClient<Issue[]>(
+      `/issues${buildQueryString(filters)}`,
+    );
+    // The backend `open` meta-status includes `idea`, but the dashboard
+    // default Open view should show only todo, in-progress, done. Exclude
+    // ideas client-side; backend semantics stay untouched.
+    if (filters.status === "open") {
+      return issues.filter((issue) => issue.status !== "idea");
+    }
+    return issues;
   },
 
   create(data: CreateIssueData): Promise<{ id: string }> {

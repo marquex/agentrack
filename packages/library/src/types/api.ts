@@ -98,14 +98,39 @@ export type ViewResult = ComputedIssue | AgentrackError;
 /** Result of the next command — the recommended issue to work on, or no issues available. */
 export type NextResult = ComputedIssue | { result: "NO_ISSUES_AVAILABLE"; message: string };
 
-// ─── History ────────────────────────────────────────────────────────
+// ─── Events ─────────────────────────────────────────────────────────
 
 import type { Event } from "./event";
 
 export type { Event };
 
-/** Result of retrieving an issue's raw event history. */
-export type HistoryResult = Event[] | AgentrackError;
+/**
+ * Result of retrieving an issue's raw event history.
+ * @deprecated Use {@link EventsListResult} instead. Kept as a back-compat alias.
+ */
+export type HistoryResult = EventsListResult;
+
+/** Parameters for listing an issue's raw events with optional type filtering. */
+export interface EventsListParams {
+  /** Optional exact-match type filter (reserved or custom). */
+  type?: string;
+}
+
+/** Result of listing an issue's raw events — an array, or an error. */
+export type EventsListResult = Event[] | AgentrackError;
+
+/** Parameters for appending a custom event to an issue's event log. */
+export interface EventsAddParams {
+  /** Caller-chosen event type; must not collide with a reserved type. */
+  type: string;
+  /** Arbitrary JSON object payload. Must be a plain object (not array/primitive). */
+  content: Record<string, unknown>;
+  /** Override author (resolved by auth layer if not provided). */
+  author?: string;
+}
+
+/** Result of appending a custom event. */
+export type EventsAddResult = { result: "OK" } | AgentrackError;
 
 // ─── Comments ───────────────────────────────────────────────────────
 
@@ -193,6 +218,16 @@ export type UsersListResult = UserInfo[];
 
 /** Result of revoking a user. */
 export type UsersRevokeResult = { result: "OK" } | { result: "USER_NOT_FOUND"; message: string };
+
+/** Parameters for regenerating a user token (self-service only). */
+export interface UsersRegenerateParams {
+  /**
+   * Explicit token to authenticate the caller (overrides the `AGT_USER_TOKEN`
+   * environment variable). Useful in open-auth mode where the caller wants to
+   * prove identity without relying on the ambient environment variable.
+   */
+  token?: string;
+}
 
 /** Result of regenerating a user token (self-service only). */
 export type UsersRegenerateResult =

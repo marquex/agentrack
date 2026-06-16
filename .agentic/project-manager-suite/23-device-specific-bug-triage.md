@@ -31,7 +31,7 @@ A user reports the app crashes on Samsung devices running Android 12 when openin
 ### What the PM creates (initial state)
 
 ```
-Bug: "Fix app crash on Samsung devices running Android 12 when opening payment screen" (tag: bug, assigned: project-manager, status: in-progress)
+Bug: "Fix app crash on Samsung devices running Android 12 when opening payment screen" (tag: bug, assigned: project-manager, status: todo)
 ├── Task: "Reproduce and diagnose payment screen crash on Samsung/Android 12" (tag: task, assigned: android-validator, status: todo, phase: reproduction)
 │   Comment: "Reproduce on Samsung Galaxy S21 (Android 12, API level 32). Focus on the payment screen
 │   open flow. Check for null pointers, SDK compatibility issues, and API-level-specific behavior."
@@ -44,11 +44,11 @@ Bug: "Fix app crash on Samsung devices running Android 12 when opening payment s
 ### What happens after — status transitions (driven by worker agents)
 
 ```
-PM sets parent → in-progress (after creating all children)
+Parent stays at todo (PM does NOT flip it)
        │
        ▼
 Step 1: Work loop wakes android-validator (Child 1 is todo, unblocked)
-  → Validator sets Child 1: todo → in-progress
+  → Validator sets Child 1: todo → in-progress (status loop auto-promotes the Bug parent todo → in-progress)
   → Validator reproduces on Samsung Galaxy S21 emulator (API 32)
   → Validator confirms crash and finds root cause
   → Validator sets Child 1: in-progress → done

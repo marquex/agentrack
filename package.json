@@ -8,6 +8,7 @@
   },
   "scripts": {
     "expert-manager": "bun scripts/expertise-caller.ts",
-    "workloop": "bun scripts/run-agents.ts"
+    "workloop": "bun scripts/run-agents.ts",
+    "webapp": "bun --filter ./packages/webapp dev"
   }
 }

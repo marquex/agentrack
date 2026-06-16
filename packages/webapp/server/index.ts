@@ -26,7 +26,7 @@ app.route("/api/sync", syncRoutes);
 // Global error handler
 app.onError(errorHandler);
 
-const port = parseInt(process.env.PORT || "3000", 10);
+const port = parseInt(process.env.PORT || "3001", 10);
 console.log(`Server running on http://localhost:${port}`);
 
 export default {

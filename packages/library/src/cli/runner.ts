@@ -1,4 +1,5 @@
 import { Command } from "commander";
+import pkg from "../../package.json";
 import {
   blockagesAddAction,
   blockagesDeleteAction,
@@ -13,7 +14,7 @@ import {
 } from "./commands/comments";
 import { createAction } from "./commands/create";
 import { deleteAction } from "./commands/delete";
-import { historyAction } from "./commands/history";
+import { eventsAddAction, eventsListAction } from "./commands/events";
 import { initAction } from "./commands/init";
 import { listAction } from "./commands/list";
 import {
@@ -44,7 +45,7 @@ export function createProgram(): Command {
   program
     .name("agt")
     .description("Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly")
-    .version("0.1.0");
+    .version(pkg.version);
 
   // ─── init ─────────────────────────────────────────────────────────
   program
@@ -117,11 +118,21 @@ export function createProgram(): Command {
     .option("--parentId <id>", 'New parent ID (use "null" to detach)')
     .action(updateAction);
 
-  // ─── history ──────────────────────────────────────────────────────
-  program
-    .command("history <issueId>")
-    .description("View an issue's raw event history")
-    .action(historyAction);
+  // ─── events ──────────────────────────────────────────────────────
+  const eventsCmd = program.command("events").description("View and record issue events");
+
+  eventsCmd
+    .command("list <issueId>")
+    .description("List an issue's raw events")
+    .option("--type <event-type>", "Filter events by exact type match")
+    .action(eventsListAction);
+
+  eventsCmd
+    .command("add <issueId> <event-json>")
+    .description(
+      "Append a custom event. Event JSON must have a non-reserved `type` and a `content` object",
+    )
+    .action(eventsAddAction);
 
   // ─── delete ────────────────────────────────────────────────────────
   program

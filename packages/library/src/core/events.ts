@@ -8,6 +8,13 @@ import type {
   IssueStatus,
   UpdateEvent,
 } from "../types";
+import {
+  isCommentDeleteEvent,
+  isCommentEvent,
+  isCommentUpdateEvent,
+  isCreationEvent,
+  isUpdateEvent,
+} from "../types";
 
 /**
  * Append a single event to an issue's JSON file (array of events).
@@ -97,13 +104,13 @@ export function computeState(events: Event[], issueId: IssueId): ComputedIssue {
   for (const event of events) {
     updatedAt = event.timestamp;
 
-    if (event.type === "creation") {
+    if (isCreationEvent(event)) {
       createdAt = event.timestamp;
       createdBy = event.author;
-    } else if (event.type === "update") {
+    } else if (isUpdateEvent(event)) {
       applyUpdate(state, event.content);
     }
-    // Comment and blockage events are metadata-only — skip
+    // Comment, blockage, and custom events are metadata-only — skip
   }
 
   return {
@@ -129,7 +136,7 @@ export function computeComments(events: Event[]): ComputedComment[] {
   const map = new Map<CommentId, ComputedComment>();
 
   for (const event of events) {
-    if (event.type === "comment") {
+    if (isCommentEvent(event)) {
       map.set(event.content.id, {
         id: event.content.id,
         author: event.author,
@@ -137,16 +144,16 @@ export function computeComments(events: Event[]): ComputedComment[] {
         timestamp: event.timestamp,
         editedAt: null,
       });
-    } else if (event.type === "comment-update") {
+    } else if (isCommentUpdateEvent(event)) {
       const existing = map.get(event.content.id);
       if (existing) {
         existing.content = event.content.content;
         existing.editedAt = event.timestamp;
       }
-    } else if (event.type === "comment-delete") {
+    } else if (isCommentDeleteEvent(event)) {
       map.delete(event.content.id);
     }
-    // All other event types are ignored
+    // All other event types (including custom events) are ignored
   }
 
   return Array.from(map.values()).sort((a, b) =>

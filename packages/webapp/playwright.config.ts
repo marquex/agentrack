@@ -5,9 +5,10 @@ import { fileURLToPath } from "node:url";
 /**
  * Playwright configuration for agentrack webapp E2E tests.
  *
- * Tests run against dedicated ports (3001 backend, 5174 frontend) with
- * reuseExistingServer: false so that no stale dev server can accidentally
- * be reused without the AGENTRACK_CWD isolation env var.
+ * Tests run against dedicated ports (5001 backend, 5000 frontend). Playwright
+ * always spawns its own backend with the AGENTRACK_CWD isolation env var
+ * pointing at validation/.e2edata/ — the real .agentrack/ is never touched.
+ * Never add reuseExistingServer: true; reuse would risk hitting real data.
  */
 const e2eDataDir = getE2EDataDir();
 const globalSetupPath = fileURLToPath(new URL("./e2e/global-setup.ts", import.meta.url));
@@ -30,7 +31,7 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   use: {
-    baseURL: "http://localhost:5174",
+    baseURL: "http://localhost:5000",
     headless: true,
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
@@ -44,22 +45,20 @@ export default defineConfig({
   webServer: [
     {
       command: "bun run dev:server",
-      port: 3001,
-      reuseExistingServer: false,
+      port: 5001,
       timeout: 10_000,
       env: {
         AGENTRACK_CWD: e2eDataDir,
-        PORT: "3001",
+        PORT: "5001",
       },
     },
     {
       command: "cd frontend && bun run dev",
-      port: 5174,
-      reuseExistingServer: false,
+      port: 5000,
       timeout: 10_000,
       env: {
-        API_PORT: "3001",
-        VITE_PORT: "5174",
+        API_PORT: "5001",
+        VITE_PORT: "5000",
       },
     },
   ],

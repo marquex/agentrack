@@ -16,8 +16,15 @@
  * - Error handling and edge cases
  */
 import { test, expect } from "@playwright/test";
+import { cleanupE2ESeeds } from "./setup.js";
 
-const BASE = "http://localhost:3001";
+const BASE = "http://localhost:5001";
+
+// Self-healing: remove every e2e-seed issue created by this spec so leftover
+// data never accumulates in the shared isolated worktree.
+test.afterAll(async () => {
+  await cleanupE2ESeeds();
+});
 
 /**
  * Helper: navigate to page and wait for the issues API to respond.
@@ -68,7 +75,7 @@ function uniqueId() {
 test.describe("Backend: GET /api/issues/:id/comments", () => {
   test("returns 200 with array for existing issue", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Comments List Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Comments List Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -80,7 +87,7 @@ test.describe("Backend: GET /api/issues/:id/comments", () => {
 
   test("returns comments with correct shape", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Comment Shape Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Comment Shape Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -107,7 +114,7 @@ test.describe("Backend: GET /api/issues/:id/comments", () => {
 test.describe("Backend: POST /api/issues/:id/comments", () => {
   test("adds a comment and returns 201", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Add Comment Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Add Comment Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -123,7 +130,7 @@ test.describe("Backend: POST /api/issues/:id/comments", () => {
 
   test("returns 400 when content is missing", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Comment Validation Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Comment Validation Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -138,7 +145,7 @@ test.describe("Backend: POST /api/issues/:id/comments", () => {
 
   test("returns 400 when content is empty string", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Comment Empty Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Comment Empty Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -150,7 +157,7 @@ test.describe("Backend: POST /api/issues/:id/comments", () => {
 
   test("returns 400 when content is not a string", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Comment Type Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Comment Type Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -164,7 +171,7 @@ test.describe("Backend: POST /api/issues/:id/comments", () => {
 test.describe("Backend: PATCH /api/issues/:id/comments/:commentId", () => {
   test("edits a comment and returns 200", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Edit Comment Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Edit Comment Test ${uniqueId()}` },
     });
     const { id: issueId } = await createRes.json();
 
@@ -191,7 +198,7 @@ test.describe("Backend: PATCH /api/issues/:id/comments/:commentId", () => {
 
   test("returns 400 when content is missing", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Edit Comment Validation ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Edit Comment Validation ${uniqueId()}` },
     });
     const { id: issueId } = await createRes.json();
 
@@ -211,7 +218,7 @@ test.describe("Backend: PATCH /api/issues/:id/comments/:commentId", () => {
 test.describe("Backend: DELETE /api/issues/:id/comments/:commentId", () => {
   test("deletes a comment and returns 200", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Delete Comment Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Delete Comment Test ${uniqueId()}` },
     });
     const { id: issueId } = await createRes.json();
 
@@ -243,7 +250,7 @@ test.describe("Backend: DELETE /api/issues/:id/comments/:commentId", () => {
 test.describe("Backend: GET /api/issues/:id/blockages", () => {
   test("returns 200 with blockage info shape", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blockages List Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blockages List Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -259,12 +266,12 @@ test.describe("Backend: GET /api/issues/:id/blockages", () => {
 
   test("returns blockages after adding one", async ({ request }) => {
     const blockerRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocker Issue ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocker Issue ${uniqueId()}` },
     });
     const { id: blockerId } = await blockerRes.json();
 
     const blockedRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocked Issue ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocked Issue ${uniqueId()}` },
     });
     const { id: blockedId } = await blockedRes.json();
 
@@ -286,12 +293,12 @@ test.describe("Backend: GET /api/issues/:id/blockages", () => {
 test.describe("Backend: POST /api/issues/:id/blockages", () => {
   test("adds blockages and returns 200", async ({ request }) => {
     const blockedRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocked For Add ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocked For Add ${uniqueId()}` },
     });
     const { id: blockedId } = await blockedRes.json();
 
     const blockerRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocker For Add ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocker For Add ${uniqueId()}` },
     });
     const { id: blockerId } = await blockerRes.json();
 
@@ -305,7 +312,7 @@ test.describe("Backend: POST /api/issues/:id/blockages", () => {
 
   test("returns 400 when blockerIds is missing", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blockage Validation ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blockage Validation ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -320,7 +327,7 @@ test.describe("Backend: POST /api/issues/:id/blockages", () => {
 
   test("returns 400 when blockerIds is empty array", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blockage Empty Array ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blockage Empty Array ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -334,12 +341,12 @@ test.describe("Backend: POST /api/issues/:id/blockages", () => {
 test.describe("Backend: PATCH /api/issues/:id/blockages/resolve", () => {
   test("resolves a blockage and returns 200", async ({ request }) => {
     const blockerRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocker Resolve Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocker Resolve Test ${uniqueId()}` },
     });
     const { id: blockerId } = await blockerRes.json();
 
     const blockedRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocked Resolve Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocked Resolve Test ${uniqueId()}` },
     });
     const { id: blockedId } = await blockedRes.json();
 
@@ -364,7 +371,7 @@ test.describe("Backend: PATCH /api/issues/:id/blockages/resolve", () => {
 
   test("returns 400 when blockerIds is missing", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Resolve Validation ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Resolve Validation ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -379,12 +386,12 @@ test.describe("Backend: PATCH /api/issues/:id/blockages/resolve", () => {
 test.describe("Backend: DELETE /api/issues/:id/blockages", () => {
   test("deletes a blockage and returns 200", async ({ request }) => {
     const blockerRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocker Delete Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocker Delete Test ${uniqueId()}` },
     });
     const { id: blockerId } = await blockerRes.json();
 
     const blockedRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Blocked Delete Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Blocked Delete Test ${uniqueId()}` },
     });
     const { id: blockedId } = await blockedRes.json();
 
@@ -409,7 +416,7 @@ test.describe("Backend: DELETE /api/issues/:id/blockages", () => {
 
   test("returns 400 when blockerIds is missing", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Delete Validation ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Delete Validation ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -427,7 +434,7 @@ test.describe("Backend: DELETE /api/issues/:id/blockages", () => {
 test.describe("Backend: GET /api/issues/:id/history", () => {
   test("returns 200 with history events array", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `History Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `History Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -446,7 +453,7 @@ test.describe("Backend: GET /api/issues/:id/history", () => {
 
   test("history includes update events after changes", async ({ request }) => {
     const createRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `History Update Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `History Update Test ${uniqueId()}` },
     });
     const { id } = await createRes.json();
 
@@ -477,7 +484,7 @@ test.describe("Backend: GET /api/issues/next/:assignee", () => {
   test("returns issue shape when available", async ({ request }) => {
     const assignee = `next-tester-${uniqueId()}`;
     await request.post(`${BASE}/api/issues`, {
-      data: {
+      data: { tags: ["e2e-seed"],
         title: `Next Issue Test ${uniqueId()}`,
         assignee,
         status: "todo",
@@ -500,12 +507,12 @@ test.describe("Backend: GET /api/issues/next/:assignee", () => {
 test.describe("Backend: PATCH parentId", () => {
   test("sets parentId on issue", async ({ request }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Parent Issue ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Parent Issue ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Child Issue ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Child Issue ${uniqueId()}` },
     });
     const { id: childId } = await childRes.json();
 
@@ -522,12 +529,12 @@ test.describe("Backend: PATCH parentId", () => {
 
   test("clears parentId by setting to null", async ({ request }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Clear Parent Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Clear Parent Test ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Child Clear Test ${uniqueId()}`, parentId },
+      data: { tags: ["e2e-seed"], title: `Child Clear Test ${uniqueId()}`, parentId },
     });
     const { id: childId } = await childRes.json();
 
@@ -543,15 +550,15 @@ test.describe("Backend: PATCH parentId", () => {
 
   test("can list children via parentId filter", async ({ request }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Parent Filter Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Parent Filter Test ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     await request.post(`${BASE}/api/issues`, {
-      data: { title: `Child 1 ${uniqueId()}`, parentId },
+      data: { tags: ["e2e-seed"], title: `Child 1 ${uniqueId()}`, parentId },
     });
     await request.post(`${BASE}/api/issues`, {
-      data: { title: `Child 2 ${uniqueId()}`, parentId },
+      data: { tags: ["e2e-seed"], title: `Child 2 ${uniqueId()}`, parentId },
     });
 
     const response = await request.get(
@@ -573,7 +580,7 @@ test.describe("Backend: PATCH parentId", () => {
 test.describe("Frontend: Comments Section", () => {
   test("displays empty state when no comments", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `No Comments Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `No Comments Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -586,7 +593,7 @@ test.describe("Frontend: Comments Section", () => {
 
   test("displays comment count in heading", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Comment Count Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Comment Count Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -603,7 +610,7 @@ test.describe("Frontend: Comments Section", () => {
 
   test("adds a comment via the form", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Add Comment UI Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Add Comment UI Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -637,7 +644,7 @@ test.describe("Frontend: Comments Section", () => {
 
   test("edits a comment inline", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Edit Comment UI Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Edit Comment UI Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -686,7 +693,7 @@ test.describe("Frontend: Comments Section", () => {
 
   test("deletes a comment with confirmation", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Delete Comment UI Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Delete Comment UI Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -733,7 +740,7 @@ test.describe("Frontend: Comments Section", () => {
 test.describe("Frontend: Blockages Section", () => {
   test("displays empty state when no blockages", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `No Blockages Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `No Blockages Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -749,12 +756,12 @@ test.describe("Frontend: Blockages Section", () => {
     page,
   }) => {
     const blockerRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `UI Blocker ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `UI Blocker ${uniqueId()}` },
     });
     const { id: blockerId } = await blockerRes.json();
 
     const blockedRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `UI Blocked ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `UI Blocked ${uniqueId()}` },
     });
     const { id: blockedId } = await blockedRes.json();
 
@@ -780,12 +787,12 @@ test.describe("Frontend: Blockages Section", () => {
 
   test("resolves a blockage via Resolve button", async ({ request, page }) => {
     const blockerRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Resolve Blocker ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Resolve Blocker ${uniqueId()}` },
     });
     const { id: blockerId } = await blockerRes.json();
 
     const blockedRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Resolve Blocked ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Resolve Blocked ${uniqueId()}` },
     });
     const { id: blockedId } = await blockedRes.json();
 
@@ -816,7 +823,7 @@ test.describe("Frontend: Blockages Section", () => {
 
   test("opens add blockage dialog", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Add Blockage Dialog Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Add Blockage Dialog Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -838,12 +845,12 @@ test.describe("Frontend: Blockages Section", () => {
 
   test("deletes a blockage via confirm button", async ({ request, page }) => {
     const blockerRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Delete Blocker ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Delete Blocker ${uniqueId()}` },
     });
     const { id: blockerId } = await blockerRes.json();
 
     const blockedRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Delete Blocked ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Delete Blocked ${uniqueId()}` },
     });
     const { id: blockedId } = await blockedRes.json();
 
@@ -891,7 +898,7 @@ test.describe("Frontend: Blockages Section", () => {
 test.describe("Frontend: Sub-issues Section", () => {
   test("displays empty state when no sub-issues", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `No Sub-issues Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `No Sub-issues Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -904,12 +911,12 @@ test.describe("Frontend: Sub-issues Section", () => {
 
   test("displays sub-issues with links", async ({ request, page }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Sub-issue Parent ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Sub-issue Parent ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Sub-issue Child ${uniqueId()}`, parentId, status: "todo" },
+      data: { tags: ["e2e-seed"], title: `Sub-issue Child ${uniqueId()}`, parentId, status: "todo" },
     });
     const { id: childId } = await childRes.json();
 
@@ -936,7 +943,7 @@ test.describe("Frontend: Sub-issues Section", () => {
     page,
   }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Sub-issue Create Parent ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Sub-issue Create Parent ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
@@ -960,12 +967,12 @@ test.describe("Frontend: Sub-issues Section", () => {
     page,
   }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Sub-issue Click Parent ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Sub-issue Click Parent ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Sub-issue Click Child ${uniqueId()}`, parentId },
+      data: { tags: ["e2e-seed"], title: `Sub-issue Click Child ${uniqueId()}`, parentId },
     });
     const { id: childId } = await childRes.json();
 
@@ -988,7 +995,7 @@ test.describe("Frontend: Sub-issues Section", () => {
 test.describe("Frontend: Tree View in List", () => {
   test("displays expand chevrons on issue rows", async ({ page, request }) => {
     await request.post(`${BASE}/api/issues`, {
-      data: { title: `Tree Root ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Tree Root ${uniqueId()}` },
     });
 
     await gotoAndWaitForIssues(page);
@@ -1003,12 +1010,12 @@ test.describe("Frontend: Tree View in List", () => {
     request,
   }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Tree Parent ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Tree Parent ${uniqueId()}`, status: "todo" },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Tree Child ${uniqueId()}`, parentId },
+      data: { tags: ["e2e-seed"], title: `Tree Child ${uniqueId()}`, parentId },
     });
     const { id: childId } = await childRes.json();
 
@@ -1051,7 +1058,7 @@ test.describe("Frontend: History Section", () => {
     page,
   }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Timeline Collapsed Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Timeline Collapsed Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -1070,7 +1077,7 @@ test.describe("Frontend: History Section", () => {
 
   test("expanding history shows events", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Timeline Expand Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Timeline Expand Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -1100,7 +1107,7 @@ test.describe("Frontend: History Section", () => {
 
   test("history shows update events", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Timeline Update Display ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Timeline Update Display ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -1138,7 +1145,7 @@ test.describe("Frontend: Tag Input", () => {
     const res = await request.post(`${BASE}/api/issues`, {
       data: {
         title: `Tag Display Test ${uniqueId()}`,
-        tags: ["alpha-tag", "beta-tag"],
+        tags: ["e2e-seed", "alpha-tag", "beta-tag"],
       },
     });
     const { id } = await res.json();
@@ -1151,7 +1158,7 @@ test.describe("Frontend: Tag Input", () => {
 
   test("adds a new tag via typing and Enter", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Tag Add Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Tag Add Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -1182,7 +1189,7 @@ test.describe("Frontend: Tag Input", () => {
     const res = await request.post(`${BASE}/api/issues`, {
       data: {
         title: `Tag Remove Test ${uniqueId()}`,
-        tags: ["removable-tag"],
+        tags: ["e2e-seed", "removable-tag"],
       },
     });
     const { id } = await res.json();
@@ -1220,7 +1227,7 @@ test.describe("Frontend: Tag Input", () => {
 test.describe("Frontend: Parent Selector", () => {
   test("shows 'none' when no parent set", async ({ request, page }) => {
     const res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `No Parent Test ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `No Parent Test ${uniqueId()}` },
     });
     const { id } = await res.json();
 
@@ -1234,12 +1241,12 @@ test.describe("Frontend: Parent Selector", () => {
 
   test("sets a parent via search and selection", async ({ request, page }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Set Parent Target ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Set Parent Target ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Set Parent Child ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Set Parent Child ${uniqueId()}` },
     });
     const { id: childId } = await childRes.json();
 
@@ -1253,13 +1260,24 @@ test.describe("Frontend: Parent Selector", () => {
       'input[placeholder="Search for parent issue..."]'
     );
     await expect(searchInput).toBeVisible({ timeout: 5000 });
-    await searchInput.fill(`Set Parent Target`);
 
-    // Wait for search results
-    await page.waitForResponse(
-      (resp) => resp.url().includes("/api/issues") && resp.url().includes("search="),
+    // Set up the search-response wait BEFORE the fill that triggers it. The
+    // previous ordering attached the listener after the action, so a fast
+    // search response could resolve before the listener registered and the
+    // wait would hang waiting for the next (possibly stale/debounced prior)
+    // response. The matcher is scoped to the exact search term via
+    // URLSearchParams so it can't latch onto an unrelated GET
+    // /api/issues?search=... call.
+    const searchResponsePromise = page.waitForResponse(
+      (resp) => {
+        if (resp.request().method() !== "GET") return false;
+        if (!resp.url().includes("/api/issues")) return false;
+        return new URL(resp.url()).searchParams.get("search") === "Set Parent Target";
+      },
       { timeout: 10000 }
     );
+    await searchInput.fill("Set Parent Target");
+    await searchResponsePromise;
 
     // Click on the parent issue in the search results
     const patchPromise = page.waitForResponse(
@@ -1286,17 +1304,17 @@ test.describe("Frontend: Parent Selector", () => {
 
   test("changes an existing parent", async ({ request, page }) => {
     const parent1Res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Old Parent ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Old Parent ${uniqueId()}` },
     });
     const { id: parent1Id } = await parent1Res.json();
 
     const parent2Res = await request.post(`${BASE}/api/issues`, {
-      data: { title: `New Parent ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `New Parent ${uniqueId()}` },
     });
     const { id: parent2Id } = await parent2Res.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Change Parent Child ${uniqueId()}`, parentId: parent1Id },
+      data: { tags: ["e2e-seed"], title: `Change Parent Child ${uniqueId()}`, parentId: parent1Id },
     });
     const { id: childId } = await childRes.json();
 
@@ -1359,12 +1377,12 @@ test.describe("Frontend: Parent Selector", () => {
 
   test("clears parent by clicking Clear button", async ({ request, page }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Clear Parent Target ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Clear Parent Target ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Clear Parent Child ${uniqueId()}`, parentId },
+      data: { tags: ["e2e-seed"], title: `Clear Parent Child ${uniqueId()}`, parentId },
     });
     const { id: childId } = await childRes.json();
 
@@ -1403,12 +1421,12 @@ test.describe("Frontend: Parent Selector", () => {
     page,
   }) => {
     const parentRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Nav Parent Target ${uniqueId()}` },
+      data: { tags: ["e2e-seed"], title: `Nav Parent Target ${uniqueId()}` },
     });
     const { id: parentId } = await parentRes.json();
 
     const childRes = await request.post(`${BASE}/api/issues`, {
-      data: { title: `Nav Parent Child ${uniqueId()}`, parentId },
+      data: { tags: ["e2e-seed"], title: `Nav Parent Child ${uniqueId()}`, parentId },
     });
     const { id: childId } = await childRes.json();
 

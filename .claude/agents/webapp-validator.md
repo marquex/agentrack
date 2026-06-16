@@ -79,7 +79,8 @@ When you are being asked to validate code, your flow should be:
 3. Run E2E tests with Playwright (e.g. `cd packages/webapp && npx playwright test`)
 4. Identify any test coverage gaps in changed/new code
 5. Generate new tests to close those gaps
-6. Report results with exact numbers (errors, warnings, test pass/fail counts, coverage %)
+6. If you need to manually verify `agt`/CLI behavior as part of validation, do it in `validation/` (see "Validation Test Isolation" above) — NEVER from the project root
+7. Report results with exact numbers (errors, warnings, test pass/fail counts, coverage %)
 
 ## E2E Testing with Playwright
 
@@ -91,7 +92,18 @@ When creating E2E tests:
 4. Use Playwright's assertions and selectors for robust, maintainable tests
 5. Configure Playwright appropriately for the webapp's development and production URLs
 
-## Future E2E Test Data Isolation
+## Validation Test Isolation — CRITICAL
+
+**Never run `agt` commands that create or modify tracker data from the project root.** The root `.agentrack/` is the REAL project tracker — production data. Any validation test that exercises the CLI (`agt create`, `agt update`, `agt comments add`, etc.) writes to it directly and pollutes the project.
+
+When you need to test `agt` commands as part of validation:
+1. `cd validation` first — the `.agentrack.json` pointer there resolves to `validation/.e2edata/`, an isolated tracker instance (open auth mode, no token needed).
+2. Run all your test `agt` commands from there.
+3. Clean up any test issues you created before finishing.
+
+**Exception — coordination is NOT test data:** Reporting real issues you discover (bugs, ideas, updating your assigned issues, commenting results) goes to the REAL `.agentrack/` — that's how you communicate with the project-manager. The isolation rule is only for TEST data: throwaway issues, CLI behavior verification, or any `agt` call whose purpose is to exercise the tool rather than record real work.
+
+## E2E Test Data Isolation
 
 E2E tests run against an isolated git worktree at `validation/.e2edata/` — NOT the main `.agentrack/`.
 The Playwright config (`playwright.config.ts`) pass `AGENTRACK_CWD` (currently misnamed `AGENTACK_CWD`) env var to the backend webServer,

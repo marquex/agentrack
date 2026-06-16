@@ -23,7 +23,7 @@ A new feature request arrives as an idea or is given to the PM. The PM must plan
 1. The PM receives the feature request.
 2. The PM creates a parent issue for the overall feature.
 3. The PM breaks it down into child issues covering all 4 phases.
-4. The PM sets the parent to `in-progress` — prevents the work loop from re-waking PM every cycle.
+4. The PM leaves the parent at `todo` (same as the children) — the status loop auto-promotes it to `in-progress` when a child starts, preventing the work loop from re-waking PM every cycle.
 5. From here, **worker agents** drive the child transitions — the status loop completes the parent when every child is `done`.
 
 ## Expected Output
@@ -31,7 +31,7 @@ A new feature request arrives as an idea or is given to the PM. The PM must plan
 ### What the PM creates (initial state)
 
 ```
-Feature: "Add search functionality to the issue list" (tag: feature, assigned: project-manager, status: in-progress)
+Feature: "Add search functionality to the issue list" (tag: feature, assigned: project-manager, status: todo)
 ├── Task: "Design search API for issue list" (tag: task, assigned: library-architect, status: todo, phase: planning)
 ├── Task: "Implement search functionality" (tag: task, assigned: library-developer, status: todo, phase: development)
 │   └── Blocked by Task 1
@@ -43,16 +43,16 @@ Feature: "Add search functionality to the issue list" (tag: feature, assigned: p
 
 **No verification child.** The PM does NOT create a "Verify complete" child to detect completion. Children are phase tasks only. The **status loop** periodically scans the PM's `in-progress` parents and completes any whose children are ALL `done` — that is the PM's completion alarm.
 
-**Why parent is `in-progress`?** If the parent stays `todo`, the work loop wakes the PM every cycle to "work" on it. `in-progress` signals: "work is happening through children — leave me alone until the status loop finds all children done."
+**Why is the parent left at `todo`?** The PM creates the parent in `todo` (same as the children) and leaves it there — it never flips it to `in-progress` itself. When a worker starts the first child (`todo` → `in-progress`), the status loop **auto-promotes the parent from `todo` to `in-progress`**, which signals "work is happening through children" and puts the parent in the PM's status-loop review queue without the work loop re-waking the PM each cycle.
 
 ### What happens after — status transitions (driven by worker agents)
 
 ```
-PM sets parent → in-progress (after creating all children)
+Parent stays at todo (PM does NOT flip it)
        │
        ▼
 Step 1: Work loop wakes library-architect (Child 1 is todo, unblocked)
-  → Architect sets Child 1: todo → in-progress
+  → Architect sets Child 1: todo → in-progress (status loop auto-promotes the Feature parent todo → in-progress)
   → Architect designs the search API, writes spec
   → Architect sets Child 1: in-progress → done
   → Architect adds comment: "Search API spec complete. Query params: q, limit, offset..."
@@ -96,7 +96,7 @@ If any step fails, the worker agent sets the issue back to `todo` and reassigns 
 - **Release → `library-releaser`**: The releaser runs the full test suite, generates docs, builds, bumps version, and publishes. It's a gate — if anything fails, it stops and reports back.
 
 **Key behaviors:**
-- PM creates parent in `todo`, then immediately sets to `in-progress` after children are created
+- PM creates parent in `todo` and leaves it at `todo` — the status loop auto-promotes it to `in-progress` when a child starts
 - PM does NOT create a verification/sync child — children are phase tasks only
 - Worker agents drive all child transitions (`todo` → `in-progress` → `done`)
 - Blockages resolve automatically when agents mark issues `done`

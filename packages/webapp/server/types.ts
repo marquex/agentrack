@@ -10,6 +10,8 @@ export interface AgentrackError {
 export interface HealthResponse {
   status: "ok";
   tracker: "initialized" | "not_initialized";
+  /** Resolved tracker cwd (AGENTRACK_CWD or process.cwd()). */
+  cwd: string;
 }
 
 export interface ApiErrorResponse {

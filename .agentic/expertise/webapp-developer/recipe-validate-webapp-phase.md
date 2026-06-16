@@ -19,19 +19,19 @@ Finishing any webapp task — a phase implementation, a bug fix, a UI change —
 
 2. **Run the phase(s) the task touches:**
    ```bash
-   cd packages/webapp && bunx playwright test e2e/phaseN-validation.spec.ts
+   cd packages/webapp && npx playwright test e2e/phaseN-validation.spec.ts
    ```
    Expect all tests in the in-scope phase to pass. If failures appear, read the specific asserts before changing code.
 
 3. **Check for regressions across all phases:**
    ```bash
-   cd packages/webapp && bunx playwright test
+   cd packages/webapp && npx playwright test
    ```
 
 4. **If new failures appear, establish a baseline** (do not assume the change caused them):
    ```bash
    cd /Users/javi/projects/agentrack && git stash
-   cd packages/webapp && bunx playwright test 2>&1 | grep -E "^\s+\d+ failed" -A 20 | head -25
+   cd packages/webapp && npx playwright test 2>&1 | grep -E "^\s+\d+ failed" -A 20 | head -25
    # capture the baseline failure set, then restore:
    cd /Users/javi/projects/agentrack && git checkout -- packages/webapp/test-results/ && git stash pop
    ```

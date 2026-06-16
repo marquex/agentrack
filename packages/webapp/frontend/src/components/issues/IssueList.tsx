@@ -11,7 +11,19 @@ interface IssueListProps {
 }
 
 export function IssueList({ filters, onCreateIssue }: IssueListProps) {
-  const { data: issues, isLoading, error } = useIssues(filters);
+  // The dashboard shows only root issues (no parent). Force parentId: null
+  // while preserving any user-applied filters (status, assignee, tags, search).
+  const { data: issues, isLoading, error } = useIssues({
+    ...filters,
+    parentId: null,
+  });
+
+  // status defaults to "open" (always present in URL-driven filters), so the
+  // empty-state copy must only treat non-default filters as "filtered".
+  const hasNonDefaultFilters =
+    !!filters.search ||
+    !!filters.assignee ||
+    (!!filters.status && filters.status !== "open");
 
   if (isLoading) {
     return (
@@ -40,12 +52,12 @@ export function IssueList({ filters, onCreateIssue }: IssueListProps) {
           </svg>
         </div>
         <h3 className="text-lg font-medium text-slate-900 mb-2">
-          {filters.search || filters.status || filters.assignee
+          {hasNonDefaultFilters
             ? "No issues match your filters"
             : "No issues yet"}
         </h3>
         <p className="text-slate-500 text-center mb-6 max-w-md">
-          {filters.search || filters.status || filters.assignee
+          {hasNonDefaultFilters
             ? "Try adjusting your filters or create a new issue to get started"
             : "Create your first issue to start tracking your work"}
         </p>

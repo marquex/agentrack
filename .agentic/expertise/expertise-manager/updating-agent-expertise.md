@@ -24,7 +24,15 @@ How was the agent's performance during the task? Did it struggle to do something
 
 Did the agent do something wrong that it should not do again? That's a key learning opportunity. You can create a "gotcha" topic with the description of what the agent should not do and why.
 
+Recurring gotcha shapes worth watching for across agents: shell-cwd persistence across Bash calls (a repeated `cd <dir> && ...` fails on the second call), assuming a script name without reading `package.json`, or trusting line numbers from a prior session. When you see these, capture them in the agent's workflow or a gotchas file.
+
 Add an entry to the work timeline so the agent can remember that it has already worked on this topic and what happened that time.
+
+### Reconciling recurring-incident counts across files
+
+When the same incident class recurs many times (e.g. a recurring leaked-seed triage), the work timeline and the topic file's running tally can drift apart. A common failure: the timeline aggregates many instances into one summary entry ("instances 2–14") while the topic file keeps an older inline count ("four") that was never updated. The next working agent then reads the stale topic count and increments it by one ("six"), unaware the timeline already tracks many more.
+
+**Guard:** when a task touches a recurring incident, read BOTH the topic file's running count/list AND the work-timeline aggregate before writing. Reconcile the topic file's count against the timeline (the timeline is usually the more complete register), and don't blindly trust the working agent's own increment — it can only see the topic file, not the full history. Add the instance consistently to both files in one pass.
 
 ### Verifying facts you cannot access
 

@@ -88,9 +88,9 @@ describe("E2E: lifecycle", () => {
     view = parseJson((await runAgt(["view", issueId])).stdout);
     expect(view.status).toBe("done");
 
-    // 7. Verify full history
+    // 7. Verify full event history
     const history = parseJson(
-      (await runAgt(["history", issueId])).stdout,
+      (await runAgt(["events", "list", issueId])).stdout,
     );
     expect(history.length).toBeGreaterThanOrEqual(4); // creation, update(status+assignee), update(done)
   });

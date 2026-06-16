@@ -10,24 +10,32 @@
 
 The library-releaser cuts and publishes releases of the Agentrack package (the `agt` CLI installable via NPM, which also exposes a TypeScript library API). It does **not** implement features — it takes already-completed, already-validated changes and ships them.
 
-### Intended release flow
+### The publishable package (concrete facts as of 2026-06-16)
 
-The agent's stated flow for an unblocked release (not yet executed end-to-end in a captured session — **verify on the first real release**):
+- Location: `packages/library/` (the repo is an npm workspace root with `workspaces: ["packages/*"]`; sibling is `packages/webapp`).
+- npm package name: `agentrack`. **Not yet on the npm registry** as of v0.3.0 (npm returns 404 for `agentrack`); publication depends on the `NPM_TOKEN` GitHub secret being configured.
+- Build tool: **`tsup`** via `bun run build`; output in `packages/library/dist/` (ESM + CJS + `.d.ts` + CLI binary).
+- Quality gate: `bun run quality` (= `typecheck` + `lint` + `test:coverage`), run from `packages/library`. Also re-run by the `prepublishOnly` hook.
+- Version: last released `0.3.0` (see [release-recipe](release-recipe.expertise.md)). Re-read `packages/library/package.json` before bumping — concurrent agents leave uncommitted bumps in the working tree (HEAD lagged the working tree during the v0.3.0 release).
 
-1. Run the **test suite** (confirm green).
-2. Update **docs** if the change warrants it.
-3. **Build** the package.
-4. **Version bump** (the exact mechanism — npm version, manual `package.json` edit, or a release script — is not yet confirmed from this agent's work; verify in the repo before bumping).
-5. **Publish** to NPM.
+### Release flow — VERIFIED end-to-end as of 2026-06-16 (v0.3.0)
 
-Treat the above as a hypothesis. The first time an actual release runs, record the concrete commands and files touched here and promote it to a dedicated recipe.
+The 5-step flow is now confirmed and captured with concrete commands in [release-recipe.expertise.md](release-recipe.expertise.md):
+
+1. **Test** — `bun run quality` from `packages/library`.
+2. **Docs** — update `README.md` + `docs/markdown/cli-reference.md` + `docs/markdown/javascript-reference.md`.
+3. **Build** — `bun run build` (tsup); verify dist symbols.
+4. **Version bump** — manual edit of `packages/library/package.json` (no `npm version`, no release script).
+5. **Publish** — **NOT local `npm publish`.** Commit on a `release/v<version>` branch, tag `v<version>`, push branch + tag; the `release.yml` GitHub Actions workflow does quality → build → `npm publish --access public` using `secrets.NPM_TOKEN`.
+
+Key correction vs. earlier hypothesis: the publish mechanism is **git-tag-driven CI**, never a direct `npm publish` (no npm auth exists on the dev machine).
 
 ### The validation gate (structural pattern)
 
 Every observed release issue is paired with a **validation issue** that blocks it. The release must **not** be cut until the validation issue is resolved (`done`).
 
-- Example: release `mqe27481sa` ("Release: library token override") is blocked by `mqe274mwm3` ("Validate: usersRegenerate token override").
-- When the validation issue is still `todo`/`in-progress`, the correct action is to **comment and reassign to project-manager** — do not proceed, and do not modify code, version numbers, or run build/publish.
+- Blocked (do not proceed): when the validation issue is still `todo`/`in-progress`, comment and reassign to project-manager — do not modify code, version numbers, or run build/publish. Seen on 2026-06-14: release `mqe27481sa` blocked by `mqe274mwm3`.
+- Cleared (proceed): when the validation issue is `done` (or resolved), verify it, mark the release issue `in-progress`, and begin the release flow. Seen on 2026-06-16 (release `mqe2xmprgj` unblocked by `mqe2xmdugp`) and again on 2026-06-16 (release `mqgxdt6csi` unblocked once its blocker `mqgxdtkaca` was resolved). Read the blocker's comments — the validator's "Done." comment there carries the pass/fail counts and is the green-light signal.
 
 ### Reporting line
 
@@ -36,14 +44,16 @@ Every observed release issue is paired with a **validation issue** that blocks i
 
 ## Related Topics
 
+- [release-recipe.expertise.md](release-recipe.expertise.md) — the verified end-to-end release recipe (commands, files, sandbox gotchas).
 - [timeline.expertise.md](timeline.expertise.md) — what this agent has actually worked on.
 
 ## Timeline
 
 - 2026-06-14 — First session: release issue was blocked by an unresolved validation issue; reassigned to project-manager without shipping. See [timeline.expertise.md](timeline.expertise.md).
+- 2026-06-16 — Second session: validation gate cleared (blocker `done`), agent proceeded and started the test suite, but the session was interrupted before any build/version/publish.
+- 2026-06-16 — Third session (`mqgxdt6csi`, "Release: agt events namespace"): **first fully completed release.** Cut v0.3.0 — tests/docs/build/version-bump all run, publish triggered via `v0.3.0` tag push → `release.yml`. Flow is now verified; see [release-recipe.expertise.md](release-recipe.expertise.md).
 
 ## Gaps And Validation Needs
 
-- **Release flow is unverified.** The five-step flow above is the agent's stated intent, not a confirmed, executed procedure. On the first real release, capture the exact commands (test runner, build command, version-bump mechanism, publish command) and the files involved, then extract a `release-recipe` topic.
-- **Version-bump mechanism unknown.** Confirm whether the repo uses `npm version`, a release script, or a manual `package.json` edit before bumping.
-- **NPM publish credentials / 2FA flow** are not documented here — the first publish will reveal the actual mechanism.
+- **NPM publication not yet observed succeeding.** The publish runs in GitHub Actions via `NPM_TOKEN`; the agent cannot observe the run locally (no `gh`, no API token). The package was not on the registry yet, and the `NPM_TOKEN` secret may still need one-time manual setup per the publish-pipeline spec. Confirm on the next release whether `agentrack` actually appears on npm.
+- **Patch-version bump is unverified.** v0.3.0 was a minor bump (new namespace + CLI break). No fix-only release has been cut yet — confirm the patch convention when one occurs.

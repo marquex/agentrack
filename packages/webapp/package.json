@@ -7,7 +7,8 @@
     "dev:server": "bun run --watch server/index.ts",
     "dev:frontend": "cd frontend && bun run dev",
     "dev": "bun run dev:server & bun run dev:frontend",
-    "build": "cd frontend && bun run build && cd .. && echo 'Frontend built successfully'"
+    "build": "cd frontend && bun run build && cd .. && echo 'Frontend built successfully'",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "agentrack": "workspace:packages/library",

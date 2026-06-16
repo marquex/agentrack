@@ -673,6 +673,93 @@ describe("--branch flag worktree validation", () => {
     });
   });
 
+  // ─── BUG-2 fix: push/pull resolve project root + branch from data dir ──
+
+  describe("BUG-2 fix: push/pull accept cwd as the worktree/data dir", () => {
+    // Reproduces BUG-2: when AGENTRACK_CWD points at the worktree data dir
+    // (e.g. validation/.e2edata) push/pull must still find the project root
+    // via the pointer file and resolve the configured {branch, dir}. With the
+    // old code, passing the data dir as cwd made isWorktreeInitialized fail
+    // (NOT_INITIALIZED -> 500 in the webapp sync route).
+
+    test("pushWorktree succeeds when cwd is the data dir (custom branch from pointer)", () => {
+      const { local } = createGitRepoWithRemote();
+      const opts = normalizeBranchName("testing");
+      initWorktree(local, opts);
+      writeBranchPointer(local, opts.branch);
+
+      const dataDir = join(local, ".testing");
+      // cwd is the DATA DIR, not the project root, and opts is NOT passed:
+      // the library must auto-resolve both the project root and the branch.
+      writeFileSync(join(dataDir, "file.txt"), "hi");
+      const result = pushWorktree(dataDir, "push from data dir");
+      expect(result.synced).toBe(true);
+
+      // Confirm the commit landed on the custom _testing branch.
+      const log = execSync("git log -1 --format=%s", {
+        cwd: dataDir, encoding: "utf-8",
+      }).trim();
+      expect(log).toBe("push from data dir");
+    });
+
+    test("pullWorktree succeeds when cwd is the data dir (custom branch from pointer)", () => {
+      const { local, remote } = createGitRepoWithRemote();
+      const opts = normalizeBranchName("testing");
+      initWorktree(local, opts);
+      writeBranchPointer(local, opts.branch);
+
+      // Seed the remote with a commit from a second clone.
+      writeFileSync(join(local, ".testing", "seed.txt"), "x");
+      pushWorktree(local, "seed", opts);
+
+      const otherBase = createTempDir();
+      const other = join(otherBase, "other");
+      execSync(`git clone ${remote} ${other}`, { stdio: "ignore" });
+      execSync('git config user.email t@t.com', { cwd: other, stdio: "ignore" });
+      execSync('git config user.name T', { cwd: other, stdio: "ignore" });
+      execSync("git checkout _testing", { cwd: other, stdio: "ignore" });
+      writeFileSync(join(other, "remote.txt"), "from-other");
+      execSync("git add -A", { cwd: other, stdio: "ignore" });
+      execSync("git commit -m from-other", { cwd: other, stdio: "ignore" });
+      execSync("git push", { cwd: other, stdio: "ignore" });
+
+      // cwd is the DATA DIR, opts omitted: must auto-resolve.
+      const dataDir = join(local, ".testing");
+      const result = pullWorktree(dataDir);
+      expect(result.updated).toBe(true);
+    });
+
+    test("pushWorktree is backward compatible when cwd is the project root", () => {
+      const { local } = createGitRepoWithRemote();
+      const opts = normalizeBranchName("testing");
+      initWorktree(local, opts);
+      writeBranchPointer(local, opts.branch);
+
+      writeFileSync(join(local, ".testing", "bw.txt"), "bw");
+      // cwd = project root, no opts: must still resolve custom branch from pointer.
+      const result = pushWorktree(local, "backward compat");
+      expect(result.synced).toBe(true);
+    });
+
+    test("pushWorktree with e2e-like config (_e2edata branch, .e2edata dir, cwd=data dir)", () => {
+      // Mirrors the agentrack e2e setup exactly.
+      const { local } = createGitRepoWithRemote();
+      const opts = normalizeBranchName("e2edata");
+      initWorktree(local, opts);
+      writeBranchPointer(local, opts.branch);
+
+      const dataDir = join(local, ".e2edata");
+      writeFileSync(join(dataDir, "e2e.txt"), "e2e");
+      const result = pushWorktree(dataDir, "e2e push");
+      expect(result.synced).toBe(true);
+
+      const remoteBranches = execSync("git branch -r", {
+        cwd: local, encoding: "utf-8",
+      });
+      expect(remoteBranches).toContain("_e2edata");
+    });
+  });
+
   // ─── Additional: DEFAULT_BRANCH / DEFAULT_DIR exports ────────────────
 
   describe("DEFAULT_BRANCH and DEFAULT_DIR exports", () => {
