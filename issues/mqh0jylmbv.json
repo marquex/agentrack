@@ -1,0 +1,15 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:06:47.484Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:06:47.484Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Phase2 E2E: List visible test"
+    }
+  }
+]

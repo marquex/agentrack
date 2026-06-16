@@ -1,0 +1,26 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:07:40.269Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:07:40.269Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Tag Remove Test 1781636860268-13zygk",
+      "tags": [
+        "removable-tag"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:07:40.445Z",
+    "author": "anonymous",
+    "content": {
+      "tags": []
+    }
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:04:37.546Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:04:37.546Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Phase2 Test: Full issue",
+      "description": "This is a test description",
+      "status": "in-progress",
+      "priority": 1,
+      "assignee": "webapp-validator",
+      "tags": [
+        "test",
+        "phase2",
+        "full"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:06:29.828Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:06:29.866Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh0jlew6j",
+      "content": "Status-loop cleanup: this is leaked test data in the production tracker (tags test/phase2/full, no parent, no real work content). Per the agentrack skill, test issues belong in validation/. Closing as abandoned test pollution."
+    }
+  }
+]

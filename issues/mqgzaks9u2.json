@@ -43,5 +43,23 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:06:01.093Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh0iztyqa",
+      "content": "VALIDATION PASSED. The shadcn theme-token fix is fully effective.\n\nWhat I verified:\n\n1. Source check — `frontend/src/index.css` now contains the full shadcn theme blocks: `@theme inline` mapping (background, foreground, card, popover, primary, secondary, muted, accent, destructive, border, input, ring, chart-*, sidebar-*, plus radius), `@theme inline { --color-* : var(--*) }` mappings, `.dark { … }` overrides, and the previously-missing `--agentrack-transition-duration-fast/normal/slow` + status/priority color tokens. All semantic tokens referenced in `src/components/ui/*` (bg/text/border/ring/fill against background/foreground/card/popover/primary/secondary/muted/accent/destructive/border/input/ring and their *-foreground variants) resolve to a mapped token.\n\n2. Build — `npm run build` succeeds. Dist CSS (`index-bc6DsJyb.css`, 57.6 kB) now contains the previously-missing rules: `.bg-background`, `.bg-primary`, `.bg-card`, `.bg-destructive`, `.text-foreground`, `.text-muted-foreground`, `.border-input`, `.border-border`, and `.focus-visible\\:ring-ring/50` -> `color-mix(in oklab, var(--ring) 50%, transparent)`. Before the fix these were all 0 matches.\n\n3. Typecheck — `npx tsc --noEmit -p tsconfig.app.json` passes clean (exit 0).\n\n4. Visual verification (Playwright, light AND dark mode) — computed-style checks on the live app:\n   - Body background: light `oklch(1 0 0)`, dark `oklch(0.145 0 0)` — solid, not transparent.\n   - Create-issue dialog background: light `oklch(1 0 0)`, dark `oklch(0.205 0 0)` — solid (bg-background / bg-card).\n   - Dialog text color: light `oklch(0.145 0 0)`, dark `oklch(0.985 0 0)` — readable.\n   - Title input border: light `oklab(0.824 0 0)`, dark `oklab(0.668 0 0 / 0.41)` — visible (border-input).\n\n5. Regression — full E2E suite: 174/174 passed (48.9s), no regressions.\n\nInputs, selects, and dialogs now render with solid backgrounds, visible borders, and readable text in both light and dark mode. Acceptance criteria met."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:06:07.890Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
   }
 ]

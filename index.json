@@ -542,8 +542,8 @@
       "id": "mqgzaks9u2",
       "title": "Validate webapp shadcn-ui styles are correctly applied",
       "path": "issues/mqgzaks9u2.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
+      "status": "done",
+      "assignee": "project-manager",
       "parentId": "mqgza1pg6m",
       "tags": [
         "task"
@@ -566,7 +566,7 @@
       "id": "mqgzjuwgpw",
       "title": "Apply waitForResponse fix to sibling parent-selector test",
       "path": "issues/mqgzjuwgpw.json",
-      "status": "todo",
+      "status": "in-progress",
       "assignee": "webapp-developer",
       "parentId": "mqgw46luxr",
       "tags": [
@@ -616,6 +616,745 @@
       "path": "issues/mqgzu3jjyb.json",
       "status": "idea",
       "assignee": "project-manager",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0gr1we4",
+      "title": "Set Parent Child 1781636658071-dn76s2",
+      "path": "issues/mqh0gr1we4.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0gr5yvu",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0gr5yvu",
+      "title": "Set Parent Target 1781636658057-ymo70m",
+      "path": "issues/mqh0gr5yvu.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h60f5o",
+      "title": "SearchTest-1781636677505",
+      "path": "issues/mqh0h60f5o.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h66ieu",
+      "title": "Phase2 Test: Issue shape validation",
+      "path": "issues/mqh0h66ieu.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "test",
+        "phase2"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h6a2en",
+      "title": "CaseTest-1781636677514",
+      "path": "issues/mqh0h6a2en.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h6bd4q",
+      "title": "Updated title by test",
+      "path": "issues/mqh0h6bd4q.json",
+      "status": "in-progress",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "updated",
+        "tags"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqh0h6bpsw",
+      "title": "Phase2 Test: Default priority",
+      "path": "issues/mqh0h6bpsw.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h6divb",
+      "title": "Phase2 Test: Default status",
+      "path": "issues/mqh0h6divb.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h6kyk3",
+      "title": "Tagged issue",
+      "path": "issues/mqh0h6kyk3.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "tag-1781636677533"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h6n4kp",
+      "title": "Phase2 E2E: List visible test",
+      "path": "issues/mqh0h6n4kp.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h6wnyc",
+      "title": "Phase2 Test: Detail view",
+      "path": "issues/mqh0h6wnyc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h6xu54",
+      "title": "Phase2 Test: Minimal issue",
+      "path": "issues/mqh0h6xu54.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h73uvw",
+      "title": "Phase2 E2E: Badge test",
+      "path": "issues/mqh0h73uvw.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h7hwvv",
+      "title": "FilterTest-1781636679138",
+      "path": "issues/mqh0h7hwvv.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h9fj58",
+      "title": "E2E Created Issue 1781636681306",
+      "path": "issues/mqh0h9fj58.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0hanezi",
+      "title": "NavTest-1781636682042-029t1l",
+      "path": "issues/mqh0hanezi.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jn1stt",
+      "title": "RootB-1781636792634-ee725y",
+      "path": "issues/mqh0jn1stt.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jn8s0c",
+      "title": "ExpandChild-1781636792849-9irbpm",
+      "path": "issues/mqh0jn8s0c.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jnmtaq",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jn9cgo",
+      "title": "RootA-1781636792634-xrcszc",
+      "path": "issues/mqh0jn9cgo.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jn9ycc",
+      "title": "CollapseChild-1781636793380-pb2tzr",
+      "path": "issues/mqh0jn9ycc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jnvz9d",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jndgfd",
+      "title": "NestedChild-1781636792422-2o3pph",
+      "path": "issues/mqh0jndgfd.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jnp61x",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jndumn",
+      "title": "ChildA-1781636792639-fnyhjq",
+      "path": "issues/mqh0jndumn.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jn9cgo",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jnmtaq",
+      "title": "ExpandParent-1781636792849-wwxeif",
+      "path": "issues/mqh0jnmtaq.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jnp61x",
+      "title": "RootParent-1781636792422-oepmab",
+      "path": "issues/mqh0jnp61x.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jnr4sg",
+      "title": "ChildB-1781636792640-v3x5sa",
+      "path": "issues/mqh0jnr4sg.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jn1stt",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jnui28",
+      "title": "TreeMid-1781636793116-z0rqg2",
+      "path": "issues/mqh0jnui28.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jnzazf",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jnvz9d",
+      "title": "CollapseParent-1781636793380-xi3vyb",
+      "path": "issues/mqh0jnvz9d.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jnvzoh",
+      "title": "TreeLeaf-1781636793116-u628ye",
+      "path": "issues/mqh0jnvzoh.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jnui28",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jnzazf",
+      "title": "TreeRoot-1781636793116-1rscro",
+      "path": "issues/mqh0jnzazf.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jo3009",
+      "title": "StatusRoot-1781636794392-fcl10p",
+      "path": "issues/mqh0jo3009.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jo67n6",
+      "title": "NoFetchChild-1781636793675-lw6t1w",
+      "path": "issues/mqh0jo67n6.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jogm2j",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jogm2j",
+      "title": "NoFetchParent-1781636793672-ik4mx4",
+      "path": "issues/mqh0jogm2j.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jp6wbv",
+      "title": "SearchMatchParent-1781636794735-518skm",
+      "path": "issues/mqh0jp6wbv.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jpmhsq",
+      "title": "SearchOther-1781636794732-6yn72h",
+      "path": "issues/mqh0jpmhsq.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jpmn0n",
+      "title": "NavRoot-1781636795216-fjh0zo",
+      "path": "issues/mqh0jpmn0n.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jpnfqq",
+      "title": "SearchMatch-1781636794737-qah0tg",
+      "path": "issues/mqh0jpnfqq.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0jp6wbv",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jpx2wo",
+      "title": "SearchMatch-1781636794732-57yj3z",
+      "path": "issues/mqh0jpx2wo.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jy13xy",
+      "title": "Updated title by test",
+      "path": "issues/mqh0jy13xy.json",
+      "status": "in-progress",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "updated",
+        "tags"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqh0jy3jno",
+      "title": "Phase2 Test: Minimal issue",
+      "path": "issues/mqh0jy3jno.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jy8bvm",
+      "title": "Tagged issue",
+      "path": "issues/mqh0jy8bvm.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "tag-1781636807126"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jy8q4o",
+      "title": "Phase2 Test: Issue shape validation",
+      "path": "issues/mqh0jy8q4o.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "test",
+        "phase2"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jyg1wd",
+      "title": "SearchTest-1781636807097",
+      "path": "issues/mqh0jyg1wd.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jyianw",
+      "title": "CaseTest-1781636807104",
+      "path": "issues/mqh0jyianw.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jylmbv",
+      "title": "Phase2 E2E: List visible test",
+      "path": "issues/mqh0jylmbv.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jyqktr",
+      "title": "Phase2 Test: Default priority",
+      "path": "issues/mqh0jyqktr.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jyx2xs",
+      "title": "Phase2 Test: Full issue",
+      "path": "issues/mqh0jyx2xs.json",
+      "status": "in-progress",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [
+        "test",
+        "phase2",
+        "full"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqh0jyy3qg",
+      "title": "Phase2 Test: Default status",
+      "path": "issues/mqh0jyy3qg.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jyyiff",
+      "title": "Phase2 Test: Detail view",
+      "path": "issues/mqh0jyyiff.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jzj4d2",
+      "title": "FilterTest-1781636808750",
+      "path": "issues/mqh0jzj4d2.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0jzuyfq",
+      "title": "Phase2 E2E: Badge test",
+      "path": "issues/mqh0jzuyfq.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0k1k9zj",
+      "title": "E2E Created Issue 1781636810937",
+      "path": "issues/mqh0k1k9zj.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0kg7j13",
+      "title": "Timestamp Test Unique",
+      "path": "issues/mqh0kg7j13.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0kga7xu",
+      "title": "Desc Display Test Unique",
+      "path": "issues/mqh0kga7xu.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0kgk2a1",
+      "title": "Detail Display Test Unique",
+      "path": "issues/mqh0kgk2a1.json",
+      "status": "todo",
+      "assignee": "test-bot",
+      "parentId": null,
+      "tags": [
+        "display-test-unique"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mqh0kgr42f",
+      "title": "Status Badge Test Unique",
+      "path": "issues/mqh0kgr42f.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0kgz09s",
+      "title": "Tag Display Test Unique",
+      "path": "issues/mqh0kgz09s.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "unique-tag-display-test"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l24vrr",
+      "title": "Timeline Expand Test 1781636859275-e29zjm",
+      "path": "issues/mqh0l24vrr.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l33iru",
+      "title": "Tag Display Test 1781636859798-eognhx",
+      "path": "issues/mqh0l33iru.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "alpha-tag",
+        "beta-tag"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l378qy",
+      "title": "No Parent Test 1781636860545-w6c89u",
+      "path": "issues/mqh0l378qy.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l3aq28",
+      "title": "Timeline Update Display 1781636859544-5vzbuq",
+      "path": "issues/mqh0l3aq28.json",
+      "status": "in-progress",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l3r0nc",
+      "title": "Tag Remove Test 1781636860268-13zygk",
+      "path": "issues/mqh0l3r0nc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l3ti95",
+      "title": "Set Parent Target 1781636860757-gu25es",
+      "path": "issues/mqh0l3ti95.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l3uh7u",
+      "title": "Tag Add Test 1781636860009-ljym0i",
+      "path": "issues/mqh0l3uh7u.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "new-e2e-tag"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l3zk9h",
+      "title": "Set Parent Child 1781636860760-pnxid5",
+      "path": "issues/mqh0l3zk9h.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0l3ti95",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l460zs",
+      "title": "Clear Parent Target 1781636861373-ip4zxa",
+      "path": "issues/mqh0l460zs.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l4dxgk",
+      "title": "New Parent 1781636861068-vvs0oy",
+      "path": "issues/mqh0l4dxgk.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l4kyve",
+      "title": "Old Parent 1781636861065-k9rfdk",
+      "path": "issues/mqh0l4kyve.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l4o8m4",
+      "title": "Change Parent Child 1781636861069-if6i6e",
+      "path": "issues/mqh0l4o8m4.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0l4dxgk",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l4rn1l",
+      "title": "Nav Parent Child 1781636861642-s35j6g",
+      "path": "issues/mqh0l4rn1l.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqh0l4wlij",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l4wlij",
+      "title": "Nav Parent Target 1781636861640-2n7yzk",
+      "path": "issues/mqh0l4wlij.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0l4x7oa",
+      "title": "Clear Parent Child 1781636861375-ewbbu0",
+      "path": "issues/mqh0l4x7oa.json",
+      "status": "idea",
+      "assignee": null,
       "parentId": null,
       "tags": [],
       "priority": 3
@@ -1182,6 +1921,120 @@
         "task"
       ],
       "priority": 3
+    },
+    {
+      "id": "mqh0fp0kw5",
+      "title": "UrlFilterClosed-1781636609158-71r20j",
+      "path": "issues/mqh0fp0kw5.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fp23hw",
+      "title": "UrlFilterIdea-1781636609158-71r20j",
+      "path": "issues/mqh0fp23hw.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fpcyzu",
+      "title": "UrlFilterInProgress-1781636609158-71r20j",
+      "path": "issues/mqh0fpcyzu.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fptqoq",
+      "title": "UrlFilterTodo-1781636609158-71r20j",
+      "path": "issues/mqh0fptqoq.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fpycws",
+      "title": "UrlFilterDone-1781636609158-71r20j",
+      "path": "issues/mqh0fpycws.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fqb1cu",
+      "title": "UrlFilterInProgress-1781636609656-6h9846",
+      "path": "issues/mqh0fqb1cu.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fqmrsy",
+      "title": "UrlFilterDone-1781636609656-6h9846",
+      "path": "issues/mqh0fqmrsy.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fqscwm",
+      "title": "UrlFilterIdea-1781636609656-6h9846",
+      "path": "issues/mqh0fqscwm.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fqutxe",
+      "title": "UrlFilterTodo-1781636609656-6h9846",
+      "path": "issues/mqh0fqutxe.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0fqx74m",
+      "title": "UrlFilterClosed-1781636609656-6h9846",
+      "path": "issues/mqh0fqx74m.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh0h61iyc",
+      "title": "Phase2 Test: Full issue",
+      "path": "issues/mqh0h61iyc.json",
+      "status": "closed",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [
+        "test",
+        "phase2",
+        "full"
+      ],
+      "priority": 1
     }
   ],
   "childrenOf": {
@@ -1327,6 +2180,45 @@
       "mqgza7xio7",
       "mqgzae4ayr",
       "mqgzaks9u2"
+    ],
+    "mqh0gr5yvu": [
+      "mqh0gr1we4"
+    ],
+    "mqh0jnp61x": [
+      "mqh0jndgfd"
+    ],
+    "mqh0jn9cgo": [
+      "mqh0jndumn"
+    ],
+    "mqh0jn1stt": [
+      "mqh0jnr4sg"
+    ],
+    "mqh0jnmtaq": [
+      "mqh0jn8s0c"
+    ],
+    "mqh0jnzazf": [
+      "mqh0jnui28"
+    ],
+    "mqh0jnui28": [
+      "mqh0jnvzoh"
+    ],
+    "mqh0jnvz9d": [
+      "mqh0jn9ycc"
+    ],
+    "mqh0jogm2j": [
+      "mqh0jo67n6"
+    ],
+    "mqh0jp6wbv": [
+      "mqh0jpnfqq"
+    ],
+    "mqh0l3ti95": [
+      "mqh0l3zk9h"
+    ],
+    "mqh0l4dxgk": [
+      "mqh0l4o8m4"
+    ],
+    "mqh0l4wlij": [
+      "mqh0l4rn1l"
     ]
   }
 }

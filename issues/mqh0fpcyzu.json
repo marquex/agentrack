@@ -1,0 +1,34 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:03:29.162Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:29.162Z",
+    "author": "anonymous",
+    "content": {
+      "title": "UrlFilterInProgress-1781636609158-71r20j",
+      "status": "in-progress",
+      "assignee": "webapp-validator"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:06:29.582Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:06:29.620Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh0jl017i",
+      "content": "Status-loop cleanup: this is leaked E2E/test data in the production tracker (mechanical title, no parent, no real work content, created by anonymous). Per the agentrack skill, test issues belong in validation/. Closing as abandoned test pollution to keep the work/ideas loops clean."
+    }
+  }
+]

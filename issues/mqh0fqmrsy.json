@@ -1,0 +1,34 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:03:29.662Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:29.662Z",
+    "author": "anonymous",
+    "content": {
+      "title": "UrlFilterDone-1781636609656-6h9846",
+      "status": "done",
+      "assignee": "webapp-validator"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:06:30.573Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:06:30.610Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh0jlouzt",
+      "content": "Status-loop cleanup: leaked E2E/test data (mechanical UrlFilterDone title, no parent). Closing to clear the production tracker of test pollution."
+    }
+  }
+]

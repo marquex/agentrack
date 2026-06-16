@@ -34,5 +34,13 @@
       "blockerId": "mqgzjnns95",
       "reason": "Blocker issue mqgzjnns95 transitioned to done"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:36.923Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
   }
 ]
