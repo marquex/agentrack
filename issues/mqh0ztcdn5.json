@@ -1,15 +1,15 @@
 [
   {
     "type": "creation",
-    "timestamp": "2026-06-16T19:09:14.502Z",
+    "timestamp": "2026-06-16T19:19:06.687Z",
     "author": "anonymous"
   },
   {
     "type": "update",
-    "timestamp": "2026-06-16T19:09:14.502Z",
+    "timestamp": "2026-06-16T19:19:06.687Z",
     "author": "anonymous",
     "content": {
-      "title": "Delete Blocker 1781636954501-zpqtoz"
+      "title": "Test Issue"
     }
   }
 ]
