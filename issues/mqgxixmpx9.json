@@ -1,0 +1,24 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:42:00.286Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:42:00.286Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Comment Count Test 1781631720285-yj76cn"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:42:00.288Z",
+    "author": "tester",
+    "content": {
+      "id": "mqgxix87u1",
+      "content": "First comment"
+    }
+  }
+]
