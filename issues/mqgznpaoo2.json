@@ -35,5 +35,13 @@
       "blockerId": "mqgznigv4t",
       "reason": "Blocker issue mqgznigv4t transitioned to done"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:23:18.097Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
   }
 ]

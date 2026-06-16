@@ -43,5 +43,23 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:21:43.213Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "library-releaser"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:21:43.251Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh136x8ik",
+      "content": "Status-loop reset: this release task was in-progress with no progress comment. A worker who picks up a release reports a blocker or completes it (see sibling mqe27481sa which documents the npm-credential gate). No signal here → likely crashed/never started. Resetting to todo, same assignee, so the work loop re-hands it. When picked up, either cut the release or report the blocker (likely the same npm publish credential / pre-publishOnly gate as mqe27481sa)."
+    }
   }
 ]

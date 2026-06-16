@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:20:23.596Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:20:23.596Z",
+    "author": "anonymous",
+    "content": {
+      "title": "UrlFilterClosed-1781637623588-jr94xp",
+      "status": "closed",
+      "assignee": "webapp-validator"
+    }
+  }
+]

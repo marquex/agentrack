@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:20:22.753Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:20:22.753Z",
+    "author": "anonymous",
+    "content": {
+      "title": "UrlFilterClosed-1781637622745-7wcgvj",
+      "status": "closed",
+      "assignee": "webapp-validator"
+    }
+  }
+]

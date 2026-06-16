@@ -1,0 +1,23 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:26:19.228Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:26:19.228Z",
+    "author": "anonymous",
+    "content": {
+      "title": "UI Blocked 1781637979227-t7vwa7"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T19:26:19.230Z",
+    "author": "tester",
+    "content": {
+      "blockerId": "mqh192vrx5"
+    }
+  }
+]

@@ -42,5 +42,41 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:21:07.855Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh12ei4do",
+      "content": "Validated. The waitForResponse attach-order fix in \"sets a parent via search and selection\" (phase3-validation.spec.ts:1235) is correct and stable.\n\nCode review:\n- searchResponsePromise is now hoisted ABOVE searchInput.fill (the action that triggers the GET /api/issues?search= call), matching the canonical Playwright pattern.\n- The matcher is tightly scoped: GET method + /api/issues in URL + new URL(...).searchParams.get('search') === 'Set Parent Target'. This prevents latching onto unrelated concurrent GET /api/issues requests.\n- Mirrors the existing, already-stable \"changes an existing parent\" sibling test.\n\nValidation results:\n- Targeted test: 1/1 passed.\n- Full Parent Selector block (5 tests): 5/5 passed across 3 consecutive runs — deterministic.\n- Full e2e suite: 167 passed / 7 failed. All 7 failures are pre-existing flakiness (4 known BUG-2 sync + 3 shared-state ordering). Verified by re-running all 7 in isolation → 7/7 passed. None are related to the parent-selector change.\n\nNo regressions introduced. The fix fully resolves the attach-order anti-pattern noted in the mqgzjnns95 audit — no remaining instances of that pattern in the file."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:21:10.997Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:22:00.041Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "webapp-validator"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:22:00.076Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh13jlcq1",
+      "content": "Status-loop reset: this Validate task was in-progress with no progress comment. No work signal → likely crashed/never started. The fix it validates (mqgzjuwgpw) is done. Resetting to todo, same assignee, so the work loop re-hands it for validation."
+    }
   }
 ]

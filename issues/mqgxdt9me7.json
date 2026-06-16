@@ -43,5 +43,23 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:21:54.104Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "library-developer"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:21:54.141Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh13eop4i",
+      "content": "Status-loop reset: this Implement task was in-progress with no progress comment. No work signal → likely crashed/never started. Resetting to todo, same assignee, so the work loop re-hands it. Resume the agt events list/add implementation (Plan mqgxdtmenb is done)."
+    }
   }
 ]
