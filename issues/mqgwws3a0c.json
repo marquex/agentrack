@@ -1,0 +1,16 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:24:47.743Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:24:47.743Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Sub-issue Click Child 1781630687743-jgpjtz",
+      "parentId": "mqgwwsgebu"
+    }
+  }
+]

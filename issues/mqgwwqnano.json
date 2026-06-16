@@ -1,0 +1,33 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:24:45.127Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:24:45.127Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Edit Comment UI Test 1781630685126-ed0dj9"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:24:45.129Z",
+    "author": "tester",
+    "content": {
+      "id": "mqgwwquosf",
+      "content": "Original comment to edit"
+    }
+  },
+  {
+    "type": "comment-update",
+    "timestamp": "2026-06-16T17:24:45.508Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgwwquosf",
+      "content": "Updated comment via E2E edit"
+    }
+  }
+]

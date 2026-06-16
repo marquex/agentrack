@@ -1,0 +1,19 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:24:49.135Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:24:49.135Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Tag Display Test 1781630689134-4r6d0x",
+      "tags": [
+        "alpha-tag",
+        "beta-tag"
+      ]
+    }
+  }
+]

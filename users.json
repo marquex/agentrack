@@ -1,3 +1,29 @@
 {
-  "users": []
+  "users": [
+    {
+      "name": "apitest-list-1781630691130-2kittx",
+      "token": "tk_qqtanjiy",
+      "registeredAt": "2026-06-16T17:24:51.131Z"
+    },
+    {
+      "name": "apitest-reg-1781630691140-xxo7tn",
+      "token": "tk_44a7m1um",
+      "registeredAt": "2026-06-16T17:24:51.140Z"
+    },
+    {
+      "name": "upper1781630691145-7ib4vw",
+      "token": "tk_2ehcdkgu",
+      "registeredAt": "2026-06-16T17:24:51.145Z"
+    },
+    {
+      "name": "dup-1781630691157-h6jzia",
+      "token": "tk_nwhchc9i",
+      "registeredAt": "2026-06-16T17:24:51.158Z"
+    },
+    {
+      "name": "regen-1781630691177-q0zsl0",
+      "token": "tk_k7yys4r2",
+      "registeredAt": "2026-06-16T17:24:51.178Z"
+    }
+  ]
 }

@@ -1,0 +1,18 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:24:29.699Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:24:29.699Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Tagged issue",
+      "tags": [
+        "tag-1781630669698"
+      ]
+    }
+  }
+]
