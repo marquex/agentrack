@@ -9,7 +9,8 @@ All agentrack CLI commands follow the format `agt <subcommand> [arguments] [flag
 - [update](#agt-update)
 - [list](#agt-list)
 - [view](#agt-view)
-- [history](#agt-history)
+- [events list](#agt-events-list)
+- [events add](#agt-events-add)
 - [delete](#agt-delete)
 - [next](#agt-next)
 - [comments add](#agt-comments-add)
@@ -273,12 +274,18 @@ agt view m1x2k9ab
 
 ---
 
-## `agt history`
+## `agt events`
 
-Show the raw event log for an issue.
+Namespace for viewing and recording issue events. Replaces the former `agt history` command (the `tracker.history()` library method remains as a deprecated alias of `eventsList`).
+
+---
+
+### `agt events list`
+
+Show the raw event log for an issue, optionally filtered by event type.
 
 ```bash
-agt history <issue-id>
+agt events list <issue-id> [--type <event-type>]
 ```
 
 **Arguments:**
@@ -287,10 +294,17 @@ agt history <issue-id>
 |----------|----------|-------------|
 | `issue-id` | Yes | The ID of the issue |
 
+**Options:**
+
+| Flag | Description |
+|------|-------------|
+| `--type <event-type>` | Filter events by exact `type` match (e.g. `creation`, `update`, `comment`, or any custom type) |
+
 **Example:**
 
 ```bash
-agt history m1x2k9ab
+agt events list m1x2k9ab
+agt events list m1x2k9ab --type comment
 ```
 
 **Output:**
@@ -320,7 +334,63 @@ agt history m1x2k9ab
 ]
 ```
 
+**Errors:**
+
+| Exit | Result | Cause |
+|------|--------|-------|
+| 20 | `NOT_FOUND` | Issue ID not in the index |
+| 21 | `ISSUE_MISSING` | Index entry exists but the event file is missing |
+| 27 | `NOT_INITIALIZED` | No `.agentrack/` in the current directory |
+
 See [The issue object](./issue-object.md) for the event sourcing model.
+
+---
+
+### `agt events add`
+
+Append a custom event to an issue's event log. Agentrack auto-attaches the `timestamp` (ISO 8601, UTC) and `author`.
+
+```bash
+agt events add <issue-id> '<event-json>'
+```
+
+The event JSON must be an object with:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `type` | Yes | Non-empty string. Must **not** collide with a reserved agentrack event type (`creation`, `update`, `comment`, `comment_update`, `comment_delete`, `blockage_added`, `blockage_resolved`, `blockage_deleted`) |
+| `content` | Yes | A plain JSON object (not an array, not a primitive, not `null`) carrying your custom payload |
+
+**Example:**
+
+```bash
+agt events add m1x2k9ab '{"type":"flag","content":{"reason":"blocked on QA"}}'
+```
+
+**Output:** the recorded event, including the auto-added `timestamp` and `author`:
+
+```json
+{
+  "timestamp": "2025-01-15T12:00:00.000Z",
+  "type": "flag",
+  "author": "alice",
+  "content": { "reason": "blocked on QA" }
+}
+```
+
+**Notes:**
+- Recording a custom event bumps the issue's `updatedAt` but does not change `title`, `status`, `assignee`, `tags`, `priority`, `parentId`, or comments — those remain driven by their dedicated event types.
+- Custom event content round-trips exactly through `eventsList` / `replayEvents`.
+
+**Errors:**
+
+| Exit | Result | Cause |
+|------|--------|-------|
+| 10 | `INVALID_PARAMS` | Payload is not valid JSON, not an object, missing/empty `type`, or `content` is not a plain object |
+| 22 | `RESERVED_EVENT_TYPE` | `type` collides with a reserved agentrack event type |
+| 20 | `NOT_FOUND` | Issue ID not in the index |
+| 21 | `ISSUE_MISSING` | Index entry exists but the event file is missing |
+| 27 | `NOT_INITIALIZED` | No `.agentrack/` in the current directory |
 
 ---
 

@@ -195,20 +195,23 @@ interface ComputedIssue {
 }
 ```
 
-#### `history(id)`
+#### `eventsList(id, options?)`
 
-Retrieve the raw event log for an issue.
+Retrieve the raw event log for an issue, optionally filtered by event type.
 
 ```javascript
-const events = await tracker.history("m1x2k9ab");
+const events = await tracker.eventsList("m1x2k9ab");
+const comments = await tracker.eventsList("m1x2k9ab", { type: "comment" });
 ```
 
-**Parameters:** `id: IssueId`
+**Parameters:** `id: IssueId`, `options?: { type?: string }`
 
-**Return type:** `HistoryResult`
+When `options.type` is provided, only events whose `type` matches exactly are returned (works for both reserved and custom event types).
+
+**Return type:** `EventsListResult`
 
 ```typescript
-type HistoryResult = Event[] | AgentrackError;
+type EventsListResult = Event[] | AgentrackError;
 ```
 
 Each event has:
@@ -216,10 +219,41 @@ Each event has:
 ```typescript
 interface Event {
   timestamp: string;   // ISO 8601
-  type: string;        // "creation", "update", "comment", etc.
+  type: string;        // "creation", "update", "comment", or any custom type
   author: string;
   content?: any;       // Varies by event type
 }
+```
+
+#### `eventsAdd(id, event)`
+
+Append a custom event to an issue's event log. Agentrack auto-attaches the `timestamp` (ISO 8601, UTC) and `author` (resolved from the configured user).
+
+```javascript
+await tracker.eventsAdd("m1x2k9ab", {
+  type: "flag",
+  content: { reason: "needs review" },
+});
+```
+
+**Parameters:** `id: IssueId`, `event: { type: string; content: Record<string, unknown> }`
+
+The `type` must be a non-empty string and must **not** collide with a reserved agentrack event type (see `RESERVED_EVENT_TYPES`). `content` must be a plain JSON object. Recording a custom event bumps `updatedAt` but leaves the rest of the computed issue state untouched.
+
+**Return type:** `EventsAddResult`
+
+```typescript
+type EventsAddResult = Event | AgentrackError;
+```
+
+**Errors:** `INVALID_PARAMS` (exit 10) for malformed payloads, `RESERVED_EVENT_TYPE` (exit 22) when `type` collides with a reserved type, plus `NOT_FOUND`, `ISSUE_MISSING`, `NOT_INITIALIZED`.
+
+#### `history(id)`
+
+**Deprecated.** Alias for `eventsList(id)` (without type filtering). Retained for backward compatibility with earlier releases.
+
+```javascript
+const events = await tracker.history("m1x2k9ab");
 ```
 
 #### `next(assignee)`
@@ -515,15 +549,28 @@ type UsersRevokeResult =
   | { result: "USER_NOT_FOUND"; message: string }
 ```
 
-#### `usersRegenerate(name)`
+#### `usersRegenerate(name, params?)`
 
 Generate a new token for an existing user. The old token is invalidated.
 
+Self-service only: the authenticated caller must be the target user. In open-auth mode where the ambient `AGT_USER_TOKEN` environment variable is absent, pass an explicit `token` in `params` to prove the caller's identity — otherwise the call authenticates as the default user and the self-service check will reject with `INVALID_TOKEN`.
+
 ```javascript
+// Rely on AGT_USER_TOKEN env var (default behavior)
 const { token } = await tracker.usersRegenerate("alice");
+
+// Provide an explicit token (overrides AGT_USER_TOKEN, useful in open-auth mode)
+const { token: newToken } = await tracker.usersRegenerate("alice", {
+  token: "tk_aliceCurrentToken",
+});
 ```
 
-**Parameters:** `name: string`
+**Parameters:**
+
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | Yes | The user name whose token to regenerate (case-insensitive). |
+| `params.token` | `string` | No | Explicit token to authenticate the caller. Overrides the `AGT_USER_TOKEN` environment variable. |
 
 **Return type:** `UsersRegenerateResult`
 

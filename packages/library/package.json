@@ -1,6 +1,6 @@
 {
   "name": "agentrack",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Issue tracker designed for AI agents — file-backed, event-sourced, git-friendly",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -23,7 +23,8 @@
   },
   "scripts": {
     "test": "bun test",
-    "test:coverage": "bun test --coverage",
+    "test:coverage": "bun test --coverage --path-ignore-patterns '**/e2e/**'",
+    "test:e2e": "bun test --jobs 1 tests/e2e",
     "test:watch": "bun test --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/ tests/",

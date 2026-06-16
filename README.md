@@ -47,8 +47,12 @@ npx agentrack view <issueId>
 # Update an issue
 npx agentrack update <issueId> --status in-progress --assignee alice
 
-# View full event history
-npx agentrack history <issueId>
+# List an issue's raw events (optionally filter by type)
+npx agentrack events list <issueId>
+npx agentrack events list <issueId> --type comment
+
+# Record a custom event on an issue
+npx agentrack events add <issueId> '{"type":"flag","content":{"reason":"blocked on QA"}}'
 
 # Sync issue data to remote
 npx agentrack push
@@ -141,8 +145,17 @@ const issue = await tracker.view(id);
 // Update an issue
 await tracker.update(id, { status: "in-progress", assignee: "alice" });
 
-// Full event history
-const events = await tracker.history(id);
+// List an issue's raw events (optionally filtered by type)
+const events = await tracker.eventsList(id);
+const comments = await tracker.eventsList(id, { type: "comment" });
+
+// Record a custom event (type must not collide with a reserved agentrack type)
+await tracker.eventsAdd(id, {
+  type: "flag",
+  content: { reason: "needs review" },
+});
+
+// `tracker.history(id)` remains available as a deprecated alias of `eventsList`.
 ```
 
 ### Worktree Sync API
