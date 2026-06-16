@@ -1,5 +1,1250 @@
 {
-  "open": [],
+  "open": [
+    {
+      "id": "mqgze4214f",
+      "title": "RootParent-1781634855585-kcyvjx",
+      "path": "issues/mqgze4214f.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze4fz1r",
+      "title": "ChildB-1781634855789-i5xzlh",
+      "path": "issues/mqgze4fz1r.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze4yy8h",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze4kipn",
+      "title": "NestedChild-1781634855585-onpeny",
+      "path": "issues/mqgze4kipn.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze4214f",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze4qevi",
+      "title": "RootA-1781634855783-x2hx5f",
+      "path": "issues/mqgze4qevi.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze4qey9",
+      "title": "ChildA-1781634855787-eetvka",
+      "path": "issues/mqgze4qey9.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze4qevi",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze4yy8h",
+      "title": "RootB-1781634855783-fc5kqd",
+      "path": "issues/mqgze4yy8h.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze516do",
+      "title": "CollapseChild-1781634856474-b9d4gs",
+      "path": "issues/mqgze516do.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze520nk",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze520nk",
+      "title": "CollapseParent-1781634856474-0kh2z6",
+      "path": "issues/mqgze520nk.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze53qdk",
+      "title": "ExpandParent-1781634855982-l5xt8j",
+      "path": "issues/mqgze53qdk.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze55fn6",
+      "title": "NoFetchParent-1781634856731-5emqzk",
+      "path": "issues/mqgze55fn6.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze567ue",
+      "title": "TreeMid-1781634856224-rm9eab",
+      "path": "issues/mqgze567ue.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze5avd9",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze5808f",
+      "title": "NoFetchChild-1781634856733-uk9w1f",
+      "path": "issues/mqgze5808f.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze55fn6",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze5avd9",
+      "title": "TreeRoot-1781634856224-1mslxf",
+      "path": "issues/mqgze5avd9.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze5l0re",
+      "title": "TreeLeaf-1781634856224-zwlv2u",
+      "path": "issues/mqgze5l0re.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze567ue",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze5lpw9",
+      "title": "ExpandChild-1781634855982-ga254z",
+      "path": "issues/mqgze5lpw9.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze53qdk",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze6jymw",
+      "title": "SearchOther-1781634857718-fh5w4e",
+      "path": "issues/mqgze6jymw.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze6mynn",
+      "title": "SearchMatch-1781634857718-lqkud0",
+      "path": "issues/mqgze6mynn.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze6o7pr",
+      "title": "NavRoot-1781634858188-ecbses",
+      "path": "issues/mqgze6o7pr.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze6rbii",
+      "title": "SearchMatch-1781634857723-5j07dl",
+      "path": "issues/mqgze6rbii.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgze6sjhj",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze6sjhj",
+      "title": "SearchMatchParent-1781634857722-53oxo6",
+      "path": "issues/mqgze6sjhj.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze6uqzb",
+      "title": "StatusRoot-1781634857429-gdry79",
+      "path": "issues/mqgze6uqzb.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze70heh",
+      "title": "Tagged issue",
+      "path": "issues/mqgze70heh.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "tag-1781634859743"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgze75uhq",
+      "title": "Phase2 Test: Full issue",
+      "path": "issues/mqgze75uhq.json",
+      "status": "in-progress",
+      "assignee": "webapp-validator",
+      "parentId": null,
+      "tags": [
+        "test",
+        "phase2",
+        "full"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqgze7i1ts",
+      "title": "Phase2 Test: Issue shape validation",
+      "path": "issues/mqgze7i1ts.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "test",
+        "phase2"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgze7kvbj",
+      "title": "Phase2 Test: Minimal issue",
+      "path": "issues/mqgze7kvbj.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze7o4cn",
+      "title": "CaseTest-1781634859725",
+      "path": "issues/mqgze7o4cn.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze7ortk",
+      "title": "SearchTest-1781634859719",
+      "path": "issues/mqgze7ortk.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze7vweq",
+      "title": "Phase2 Test: Default status",
+      "path": "issues/mqgze7vweq.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze80hd8",
+      "title": "Phase2 Test: Default priority",
+      "path": "issues/mqgze80hd8.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze8dbpp",
+      "title": "Phase2 E2E: Badge test",
+      "path": "issues/mqgze8dbpp.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze8o2so",
+      "title": "Phase2 Test: Detail view",
+      "path": "issues/mqgze8o2so.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze8oc9h",
+      "title": "Phase2 E2E: List visible test",
+      "path": "issues/mqgze8oc9h.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgze8toyd",
+      "title": "Updated title by test",
+      "path": "issues/mqgze8toyd.json",
+      "status": "in-progress",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "updated",
+        "tags"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqgze9lu7w",
+      "title": "FilterTest-1781634861291",
+      "path": "issues/mqgze9lu7w.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeamhrr",
+      "title": "E2E Created Issue 1781634863373",
+      "path": "issues/mqgzeamhrr.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzebaeba",
+      "title": "BackNavTest-1781634864097-gsws8a",
+      "path": "issues/mqgzebaeba.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzebylie",
+      "title": "NavTest-1781634863828-hurxfs",
+      "path": "issues/mqgzebylie.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeh61xe",
+      "title": "Timestamp Test Unique",
+      "path": "issues/mqgzeh61xe.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzehb54p",
+      "title": "Detail Display Test Unique",
+      "path": "issues/mqgzehb54p.json",
+      "status": "todo",
+      "assignee": "test-bot",
+      "parentId": null,
+      "tags": [
+        "display-test-unique"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mqgzehuakq",
+      "title": "Tag Display Test Unique",
+      "path": "issues/mqgzehuakq.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "unique-tag-display-test"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzehyjea",
+      "title": "Desc Display Test Unique",
+      "path": "issues/mqgzehyjea.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzehzh9j",
+      "title": "Status Badge Test Unique",
+      "path": "issues/mqgzehzh9j.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzei9wyj",
+      "title": "Status Change Test Unique",
+      "path": "issues/mqgzei9wyj.json",
+      "status": "in-progress",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeifr7i",
+      "title": "Desc Edit Test Unique",
+      "path": "issues/mqgzeifr7i.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzein6sl",
+      "title": "Title Edit Test Updated",
+      "path": "issues/mqgzein6sl.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeit7qp",
+      "title": "Priority Change Test Unique",
+      "path": "issues/mqgzeit7qp.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 5
+    },
+    {
+      "id": "mqgzej0e35",
+      "title": "Blocker Resolve Test 1781634874529-hr3eak",
+      "path": "issues/mqgzej0e35.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej14xr",
+      "title": "Blocked For Add 1781634874512-xmmal5",
+      "path": "issues/mqgzej14xr.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej1y13",
+      "title": "Comments List Test 1781634874441-fgt7e4",
+      "path": "issues/mqgzej1y13.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej3bor",
+      "title": "Delete Comment Test 1781634874490-7xhq4l",
+      "path": "issues/mqgzej3bor.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej3ps4",
+      "title": "Assignee Change Test Unique",
+      "path": "issues/mqgzej3ps4.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej4y3s",
+      "title": "Next Issue Test 1781634874571-281ae6",
+      "path": "issues/mqgzej4y3s.json",
+      "status": "todo",
+      "assignee": "next-tester-1781634874571-fdwb7a",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej5esj",
+      "title": "Comment Count Test 1781634874831-yataam",
+      "path": "issues/mqgzej5esj.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej5gyd",
+      "title": "Child 2 1781634874593-cnm0sf",
+      "path": "issues/mqgzej5gyd.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzejeym9",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej6nkg",
+      "title": "Blockage Empty Array 1781634874524-oi6lci",
+      "path": "issues/mqgzej6nkg.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzej7bse",
+      "title": "Edit Comment Validation 1781634874485-0a5yic",
+      "path": "issues/mqgzej7bse.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeja5vi",
+      "title": "Add Comment UI Test 1781634875031-06q680",
+      "path": "issues/mqgzeja5vi.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeja6xe",
+      "title": "Delete Validation 1781634874550-bcl1ti",
+      "path": "issues/mqgzeja6xe.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejbsg7",
+      "title": "Edit Comment Test 1781634874477-5saols",
+      "path": "issues/mqgzejbsg7.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeje6rn",
+      "title": "Blocked Issue 1781634874505-gdp7ym",
+      "path": "issues/mqgzeje6rn.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejeym9",
+      "title": "Parent Filter Test 1781634874591-7a3shx",
+      "path": "issues/mqgzejeym9.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejf4jc",
+      "title": "Clear Parent Test 1781634874584-8bbjci",
+      "path": "issues/mqgzejf4jc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejff0e",
+      "title": "Comment Type Test 1781634874472-f53u14",
+      "path": "issues/mqgzejff0e.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejh24b",
+      "title": "Add Comment Test 1781634874455-cjyzyg",
+      "path": "issues/mqgzejh24b.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejhjd5",
+      "title": "Comment Empty Test 1781634874467-wwz5by",
+      "path": "issues/mqgzejhjd5.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeji131",
+      "title": "Blockages List Test 1781634874499-zs6m4l",
+      "path": "issues/mqgzeji131.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejicj6",
+      "title": "Blocker Delete Test 1781634874542-kgs0ue",
+      "path": "issues/mqgzejicj6.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejimmg",
+      "title": "Child 1 1781634874592-dq6voa",
+      "path": "issues/mqgzejimmg.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzejeym9",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejjhem",
+      "title": "Comment Shape Test 1781634874447-b4cagn",
+      "path": "issues/mqgzejjhem.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejjzoe",
+      "title": "Resolve Validation 1781634874537-z17e9z",
+      "path": "issues/mqgzejjzoe.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejl9ob",
+      "title": "History Update Test 1781634874561-szh70p",
+      "path": "issues/mqgzejl9ob.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejlo7l",
+      "title": "Blocker For Add 1781634874513-v7vuo2",
+      "path": "issues/mqgzejlo7l.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejp27q",
+      "title": "Blocked Delete Test 1781634874543-5jpvlh",
+      "path": "issues/mqgzejp27q.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejrv59",
+      "title": "Child Clear Test 1781634874585-tr943v",
+      "path": "issues/mqgzejrv59.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejthsa",
+      "title": "Blocker Issue 1781634874504-fppw26",
+      "path": "issues/mqgzejthsa.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejtvod",
+      "title": "No Comments Test 1781634874624-0069wc",
+      "path": "issues/mqgzejtvod.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejuszs",
+      "title": "Parent Issue 1781634874577-xhn6u0",
+      "path": "issues/mqgzejuszs.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejv5dq",
+      "title": "Blocked Resolve Test 1781634874530-7sskmh",
+      "path": "issues/mqgzejv5dq.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejvxci",
+      "title": "Edit Comment UI Test 1781634875313-4thx64",
+      "path": "issues/mqgzejvxci.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejwrgj",
+      "title": "History Test 1781634874555-6quc1e",
+      "path": "issues/mqgzejwrgj.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejxpqv",
+      "title": "Comment Validation Test 1781634874461-o28y61",
+      "path": "issues/mqgzejxpqv.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejxr9e",
+      "title": "Blockage Validation 1781634874519-d5paic",
+      "path": "issues/mqgzejxr9e.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzejzn8j",
+      "title": "Child Issue 1781634874578-sat99c",
+      "path": "issues/mqgzejzn8j.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzejuszs",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzekaumy",
+      "title": "UI Blocked 1781634876232-yro972",
+      "path": "issues/mqgzekaumy.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzekj7jx",
+      "title": "No Blockages Test 1781634876030-qb375l",
+      "path": "issues/mqgzekj7jx.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzekju3h",
+      "title": "Delete Comment UI Test 1781634875748-b3x0ge",
+      "path": "issues/mqgzekju3h.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeknpyb",
+      "title": "UI Blocker 1781634876230-qs7lo9",
+      "path": "issues/mqgzeknpyb.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzekqa7r",
+      "title": "Resolve Blocker 1781634876430-hsvzg5",
+      "path": "issues/mqgzekqa7r.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzektwte",
+      "title": "Resolve Blocked 1781634876432-2nbeg5",
+      "path": "issues/mqgzektwte.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzel8b81",
+      "title": "Delete Blocked 1781634876967-ukjf4u",
+      "path": "issues/mqgzel8b81.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzel9lt8",
+      "title": "Sub-issue Child 1781634877482-z0t6ks",
+      "path": "issues/mqgzel9lt8.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": "mqgzelvxet",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzelevto",
+      "title": "Sub-issue Create Parent 1781634877682-slzgiz",
+      "path": "issues/mqgzelevto.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzelhivw",
+      "title": "No Sub-issues Test 1781634877274-01cguh",
+      "path": "issues/mqgzelhivw.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeliknc",
+      "title": "Delete Blocker 1781634876965-qgja4y",
+      "path": "issues/mqgzeliknc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzelluhh",
+      "title": "Add Blockage Dialog Test 1781634876698-d0yhbs",
+      "path": "issues/mqgzelluhh.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzelvxet",
+      "title": "Sub-issue Parent 1781634877480-wwypqh",
+      "path": "issues/mqgzelvxet.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzem7l8m",
+      "title": "Tree Parent 1781634878416-5zk9to",
+      "path": "issues/mqgzem7l8m.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzemb6fb",
+      "title": "Sub-issue Click Child 1781634877951-jmckwo",
+      "path": "issues/mqgzemb6fb.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzemp2zd",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzembgps",
+      "title": "Tree Root 1781634878208-mjr5v4",
+      "path": "issues/mqgzembgps.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzemg4co",
+      "title": "Timeline Expand Test 1781634878872-9s7y31",
+      "path": "issues/mqgzemg4co.json",
+      "status": "todo",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzemid09",
+      "title": "Timeline Collapsed Test 1781634878658-78y232",
+      "path": "issues/mqgzemid09.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzemp2zd",
+      "title": "Sub-issue Click Parent 1781634877949-btk4bx",
+      "path": "issues/mqgzemp2zd.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzemqf07",
+      "title": "Tree Child 1781634878418-d3244a",
+      "path": "issues/mqgzemqf07.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzem7l8m",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzemrm5s",
+      "title": "Timeline Update Display 1781634879123-8rfxy5",
+      "path": "issues/mqgzemrm5s.json",
+      "status": "in-progress",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzen96y8",
+      "title": "Tag Display Test 1781634879372-6owi00",
+      "path": "issues/mqgzen96y8.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "alpha-tag",
+        "beta-tag"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzenazbh",
+      "title": "Set Parent Target 1781634880290-iuxgyu",
+      "path": "issues/mqgzenazbh.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzensvpf",
+      "title": "Tag Add Test 1781634879572-wx869y",
+      "path": "issues/mqgzensvpf.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [
+        "new-e2e-tag"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzenteya",
+      "title": "Set Parent Child 1781634880291-c4h0ka",
+      "path": "issues/mqgzenteya.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzenazbh",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzenu4mc",
+      "title": "Tag Remove Test 1781634879822-bu0zum",
+      "path": "issues/mqgzenu4mc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzenvncb",
+      "title": "No Parent Test 1781634880092-3ugvbz",
+      "path": "issues/mqgzenvncb.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeo0ixh",
+      "title": "Old Parent 1781634880581-izg22w",
+      "path": "issues/mqgzeo0ixh.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeo20sj",
+      "title": "Clear Parent Child 1781634880883-gyrnun",
+      "path": "issues/mqgzeo20sj.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeo2jye",
+      "title": "Nav Parent Child 1781634881149-fyxwhq",
+      "path": "issues/mqgzeo2jye.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzeoeqcf",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeoeqcf",
+      "title": "Nav Parent Target 1781634881147-dulnjr",
+      "path": "issues/mqgzeoeqcf.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeoor5h",
+      "title": "New Parent 1781634880583-4eahc8",
+      "path": "issues/mqgzeoor5h.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeooxri",
+      "title": "Change Parent Child 1781634880584-ljhzkk",
+      "path": "issues/mqgzeooxri.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": "mqgzeoor5h",
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgzeoywik",
+      "title": "Clear Parent Target 1781634880881-qweold",
+      "path": "issues/mqgzeoywik.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    }
+  ],
   "closed": [],
-  "childrenOf": {}
+  "childrenOf": {
+    "mqgze4214f": [
+      "mqgze4kipn"
+    ],
+    "mqgze4qevi": [
+      "mqgze4qey9"
+    ],
+    "mqgze4yy8h": [
+      "mqgze4fz1r"
+    ],
+    "mqgze53qdk": [
+      "mqgze5lpw9"
+    ],
+    "mqgze5avd9": [
+      "mqgze567ue"
+    ],
+    "mqgze567ue": [
+      "mqgze5l0re"
+    ],
+    "mqgze520nk": [
+      "mqgze516do"
+    ],
+    "mqgze55fn6": [
+      "mqgze5808f"
+    ],
+    "mqgze6sjhj": [
+      "mqgze6rbii"
+    ],
+    "mqgzejuszs": [
+      "mqgzejzn8j"
+    ],
+    "mqgzejeym9": [
+      "mqgzejimmg",
+      "mqgzej5gyd"
+    ],
+    "mqgzelvxet": [
+      "mqgzel9lt8"
+    ],
+    "mqgzemp2zd": [
+      "mqgzemb6fb"
+    ],
+    "mqgzem7l8m": [
+      "mqgzemqf07"
+    ],
+    "mqgzenazbh": [
+      "mqgzenteya"
+    ],
+    "mqgzeoor5h": [
+      "mqgzeooxri"
+    ],
+    "mqgzeoeqcf": [
+      "mqgzeo2jye"
+    ]
+  }
 }

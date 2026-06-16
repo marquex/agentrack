@@ -1,0 +1,23 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:34:33.890Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:34:33.890Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Priority Change Test Unique"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:34:34.123Z",
+    "author": "anonymous",
+    "content": {
+      "priority": 5
+    }
+  }
+]

@@ -1,4 +1,76 @@
 {
-  "blockedBy": {},
-  "blocks": {}
+  "blockedBy": {
+    "mqgzeje6rn": [
+      {
+        "blockerId": "mqgzejthsa",
+        "blockedId": "mqgzeje6rn",
+        "status": "active"
+      }
+    ],
+    "mqgzej14xr": [
+      {
+        "blockerId": "mqgzejlo7l",
+        "blockedId": "mqgzej14xr",
+        "status": "active"
+      }
+    ],
+    "mqgzejv5dq": [
+      {
+        "blockerId": "mqgzej0e35",
+        "blockedId": "mqgzejv5dq",
+        "status": "resolved"
+      }
+    ],
+    "mqgzekaumy": [
+      {
+        "blockerId": "mqgzeknpyb",
+        "blockedId": "mqgzekaumy",
+        "status": "active"
+      }
+    ],
+    "mqgzektwte": [
+      {
+        "blockerId": "mqgzekqa7r",
+        "blockedId": "mqgzektwte",
+        "status": "resolved"
+      }
+    ]
+  },
+  "blocks": {
+    "mqgzejthsa": [
+      {
+        "blockerId": "mqgzejthsa",
+        "blockedId": "mqgzeje6rn",
+        "status": "active"
+      }
+    ],
+    "mqgzejlo7l": [
+      {
+        "blockerId": "mqgzejlo7l",
+        "blockedId": "mqgzej14xr",
+        "status": "active"
+      }
+    ],
+    "mqgzej0e35": [
+      {
+        "blockerId": "mqgzej0e35",
+        "blockedId": "mqgzejv5dq",
+        "status": "resolved"
+      }
+    ],
+    "mqgzeknpyb": [
+      {
+        "blockerId": "mqgzeknpyb",
+        "blockedId": "mqgzekaumy",
+        "status": "active"
+      }
+    ],
+    "mqgzekqa7r": [
+      {
+        "blockerId": "mqgzekqa7r",
+        "blockedId": "mqgzektwte",
+        "status": "resolved"
+      }
+    ]
+  }
 }

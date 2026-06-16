@@ -1,0 +1,15 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:34:19.773Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:34:19.773Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Phase2 Test: Default status"
+    }
+  }
+]

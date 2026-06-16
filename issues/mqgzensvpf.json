@@ -1,0 +1,25 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:34:39.573Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:34:39.573Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Tag Add Test 1781634879572-wx869y"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:34:39.729Z",
+    "author": "anonymous",
+    "content": {
+      "tags": [
+        "new-e2e-tag"
+      ]
+    }
+  }
+]
