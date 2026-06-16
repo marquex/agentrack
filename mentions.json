@@ -1,12 +1,12 @@
 {
   "bob": [
     {
-      "id": "mqgw9ok2ws",
-      "createdAt": "2026-06-16T17:06:48.747Z",
+      "id": "mqgwb7aiwn",
+      "createdAt": "2026-06-16T17:07:59.969Z",
       "mentionedUser": "bob",
       "mentionedBy": "bob",
-      "issueId": "mqgw9ojffa",
-      "commentId": "mqgw9omf7o",
+      "issueId": "mqgwb7arwv",
+      "commentId": "mqgwb7g80q",
       "isRead": false
     }
   ]
