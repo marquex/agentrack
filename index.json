@@ -1,9 +1,19 @@
 {
   "open": [
     {
-      "id": "mqh0ztcdn5",
-      "title": "Test Issue",
-      "path": "issues/mqh0ztcdn5.json",
+      "id": "mqh115qing",
+      "title": "Previously Blocked",
+      "path": "issues/mqh115qing.json",
+      "status": "todo",
+      "assignee": "alice",
+      "parentId": null,
+      "tags": [],
+      "priority": 1
+    },
+    {
+      "id": "mqh115up5s",
+      "title": "Blocker",
+      "path": "issues/mqh115up5s.json",
       "status": "idea",
       "assignee": null,
       "parentId": null,

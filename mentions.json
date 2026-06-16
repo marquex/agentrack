@@ -1,3 +1,13 @@
 {
-  "mentions": []
+  "bob": [
+    {
+      "id": "mqh112rwq5",
+      "createdAt": "2026-06-16T19:20:05.285Z",
+      "mentionedUser": "bob",
+      "mentionedBy": "bob",
+      "issueId": "mqh112z73h",
+      "commentId": "mqh112017h",
+      "isRead": false
+    }
+  ]
 }
