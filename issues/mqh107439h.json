@@ -1,0 +1,24 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:19:25.015Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:19:25.015Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Edit Comment Validation 1781637565015-o11k0o"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:19:25.017Z",
+    "author": "tester",
+    "content": {
+      "id": "mqh107rfmb",
+      "content": "A comment"
+    }
+  }
+]

@@ -26,5 +26,14 @@
     "content": {
       "blockerId": "mqgznigv4t"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:14:19.918Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgznigv4t",
+      "reason": "Blocker issue mqgznigv4t transitioned to done"
+    }
   }
 ]

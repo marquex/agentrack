@@ -104,6 +104,31 @@
       "name": "regen-api-1781636870707-9xw582",
       "token": "tk_jursn44v",
       "registeredAt": "2026-06-16T19:07:50.708Z"
+    },
+    {
+      "name": "apitest-list-1781637582468-4e4wuk",
+      "token": "tk_f50coh7h",
+      "registeredAt": "2026-06-16T19:19:42.469Z"
+    },
+    {
+      "name": "apitest-reg-1781637582491-txtp0y",
+      "token": "tk_g96m1pwo",
+      "registeredAt": "2026-06-16T19:19:42.492Z"
+    },
+    {
+      "name": "upper1781637582500-4lqtuw",
+      "token": "tk_ylkdkoq9",
+      "registeredAt": "2026-06-16T19:19:42.501Z"
+    },
+    {
+      "name": "dup-1781637582514-kd2ou1",
+      "token": "tk_4me3g3pv",
+      "registeredAt": "2026-06-16T19:19:42.514Z"
+    },
+    {
+      "name": "regen-1781637582538-965ibv",
+      "token": "tk_tx6braqu",
+      "registeredAt": "2026-06-16T19:19:42.538Z"
     }
   ]
 }

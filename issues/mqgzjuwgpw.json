@@ -42,5 +42,23 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:10:11.268Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh0ocfk8a",
+      "content": "Applied the waitForResponse attach-order fix to the \"sets a parent via search and selection\" test (phase3-validation.spec.ts:1235), mirroring the pattern already used in the \"changes an existing parent\" sibling.\n\nChanges:\n- Hoisted the searchResponsePromise (page.waitForResponse) ABOVE the searchInput.fill that triggers the request.\n- Scoped the matcher precisely: GET method + URL contains /api/issues + new URL(...).searchParams.get('search') === 'Set Parent Target', so it can't latch onto an unrelated GET /api/issues?search= call.\n- await searchResponsePromise after the fill.\n\nValidation:\n- Targeted test passes (Parent Selector block: 5/5 passed across 3 consecutive runs).\n- Full e2e suite: one clean run of 170 passed / 0 failed. An earlier run showed 4 intermittent failures in unrelated tests (new-issue dialog, relation-collapsed, URL assignee filter) — these are pre-existing flakiness, not related to this change.\n- No other instances of this search-response anti-pattern remain in the file (per the mqgzjnns95 audit), so this is the last one.\n\nNo typecheck/lint script is configured for the webapp package (bun + Playwright only); relied on Playwright as the validation gate."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:10:25.982Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
   }
 ]

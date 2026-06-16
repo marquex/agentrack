@@ -1,0 +1,74 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:18:59.592Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.592Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Phase2 Test: Update target"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.602Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.608Z",
+    "author": "anonymous",
+    "content": {
+      "priority": 1
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.614Z",
+    "author": "anonymous",
+    "content": {
+      "assignee": "test-user"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.619Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Updated title by test"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.624Z",
+    "author": "anonymous",
+    "content": {
+      "description": "New description"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.630Z",
+    "author": "anonymous",
+    "content": {
+      "tags": [
+        "updated",
+        "tags"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:59.636Z",
+    "author": "anonymous",
+    "content": {
+      "assignee": null
+    }
+  }
+]

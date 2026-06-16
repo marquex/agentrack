@@ -1,0 +1,18 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:13:41.525Z",
+    "author": "webapp-validator"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:13:41.525Z",
+    "author": "webapp-validator",
+    "content": {
+      "title": "Clean up 50 leaked UrlFilter E2E seed issues and harden isolation to prevent recurrence",
+      "description": "The real agentrack tracker has been polluted with 50 stray issues created by the E2E seedIssues helper in packages webApp e2e url-filters-validation spec. They were assigned to webapp-validator with empty descriptions and the title pattern UrlFilter Status dash timestamp dash random.\n\nScope of pollution (verified 2026-06-16):\n- 50 issues total: 8 todo, 8 in-progress, 8 idea, 8 done, 18 closed.\n- 24 are in non-terminal states and pollute the Open, Idea, Todo, and In-progress dashboards.\n- They cluster into 10 seedIssues batches by timestamp stamp (e.g. uz574m, tcsjzj, 1yg76g, v78324, brvgt2, l5r9qj, yvvq7e, eo4h4l, 71r20j, 6h9846).\n\nTwo work items:\n\n1. Bulk cleanup. Close or delete the 50 leaked issues. The 24 non-terminal ones are highest priority because they appear on active dashboards. A safe heuristic for identifying them: title matches regex UrlFilter prefix (Idea or Todo or InProgress or Done or Closed) followed by dash, no parent, empty description, no tags. Note: the originally-assigned issue mqh0lg9d2i is one of these 50.\n\n2. Root-cause guard. The current playwright config spawns its own backend with AGENTRACK CWD pointed at the isolated e2e data dir and does not set reuseExistingServer, which is correct. The leak most likely happened when a manually-started dev server was already bound to port 3001 without the AGENTRACK CWD env var, OR from an older config revision. Options to prevent recurrence:\n   - Add a startup assertion in global-setup that the running backend resolves AGENTRACK CWD to the e2e data dir (e.g. GET a health or config endpoint that echoes the cwd) and fail the run otherwise.\n   - Have seedIssues create issues with a recognizable tag (e.g. e2e-seed) and a cleanup afterEach that deletes them, so leaked seeds are self-healing.\n   - Document in the e2e README that nothing should ever bind port 3001 manually while tests run.\n\nThis is idea status for manager triage.",
+      "priority": 2,
+      "assignee": "project-manager"
+    }
+  }
+]

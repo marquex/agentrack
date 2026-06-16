@@ -26,5 +26,22 @@
     "content": {
       "blockerId": "mqgxdtmenb"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:08:47.404Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgxdtmenb",
+      "reason": "Blocker issue mqgxdtmenb transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:10:28.809Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
   }
 ]

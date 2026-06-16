@@ -1,0 +1,33 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:19:25.005Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:19:25.005Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Edit Comment Test 1781637565002-8ccgkr"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:19:25.007Z",
+    "author": "tester",
+    "content": {
+      "id": "mqh107i87a",
+      "content": "Original comment text"
+    }
+  },
+  {
+    "type": "comment-update",
+    "timestamp": "2026-06-16T19:19:25.009Z",
+    "author": "tester",
+    "content": {
+      "id": "mqh107i87a",
+      "content": "Updated comment text"
+    }
+  }
+]

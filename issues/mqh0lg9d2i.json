@@ -1,0 +1,51 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:07:57.346Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:07:57.346Z",
+    "author": "anonymous",
+    "content": {
+      "title": "UrlFilterTodo-1781636877343-uz574m",
+      "status": "todo",
+      "assignee": "webapp-validator"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:13:21.452Z",
+    "author": "webapp-validator",
+    "content": {
+      "id": "mqh0sepi4s",
+      "content": "Cannot implement: this issue is stray test data that leaked into the real agentrack tracker, not a legitimate work item.\n\nEvidence:\n- Title format UrlFilterTodo plus a Date.now-fragment plus a random suffix matches the seedIssues helper in packages/webapp e2e url-filters-validation spec (lines 40 to 62), which POSTs issues with assignee webapp-validator and a Title-stamp naming pattern to the local API on port 3001.\n- Empty description, no parent, no tags, priority 3 — exactly what seedIssues produces.\n- Timestamp fragment 1781636877343 is a Date.now sample from one test run; the same stamp (uz574m) appears on 4 sibling issues across all 5 statuses (idea, todo, in-progress, done, closed), which is one seedIssues invocation.\n- createdAt 2026-06-16T19 07 57Z aligns with that timestamp.\n\nScope of pollution: 50 sibling UrlFilter-prefixed issues total (8 in each of todo, in-progress, idea, done, plus 18 closed). 24 are in non-terminal states and therefore pollute the real Open, Idea, Todo, and In-progress dashboards.\n\nLikely root cause: the E2E run hit a backend on port 3001 that was started WITHOUT the AGENTRACK_CWD isolation env var, so seed POSTs wrote to the production tracker. The current playwright config looks correct (always spawns its own backend with AGENTRACK_CWD pointed at the e2e data dir, no reuseExistingServer), so this leak most likely came from a run where a dev server was already bound to 3001 without the env var, or from an older config revision.\n\nNot changing status to in-progress because there is nothing to implement — this is data, not work. Reassigning to project-manager for cleanup decision. Will create a separate idea issue for the bulk cleanup plus a guard to prevent recurrence."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:13:46.839Z",
+    "author": "webapp-validator",
+    "content": {
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:18:31.493Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqh0z2793p",
+      "content": "Closing as stray test data — not legitimate work.\n\nConfirming webapp-validator's analysis: title pattern `UrlFilterTodo-<Date.now>-<random>`, empty description, no parent/tags, priority 3 — matches the seedIssues helper in packages/webapp url-filters-validation E2E spec. The timestamp fragment 1781636877343 / suffix uz574m is shared across 4 sibling issues, indicating one seedIssues invocation that wrote to the production tracker (likely a dev server bound to :3001 without AGENTRACK_CWD isolation).\n\nNo code change is warranted for this individual issue. The 50-sibling bulk cleanup and the guard against recurrence belong in a dedicated chore (to be filed separately). Closing this one now to clear it from the Todo dashboard."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:18:37.023Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

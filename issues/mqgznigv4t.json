@@ -18,5 +18,31 @@
         "task"
       ]
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:12:16.524Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:14:10.687Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh0tgfaip",
+      "content": "Done. Fixed the Status filter trigger in packages/webapp/frontend/src/components/issues/IssueFilters.tsx so it renders the human-readable label (e.g. 'In Progress', 'Closed') instead of the raw value (e.g. 'in-progress', 'closed').\n\nImplementation:\n- Built a STATUS_LABEL lookup map from the existing STATUS_OPTIONS.\n- Gave the Status SelectValue a function-as-child render: ```<SelectValue>{(value) => STATUS_LABEL[value] ?? value}</SelectValue>```. Confirmed against the installed @base-ui/react SelectValue API, which accepts a `(value) => ReactNode` child.\n- Applied the same pattern to the Assignee trigger for consistency (so the 'all' sentinel renders as 'All assignees' instead of the raw 'all'); user names are unchanged since value === label there.\n\nFiltering behavior was not touched (only the trigger display). Verified with `bun run build` (tsc -b + vite build) — passes with no type errors. The webapp frontend package has no lint script and no unit-test runner, so the requested component assertion could not be added here; per my role I don't author tests — leaving that to webapp-validator."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:14:19.916Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
   }
 ]

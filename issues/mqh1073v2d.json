@@ -1,0 +1,24 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:19:25.593Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:19:25.593Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Add Comment UI Test 1781637565592-4nc5t8"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:19:25.774Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh1072vqm",
+      "content": "E2E test comment from Playwright"
+    }
+  }
+]
