@@ -125,3 +125,24 @@ Task: the `project-manager.md` agent file and `.claude/skills/issue-managing/SKI
 
 **Related topics:** [agent-system-files](agent-system-files.expertise.md), [agent-testing](agent-testing.expertise.md)
 
+## 2026-06-15 Removed the completion sync tracker ÃÂ¢ status-loop-driven completion
+
+**Sessions:** the first session (`1a1eb26a`) was **exploration-only** — the agent read the SKILL.md, project-manager.md, test-runner.ts, and all 27 PM suite stories, formulating the design (completion trackers out, gate trackers stay), but ended with `process_end` before making any edits. The implementation happened in continuation sessions.
+
+Replaced the PM's "verify complete" sync-tracker pattern with status-loop-driven parent completion. The work loop no longer relies on a `+1` verification child to wake the PM; instead the status loop scans `in-progress` parents assigned to the PM and completes any whose children are ALL `done`. New done-vs-closed rule: parent HAS a parent ÃÂ¢ `done`; parent has NO parent (top-level) ÃÂ¢ `closed` + close all descendants. Gate trackers (`task,sync`) survive but ONLY as collaborative decision gates (design agreement, idea review), never for completion.
+
+**Affected files (~20):**
+- The issue-managing skill Ã¢ rewrote: removed "sync tracker = completion alarm", added "status loop completes parents" + done-vs-closed rule, reframed `task,sync` as gate-only.
+- The test runner Ã¢ repurposed judge `syncPattern` dimension (no completion child; gates only for reviews); added scenarios 28 & 29 to SCENARIO_TEAMS + LOOP_MAP.
+- 15 scenario Expected Outputs (01,02,03,04,05,06,19,20,21,22,23,24,25,26,27) Ã¢ stripped the "Verify X complete" child; changed cross-team blockages from "blocked by upstream sync tracker" to "blocked by upstream Release/Deploy task".
+- team-roster + README Ã¢ rewrote the parent-status table and "why" sections.
+- 2 new scenarios: 28 (top-level close + close children), 29 (sub-deliverable mark-done + cascade Epic). Suite now 29 scenarios.
+
+**Learnings:**
+- A single semantic change to the PM's completion mechanism has the WIDEST blast radius of any rule change seen so far (~20 files) Ã¢ wider than the 2026-06-14 hierarchy refactor (8 files). Every work-loop scenario's Expected Output tree changes because the "+1 verify child" appeared in all of them.
+- The done-vs-closed distinction is subtle and easy for the model to get wrong: sub-deliverable (has parent) Ã¢ `done` (stays visible for cascade); top-level (no parent) Ã¢ `closed` + sweep descendants. Two dedicated stories (28, 29) are needed to test both branches.
+- Gate trackers (design agreement, idea review) are structurally identical to the old completion tracker but semantically distinct (a gate the PM drives to `done` after reading a review; NOT a completion alarm). The skill must state this contrast explicitly or the model collapses the two concepts.
+- `bun -e "import './test-runner.ts'"` EXECUTES the suite (top-level `main()` call) Ã¢ never use it to syntax-check; use `bun build --no-bundle` instead. (New gotcha recorded in agent-testing expertise.)
+
+**Related topics:** [agent-system-files](agent-system-files.expertise.md), [agent-testing](agent-testing.expertise.md)
+

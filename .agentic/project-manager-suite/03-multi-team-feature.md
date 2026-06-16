@@ -41,22 +41,19 @@ Epic: "Add crypto data feed and crypto trading strategy" (tag: epic, assigned: p
 │   │   └── Blocked by "Implement" task
 │   ├── Task: "Release crypto data feed" (tag: task, assigned: platform-releaser, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
-│   └── Task: "Verify crypto data feed complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Release" task
 │
 ├── Feature: "Crypto trading strategy" (tag: feature, assigned: project-manager, status: in-progress)
 │   ├── Task: "Plan crypto trading strategy" (tag: task, assigned: quant-researcher, status: todo, phase: planning)
 │   │   └── Blocked by platform feature "Release" task (can't plan strategy until data feed is available)
 │   ├── Task: "Implement crypto trading strategy" (tag: task, assigned: quant-researcher, status: todo, phase: development)
 │   │   └── Blocked by "Plan" task
-│   ├── Task: "Validate crypto trading strategy" (tag: task, assigned: strategy-validator, status: todo, phase: validation)
-│   │   └── Blocked by "Implement" task
-│   └── Task: "Verify crypto strategy complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Validate" task
+│   └── Task: "Validate crypto trading strategy" (tag: task, assigned: strategy-validator, status: todo, phase: validation)
+│       └── Blocked by "Implement" task
 │
-└── Task: "Verify crypto initiative complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by both feature sync trackers (both features must complete)
+└── (Epic completed by the status loop once both Features are done)
 ```
+
+**No completion children.** Neither Feature nor the Epic gets a "Verify complete" child. Each Feature is marked `done` by the status loop once its phase tasks are all `done` (they have the Epic as parent → marked `done`, not closed). Once both Features are `done`, the status loop finds the Epic `in-progress` with all children `done` → since the Epic has no parent, it is `closed` and its children (the Features) are `closed`.
 
 **3-level hierarchy: Epic → Feature → Task**
 - **Epic** groups the two related deliverables (the platform data feed + the research strategy). No Initiative, and no per-team Epic — each team contributes exactly one deliverable, so a per-team grouping would be a parent with a single child (pure overhead).
@@ -86,13 +83,13 @@ Teams are reflected by **assignment** (platform agents vs. research agents), not
 **Key behaviors:**
 - The PM recognizes cross-team dependencies and models them with blockages
 - **The researcher reviews the data feed design before the platform implements it** — both teams must agree on what the data feed provides (data format, fields, granularity, update frequency)
-- **The PM reads the researcher's review via the sync tracker** — if the researcher found issues (wrong granularity, missing fields), the PM creates fix tasks for the architect and re-review tasks for the researcher, looping until agreement is total
+- **The PM reads the researcher's review via the design-agreement gate tracker** — if the researcher found issues (wrong granularity, missing fields), the PM creates fix tasks for the architect and re-review tasks for the researcher, looping until agreement is total
 - The PM does NOT decide the design is agreed by itself — the researcher's review determines agreement
 - The PM does NOT start platform implementation until agreement is total — no "we'll fix it later" shortcuts
 - Each team follows its own phase structure independently after the design is agreed
 - The platform release must complete before research can start planning the strategy
 - Research work has no release phase — strategies go through plan→dev→validate only
-- **PM sets the Epic and both Features to `in-progress`** after creating all children — prevents re-waking. Each Feature has its own sync tracker; the Epic's sync tracker is blocked by both. See Story 01 for the single-feature lifecycle example.
+- **PM sets the Epic and both Features to `in-progress`** after creating all children — prevents re-waking. No completion children are created; the status loop completes each Feature when its phase tasks are done, then completes the Epic when both Features are done. See Story 01 for the single-feature lifecycle example.
 - Blockages resolve automatically when an agent marks its issue `done`, cascading through the chain across both teams
 
 ## Notes

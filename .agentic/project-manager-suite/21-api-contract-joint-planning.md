@@ -46,8 +46,7 @@ Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: 
 ├── Feature: "Build user profile Android screen" (tag: feature, assigned: project-manager, status: in-progress)
 │   └── (tasks blocked by Contract Feature — cannot start until contract is agreed)
 │
-└── Task: "Verify user profile epic complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by both feature sync trackers (backend + frontend must both complete)
+└── (Epic completed by the status loop once all three Features are done)
 ```
 
 ### Phase 1: Architect designs, consumer reviews
@@ -91,38 +90,34 @@ Feature: "Define user profile API contract" (tag: feature, assigned: project-man
 
 ### Phase 3: Contract agreed — both teams start
 
-Once the PM confirms agreement is total (no outstanding issues), it:
+Once the PM confirms agreement is total (no outstanding issues), it marks the contract Feature's gate tracker `done`. That leaves the contract Feature with all children `done`, so:
 
-11. Marks the contract Feature as done
-12. Unblocks both the backend and frontend Features by marking their first tasks as unblocked:
+11. The status loop marks the contract Feature `done` (it has the Epic as parent → `done`).
+12. The system auto-clears the blockages that the contract Feature was causing — the backend and frontend Features' first tasks become unblocked:
 
 ```
 ├── Feature: "Implement user profile backend API" (tag: feature, assigned: project-manager, status: in-progress)
 │   ├── Task: "Plan user profile backend implementation" (tag: task, assigned: backend-developer, status: todo, phase: planning)
-│   │   └── Blocked by Contract Feature being marked done (contract is now agreed)
+│   │   └── Blocked by Contract Feature (auto-clears once the Contract Feature is marked done = agreed)
 │   ├── Task: "Implement user profile API endpoints" (tag: task, assigned: backend-developer, status: todo, phase: development)
 │   │   └── Blocked by "Plan" task
 │   ├── Task: "Validate user profile API" (tag: task, assigned: backend-validator, status: todo, phase: validation)
 │   │   └── Blocked by "Implement" task
-│   ├── Task: "Deploy user profile API" (tag: task, assigned: devops-engineer, status: todo, phase: release)
-│   │   └── Blocked by "Validate" task
-│   └── Task: "Verify backend API complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Deploy" task
+│   └── Task: "Deploy user profile API" (tag: task, assigned: devops-engineer, status: todo, phase: release)
+│       └── Blocked by "Validate" task
 │
 ├── Feature: "Build user profile Android screen" (tag: feature, assigned: project-manager, status: in-progress)
 │   ├── Task: "Plan user profile screen from API contract" (tag: task, assigned: android-developer, status: todo, phase: planning)
-│   │   └── Blocked by Contract Feature being marked done (contract is now agreed)
+│   │   └── Blocked by Contract Feature (auto-clears once the Contract Feature is marked done = agreed)
 │   ├── Task: "Implement user profile screen" (tag: task, assigned: android-developer, status: todo, phase: development)
 │   │   └── Blocked by "Plan" task
 │   ├── Task: "Polish user profile screen design" (tag: task, assigned: android-designer, status: todo, phase: styling)
 │   │   └── Blocked by "Implement" task
-│   ├── Task: "Validate user profile screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
-│   │   └── Blocked by "Polish" task
-│   └── Task: "Verify Android screen complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Validate" task
+│   └── Task: "Validate user profile screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
+│       └── Blocked by "Polish" task
 ```
 
-Both streams run IN PARALLEL after the contract is agreed.
+Both streams run IN PARALLEL after the contract is agreed. Each Feature is completed by the status loop when its phase tasks are done; the Epic is completed (closed + children closed) once all three Features are done.
 
 **3-level hierarchy: Epic → Feature → Task**
 - **Epic** groups the three related features (contract, backend, frontend)
@@ -131,7 +126,7 @@ Both streams run IN PARALLEL after the contract is agreed.
 
 **The key insight: contract-level dependency**
 
-The frontend Feature's planning task is blocked by the **contract Feature's sync tracker**, not by the backend implementation Feature. This means:
+The frontend Feature's planning task is blocked by the **contract Feature itself** (it auto-unblocks once the contract Feature is marked `done` = agreed), not by the backend implementation Feature. This means:
 
 ```
 Timeline:
@@ -149,7 +144,7 @@ Timeline:
        │         ▼
        │    PM reads re-review via sync tracker ──► still issues? loop again
        │
-       └──► No issues: PM marks contract Feature done
+       └──► No issues: PM marks gate done → status loop marks contract Feature done
                  │
                  ├──► Backend planning starts (backend-developer reads agreed contract)
                  │         │
@@ -200,7 +195,7 @@ If the PM had incorrectly blocked frontend on the **backend release** (instead o
 - Both the backend and frontend Features are blocked until the contract Feature is marked done (only happens after agreement)
 - After the contract is agreed, both teams work in parallel — no unnecessary waiting
 - The android-developer can plan and implement against the contract by mocking API responses
-- The Epic sync tracker waits for both Features to complete — the work is done when both sides are ready
+- No completion children are created: the status loop completes each Feature when its phase tasks are done, and completes the Epic (closed + children closed) once all three Features are done
 
 ## Notes
 - This story tests three critical PM skills: (1) joint contract planning — both teams must agree before implementation, (2) iterative agreement — the PM reads reviews and loops until consensus, and (3) contract-level dependency vs implementation dependency

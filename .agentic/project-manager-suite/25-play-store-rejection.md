@@ -42,8 +42,6 @@ Bug: "Resolve Play Store rejection — missing in-app purchase disclosure" (tag:
 │   └── Blocked by "Validate" task
 ├── Task: "Resubmit app to Play Store" (tag: task, assigned: devops-engineer, status: todo, phase: release)
 │   └── Blocked by "Build APK" task
-└── Task: "Verify Play Store resubmission complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by "Resubmit" task
 ```
 
 ### What happens after — status transitions (driven by worker agents)
@@ -84,12 +82,12 @@ Step 4: Work loop wakes devops-engineer (Child 4 is todo, now unblocked)
   → DevOps sets Child 4: in-progress → done
   → DevOps adds comment: "APK 2.4.1 submitted to Play Store. Release notes
      updated. Awaiting review."
-  → System auto-resolves blockage on Child 5 (sync tracker)
+  → All children are now done
 
-Step 5: Work loop wakes project-manager (Child 5 is todo, now unblocked)
-  → PM verifies all children are done
-  → PM sets Child 5 (sync tracker): todo → done
-  → PM sets parent: in-progress → done
+Step 5: Status loop runs → finds the Bug in-progress + every child done
+  → The Bug has NO parent (top-level) → PM closes it and closes every child:
+      Bug → closed
+      Child 1..4 (done) → closed
 ```
 
 **Why this is NOT a standard bug:**
@@ -123,5 +121,4 @@ Step 5: Work loop wakes project-manager (Child 5 is todo, now unblocked)
 - The non-standard workflow is a key signal: when the PM encounters an external blocker (Play Store, App Store, regulatory compliance), the standard bug/feature lifecycle may not apply
 - The Play Store rejection is NOT the same as a code review rejection — it's an external policy enforcement
 - If the Play Store rejection required backend changes (e.g., "your API must expose pricing in a specific format"), the PM would need to involve the backend team. But this specific rejection is frontend-only.
-- The PM should note the Play Store review timeline in the sync tracker — the resubmission may take hours to days for approval
 - Compare with Story 02 (standard bug): the structure is adapted. No reproduction, no architect, two release steps. The PM must be flexible.

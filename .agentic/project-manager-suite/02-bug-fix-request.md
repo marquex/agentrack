@@ -34,10 +34,8 @@ Bug: "Fix crash on orientation change during checkout" (tag: bug, assigned: proj
 ├── Task: "Reproduce and diagnose orientation change crash on checkout" (tag: task, assigned: android-validator, status: todo, phase: reproduction)
 ├── Task: "Implement fix for orientation change crash" (tag: task, assigned: android-developer, status: todo, phase: development)
 │   └── Blocked by Task 1
-├── Task: "Validate orientation change crash fix" (tag: task, assigned: android-validator, status: todo, phase: validation)
-│   └── Blocked by Task 2
-└── Task: "Verify bug fix complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by Task 3
+└── Task: "Validate orientation change crash fix" (tag: task, assigned: android-validator, status: todo, phase: validation)
+    └── Blocked by Task 2
 ```
 
 ### What happens after — status transitions (driven by worker agents)
@@ -77,12 +75,13 @@ Step 3: Work loop wakes android-validator (Child 3 is todo, now unblocked)
   → Validator adds comment: "Regression tests added. Fix verified on API 31,
      32, 33, 34. Tested portrait→landscape, landscape→portrait, and foldable
      unfold scenarios. All tests pass. No regression on other screens."
-  → System auto-resolves blockage on Child 4 (sync tracker)
+  → All children are now done
 
-Step 4: Work loop wakes project-manager (Child 4 is todo, now unblocked)
-  → PM verifies all children are done
-  → PM sets Child 4 (sync tracker): todo → done
-  → PM sets parent: in-progress → done
+Step 4: Status loop runs → finds the Bug in-progress + every child done
+  → The Bug has NO parent (top-level) → PM closes it and closes every child:
+      Bug → closed
+      Child 1..3 (done) → closed
+  → PM adds comment: "Bug fix complete. All phases done."
 ```
 
 **Assignment rationale:**

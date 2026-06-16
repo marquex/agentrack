@@ -29,10 +29,8 @@ Feature: "Polish login page button styles" (tag: feature, assigned: project-mana
 ├── Task: "Review and plan button style improvements" (tag: task, assigned: webapp-styler, status: todo, phase: planning)
 ├── Task: "Implement button style improvements" (tag: task, assigned: webapp-styler, status: todo, phase: styling)
 │   └── Blocked by "Review" task
-├── Task: "Validate button style changes" (tag: task, assigned: webapp-validator, status: todo, phase: validation)
-│   └── Blocked by "Implement" task
-└── Task: "Verify styling task complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by "Validate" task
+└── Task: "Validate button style changes" (tag: task, assigned: webapp-validator, status: todo, phase: validation)
+    └── Blocked by "Implement" task
 ```
 
 **Assignment rationale:**
@@ -47,7 +45,7 @@ Feature: "Polish login page button styles" (tag: feature, assigned: project-mana
 - The styler handles both planning and implementation since this is their domain
 - Validation is still assigned to the validator — the styler doesn't write tests
 - The PM should NOT collapse all phases into a single issue — phases ensure quality
-- **PM sets parent to `in-progress`** after creating children — sync tracker (Child 4) ensures PM gets woken when validation completes. See Story 01 for the full lifecycle explanation.
+- **PM sets parent to `in-progress`** after creating children — no verification child is created. The status loop completes the parent once validation (the last phase) is `done`. See Story 01 for the full lifecycle explanation.
 
 ## Notes
 - The PM correctly recognizes that `webapp-developer` is NOT needed here — the feature is already built

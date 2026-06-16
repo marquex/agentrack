@@ -74,8 +74,6 @@ The PM should:
     │   └── Blocked by "Implement" task
     ├── Task: "Validate screen reader support across screens" (tag: task, assigned: android-validator, status: todo, phase: validation)
     │   └── Blocked by "Polish" task
-    └── Task: "Verify accessibility chore complete" (tag: task,sync, assigned: project-manager, status: todo)
-        └── Blocked by "Validate" task
     ```
 14. The agent who created the idea (`android-developer`) continues with their original work (#130) undisturbed — the accessibility tasks are queued behind existing work
 

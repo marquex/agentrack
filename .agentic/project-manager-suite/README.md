@@ -53,13 +53,13 @@ PM creates issue → status: todo, assignee: <worker>
 
 ### Status flow for parent issues (managed by PM)
 
-Parent issues are assigned to the PM. The PM must manage their status to avoid being re-woken every cycle and to get notified when work completes.
+Parent issues are assigned to the PM. The PM must manage their status to avoid being re-woken every cycle, and rely on the status loop to complete them when work finishes.
 
 ```
 PM creates parent → status: todo
                         │
                         ▼
-PM creates children + sync tracker issue
+PM creates phase-task children (NO verification child)
                         │
                         ▼
 PM sets parent → in-progress (work is happening via children)
@@ -69,22 +69,17 @@ PM sets parent → in-progress (work is happening via children)
           (todo → in-progress → done, blockages auto-resolve)
                         │
                         ▼
-          Last child marked done → sync tracker's blockage clears
+          Status loop runs → finds parent in-progress + every child done
                         │
                         ▼
-          Work loop wakes PM for the sync tracker
-                        │
-                        ▼
-          PM checks children are all done
-                        │
-                        ▼
-          PM sets sync tracker → done
-          PM sets parent → done
+          PM completes the parent:
+            - has a parent (sub-deliverable) → done
+            - no parent (top-level)         → closed + close all children
 ```
 
-**Why the sync tracker?** The work loop won't automatically notify the PM when children complete. The PM must create a child issue assigned to itself, blocked by the last worker child. When that child is marked `done`, the blockage clears and the work loop wakes the PM.
+**Why no verification child?** The work loop won't notify the PM when children complete, but the PM does NOT create a "verify complete" child to find out. The **status loop** periodically scans the PM's `in-progress` parents and completes any whose children are ALL `done`. That is the PM's completion alarm. (Gate trackers — `task,sync` — still exist, but ONLY as collaborative decision gates for design agreements and idea reviews, never for completion.)
 
-**Why set parent to `in-progress`?** If the parent stays `todo`, the work loop will wake the PM every cycle to "work" on it. Setting it to `in-progress` means: "this feature is being actively worked on through its children — don't bother me about it until the children are done."
+**Why set parent to `in-progress`?** If the parent stays `todo`, the work loop will wake the PM every cycle to "work" on it. Setting it to `in-progress` means: "this feature is being actively worked on through its children — leave me alone until the status loop finds all children done."
 
 ### Who does what
 
@@ -92,17 +87,16 @@ PM sets parent → in-progress (work is happening via children)
 |---|---|---|
 | Create issue in `todo` | **PM** | During planning — PM creates the issue hierarchy |
 | Assign agent to issue | **PM** | At creation time — each issue gets the right agent for its phase |
-| Create sync tracker (child assigned to PM, blocked by last child) | **PM** | At creation time — ensures PM gets notified when children complete |
+| Create gate tracker (child assigned to PM, blocked by a review task) | **PM** | ONLY when a collaborative review/decision gate is needed (design agreement, idea review) — never for completion |
 | Set parent → `in-progress` | **PM** | Immediately after creating all children — prevents re-waking |
 | Set `in-progress` on worker children | **Worker agent** | When the agent starts working (after work loop wakes it) |
 | Set `done` + comment on worker children | **Worker agent** | When the agent completes successfully |
 | Set `todo` + reassign to PM on worker children | **Worker agent** | When the agent hits an unresolvable blocker |
-| PM wakes for sync tracker | **Work loop** | When last child is `done` and blockage clears |
-| Set sync tracker → `done` | **PM** | After verifying all children completed successfully |
-| Set parent → `done` | **PM** | After sync tracker confirms all children are done |
+| Complete parent (done / closed) | **Status loop (PM)** | When status loop finds a parent in-progress with all children done → `done` if it has a parent, `closed` + close children if top-level |
+| Set gate tracker → `done` | **PM** | After reading the review/decision the gate guards |
 | Create `idea` issues | **Any agent** | When an agent notices out-of-scope work while working |
 | Check for duplicates before routing | **PM** | First step of ideas triage — searches `idea`, `todo`, `in-progress`, and `closed` with `idea` tag |
-| Create review task + sync tracker for idea | **PM** | Routes to team lead (technical) or product-owner (product) for accept/reject decision |
+| Create review task + gate tracker for idea | **PM** | Routes to team lead (technical) or product-owner (product) for accept/reject decision |
 | Route idea to manager | **PM** | Technical → team lead, product → product-owner, manager-created → auto-accept |
 | Accept idea → plan implementation | **PM** | After manager accepts — tags idea as feature/bug/chore, creates implementation tasks |
 | Discard idea → close | **PM** | After manager rejects — status: `closed`, tags: `idea,discarded`, comment with reason |
@@ -115,15 +109,15 @@ PM sets parent → in-progress (work is happening via children)
 ### Key rules
 
 1. **PM sets parent to `in-progress` immediately after creating children** — prevents the work loop from re-waking PM every cycle for the parent.
-2. **PM creates a sync tracker child** — assigned to PM, blocked by the last worker child. This is the notification mechanism that tells PM when children are done.
+2. **PM does NOT create a completion/verification child** — children are phase tasks only (plus gate trackers where a collaborative review is needed). The status loop completes the parent.
 3. **PM never sets worker children to `in-progress` or `done`** — that's the worker agent's job.
-4. **PM marks parent `done` only after all children are `done`** — triggered by the sync tracker waking the PM.
+4. **The status loop completes parents when all children are `done`** — `done` if the parent has a parent (sub-deliverable), `closed` + close all children if it is top-level.
 5. **Blockages resolve automatically** — when an agent marks its issue `done`, the system clears blockages on downstream issues.
-6. **PM only intervenes on worker child statuses during the status loop** — to fix stuck/abandoned issues.
+6. **PM only intervenes on worker child statuses during the status loop** — to fix stuck/abandoned issues, or to complete parents whose children are all done.
 7. **Failed work comes back to PM** — agents reassign to `project-manager` with `todo` status and a problem comment.
 8. **PM does NOT evaluate ideas** — it routes them to the right manager. Technical ideas → team lead, product ideas → product-owner, manager-created → auto-accept.
 9. **Duplicate check is the first step of ideas triage** — PM searches `idea`, `todo`, `in-progress`, and `closed` with `idea` tag before routing. Duplicates are closed directly without manager review.
-10. **Ideas loop uses review task + sync tracker** — PM creates a task for the manager to decide, and a sync tracker for PM to check the decision. Same pattern as work loop.
+10. **Ideas loop uses review task + gate tracker** — PM creates a task for the manager to decide, and a gate tracker (`task,sync`) for PM to read the decision. Gate trackers are decision gates, not completion alarms.
 
 ## Issue Hierarchy
 
@@ -157,7 +151,7 @@ Hierarchy exists to **group related issues**. Build it from the bottom up and on
 | **Bug** | `bug` | PM only | Fix for broken behavior. Reproduce→Dev→Validate→Release. | "Fix CLI crash" |
 | **Chore** | `chore` | PM only | Technical maintenance without user-facing changes. | "Refactor event store" |
 | **Task** | `task` | Worker agent | Individual phase work (Plan, Dev, Validate, Release, Reproduce, Style). | "Implement search" |
-| **Sync** | `task,sync` | PM | Notification — PM's alarm clock for when children complete. | "Verify search complete" |
+| **Gate tracker** | `task,sync` | PM | Collaborative decision gate — PM reads a review/decision before marking it done. | "Verify design agreed" |
 
 ### When to use each depth (decide bottom-up)
 
@@ -173,7 +167,7 @@ Hierarchy exists to **group related issues**. Build it from the bottom up and on
 3. **Related issues must be linked** — if 2+ deliverables depend on each other or belong to the same goal, wrap them in an Epic. If 2+ epics are related, wrap in an Initiative.
 4. **Teams are assignment, not hierarchy** — two teams each contributing one deliverable share a single Epic (3 levels), never a per-team wrapper around a lone deliverable.
 5. **Tags use `agt create --tags`** — e.g., `agt create "Fix crash" --tags bug`
-6. **Sync trackers use both tags** — `--tags task,sync`
+6. **Gate trackers use both tags** — `--tags task,sync` (ONLY for review/decision gates, never for completion)
 
 ## Phase-to-Agent Mapping (Quick Reference)
 

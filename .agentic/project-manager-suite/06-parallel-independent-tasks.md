@@ -34,20 +34,16 @@ Feature: "Add pagination to issue list CLI" (tag: feature, assigned: project-man
 │   └── Blocked by "Plan" task
 ├── Task: "Validate pagination" (tag: task, assigned: library-validator, status: todo, phase: validation)
 │   └── Blocked by "Implement" task
-├── Task: "Release pagination" (tag: task, assigned: library-releaser, status: todo, phase: release)
-│   └── Blocked by "Validate" task
-└── Task: "Verify pagination complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by "Release" task
+└── Task: "Release pagination" (tag: task, assigned: library-releaser, status: todo, phase: release)
+    └── Blocked by "Validate" task
     No blockages to or from Bug below
 
 Bug: "Fix dark mode toggle on webapp" (tag: bug, assigned: project-manager, status: in-progress)
 ├── Task: "Reproduce and diagnose dark mode issue" (tag: task, assigned: webapp-validator, status: todo, phase: reproduction)
 ├── Task: "Implement dark mode fix" (tag: task, assigned: webapp-developer, status: todo, phase: development)
 │   └── Blocked by "Reproduce" task
-├── Task: "Validate dark mode fix" (tag: task, assigned: webapp-validator, status: todo, phase: validation)
-│   └── Blocked by "Implement" task
-└── Task: "Verify dark mode fix complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by "Validate" task
+└── Task: "Validate dark mode fix" (tag: task, assigned: webapp-validator, status: todo, phase: validation)
+    └── Blocked by "Implement" task
     No separate release (webapp deploys automatically)
     No blockages to or from Feature above
 ```
@@ -76,7 +72,7 @@ Bug: "Fix dark mode toggle on webapp" (tag: bug, assigned: project-manager, stat
 - Each feature follows the 4-phase structure independently
 - The PM correctly recognizes pagination is simple enough for the developer to plan (no architect needed)
 - The PM correctly recognizes the dark mode fix is a bug, not a styling task (no styler needed)
-- **PM sets each parent to `in-progress`** after creating children — each has its own sync tracker. Both features run independently. See Story 01 for the full lifecycle explanation.
+- **PM sets each parent to `in-progress`** after creating children — no verification child on either. Each parent is completed independently by the status loop once its children are all `done`. See Story 01 for the full lifecycle explanation.
 - **Bug fix in Parent B** starts with reproduction by the validator (see Story 02), not planning by the developer.
 
 ## Notes

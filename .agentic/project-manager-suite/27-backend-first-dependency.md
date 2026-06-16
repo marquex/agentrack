@@ -43,24 +43,19 @@ Epic: "Add real-time order tracking" (tag: epic, assigned: project-manager, stat
 │   │   └── Blocked by "Implement" task
 │   ├── Task: "Deploy order tracking service to staging" (tag: task, assigned: devops-engineer, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
-│   └── Task: "Verify backend order tracking service deployed" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Deploy" task
 │
 ├── Feature: "Order tracking screen with live updates" (tag: feature, assigned: project-manager, status: in-progress)
 │   ├── Task: "Plan Android WebSocket integration for order tracking" (tag: task, assigned: android-developer, status: todo, phase: planning)
-│   │   └── Blocked by backend Feature's sync tracker (can't plan until backend is DEPLOYED TO STAGING —
+│   │   └── Blocked by backend Feature's "Deploy" task (can't plan until backend is DEPLOYED TO STAGING —
 │   │        WebSocket integration requires a running backend, not just a contract)
 │   ├── Task: "Implement order tracking screen with WebSocket" (tag: task, assigned: android-developer, status: todo, phase: development)
 │   │   └── Blocked by "Plan" task
 │   ├── Task: "Polish order tracking screen" (tag: task, assigned: android-designer, status: todo, phase: styling)
 │   │   └── Blocked by "Implement" task
-│   ├── Task: "Validate order tracking screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
-│   │   └── Blocked by "Polish" task
-│   └── Task: "Verify Android order tracking complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Validate" task
+│   └── Task: "Validate order tracking screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
+│       └── Blocked by "Polish" task
 │
-└── Task: "Verify order tracking initiative complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by both feature sync trackers (both features must complete)
+└── (Epic completed by the status loop once both Features are done)
 ```
 
 **3-level hierarchy: Epic → Feature → Task**
@@ -119,7 +114,7 @@ Story 27 (WebSocket — Live service dependency):
 - **The frontend developer reviews the WebSocket architecture before the backend implements it** — both teams must agree on the protocol (message format, subscription model, reconnection behavior)
 - **The PM reads the developer's review** — if issues found, creates fix tasks for architect + re-review tasks for developer and loops until agreement is total
 - The PM does NOT decide the architecture is agreed by itself — the consumer's review determines agreement
-- The frontend Feature is blocked by the **backend's staging deployment** (via the backend Feature's sync tracker), not by the architecture agreement
+- The frontend Feature is blocked by the **backend's staging deployment** (the backend Feature's "Deploy" task), not by the architecture agreement and not by a sync tracker
 - Even though the frontend needs a running backend, the architecture is still agreed first — wrong protocol would waste the backend team's time
 - This is a strict sequential chain — backend must be running before frontend can even start planning
 - The backend deployment is to STAGING (for frontend integration), not production

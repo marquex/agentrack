@@ -41,8 +41,6 @@ Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: 
 │   │   └── Blocked by "Implement" task
 │   ├── Task: "Release user profiles API" (tag: task, assigned: devops-engineer, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
-│   └── Task: "Verify user profiles API complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Release" task
 │
 ├── Feature: "Build user profile screen (Android)" (tag: feature, assigned: project-manager, status: in-progress)
 │   ├── Task: "Plan user profile screen from API contract" (tag: task, assigned: android-developer, status: todo, phase: planning)
@@ -51,10 +49,8 @@ Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: 
 │   │   └── Blocked by "Plan" task
 │   ├── Task: "Polish user profile screen UI" (tag: task, assigned: android-designer, status: todo, phase: styling)
 │   │   └── Blocked by "Implement" task
-│   ├── Task: "Validate user profile screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
-│   │   └── Blocked by "Polish" task
-│   └── Task: "Verify profile screen complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Validate" task
+│   └── Task: "Validate user profile screen" (tag: task, assigned: android-validator, status: todo, phase: validation)
+│       └── Blocked by "Polish" task
 │
 ├── Chore: "Add caching layer for user profile data" (tag: chore, assigned: project-manager, status: in-progress)
 │   ├── Task: "Design caching strategy for user profiles" (tag: task, assigned: backend-architect, status: todo, phase: planning)
@@ -63,13 +59,10 @@ Epic: "Add user profile feature" (tag: epic, assigned: project-manager, status: 
 │   │   └── Blocked by "Design" task
 │   ├── Task: "Validate caching layer" (tag: task, assigned: backend-validator, status: todo, phase: validation)
 │   │   └── Blocked by "Implement" task
-│   ├── Task: "Release caching layer" (tag: task, assigned: devops-engineer, status: todo, phase: release)
-│   │   └── Blocked by "Validate" task
-│   └── Task: "Verify caching layer complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Release" task
+│   └── Task: "Release caching layer" (tag: task, assigned: devops-engineer, status: todo, phase: release)
+│       └── Blocked by "Validate" task
 │
-└── Task: "Verify user profile epic complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by all 3 feature sync trackers (all must complete)
+└── (Epic completed by the status loop once all 3 deliverables are done)
 ```
 
 **3-level hierarchy: Epic → Feature/Chore → Task**
@@ -102,10 +95,9 @@ The frontend "Plan" task is blocked by the backend "Verify contract agreed" task
 
 **Key behaviors:**
 - The PM creates an Epic to link all 3 related features — no orphaned related work
-- Each feature has its own sync tracker for the PM to get notified when that feature completes
-- The Epic has a sync tracker blocked by all 3 feature sync trackers
+- Each feature is completed by the status loop when its phase tasks are done (marked `done` since they have the Epic as parent); the Epic is then completed (closed + children closed) by the status loop once all 3 are done
 - **The frontend developer reviews the API contract before the backend implements it** — both teams must agree on the contract
-- **The PM reads the developer's review** — if issues found (missing fields, inconsistent patterns), the PM creates fix tasks for the architect and re-review tasks for the developer, looping until agreement is total
+- **The PM reads the developer's review via the contract gate tracker** — if issues found (missing fields, inconsistent patterns), the PM creates fix tasks for the architect and re-review tasks for the developer, looping until agreement is total
 - The PM does NOT decide the contract is agreed by itself — the consumer's review determines agreement
 - Cross-team blockage: frontend planning blocked by backend API contract agreement (not full implementation)
 - The caching chore is blocked by both the backend release and frontend validation — it needs both sides stable

@@ -643,7 +643,7 @@ Task ← Feature/Bug/Chore ← Epic ← Initiative
 | `bug` | Deliverable | PM only | Fix for broken behavior with Reproduce→Dev→Validate→Release. |
 | `chore` | Deliverable | PM only | Technical maintenance without user-facing changes. |
 | `task` | Leaf | Worker agent | Individual phase work. The only level assigned to worker agents. |
-| `task,sync` | Leaf | PM | Sync tracker — PM's alarm clock for completion notification. |
+| `task,sync` | Leaf | PM | Gate tracker — collaborative review/decision gate (design agreement, idea review). NEVER used for completion. |
 
 **When to use each depth (decide bottom-up):**
 - One thing to do: 1 Task (no parent)
@@ -668,28 +668,26 @@ The PM manages **parent issue** statuses (since the PM is the assignee). Worker 
 | `in-progress` → `todo` + reassign to PM | **Worker agent** | When blocked or failed |
 | Auto-resolve blockages | **System** | When an issue is marked `done` |
 
-### Parent issues — driven by PM
+### Parent issues — driven by PM (planning) and the status loop (completion)
 
 | Transition | Who | When |
 |---|---|---|
 | Create parent in `todo` | **PM** | During planning |
-| Create children + sync tracker | **PM** | At the same time as parent |
+| Create phase-task children (+ gate trackers only where a review is needed) | **PM** | At the same time as parent |
 | Parent `todo` → `in-progress` | **PM** | Immediately after creating children — prevents re-waking |
-| Sync tracker blockage clears | **System** | When last child is marked `done` |
-| PM wakes for sync tracker | **Work loop** | Sync tracker is now unblocked + assigned to PM |
-| Sync tracker → `done` | **PM** | After verifying all children completed |
-| Parent `in-progress` → `done` | **PM** | After sync tracker confirms completion |
+| Gate tracker blockage clears | **System** | When the review task it's blocked by is marked `done` |
+| Gate tracker → `done` | **PM** | After reading the review/decision the gate guards |
+| Parent `in-progress` → `done` | **Status loop (PM)** | When status loop finds parent in-progress with all children done AND it has a parent (sub-deliverable) |
+| Parent `in-progress` → `closed` (+ close all children) | **Status loop (PM)** | When status loop finds parent in-progress with all children done AND it has NO parent (top-level) |
 | Parent → `closed` | **PM** | When cancelling or discarding |
 
-### Why the sync tracker?
+### Why no completion/verification child?
 
-The work loop won't automatically notify the PM when children complete. The PM must create a **sync tracker** — a child issue assigned to itself, blocked by the last worker child. When that child is marked `done`, the blockage clears and the work loop wakes the PM.
-
-Without the sync tracker, the PM would never know when to close the parent.
+The work loop won't automatically notify the PM when children complete — but the PM does NOT create a "verify complete" child to find out. The **status loop** periodically scans the PM's `in-progress` parents and completes any whose children are ALL `done`. That is the PM's completion alarm. (Gate trackers — `task,sync` — still exist, but ONLY as collaborative decision gates for design agreements and idea reviews, never for completion.)
 
 ### Why `in-progress` on the parent?
 
-If the parent stays `todo`, the work loop wakes the PM every cycle to "work" on it. Setting it to `in-progress` signals: "work is happening through children — don't wake me until the sync tracker fires."
+If the parent stays `todo`, the work loop wakes the PM every cycle to "work" on it. Setting it to `in-progress` signals: "work is happening through children — leave me alone until the status loop finds all children done."
 
 ### Status loop exceptions
 

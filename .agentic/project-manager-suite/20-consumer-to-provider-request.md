@@ -75,21 +75,16 @@ Issue #200: "Add iceberg order type support to backtesting engine" (tag: epic, s
 │   │   └── Blocked by "Implement" task
 │   ├── Task: "Release iceberg order type" (tag: task, assigned: platform-releaser, status: todo, phase: release)
 │   │   └── Blocked by "Validate" task
-│   └── Task: "Verify iceberg order feature complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Release" task
 │
 ├── Feature: "Iceberg liquidity strategy" (tag: feature, assigned: project-manager, status: in-progress)
 │   ├── Task: "Design iceberg liquidity strategy model" (tag: task, assigned: quant-researcher, status: todo, phase: planning)
-│   │   └── Blocked by platform Feature's sync tracker (can't plan strategy until platform feature is released)
+│   │   └── Blocked by platform Feature's "Release" task (can't plan strategy until platform feature is released)
 │   ├── Task: "Implement iceberg liquidity strategy" (tag: task, assigned: quant-researcher, status: todo, phase: development)
 │   │   └── Blocked by "Design" task
-│   ├── Task: "Validate iceberg liquidity strategy" (tag: task, assigned: strategy-validator, status: todo, phase: validation)
-│   │   └── Blocked by "Implement" task
-│   └── Task: "Verify iceberg strategy complete" (tag: task,sync, assigned: project-manager, status: todo)
-│       └── Blocked by "Validate" task
+│   └── Task: "Validate iceberg liquidity strategy" (tag: task, assigned: strategy-validator, status: todo, phase: validation)
+│       └── Blocked by "Implement" task
 │
-└── Task: "Verify iceberg initiative complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by both feature sync trackers (both features must complete)
+└── (Epic completed by the status loop once both Features are done)
 ```
 
 **3-level hierarchy: Epic → Feature → Task**
@@ -113,17 +108,17 @@ Issue #200: "Add iceberg order type support to backtesting engine" (tag: epic, s
 - **Validation → `strategy-validator`**: Backtests the strategy, runs Monte Carlo simulations, checks for overfitting. Note: strategy work has no release phase — strategies are evaluated in the backtesting environment.
 
 *Cross-team dependency:*
-- The research Feature's planning task is blocked by the platform Feature's sync tracker — the researcher can't even start designing the strategy until the platform feature is released and available.
+- The research Feature's planning task is blocked by the platform Feature's "Release" task — the researcher can't even start designing the strategy until the platform feature is released and available.
 
 **Key behaviors:**
 - The PM correctly routes the platform tool request to `platform-architect`, NOT `head-of-research`
 - The PM recognizes the consumer-producer dependency: research team needs a tool that the dev team must build first
 - **The researcher who requested the feature reviews the iceberg order design** — the consumer validates the design meets their strategy needs before the platform team implements it
-- **The PM reads the researcher's design review** — if issues found, creates fix tasks for architect + re-review tasks for researcher and loops until agreement is total
+- **The PM reads the researcher's design review via the design-agreement gate tracker** — if issues found, creates fix tasks for architect + re-review tasks for researcher and loops until agreement is total
 - The PM does NOT decide the design is agreed by itself — the consumer's review determines agreement
-- The cross-team blockage is modeled at the task level: research planning blocked by platform feature's sync tracker
+- The cross-team blockage is modeled at the task level: research planning blocked by platform feature's Release task (not a sync tracker)
 - The strategy feature has no release phase — strategies are backtesting-only deliverables
-- The Epic-level sync tracker ensures both Features complete before the Epic is closed
+- No completion children: each Feature is completed by the status loop when its tasks are done; the Epic is completed (closed + children closed) once both Features are done
 - The PM uses the same duplicate-check → route → review → plan pattern as Story 11
 
 ## Notes

@@ -1,0 +1,82 @@
+# TEST SCENARIO: Story 13: Idea Needs Refinement — Manager Requests More Info
+
+Team: AndroidApp
+Loop: Ideas Loop
+
+---
+
+Available Agents (AndroidApp — Mobile App):
+
+Backend Team:
+- backend-architect: Planning phase + team lead — designs API contracts, database schemas. Technical ideas route here.
+- backend-developer: Development phase — implements endpoints, business logic
+- backend-validator: Validation phase — API tests, load tests, bug reproduction
+- devops-engineer: Release phase — deploys services, CI/CD, Play Store submissions, incident response
+
+Frontend (Android) Team:
+- android-developer: Planning + Development — builds screens, integrates APIs, handles device compatibility, builds release APKs
+- android-designer: Styling phase — Material Design, animations, accessibility (AFTER developer builds)
+- android-validator: Validation — UI tests, cross-device testing, bug reproduction
+
+Leadership:
+- product-owner: Product decisions, feature prioritization, acceptance reviews. Product ideas route here.
+
+Phase Flows:
+- Backend Features: Plan → Dev → Validate → Release
+- Backend Bugs: Reproduce → Dev → Validate → Release
+- Frontend Features: Plan → Dev → Style → Validate (release via android-developer APK → devops Play Store)
+- Frontend Bugs: Reproduce → Dev → Validate (no separate release)
+
+Idea Routing:
+- Backend technical idea → backend-architect
+- Product idea → product-owner
+- Idea from a manager → Auto-accept (skip review)
+
+Key Rules:
+- Frontend blocked on API contract definition, NOT full backend implementation
+- Play Store rejections require non-standard workflow
+- Backend deploys independently; Android goes through Play Store review
+
+---
+
+## Current Tracker State
+
+- **agentrack state:**
+  - Issue #100: "Make the checkout flow faster" — status: `idea`, created by `android-developer`, assignee: none
+  - No other issues matching "checkout" or "faster" or "performance" in status `idea`, `todo`, `in-progress`, or `closed` with `idea` tag
+
+### Team Context
+
+> See [Team Roster](00-team-roster.md) for agent roles.
+
+| Agent | Relevance |
+|---|---|
+| `product-owner` | **Product decision-maker** — reviews the idea and decides if it needs more info |
+| `android-developer` | Source of the idea — the product-owner may ask them for specifics |
+
+## Trigger / Situation
+
+1. The PM picks up Issue #100 from the ideas queue.
+2. The PM checks for duplicates — none found.
+3. The PM determines: this is a product-related idea (checkout UX improvement) → route to product-owner.
+4. The PM creates a review task for the product-owner + sync tracker for itself.
+5. The product-owner needs more info and asks the creator for clarification.
+6. The PM sees the "needs refinement" decision and resets the idea for future re-triage.
+
+---
+
+## Your Task
+
+Analyze this situation and produce a complete, detailed action plan. For each step:
+
+1. Show the exact `agt` command you would run
+2. Explain your reasoning
+
+Show the COMPLETE issue hierarchy you would create (or modify), including:
+- Every issue with its title, tags, assignee, and status
+- Parent-child relationships (indented tree)
+- All blockages between issues
+- All comments you would add
+- All status changes you would make
+
+Use the AndroidApp team's agents for assignments. Follow the correct phase flow for the issue type (feature, bug, chore, strategy).

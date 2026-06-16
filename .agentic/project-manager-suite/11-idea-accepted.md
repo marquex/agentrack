@@ -73,8 +73,6 @@ The PM should:
     │   └── Blocked by "Implement" task
     ├── Task: "Release risk-adjusted metric" (tag: task, assigned: platform-releaser, status: todo, phase: release)
     │   └── Blocked by "Validate" task
-    └── Task: "Verify metric feature complete" (tag: task,sync, assigned: project-manager, status: todo)
-        └── Blocked by "Release" task
     ```
 
 **Assignment rationale:**

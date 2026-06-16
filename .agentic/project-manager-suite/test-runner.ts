@@ -92,6 +92,8 @@ const SCENARIO_TEAMS: Record<string, string> = {
   "25": "android",
   "26": "quantedge",
   "27": "android",
+  "28": "library-webapp",
+  "29": "android",
 };
 
 const LOOP_MAP: Record<string, string> = {
@@ -122,6 +124,8 @@ const LOOP_MAP: Record<string, string> = {
   "25": "error",
   "26": "ideas",
   "27": "work",
+  "28": "status",
+  "29": "status",
 };
 
 const TEAM_LABELS: Record<string, string> = {
@@ -275,7 +279,7 @@ Score the agent's response on these 7 dimensions (0-10 each):
 1. hierarchy — Issue hierarchy levels (Initiative/Epic/Feature/Bug/Chore/Task), correct tags, no single-child parents (a parent must group 2+ related issues; never wrap one deliverable in its own Epic)
 2. assignments — Right worker agent for each task, correct phase-to-agent mapping
 3. dependencies — Correct blockages between tasks, sequential dependencies, cross-team dependencies
-4. syncPattern — Sync tracker created (child assigned to project-manager, blocked by last worker child)
+4. syncPattern — Completion pattern correct: NO "verify complete" child created for parent completion (the status loop completes parents); gate trackers (task,sync assigned to project-manager, blocked by a review task) created ONLY where a collaborative review/decision gate is required (joint design agreement, idea review); for status-loop scenarios, parents completed correctly (done if has parent, closed + close children if top-level)
 5. statusManagement — Parent set to in-progress after children, correct status transitions
 6. behavioralAccuracy — Scenario-specific key behaviors met
 7. completeness — All expected actions covered, nothing critical missing

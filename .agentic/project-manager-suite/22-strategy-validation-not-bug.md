@@ -70,8 +70,6 @@ Issue #220: "Develop mean-reversion strategy for equities" (tag: feature, status
 │   or use a more robust signal. The strategy code is correct; the model needs refinement."
 ├── Task: "Re-validate refined mean-reversion strategy" (tag: task, assigned: strategy-validator, status: todo, phase: validation)
 │   └── Blocked by "Refine" task
-└── Task: "Verify strategy complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by "Re-validate" task
 ```
 
 3. Close Issue #223 (the original validation task) — the validator completed its job. The finding is captured in the new refinement task.
@@ -94,8 +92,7 @@ Issue #220: "Develop mean-reversion strategy for equities" (tag: feature, status
 
 **Assignment rationale:**
 - **Refinement → `quant-researcher`**: The researcher designed the original model and has the domain expertise to simplify it. They understand the mathematical model, the parameters, and the tradeoffs. The validator's feedback (reduce parameter count, add regularization) is actionable by the researcher.
-- **Re-validation → `strategy-validator`**: After refinement, the same validator runs the full check again — backtesting + Monte Carlo + robustness.
-- **Sync → `project-manager`**: PM gets woken when the refinement cycle completes.
+- **Re-validation → `strategy-validator`**: After refinement, the same validator runs the full check again — backtesting + Monte Carlo + robustness. The status loop completes the Feature once the refine + re-validate tasks are `done`.
 
 **Key behaviors:**
 - The PM correctly identifies this as a domain issue (strategy quality), not a technical issue (platform bug)

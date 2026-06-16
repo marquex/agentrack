@@ -1,0 +1,88 @@
+# TEST SCENARIO: Story 15: Agent Reports a Problem — Platform Blocker on Strategy Work
+
+Team: QuantEdge
+Loop: Work Loop + Project Status Loop
+
+---
+
+Available Agents (QuantEdge — Algorithmic Trading):
+
+Development Team:
+- platform-architect: Planning phase + team lead — designs platform architecture, APIs. Technical ideas route here.
+- platform-developer: Development phase — builds platform tools and infrastructure
+- platform-validator: Validation phase — tests platform, performance benchmarks, bug reproduction
+- platform-releaser: Release phase — deploys platform updates
+
+Research Team:
+- head-of-research: Research team lead — research direction decisions, strategy priorities. Research direction ideas route here.
+- quant-researcher: Planning + Development — designs and implements trading strategies
+- strategy-validator: Validation — backtests, Monte Carlo simulations, overfitting detection
+
+Leadership:
+- cto: Cross-team priority conflicts, build-vs-buy decisions. Escalations only.
+
+Phase Flows:
+- Platform Features: Plan → Dev → Validate → Release
+- Platform Bugs: Reproduce → Dev → Validate → Release
+- Strategy Work: Plan → Dev → Validate (no release phase)
+
+Idea Routing:
+- Platform technical idea → platform-architect
+- Research direction idea → head-of-research
+- Cross-team idea or conflict → cto
+- Idea from a manager → Auto-accept (skip review)
+
+Key Rules:
+- Platform feature requests from researchers route to platform-architect, NOT head-of-research
+- Strategy validation failures are NOT platform bugs → route to quant-researcher
+- Platform bugs in production trading take priority over scheduled research work
+
+---
+
+## Current Tracker State
+
+- **agentrack state:**
+  - Issue #120: "Implement pairs trading strategy" — status: `todo`, assignee: `project-manager`
+    - Has a comment from `quant-researcher`: "Cannot validate pairs trading strategy — the backtesting engine doesn't account for market impact. All backtest results show unrealistic fills. The engine assumes zero slippage on all orders. This is a platform limitation, not a strategy issue."
+    - Reassigned back to PM by the researcher
+  - Issue #120 was blocked by nothing (blockages clear)
+  - No slippage model exists in the backtesting engine
+
+### Team Context
+
+> See [Team Roster](00-team-roster.md) for agent roles.
+
+| Agent | Relevance |
+|---|---|
+| `quant-researcher` | Reported the blocker on #120 — needs platform fix before it can validate the pairs trading strategy |
+| `platform-architect` | **Platform team lead** — must analyze the blocker and propose a solution |
+| `platform-developer` | Would implement whichever platform fix gets created |
+| `platform-validator` | Would validate whichever platform fix gets created |
+| `platform-releaser` | Would release whichever platform fix gets created |
+
+## Trigger / Situation
+
+1. The PM picks up Issue #120 (reassigned to it by the researcher).
+2. The PM reads the comment and understands the blocker.
+3. The PM recognizes this is a platform problem — but does NOT design the solution itself.
+4. The PM asks the platform team lead (`platform-architect`) to analyze the blocker and propose a solution.
+5. The platform architect responds with a proposed approach.
+6. Based on the architect's proposal, the PM creates the prerequisite platform work.
+
+---
+
+## Your Task
+
+Analyze this situation and produce a complete, detailed action plan. For each step:
+
+1. Show the exact `agt` command you would run
+2. Explain your reasoning
+
+Show the COMPLETE issue hierarchy you would create (or modify), including:
+- Every issue with its title, tags, assignee, and status
+- Parent-child relationships (indented tree)
+- All blockages between issues
+- All comments you would add
+- All status changes you would make
+
+Use the QuantEdge team's agents for assignments. Follow the correct phase flow for the issue type (feature, bug, chore, strategy).

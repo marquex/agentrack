@@ -101,10 +101,8 @@ The PM should:
     │   └── Blocked by "Implement" task
     ├── Task: "Release slippage model" (tag: task, assigned: platform-releaser, status: todo, phase: release)
     │   └── Blocked by "Validate" task
-    └── Task: "Verify slippage model complete" (tag: task,sync, assigned: project-manager, status: todo)
-        └── Blocked by "Release" task
     ```
-25. Create a blockage: Issue #120 (original strategy task) is blocked by the slippage model Feature's sync tracker (the platform prerequisite must complete before the strategy work resumes)
+25. Create a blockage: Issue #120 (original strategy task) is blocked by the slippage model Feature's "Release" task (the platform prerequisite must complete before the strategy work resumes)
 26. Add a comment to Issue #120: "Based on agreed solution (platform-architect proposal validated by quant-researcher), creating prerequisite Feature: 'Add slippage model to backtesting engine.' Requirements from researcher: per-asset slippage parameters, configurable market impact function. This strategy will resume after the slippage model is implemented and released."
 
 **Assignment rationale:**

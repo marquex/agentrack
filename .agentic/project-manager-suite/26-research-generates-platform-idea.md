@@ -113,8 +113,6 @@ Issue #265: "Build automated data normalization pipeline" (tag: feature, status:
 │   └── Blocked by "Implement" task
 ├── Task: "Release data normalization pipeline" (tag: task, assigned: platform-releaser, status: todo, phase: release)
 │   └── Blocked by "Validate" task
-└── Task: "Verify data normalization pipeline complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by "Release" task
 ```
 
 **Why route to `platform-architect` and NOT `head-of-research`:**

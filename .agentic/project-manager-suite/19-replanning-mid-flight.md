@@ -47,10 +47,8 @@ The PM should:
    ├── Task: "Plan volatility strategy" (tag: task, assigned: quant-researcher, status: todo, phase: planning)
    ├── Task: "Implement volatility strategy" (tag: task, assigned: quant-researcher, status: todo, phase: development)
    │   └── Blocked by "Plan" task
-   ├── Task: "Validate volatility strategy" (tag: task, assigned: strategy-validator, status: todo, phase: validation)
-   │   └── Blocked by "Implement" task
-   └── Task: "Verify volatility strategy complete" (tag: task,sync, assigned: project-manager, status: todo)
-       └── Blocked by "Validate" task
+   └── Task: "Validate volatility strategy" (tag: task, assigned: strategy-validator, status: todo, phase: validation)
+       └── Blocked by "Implement" task
    ```
 6. Add a comment to Issue #150 mentioning the new issue created for reference.
 

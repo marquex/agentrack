@@ -17,7 +17,6 @@ The execution engine has a critical bug — it's double-submitting orders in pro
     - Has a comment from `platform-developer`: "In progress. Completed the data ingestion module, working on the transformation layer. About 60% done."
   - Issue #243: "Validate data normalization pipeline" — status: `todo`, blocked by #242, assignee: `platform-validator`
   - Issue #244: "Release data normalization pipeline" — status: `todo`, blocked by #243, assignee: `platform-releaser`
-  - Issue #245: "Verify pipeline complete" — status: `todo`, blocked by #244, assignee: `project-manager` (sync tracker)
 
 ### Team Context
 
@@ -56,8 +55,6 @@ The PM should:
    │   └── Blocked by "Fix" task
    ├── Task: "Emergency deploy double submission fix" (tag: task, assigned: platform-releaser, status: todo, phase: release)
    │   └── Blocked by "Validate" task
-   └── Task: "Verify hotfix deployed" (tag: task,sync, assigned: project-manager, status: todo)
-       └── Blocked by "Deploy" task
    ```
 3. Interrupt the pipeline work:
    - Reassign Issue #242 from `platform-developer` to `project-manager`
@@ -83,19 +80,16 @@ The PM should:
    - Releaser runs validation suite, builds, deploys to production
    - Releaser adds comment: "Emergency deployed to production. All validation passed. Monitoring for duplicate submissions."
    - Releaser marks deploy task `done`
-9. System auto-resolves blockage on sync tracker
+9. All hotfix children are now done
 
 ### Phase 3: Resume Pipeline Work
 
-10. Work loop picks up sync tracker, wakes PM
-11. PM verifies all hotfix children are done
-12. PM marks sync tracker `done`
-13. PM marks hotfix bug `done`
-14. PM **resumes the pipeline work**:
+10. Status loop runs → finds the hotfix Bug in-progress + every child done → the Bug has NO parent (top-level) → PM closes it and closes every child (Bug → closed, children → closed)
+11. PM **resumes the pipeline work**:
     - Reassign Issue #242 back to `platform-developer` (from `project-manager`)
     - Keep Issue #242 status as `todo` (it was paused mid-implementation)
     - Add comment to #242: "Hotfix deployed. Resuming pipeline work. Developer was ~60% through the transformation layer — pick up where you left off."
-15. The work loop will pick up Issue #242 and wake the developer to continue
+12. The work loop will pick up Issue #242 and wake the developer to continue
 
 **The full timeline:**
 
@@ -136,7 +130,7 @@ Pipeline work resumes (#242 todo → in-progress, developer continues)
 - The PM preserves the developer's progress context ("~60% through transformation layer") so the developer can resume efficiently
 - The PM communicates clearly: the pipeline task comment explains WHY work was paused and WHAT will happen next
 - After the hotfix is deployed, the PM **resumes** the pipeline work — same task, same developer, same plan
-- The pipeline Feature's other tasks (#243, #244, #245) remain blocked/unaffected — only the in-flight task is paused
+- The pipeline Feature's other tasks (#243, #244) remain blocked/unaffected — only the in-flight task is paused
 - The hotfix follows the standard bug lifecycle (Reproduce → Dev → Validate → Release) with added urgency
 - **This is a status loop exception** — the PM directly reassigns and changes the status of #242, which is normally driven by worker agents. But interrupting in-flight work for production hotfixes is a PM-initiated intervention.
 

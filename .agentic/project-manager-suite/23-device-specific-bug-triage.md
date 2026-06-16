@@ -37,10 +37,8 @@ Bug: "Fix app crash on Samsung devices running Android 12 when opening payment s
 │   open flow. Check for null pointers, SDK compatibility issues, and API-level-specific behavior."
 ├── Task: "Fix payment screen crash on Android 12" (tag: task, assigned: android-developer, status: todo, phase: development)
 │   └── Blocked by "Reproduce" task
-├── Task: "Verify payment screen fix across API levels" (tag: task, assigned: android-validator, status: todo, phase: validation)
-│   └── Blocked by "Fix" task
-└── Task: "Verify payment screen bug fix complete" (tag: task,sync, assigned: project-manager, status: todo)
-    └── Blocked by "Verify" task
+└── Task: "Verify payment screen fix across API levels" (tag: task, assigned: android-validator, status: todo, phase: validation)
+    └── Blocked by "Fix" task
 ```
 
 ### What happens after — status transitions (driven by worker agents)
@@ -80,12 +78,12 @@ Step 3: Work loop wakes android-validator (Child 3 is todo, now unblocked)
   → Validator adds comment: "Regression tests added. Verified payment screen
      opens correctly on API 29-34. Fix confirmed on API 32 (the failing level).
      No regressions on other API levels. All tests pass."
-  → System auto-resolves blockage on Child 4 (sync tracker)
+  → All children are now done
 
-Step 4: Work loop wakes project-manager (Child 4 is todo, now unblocked)
-  → PM verifies all children are done
-  → PM sets Child 4 (sync tracker): todo → done
-  → PM sets parent: in-progress → done
+Step 4: Status loop runs → finds the Bug in-progress + every child done
+  → The Bug has NO parent (top-level) → PM closes it and closes every child:
+      Bug → closed
+      Child 1..3 (done) → closed
 ```
 
 **Why no backend involvement:**
@@ -97,8 +95,7 @@ Step 4: Work loop wakes project-manager (Child 4 is todo, now unblocked)
 **Assignment rationale:**
 - **Reproduction → `android-validator`**: The validator is the quality expert for Android. They reproduce bugs methodically with device-specific conditions (exact API level, manufacturer, screen size). The validator's diagnosis should include: exact reproduction steps, root cause analysis, affected code paths, and which API levels are affected. The reproduction comment explicitly asks the validator to focus on the Samsung/API 32 combination.
 - **Development → `android-developer`**: With the validator's diagnosis (null pointer on API 32, line 45 of PaymentFragment.kt), the developer knows exactly what to fix — add null checks and API-level guards. No architect needed — the scope is defined by the reproduction report.
-- **Validation → `android-validator`**: The same validator who reproduced the bug now verifies the fix across MULTIPLE API levels (not just the failing one). This is critical for Android bugs — the fix must not break other device configurations. The validator writes regression tests that cover the payment screen across different API levels.
-- **Sync → `project-manager`**: PM gets woken when the full cycle completes.
+- **Validation → `android-validator`**: The same validator who reproduced the bug now verifies the fix across MULTIPLE API levels (not just the failing one). This is critical for Android bugs — the fix must not break other device configurations. The validator writes regression tests that cover the payment screen across different API levels. The status loop closes the Bug once validation is `done`.
 
 **Key behaviors:**
 - The PM correctly scopes this as a **frontend-only** bug — no backend agents involved at any stage
