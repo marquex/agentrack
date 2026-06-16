@@ -1,4 +1,20 @@
 {
-  "blockedBy": {},
-  "blocks": {}
+  "blockedBy": {
+    "mqgwd6vhwq": [
+      {
+        "blockerId": "mqgwd6rzqc",
+        "blockedId": "mqgwd6vhwq",
+        "status": "resolved"
+      }
+    ]
+  },
+  "blocks": {
+    "mqgwd6rzqc": [
+      {
+        "blockerId": "mqgwd6rzqc",
+        "blockedId": "mqgwd6vhwq",
+        "status": "resolved"
+      }
+    ]
+  }
 }

@@ -1,11 +1,31 @@
 {
   "open": [
     {
-      "id": "mqgwd6m343",
-      "title": "Done Issue",
-      "path": "issues/mqgwd6m343.json",
-      "status": "done",
+      "id": "mqgwd6rzqc",
+      "title": "Blocker",
+      "path": "issues/mqgwd6rzqc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqgwd6vhwq",
+      "title": "Previously Blocked",
+      "path": "issues/mqgwd6vhwq.json",
+      "status": "todo",
       "assignee": "alice",
+      "parentId": null,
+      "tags": [],
+      "priority": 1
+    },
+    {
+      "id": "mqgwd7engg",
+      "title": "Test Issue",
+      "path": "issues/mqgwd7engg.json",
+      "status": "idea",
+      "assignee": null,
       "parentId": null,
       "tags": [],
       "priority": 3
