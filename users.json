@@ -1,14 +1,14 @@
 {
   "users": [
     {
-      "name": "display-1781638004592-xftb0q",
-      "token": "tk_0eto89xp",
-      "registeredAt": "2026-06-16T19:26:44.593Z"
+      "name": "alice",
+      "token": "tk_ulymyxq6",
+      "registeredAt": "2026-06-16T19:27:22.898Z"
     },
     {
-      "name": "avatar-1781638004774-9rw8n6",
-      "token": "tk_4q59umd2",
-      "registeredAt": "2026-06-16T19:26:44.775Z"
+      "name": "bob",
+      "token": "tk_9wg25e95",
+      "registeredAt": "2026-06-16T19:27:22.918Z"
     }
   ]
 }

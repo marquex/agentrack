@@ -1,5 +1,26 @@
 {
-  "open": [],
+  "open": [
+    {
+      "id": "mqh1agd3ya",
+      "title": "Test",
+      "path": "issues/mqh1agd3ya.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh1aocyjc",
+      "title": "Test Issue",
+      "path": "issues/mqh1aocyjc.json",
+      "status": "idea",
+      "assignee": null,
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    }
+  ],
   "closed": [],
   "childrenOf": {}
 }
