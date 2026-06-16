@@ -1,0 +1,23 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:48:14.374Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:48:14.374Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Timeline Expand Test 1781632094373-bvnqx4"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:48:14.376Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  }
+]

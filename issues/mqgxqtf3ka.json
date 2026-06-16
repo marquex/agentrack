@@ -1,0 +1,18 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:48:08.215Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:48:08.215Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Tag Display Test Unique",
+      "tags": [
+        "unique-tag-display-test"
+      ]
+    }
+  }
+]
