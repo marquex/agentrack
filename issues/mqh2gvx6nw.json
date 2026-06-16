@@ -1,0 +1,38 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:00:21.978Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:00:21.978Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Standardize webapp ports and add E2E environment safety guard",
+      "description": "Two related webapp infrastructure changes:\n\n1. PORT CONFIGURATION — standardize the ports the webapp (frontend) and its API server run on:\n   - Development: webapp (vite) = 3000, API (hono server) = 3001\n   - Validation/E2E: webapp (vite) = 5000, API (hono server) = 5001\n\n2. E2E ISOLATION GUARD — prevent E2E tests from ever creating issues/users against the real development .agentrack/ folder:\n   - Add a GET /api/status endpoint to the webapp server that returns { agentrackPath: <resolved AGENTRACK_CWD> }.\n   - Add a safety check to the E2E global setup that calls /api/status and aborts the test run if the resolved path is the project's real .agentrack/ directory.\n\nThese two deliverables are grouped here because they are co-dependent: the E2E guard must target the final validation API port (5001), so the port change lands first.\n\nNote: this implements the 'root-cause guard' option from the related isolation-hardening idea mqh0su9kgq (the bulk-cleanup portion of that issue is tracked separately).",
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:25.893Z",
+    "author": "system",
+    "content": {
+      "status": "in-progress",
+      "reason": "auto-promoted to 'in-progress': child advanced to 'in-progress'"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:25.962Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

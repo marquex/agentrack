@@ -25,5 +25,22 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:03:12.912Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T20:03:37.443Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh2l21x49",
+      "content": "Status-loop: all phase tasks (Plan, Implement, Validate, Release) are done. Events namespace shipped -- agt events list (+ --type filter), agt events add for custom events, history removed at CLI level (library method kept as deprecated alias). Releaser reports quality gate green, build clean, version bump + docs committed on a release branch and pushed; npm publish driven by the CI workflow (subject to the one-time npm token secret tracked in mqh1kqwpy9). Top-level deliverable -> closing parent and all descendants."
+    }
   }
 ]

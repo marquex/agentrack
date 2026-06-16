@@ -58,5 +58,22 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:40:18.758Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh1r28fyc",
+      "content": "Status loop: all phase children (review, plan, apply, validate) are done. Top-level chore fully delivered — closing and clearing descendants."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:40:18.798Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

@@ -26,5 +26,57 @@
     "content": {
       "blockerId": "mqgxdtkaca"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:50:11.540Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgxdtkaca",
+      "reason": "Blocker issue mqgxdtkaca transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:53:03.868Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T20:02:39.810Z",
+    "author": "library-releaser",
+    "content": {
+      "id": "mqh2jt88pr",
+      "content": "Done. Released the library version that includes the new events namespace.\n\nWhat shipped:\n- New events namespace: events list with optional type filter, and events add to record custom events (reserved-type collisions rejected, malformed payloads rejected, timestamp and author auto-attached).\n- Removed the old history CLI command. The library tracker history method is kept as a deprecated alias of eventsList for backward compatibility.\n- Version bump to the next minor (new namespace plus a CLI-level breaking change, consistent with zero-x semver).\n- Docs updated: README quick start, the CLI reference markdown (full events list and add reference with error tables), and the JavaScript reference markdown (eventsList, eventsAdd, plus a history deprecation note).\n\nVerification:\n- Full quality gate green: typecheck and lint clean; all tests pass with zero failures (includes the dedicated tracker events tests and CLI events tests added during validation).\n- Build succeeded; the dist contains ESM, CJS, type declarations, and the CLI binary, with all events symbols exported.\n- Pack dry run confirms a clean tarball (dist plus package json only); install and the events help output were smoke-tested against the built artifact.\n\nPublish:\nPublishing is driven by the existing release workflow, which runs quality, build, then npm publish on version tag pushes using the configured npm token secret. I committed the version bump and docs on a release branch, created the version tag, and pushed both to origin. The release workflow is now triggered and will publish the package to the npm registry.\n\nNote: the package was not previously on the registry. The actual npm publish step requires the one-time npm token GitHub secret to be configured. If that secret is absent, the workflow publish step will fail on auth and the secret must be added before re-running."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:02:43.430Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:03:12.916Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:03:12.950Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

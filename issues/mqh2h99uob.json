@@ -1,0 +1,47 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:00:40.853Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:00:40.853Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Update webapp dev and validation ports",
+      "description": "Standardize the ports the webapp and its API server use across development and E2E/validation environments.\n\nTarget ports:\n- Development: webapp (vite frontend) = 3000, API (hono server) = 3001\n- Validation/E2E: webapp (vite frontend) = 5000, API (hono server) = 5001\n\nCurrent state (to be changed):\n- server/index.ts: defaults PORT to 3000 (dev API runs on 3000).\n- frontend/vite.config.ts: apiPort defaults to '3000'; vitePort is only set when VITE_PORT is provided (dev vite falls back to its default 5173).\n- playwright.config.ts: E2E API server on 3001, vite on 5174, baseURL http://localhost:5174; webServer env sets PORT=3001, VITE_PORT=5174, API_PORT=3001.\n\nExpected changes:\n- server/index.ts: default PORT 3000 -> 3001.\n- frontend/vite.config.ts: default apiPort '3000' -> '3001'; make the dev vite port default to 3000 when VITE_PORT is not set (E2E still overrides via VITE_PORT=5000).\n- playwright.config.ts: API webServer port 3001 -> 5001 (PORT=5001), vite port 5174 -> 5000 (VITE_PORT=5000, API_PORT=5001), baseURL -> http://localhost:5000. Update the explanatory comment that references '3001 backend, 5174 frontend'.\n- package.json: update any scripts/docs that reference the old ports.\n- docs and webapp expertise files (e.g. .agentic/expertise/webapp-validator/webapp-server-ports.expertise.md) that reference the old ports must be updated to keep guidance accurate.\n\nThis deliverable has NO new user-facing capability — it is infrastructure config.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqh2gvx6nw",
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:25.891Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T21:03:30.900Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T21:03:48.327Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqh4qgrfdg",
+      "content": "Status-loop: all phase tasks (Plan, Implement, Validate webapp port configuration) are done. Marking this sub-deliverable done. Parent mqh2gvx6nw stays in-progress until sibling /status-endpoint deliverable (mqh2h9dlr5) completes."
+    }
+  }
+]

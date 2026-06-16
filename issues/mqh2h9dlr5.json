@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:00:40.888Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:00:40.888Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Add /status endpoint and E2E environment safety guard",
+      "description": "Add a backend /status endpoint and an E2E startup guard so E2E tests can never pollute the real development .agentrack/ folder.\n\nPart A — GET /api/status endpoint:\n- New route (e.g. server/routes/status.ts) registered in server/index.ts as app.route('/api/status', statusRoute).\n- Response body: { agentrackPath: <AGENTRACK_CWD> } where the value is the resolved tracker cwd (process.env.AGENTRACK_CWD || process.cwd()). Reuse the cwd resolution already in server/utils/tracker.ts (consider exporting it from there or a shared config module so the route and the tracker stay in sync).\n- Add the response type to server/types.ts.\n\nPart B — E2E global-setup guard:\n- In e2e/global-setup.ts (or setup.ts), after the Playwright webServers are up, fetch http://localhost:<E2E_API_PORT>/api/status and read agentrackPath. The E2E API port will be 5001 once the ports deliverable lands.\n- If agentrackPath resolves to the project's real .agentrack/ directory (i.e. <projectRoot>/.agentrack), THROW / abort the test run immediately (fail fast in globalSetup) before any test creates issues or users.\n- Otherwise (path is the isolated validation/.e2edata/) proceed normally.\n- Verify the Playwright execution order: confirm webServers are running before globalSetup executes the fetch, so the guard does not false-positive. If ordering is uncertain, handle the fetch failure safely (treat connection failure as 'could not verify isolation' and abort).\n\nThis implements the root-cause guard from the related isolation-hardening idea mqh0su9kgq. The bulk cleanup of already-leaked seed issues is tracked separately under that issue.\n\nThis deliverable has NO new user-facing capability — it is infrastructure/test-safety.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqh2gvx6nw",
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:25.928Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

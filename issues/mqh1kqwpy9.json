@@ -1,0 +1,35 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:35:22.983Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:35:22.983Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Configure npm publish credentials for agentrack",
+      "description": "The library release (mqe2xmprgj) is fully prepared — version bumped to 0.2.1, built, quality gate green (863 pass / 0 fail), package packed and verified (agentrack-0.2.1.tgz). The ONLY remaining step is 'npm publish', but there are no npm credentials configured in the release environment (no .npmrc, no npm_token env var, 'npm whoami' returns ENEEDAUTH). The package 'agentrack' does not yet exist on the npm registry (404), so this will be the first publish.\\n\\nNeeded: an npm publish token (automation granular token or legacy auth token) for the npm account that owns (or will own) the 'agentrack' package name, exposed to the release environment. Once configured, the publish is a single command from packages/library: 'npm publish' (prepublishOnly runs the quality gate automatically; build artifact is already in dist/).\\n\\nNote: decide whether first publish should be 0.2.0 (current state, includes the BUG-2 fix) or 0.2.1 (already bumped). Currently package.json + dist are at 0.2.1.",
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:43:15.656Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:43:31.868Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqh1v7zzq7",
+      "content": "Version decision: go with 0.2.1 (package.json + dist are already at 0.2.1; it includes the BUG-2 fix and is the cleanest first publish).\n\nAnalysis — what's already in place:\n- release.yml (GitHub Actions) already wires the publish step to use `NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}`. So the CI infrastructure is ready; the ONLY missing piece is the secret VALUE.\n- Locally there is no .npmrc and `npm whoami` fails (ENEEDAUTH), so a local publish is not possible either without the token.\n- The package 'agentrack' does not yet exist on the npm registry â this is a first publish (needs --access public, which release.yml already sets).\n\nThis task is blocked on HUMAN action â no agent can perform either of these steps:\n1. Generate an npm publish token on npmjs.com (Granular Access Token, publish permission, scoped to 'agentrack'; or a classic Automation token).\n2. Add it as the `NPM_TOKEN` secret in the GitHub repository settings (Settings â Secrets and variables â Actions â New repository secret).\n\nOnce the secret is configured, publishing is turnkey: either push a `v0.2.1` git tag (triggers release.yml, which runs quality gate + build + `npm publish --access public`) or have the library-releaser run the publish locally with the token exposed.\n\nCannot proceed further as an agent â requires the npm account owner / repo admin to set the credential. Keeping this in-progress and assigned to me so it stays visible as a human-blocked item."
+    }
+  }
+]

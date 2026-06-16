@@ -1,0 +1,65 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:01:09.997Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:09.997Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Plan /status endpoint and E2E environment guard",
+      "description": "Plan the /status endpoint and the E2E guard that consumes it.\n\nEndpoint design:\n- GET /api/status returns { agentrackPath: <resolved cwd> }.\n- Decide where the cwd value comes from: reuse the resolution in server/utils/tracker.ts (export it, or a shared config) so the endpoint and the Tracker singleton agree. Add a StatusResponse type to server/types.ts.\n\nGuard design:\n- In e2e/global-setup.ts or setup.ts, fetch http://localhost:5001/api/status (the E2E API port after the ports deliverable lands) and compare agentrackPath to the project's real .agentrack/ path (<projectRoot>/.agentrack). If they match, abort the run (throw in globalSetup).\n- Verify Playwright starts webServers BEFORE globalSetup runs, so the fetch has a target. If that ordering cannot be guaranteed, define a safe fallback (e.g. treat a fetch failure as 'isolation unverified -> abort').\n- Note how the guard gets the expected API port (5001) without hardcoding magic numbers where possible.\n\nOutput the plan as a comment. Do not make code changes in this phase.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqh2h9dlr5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T20:01:18.366Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqh2hwglif"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T20:40:25.437Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh2hwglif",
+      "reason": "Blocker issue mqh2hwglif transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T21:10:19.751Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T21:11:34.723Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh50gtleu",
+      "content": "PLAN: /status endpoint + E2E environment guard\n\nThis is the plan for implementer issue mqh2hweq9n. No code changed in this phase.\n\n====================================================================\nCURRENT STATE (verified 2026-06-16)\n====================================================================\n- server/utils/tracker.ts ALREADY exports `cwd` (= process.env.AGENTRACK_CWD || process.cwd()). Reuse it — do NOT re-resolve.\n- server/routes/health.ts ALREADY returns `cwd` in HealthResponse. This was an interim guard. /status becomes the authoritative source.\n- e2e/global-setup.ts ALREADY polls /api/health and asserts body.cwd === getE2EDataDir(). This must be migrated to /api/status.\n- NO server/routes/status.ts exists yet. NO StatusResponse type exists yet.\n- e2e/setup.ts exposes getE2EDataDir(), getProjectRoot(). E2E_SEED_TAG and cleanupE2ESeeds() already exist.\n- playwright.config.ts: backend webServer on port 5001 with env { AGENTRACK_CWD: e2eDataDir, PORT: \"5001\" }. frontend on 5000 with API_PORT: \"5001\".\n\n====================================================================\nDECISION 1 — /status vs /health\n====================================================================\nAdd a NEW /api/status route as the AUTHORITATIVE environment/isolation endpoint. /health stays a pure liveness probe.\n\nTo avoid two sources of truth, REMOVE `cwd` from HealthResponse and from the health route response. The guard moves to /status. Health keeps { status, tracker } only.\n\nRationale: health = \"is the server up?\", status = \"what is the server pointed at?\". Separation prevents the isolation contract from being silently coupled to a liveness field someone might later strip down.\n\n====================================================================\nDECISION 2 — Response shape\n====================================================================\nStatusResponse (add to server/types.ts):\n  interface StatusResponse {\n    agentrackPath: string; // resolved AGENTRACK_CWD || process.cwd() — same value the Tracker singleton used\n  }\n\nField name is `agentrackPath` (per spec), NOT `cwd`, so the guard reads semantically: body.agentrackPath.\n\n====================================================================\nPART A — Endpoint (file-by-file)\n====================================================================\n1. server/routes/status.ts (NEW):\n   - `import { cwd } from \"../utils/tracker.js\"` and `import type { StatusResponse } from \"../types.js\"`.\n   - `const status = new Hono();`\n   - `status.get(\"/\", (c) => c.json<StatusResponse>({ agentrackPath: cwd }));`\n   - `export default status;`\n   - Reusing the exported `cwd` guarantees the endpoint and the Tracker singleton can NEVER drift.\n\n2. server/index.ts:\n   - `import statusRoute from \"./routes/status.js\";`\n   - `app.route(\"/api/status\", statusRoute);`\n\n3. server/types.ts:\n   - Add `StatusResponse` interface (above).\n   - Remove `cwd` from `HealthResponse` (Decision 1). HealthResponse becomes { status: \"ok\"; tracker: \"initialized\" | \"not_initialized\" }.\n\n4. server/routes/health.ts:\n   - Remove the `cwd` import and the `cwd` field from the response. Remove the now-stale isolation-guard comment.\n\n====================================================================\nPART B — Guard (file-by-file)\n====================================================================\n5. e2e/global-setup.ts (REWRITE the isolation half; keep waitForBackend):\n   - Keep the existing waitForBackend() poll on /api/health (liveness). Playwright guarantees webServers start BEFORE globalSetup, so the fetch has a target — but keep the poll as the readiness gate.\n   - After waitForBackend(), fetch http://localhost:${BACKEND_PORT}/api/status.\n   - Fetch-failure fallback (per spec): if the /api/status fetch itself fails or returns non-2xx AFTER waitForBackend succeeded, treat as \"isolation UNVERIFIED -> abort\". Do NOT fall through to running tests. Reason: waitForBackend already proved the server is reachable; a /status failure at that point means the server is the wrong server (no /status route = stale dev build) or something intercepted the request — either way, unsafe to seed.\n   - Read body as { agentrackPath?: string }.\n   - expected = getE2EDataDir().\n   - If body.agentrackPath !== expected -> THROW with a clear message naming both paths and the port.\n   - NOTE the spec says \"compare to real <projectRoot>/.agentrack and abort if they match\". Implementing it as \"abort unless === getE2EDataDir()\" is STRICTLY STRONGER (allowlist of one) and matches the existing guard's intent. Recommend the allowlist form; call this out so the validator (mqh2hwfsqg) tests both directions.\n\n6. FIX an existing bug while rewriting global-setup.ts: the current error message on the mismatch branch uses a double-quoted string with `${BACKEND_PORT}` — it will NOT interpolate. The new throw must use a backtick template literal so the port number actually appears in the abort message.\n\n7. Port sourcing (no magic numbers): global-setup already reads `process.env.E2E_BACKEND_PORT ?? \"5001\"`. To make the single source explicit, ADD `E2E_BACKEND_PORT: \"5001\"` to the backend webServer env in playwright.config.ts (it currently sets PORT: \"5001\" but not E2E_BACKEND_PORT, so the guard relies on the default matching). This keeps the guard's port and the webServer's port from drifting.\n\n====================================================================\nINVARIANTS (do not break)\n====================================================================\n- AGENTRACK_CWD is load-bearing: set in playwright.config.ts webServer.env, read in server/utils/tracker.ts. The /status endpoint echoes the RESOLVED value — never re-resolve in the route.\n- NEVER add reuseExistingServer: true to either webServer.\n- E2E ports 5001/5000 must stay distinct from dev 3001/3000.\n- workers: 1 / fullyParallel: false stays (shared file store, unlocked RMW).\n- The Tracker instance's cwd is private — the endpoint MUST source cwd from the exported constant in server/utils/tracker.ts, not off the Tracker object.\n\n====================================================================\nGOTCHAS\n====================================================================\n- /status route does not exist on older builds. A stale dev server on 5001 will 404 /api/status — the fetch-failure fallback (step 5) catches exactly this and aborts. Good.\n- macOS AirPlay Receiver holds port 5000 locally; `npx playwright test` may fail to bind the frontend. Backend-only validation (curl /api/status) still works. Validator (mqh2hwfsqg) should plan around the 5000/5001 bind.\n- Run e2e with `npx playwright test`, never `bunx`.\n- `server/index.ts` currently routes comments AND blockages under /api/issues; don't disturb that. Add /api/status as a sibling top-level route.\n\n====================================================================\nVALIDATION HOOKS (for mqh2hwfsqg)\n====================================================================\n- Happy path: AGENTRACK_CWD=validation/.e2edata -> body.agentrackPath ends with \"validation/.e2edata\", guard passes, suite runs.\n- Failure path: start backend WITHOUT AGENTRACK_CWD (resolves to repo root .agentrack) -> guard throws in globalSetup before any test; no seed created.\n- Wrong-server path: stale dev server on 5001 without /status route -> fetch fallback aborts.\n- Regression: typecheck (cd packages/webapp && npx tsc --noEmit) and existing unit tests still pass after removing cwd from HealthResponse.\n\n====================================================================\nSCOPE NOTE\n====================================================================\nThis issue is PLAN-only. Implementation = mqh2hweq9n, validation = mqh2hwfsqg. No code changed here. The interim /health.cwd guard already in global-setup is superseded by this plan; the implementer should remove it as part of migrating to /status."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T21:11:48.378Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

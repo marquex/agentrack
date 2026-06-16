@@ -111,19 +111,6 @@
       "priority": 3
     },
     {
-      "id": "mqe2745bhi",
-      "title": "Verify complete: library token override",
-      "path": "issues/mqe2745bhi.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqe26nou8f",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
       "id": "mqe2745ekb",
       "title": "Implement: usersRegenerate token override",
       "path": "issues/mqe2745ekb.json",
@@ -221,32 +208,6 @@
       "priority": 3
     },
     {
-      "id": "mqe27h6jl1",
-      "title": "Verify complete: webapp regenerate route fix (BUG-1)",
-      "path": "issues/mqe27h6jl1.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqe26n00jo",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe27hts2g",
-      "title": "Verify BUG-1 fully resolved",
-      "path": "issues/mqe27hts2g.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqe162cmbi",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
       "id": "mqe2xmdugp",
       "title": "Validate sync push/pull end-to-end",
       "path": "issues/mqe2xmdugp.json",
@@ -279,19 +240,6 @@
       "parentId": "mqe162svv5",
       "tags": [
         "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe2xmxeiv",
-      "title": "Verify complete",
-      "path": "issues/mqe2xmxeiv.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqe162svv5",
-      "tags": [
-        "task",
-        "sync"
       ],
       "priority": 3
     },
@@ -357,43 +305,6 @@
       "priority": 3
     },
     {
-      "id": "mqgw46luxr",
-      "title": "Apply waitForResponse fix to sibling parent-selector test",
-      "path": "issues/mqgw46luxr.json",
-      "status": "in-progress",
-      "assignee": "project-manager",
-      "parentId": null,
-      "tags": [
-        "chore"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgwmy76fo",
-      "title": "Review idea: apply waitForResponse fix to sibling parent-selector test",
-      "path": "issues/mqgwmy76fo.json",
-      "status": "done",
-      "assignee": "webapp-developer",
-      "parentId": "mqgw46luxr",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgwn6zwiu",
-      "title": "Check review decision: apply waitForResponse fix to sibling parent-selector test",
-      "path": "issues/mqgwn6zwiu.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqgw46luxr",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
       "id": "mqgwul2ltn",
       "title": "Flip phase4 push/pull e2e assertions to success + run suite (BUG-2)",
       "path": "issues/mqgwul2ltn.json",
@@ -406,96 +317,48 @@
       "priority": 3
     },
     {
-      "id": "mqgxdfjpuc",
-      "title": "Events namespace: replace agt history with agt events list/add + type filtering",
-      "path": "issues/mqgxdfjpuc.json",
+      "id": "mqgzu3jjyb",
+      "title": "Geist font dependency is imported nowhere in webapp",
+      "path": "issues/mqgzu3jjyb.json",
       "status": "in-progress",
       "assignee": "project-manager",
       "parentId": null,
       "tags": [
-        "feature"
+        "chore"
       ],
       "priority": 3
     },
     {
-      "id": "mqgxdt6csi",
-      "title": "Release: agt events namespace",
-      "path": "issues/mqgxdt6csi.json",
-      "status": "todo",
-      "assignee": "library-releaser",
-      "parentId": "mqgxdfjpuc",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgxdt9me7",
-      "title": "Implement: agt events list/add commands + type filtering + custom events",
-      "path": "issues/mqgxdt9me7.json",
-      "status": "todo",
-      "assignee": "library-developer",
-      "parentId": "mqgxdfjpuc",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgxdtkaca",
-      "title": "Validate: agt events list/add + type filtering and custom events",
-      "path": "issues/mqgxdtkaca.json",
-      "status": "todo",
-      "assignee": "library-validator",
-      "parentId": "mqgxdfjpuc",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgxdtmenb",
-      "title": "Plan: agt events namespace (list/add) + custom event type design",
-      "path": "issues/mqgxdtmenb.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqgxdfjpuc",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgxk7rj2a",
-      "title": "Status filter dropdown shows raw status values instead of labels",
-      "path": "issues/mqgxk7rj2a.json",
+      "id": "mqh0su9kgq",
+      "title": "Clean up 50 leaked UrlFilter E2E seed issues and harden isolation to prevent recurrence",
+      "path": "issues/mqh0su9kgq.json",
       "status": "in-progress",
       "assignee": "project-manager",
       "parentId": null,
       "tags": [
-        "bug"
+        "chore"
       ],
-      "priority": 3
+      "priority": 2
     },
     {
-      "id": "mqgxnab1q9",
-      "title": "Review idea: Status filter dropdown shows raw status values instead of labels",
-      "path": "issues/mqgxnab1q9.json",
+      "id": "mqh1ghz42s",
+      "title": "Review idea: Clean up leaked E2E seed issues and harden test isolation",
+      "path": "issues/mqh1ghz42s.json",
       "status": "done",
       "assignee": "project-manager",
-      "parentId": "mqgxk7rj2a",
+      "parentId": "mqh0su9kgq",
       "tags": [
         "task"
       ],
       "priority": 3
     },
     {
-      "id": "mqgxnehpqc",
-      "title": "Check review decision: Status filter dropdown shows raw status values instead of labels",
-      "path": "issues/mqgxnehpqc.json",
+      "id": "mqh1gpnqjp",
+      "title": "Check review decision: E2E seed cleanup idea",
+      "path": "issues/mqh1gpnqjp.json",
       "status": "done",
       "assignee": "project-manager",
-      "parentId": "mqgxk7rj2a",
+      "parentId": "mqh0su9kgq",
       "tags": [
         "task",
         "sync"
@@ -503,1128 +366,44 @@
       "priority": 3
     },
     {
-      "id": "mqgzjnns95",
-      "title": "Plan: apply waitForResponse fix to sibling parent-selector test",
-      "path": "issues/mqgzjnns95.json",
+      "id": "mqh1he4m3q",
+      "title": "Review idea: Wire up (or remove) the unused Geist font dependency in webapp",
+      "path": "issues/mqh1he4m3q.json",
       "status": "done",
       "assignee": "project-manager",
-      "parentId": "mqgw46luxr",
+      "parentId": "mqgzu3jjyb",
       "tags": [
         "task"
       ],
       "priority": 3
     },
     {
-      "id": "mqgzjuwgpw",
-      "title": "Apply waitForResponse fix to sibling parent-selector test",
-      "path": "issues/mqgzjuwgpw.json",
+      "id": "mqh1hkjvso",
+      "title": "Check review decision: Geist font idea",
+      "path": "issues/mqh1hkjvso.json",
       "status": "done",
       "assignee": "project-manager",
-      "parentId": "mqgw46luxr",
+      "parentId": "mqgzu3jjyb",
       "tags": [
-        "task"
+        "task",
+        "sync"
       ],
       "priority": 3
     },
     {
-      "id": "mqgzjyv8j4",
-      "title": "Validate sibling parent-selector test fix",
-      "path": "issues/mqgzjyv8j4.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": "mqgw46luxr",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgznigv4t",
-      "title": "Fix Status filter dropdown trigger to show label instead of raw value",
-      "path": "issues/mqgznigv4t.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqgxk7rj2a",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgznpaoo2",
-      "title": "Validate Status filter dropdown shows label instead of raw value",
-      "path": "issues/mqgznpaoo2.json",
+      "id": "mqh1kqwpy9",
+      "title": "Configure npm publish credentials for agentrack",
+      "path": "issues/mqh1kqwpy9.json",
       "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": "mqgxk7rj2a",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqgzu3jjyb",
-      "title": "Geist font dependency is imported nowhere in webapp",
-      "path": "issues/mqgzu3jjyb.json",
-      "status": "idea",
       "assignee": "project-manager",
       "parentId": null,
       "tags": [],
       "priority": 3
     },
     {
-      "id": "mqh0gr1we4",
-      "title": "Set Parent Child 1781636658071-dn76s2",
-      "path": "issues/mqh0gr1we4.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0gr5yvu",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0gr5yvu",
-      "title": "Set Parent Target 1781636658057-ymo70m",
-      "path": "issues/mqh0gr5yvu.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h60f5o",
-      "title": "SearchTest-1781636677505",
-      "path": "issues/mqh0h60f5o.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h66ieu",
-      "title": "Phase2 Test: Issue shape validation",
-      "path": "issues/mqh0h66ieu.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "test",
-        "phase2"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h6a2en",
-      "title": "CaseTest-1781636677514",
-      "path": "issues/mqh0h6a2en.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h6bd4q",
-      "title": "Updated title by test",
-      "path": "issues/mqh0h6bd4q.json",
-      "status": "in-progress",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "updated",
-        "tags"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mqh0h6bpsw",
-      "title": "Phase2 Test: Default priority",
-      "path": "issues/mqh0h6bpsw.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h6divb",
-      "title": "Phase2 Test: Default status",
-      "path": "issues/mqh0h6divb.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h6kyk3",
-      "title": "Tagged issue",
-      "path": "issues/mqh0h6kyk3.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "tag-1781636677533"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h6n4kp",
-      "title": "Phase2 E2E: List visible test",
-      "path": "issues/mqh0h6n4kp.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h6wnyc",
-      "title": "Phase2 Test: Detail view",
-      "path": "issues/mqh0h6wnyc.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h6xu54",
-      "title": "Phase2 Test: Minimal issue",
-      "path": "issues/mqh0h6xu54.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h73uvw",
-      "title": "Phase2 E2E: Badge test",
-      "path": "issues/mqh0h73uvw.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h7hwvv",
-      "title": "FilterTest-1781636679138",
-      "path": "issues/mqh0h7hwvv.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h9fj58",
-      "title": "E2E Created Issue 1781636681306",
-      "path": "issues/mqh0h9fj58.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0hanezi",
-      "title": "NavTest-1781636682042-029t1l",
-      "path": "issues/mqh0hanezi.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jn1stt",
-      "title": "RootB-1781636792634-ee725y",
-      "path": "issues/mqh0jn1stt.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jn8s0c",
-      "title": "ExpandChild-1781636792849-9irbpm",
-      "path": "issues/mqh0jn8s0c.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jnmtaq",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jn9cgo",
-      "title": "RootA-1781636792634-xrcszc",
-      "path": "issues/mqh0jn9cgo.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jn9ycc",
-      "title": "CollapseChild-1781636793380-pb2tzr",
-      "path": "issues/mqh0jn9ycc.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jnvz9d",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jndgfd",
-      "title": "NestedChild-1781636792422-2o3pph",
-      "path": "issues/mqh0jndgfd.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jnp61x",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jndumn",
-      "title": "ChildA-1781636792639-fnyhjq",
-      "path": "issues/mqh0jndumn.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jn9cgo",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jnmtaq",
-      "title": "ExpandParent-1781636792849-wwxeif",
-      "path": "issues/mqh0jnmtaq.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jnp61x",
-      "title": "RootParent-1781636792422-oepmab",
-      "path": "issues/mqh0jnp61x.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jnr4sg",
-      "title": "ChildB-1781636792640-v3x5sa",
-      "path": "issues/mqh0jnr4sg.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jn1stt",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jnui28",
-      "title": "TreeMid-1781636793116-z0rqg2",
-      "path": "issues/mqh0jnui28.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jnzazf",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jnvz9d",
-      "title": "CollapseParent-1781636793380-xi3vyb",
-      "path": "issues/mqh0jnvz9d.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jnvzoh",
-      "title": "TreeLeaf-1781636793116-u628ye",
-      "path": "issues/mqh0jnvzoh.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jnui28",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jnzazf",
-      "title": "TreeRoot-1781636793116-1rscro",
-      "path": "issues/mqh0jnzazf.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jo3009",
-      "title": "StatusRoot-1781636794392-fcl10p",
-      "path": "issues/mqh0jo3009.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jo67n6",
-      "title": "NoFetchChild-1781636793675-lw6t1w",
-      "path": "issues/mqh0jo67n6.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jogm2j",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jogm2j",
-      "title": "NoFetchParent-1781636793672-ik4mx4",
-      "path": "issues/mqh0jogm2j.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jp6wbv",
-      "title": "SearchMatchParent-1781636794735-518skm",
-      "path": "issues/mqh0jp6wbv.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jpmhsq",
-      "title": "SearchOther-1781636794732-6yn72h",
-      "path": "issues/mqh0jpmhsq.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jpmn0n",
-      "title": "NavRoot-1781636795216-fjh0zo",
-      "path": "issues/mqh0jpmn0n.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jpnfqq",
-      "title": "SearchMatch-1781636794737-qah0tg",
-      "path": "issues/mqh0jpnfqq.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0jp6wbv",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jpx2wo",
-      "title": "SearchMatch-1781636794732-57yj3z",
-      "path": "issues/mqh0jpx2wo.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jy13xy",
-      "title": "Updated title by test",
-      "path": "issues/mqh0jy13xy.json",
-      "status": "in-progress",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "updated",
-        "tags"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mqh0jy3jno",
-      "title": "Phase2 Test: Minimal issue",
-      "path": "issues/mqh0jy3jno.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jy8bvm",
-      "title": "Tagged issue",
-      "path": "issues/mqh0jy8bvm.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "tag-1781636807126"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jy8q4o",
-      "title": "Phase2 Test: Issue shape validation",
-      "path": "issues/mqh0jy8q4o.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "test",
-        "phase2"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jyg1wd",
-      "title": "SearchTest-1781636807097",
-      "path": "issues/mqh0jyg1wd.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jyianw",
-      "title": "CaseTest-1781636807104",
-      "path": "issues/mqh0jyianw.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jylmbv",
-      "title": "Phase2 E2E: List visible test",
-      "path": "issues/mqh0jylmbv.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jyqktr",
-      "title": "Phase2 Test: Default priority",
-      "path": "issues/mqh0jyqktr.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jyx2xs",
-      "title": "Phase2 Test: Full issue",
-      "path": "issues/mqh0jyx2xs.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [
-        "test",
-        "phase2",
-        "full"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mqh0jyy3qg",
-      "title": "Phase2 Test: Default status",
-      "path": "issues/mqh0jyy3qg.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jyyiff",
-      "title": "Phase2 Test: Detail view",
-      "path": "issues/mqh0jyyiff.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jzj4d2",
-      "title": "FilterTest-1781636808750",
-      "path": "issues/mqh0jzj4d2.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0jzuyfq",
-      "title": "Phase2 E2E: Badge test",
-      "path": "issues/mqh0jzuyfq.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0k1k9zj",
-      "title": "E2E Created Issue 1781636810937",
-      "path": "issues/mqh0k1k9zj.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0kg7j13",
-      "title": "Timestamp Test Unique",
-      "path": "issues/mqh0kg7j13.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0kga7xu",
-      "title": "Desc Display Test Unique",
-      "path": "issues/mqh0kga7xu.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0kgk2a1",
-      "title": "Detail Display Test Unique",
-      "path": "issues/mqh0kgk2a1.json",
-      "status": "todo",
-      "assignee": "test-bot",
-      "parentId": null,
-      "tags": [
-        "display-test-unique"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mqh0kgr42f",
-      "title": "Status Badge Test Unique",
-      "path": "issues/mqh0kgr42f.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0kgz09s",
-      "title": "Tag Display Test Unique",
-      "path": "issues/mqh0kgz09s.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "unique-tag-display-test"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l24vrr",
-      "title": "Timeline Expand Test 1781636859275-e29zjm",
-      "path": "issues/mqh0l24vrr.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l33iru",
-      "title": "Tag Display Test 1781636859798-eognhx",
-      "path": "issues/mqh0l33iru.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "alpha-tag",
-        "beta-tag"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l378qy",
-      "title": "No Parent Test 1781636860545-w6c89u",
-      "path": "issues/mqh0l378qy.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l3aq28",
-      "title": "Timeline Update Display 1781636859544-5vzbuq",
-      "path": "issues/mqh0l3aq28.json",
-      "status": "in-progress",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l3r0nc",
-      "title": "Tag Remove Test 1781636860268-13zygk",
-      "path": "issues/mqh0l3r0nc.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l3ti95",
-      "title": "Set Parent Target 1781636860757-gu25es",
-      "path": "issues/mqh0l3ti95.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l3uh7u",
-      "title": "Tag Add Test 1781636860009-ljym0i",
-      "path": "issues/mqh0l3uh7u.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "new-e2e-tag"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l3zk9h",
-      "title": "Set Parent Child 1781636860760-pnxid5",
-      "path": "issues/mqh0l3zk9h.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0l3ti95",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l460zs",
-      "title": "Clear Parent Target 1781636861373-ip4zxa",
-      "path": "issues/mqh0l460zs.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l4dxgk",
-      "title": "New Parent 1781636861068-vvs0oy",
-      "path": "issues/mqh0l4dxgk.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l4kyve",
-      "title": "Old Parent 1781636861065-k9rfdk",
-      "path": "issues/mqh0l4kyve.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l4o8m4",
-      "title": "Change Parent Child 1781636861069-if6i6e",
-      "path": "issues/mqh0l4o8m4.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0l4dxgk",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l4rn1l",
-      "title": "Nav Parent Child 1781636861642-s35j6g",
-      "path": "issues/mqh0l4rn1l.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh0l4wlij",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l4wlij",
-      "title": "Nav Parent Target 1781636861640-2n7yzk",
-      "path": "issues/mqh0l4wlij.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0l4x7oa",
-      "title": "Clear Parent Child 1781636861375-ewbbu0",
-      "path": "issues/mqh0l4x7oa.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lg2khe",
-      "title": "UrlFilterInProgress-1781636877343-uz574m",
-      "path": "issues/mqh0lg2khe.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lg8cai",
-      "title": "UrlFilterIdea-1781636877117-tcsjzj",
-      "path": "issues/mqh0lg8cai.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgafha",
-      "title": "UrlFilterDone-1781636877343-uz574m",
-      "path": "issues/mqh0lgafha.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgfny3",
-      "title": "UrlFilterDone-1781636877117-tcsjzj",
-      "path": "issues/mqh0lgfny3.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgm8sq",
-      "title": "UrlFilterIdea-1781636877566-1yg76g",
-      "path": "issues/mqh0lgm8sq.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgot6w",
-      "title": "UrlFilterTodo-1781636877566-1yg76g",
-      "path": "issues/mqh0lgot6w.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgpvfa",
-      "title": "UrlFilterInProgress-1781636877566-1yg76g",
-      "path": "issues/mqh0lgpvfa.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgqr6x",
-      "title": "UrlFilterIdea-1781636877343-uz574m",
-      "path": "issues/mqh0lgqr6x.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgvag7",
-      "title": "UrlFilterInProgress-1781636877117-tcsjzj",
-      "path": "issues/mqh0lgvag7.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgwr7i",
-      "title": "UrlFilterTodo-1781636877117-tcsjzj",
-      "path": "issues/mqh0lgwr7i.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lgxqcu",
-      "title": "UrlFilterDone-1781636877566-1yg76g",
-      "path": "issues/mqh0lgxqcu.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lh1qeq",
-      "title": "UrlFilterDone-1781636877784-v78324",
-      "path": "issues/mqh0lh1qeq.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lh91ks",
-      "title": "UrlFilterIdea-1781636877998-l5r9qj",
-      "path": "issues/mqh0lh91ks.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lh9m3s",
-      "title": "UrlFilterTodo-1781636878398-yvvq7e",
-      "path": "issues/mqh0lh9m3s.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lh9ocm",
-      "title": "UrlFilterInProgress-1781636877784-v78324",
-      "path": "issues/mqh0lh9ocm.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhdif8",
-      "title": "UrlFilterInProgress-1781636878208-brvgt2",
-      "path": "issues/mqh0lhdif8.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhfy66",
-      "title": "UrlFilterTodo-1781636877784-v78324",
-      "path": "issues/mqh0lhfy66.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhhkvw",
-      "title": "UrlFilterDone-1781636878757-eo4h4l",
-      "path": "issues/mqh0lhhkvw.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhltdl",
-      "title": "UrlFilterIdea-1781636878208-brvgt2",
-      "path": "issues/mqh0lhltdl.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lho89r",
-      "title": "UrlFilterDone-1781636878208-brvgt2",
-      "path": "issues/mqh0lho89r.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhouep",
-      "title": "UrlFilterDone-1781636877998-l5r9qj",
-      "path": "issues/mqh0lhouep.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhpexx",
-      "title": "UrlFilterTodo-1781636878757-eo4h4l",
-      "path": "issues/mqh0lhpexx.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhr6eo",
-      "title": "UrlFilterTodo-1781636878208-brvgt2",
-      "path": "issues/mqh0lhr6eo.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhrm7h",
-      "title": "UrlFilterIdea-1781636878757-eo4h4l",
-      "path": "issues/mqh0lhrm7h.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhs1hh",
-      "title": "UrlFilterIdea-1781636878398-yvvq7e",
-      "path": "issues/mqh0lhs1hh.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhsc6n",
-      "title": "UrlFilterDone-1781636878398-yvvq7e",
-      "path": "issues/mqh0lhsc6n.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhux79",
-      "title": "UrlFilterInProgress-1781636878398-yvvq7e",
-      "path": "issues/mqh0lhux79.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhv42f",
-      "title": "UrlFilterInProgress-1781636878757-eo4h4l",
-      "path": "issues/mqh0lhv42f.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhw6pl",
-      "title": "UrlFilterInProgress-1781636877998-l5r9qj",
-      "path": "issues/mqh0lhw6pl.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhyrqf",
-      "title": "UrlFilterIdea-1781636877784-v78324",
-      "path": "issues/mqh0lhyrqf.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhzldz",
-      "title": "UrlFilterTodo-1781636877998-l5r9qj",
-      "path": "issues/mqh0lhzldz.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0su9kgq",
-      "title": "Clean up 50 leaked UrlFilter E2E seed issues and harden isolation to prevent recurrence",
-      "path": "issues/mqh0su9kgq.json",
+      "id": "mqh1l5phtj",
+      "title": "Clean up test suite: mentions spec-deviation tests + flaky E2E",
+      "path": "issues/mqh1l5phtj.json",
       "status": "idea",
       "assignee": "project-manager",
       "parentId": null,
@@ -1632,1872 +411,211 @@
       "priority": 2
     },
     {
-      "id": "mqh0zn81u6",
-      "title": "CaseTest-1781637539511",
-      "path": "issues/mqh0zn81u6.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0zn8laa",
-      "title": "Phase2 Test: Default priority",
-      "path": "issues/mqh0zn8laa.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0znassq",
-      "title": "Tagged issue",
-      "path": "issues/mqh0znassq.json",
-      "status": "idea",
-      "assignee": null,
+      "id": "mqh2gvx6nw",
+      "title": "Standardize webapp ports and add E2E environment safety guard",
+      "path": "issues/mqh2gvx6nw.json",
+      "status": "in-progress",
+      "assignee": "project-manager",
       "parentId": null,
       "tags": [
-        "tag-1781637539536"
+        "chore"
       ],
       "priority": 3
     },
     {
-      "id": "mqh0zndugy",
-      "title": "Phase2 Test: Minimal issue",
-      "path": "issues/mqh0zndugy.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0znow4q",
-      "title": "SearchTest-1781637539505",
-      "path": "issues/mqh0znow4q.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0znqlwd",
-      "title": "Phase2 Test: Issue shape validation",
-      "path": "issues/mqh0znqlwd.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
+      "id": "mqh2h99uob",
+      "title": "Update webapp dev and validation ports",
+      "path": "issues/mqh2h99uob.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh2gvx6nw",
       "tags": [
-        "test",
-        "phase2"
+        "chore"
       ],
       "priority": 3
     },
     {
-      "id": "mqh0znqzr4",
-      "title": "Phase2 Test: Default status",
-      "path": "issues/mqh0znqzr4.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0znreer",
-      "title": "Updated title by test",
-      "path": "issues/mqh0znreer.json",
+      "id": "mqh2h9dlr5",
+      "title": "Add /status endpoint and E2E environment safety guard",
+      "path": "issues/mqh2h9dlr5.json",
       "status": "in-progress",
-      "assignee": null,
-      "parentId": null,
+      "assignee": "project-manager",
+      "parentId": "mqh2gvx6nw",
       "tags": [
-        "updated",
-        "tags"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mqh0znsqhf",
-      "title": "Phase2 Test: Full issue",
-      "path": "issues/mqh0znsqhf.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [
-        "test",
-        "phase2",
-        "full"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mqh0znx56l",
-      "title": "Phase2 Test: Detail view",
-      "path": "issues/mqh0znx56l.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0zny7nm",
-      "title": "Phase2 E2E: List visible test",
-      "path": "issues/mqh0zny7nm.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0zo906r",
-      "title": "Phase2 E2E: Badge test",
-      "path": "issues/mqh0zo906r.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0zprprw",
-      "title": "FilterTest-1781637541252",
-      "path": "issues/mqh0zprprw.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh101jf4a",
-      "title": "Test Issue",
-      "path": "issues/mqh101jf4a.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh106n17o",
-      "title": "Priority Change Test Unique",
-      "path": "issues/mqh106n17o.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 5
-    },
-    {
-      "id": "mqh1071f2d",
-      "title": "Add Comment Test 1781637564974-m9c1lh",
-      "path": "issues/mqh1071f2d.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1072c8b",
-      "title": "Blocker Delete Test 1781637565087-7xr9vk",
-      "path": "issues/mqh1072c8b.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1072y6m",
-      "title": "Assignee Change Test Unique",
-      "path": "issues/mqh1072y6m.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1072ysr",
-      "title": "Next Issue Test 1781637565123-xxan74",
-      "path": "issues/mqh1072ysr.json",
-      "status": "todo",
-      "assignee": "next-tester-1781637565123-urqhmd",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1073v2d",
-      "title": "Add Comment UI Test 1781637565592-4nc5t8",
-      "path": "issues/mqh1073v2d.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107439h",
-      "title": "Edit Comment Validation 1781637565015-o11k0o",
-      "path": "issues/mqh107439h.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1074ae5",
-      "title": "No Comments Test 1781637565181-3kqjii",
-      "path": "issues/mqh1074ae5.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1074kcd",
-      "title": "Blockage Empty Array 1781637565063-qc5cyd",
-      "path": "issues/mqh1074kcd.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1076kr4",
-      "title": "Parent Issue 1781637565129-r7z11c",
-      "path": "issues/mqh1076kr4.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1077vpd",
-      "title": "Blockages List Test 1781637565030-6md557",
-      "path": "issues/mqh1077vpd.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1079ddl",
-      "title": "History Test 1781637565104-qqctoi",
-      "path": "issues/mqh1079ddl.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107a2c2",
-      "title": "Comment Shape Test 1781637564962-u7yjfd",
-      "path": "issues/mqh107a2c2.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107b7xp",
-      "title": "History Update Test 1781637565111-3wiaxy",
-      "path": "issues/mqh107b7xp.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107boib",
-      "title": "Child 1 1781637565148-0eugzf",
-      "path": "issues/mqh107boib.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh107j4z7",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107cah8",
-      "title": "Delete Validation 1781637565098-f7jd8b",
-      "path": "issues/mqh107cah8.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107fclf",
-      "title": "Comment Empty Test 1781637564989-n80sbu",
-      "path": "issues/mqh107fclf.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107gjui",
-      "title": "Comment Count Test 1781637565383-7fjhsl",
-      "path": "issues/mqh107gjui.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107h8no",
-      "title": "Blocked For Add 1781637565049-1ypuwp",
-      "path": "issues/mqh107h8no.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107hlzr",
-      "title": "Comment Validation Test 1781637564982-au3b7n",
-      "path": "issues/mqh107hlzr.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107it2k",
-      "title": "Delete Comment Test 1781637565021-3z7181",
-      "path": "issues/mqh107it2k.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107j4z7",
-      "title": "Parent Filter Test 1781637565146-tioek2",
-      "path": "issues/mqh107j4z7.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107jrdh",
-      "title": "Comments List Test 1781637564954-3lli95",
-      "path": "issues/mqh107jrdh.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107n96b",
-      "title": "Child Issue 1781637565130-n7ahvv",
-      "path": "issues/mqh107n96b.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh1076kr4",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107ovxm",
-      "title": "Blockage Validation 1781637565057-uwcvah",
-      "path": "issues/mqh107ovxm.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107ow3a",
-      "title": "Clear Parent Test 1781637565138-efe7m7",
-      "path": "issues/mqh107ow3a.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107pdj4",
-      "title": "Edit Comment Test 1781637565002-8ccgkr",
-      "path": "issues/mqh107pdj4.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107ry4p",
-      "title": "Comment Type Test 1781637564995-d2n7p2",
-      "path": "issues/mqh107ry4p.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107tx09",
-      "title": "Blocker For Add 1781637565051-gt3sah",
-      "path": "issues/mqh107tx09.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107uchf",
-      "title": "Blocked Issue 1781637565041-k8f5v4",
-      "path": "issues/mqh107uchf.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107uh8n",
-      "title": "Blocked Resolve Test 1781637565073-es1wio",
-      "path": "issues/mqh107uh8n.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107uoon",
-      "title": "Blocker Resolve Test 1781637565071-tds24g",
-      "path": "issues/mqh107uoon.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107x707",
-      "title": "Blocked Delete Test 1781637565089-6xwd8a",
-      "path": "issues/mqh107x707.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107ymgn",
-      "title": "Resolve Validation 1781637565082-p6b9lb",
-      "path": "issues/mqh107ymgn.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107yueg",
-      "title": "Child Clear Test 1781637565139-qa0ipk",
-      "path": "issues/mqh107yueg.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107yyhc",
-      "title": "Blocker Issue 1781637565039-6f8a7w",
-      "path": "issues/mqh107yyhc.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh107zofp",
-      "title": "Child 2 1781637565149-ppxcqd",
-      "path": "issues/mqh107zofp.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh107j4z7",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh108wpni",
-      "title": "Edit Comment UI Test 1781637565875-fdiyll",
-      "path": "issues/mqh108wpni.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10i5oco",
-      "title": "Tree Child 1781637579367-p8qhzf",
-      "path": "issues/mqh10i5oco.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh10ih949",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10ib7pp",
-      "title": "Timeline Collapsed Test 1781637579649-t5nfwb",
-      "path": "issues/mqh10ib7pp.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10ih949",
-      "title": "Tree Parent 1781637579357-jnugxb",
-      "path": "issues/mqh10ih949.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10iyik9",
-      "title": "Timeline Expand Test 1781637579858-kyydis",
-      "path": "issues/mqh10iyik9.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10j4nvm",
-      "title": "Tag Add Test 1781637580592-p71zrr",
-      "path": "issues/mqh10j4nvm.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [
-        "new-e2e-tag"
+        "chore"
       ],
       "priority": 3
     },
     {
-      "id": "mqh10j7ohj",
-      "title": "Tag Remove Test 1781637580859-909m8b",
-      "path": "issues/mqh10j7ohj.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10j7yw9",
-      "title": "Timeline Update Display 1781637580120-xs3yk0",
-      "path": "issues/mqh10j7yw9.json",
-      "status": "in-progress",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10j80b7",
-      "title": "Set Parent Target 1781637581335-e5zxtu",
-      "path": "issues/mqh10j80b7.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10jjwy7",
-      "title": "Set Parent Child 1781637581338-9jh1et",
-      "path": "issues/mqh10jjwy7.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh10j80b7",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10jqsh4",
-      "title": "Tag Display Test 1781637580379-r3y63o",
-      "path": "issues/mqh10jqsh4.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
+      "id": "mqh2hw1wl3",
+      "title": "Plan webapp port configuration changes",
+      "path": "issues/mqh2hw1wl3.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh2h99uob",
       "tags": [
-        "alpha-tag",
-        "beta-tag"
+        "task"
       ],
       "priority": 3
     },
     {
-      "id": "mqh10jr9oi",
-      "title": "No Parent Test 1781637581132-ltywcs",
-      "path": "issues/mqh10jr9oi.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10kahuv",
-      "title": "Clear Parent Child 1781637581962-8al43u",
-      "path": "issues/mqh10kahuv.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10kco3e",
-      "title": "Nav Parent Child 1781637582227-flt78i",
-      "path": "issues/mqh10kco3e.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh10ksumh",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10kl6h3",
-      "title": "Old Parent 1781637581642-ekwhij",
-      "path": "issues/mqh10kl6h3.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10knu8q",
-      "title": "Clear Parent Target 1781637581960-e8ptdy",
-      "path": "issues/mqh10knu8q.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10ksmdf",
-      "title": "Change Parent Child 1781637581647-3o4k9k",
-      "path": "issues/mqh10ksmdf.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh10kvam7",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10ksumh",
-      "title": "Nav Parent Target 1781637582225-b6mv5m",
-      "path": "issues/mqh10ksumh.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh10kvam7",
-      "title": "New Parent 1781637581645-tw6k2o",
-      "path": "issues/mqh10kvam7.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11e3234",
-      "title": "UrlFilterIdea-1781637621411-rhb0u3",
-      "path": "issues/mqh11e3234.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11e538s",
-      "title": "UrlFilterDone-1781637620328-wvrm6q",
-      "path": "issues/mqh11e538s.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11e7gnj",
-      "title": "UrlFilterInProgress-1781637620328-wvrm6q",
-      "path": "issues/mqh11e7gnj.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11e8ei9",
-      "title": "UrlFilterTodo-1781637621411-rhb0u3",
-      "path": "issues/mqh11e8ei9.json",
+      "id": "mqh2hweq9n",
+      "title": "Implement /status endpoint and E2E environment guard",
+      "path": "issues/mqh2hweq9n.json",
       "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ebdy8",
-      "title": "UrlFilterTodo-1781637620893-hvrfxc",
-      "path": "issues/mqh11ebdy8.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ebkqb",
-      "title": "UrlFilterIdea-1781637620328-wvrm6q",
-      "path": "issues/mqh11ebkqb.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11edl6g",
-      "title": "UrlFilterIdea-1781637620893-hvrfxc",
-      "path": "issues/mqh11edl6g.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ee9tz",
-      "title": "UrlFilterInProgress-1781637621150-1zw2ds",
-      "path": "issues/mqh11ee9tz.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11eggib",
-      "title": "UrlFilterDone-1781637621150-1zw2ds",
-      "path": "issues/mqh11eggib.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11egjo1",
-      "title": "UrlFilterIdea-1781637620612-1rsll8",
-      "path": "issues/mqh11egjo1.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ehwg7",
-      "title": "UrlFilterIdea-1781637621150-1zw2ds",
-      "path": "issues/mqh11ehwg7.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ensid",
-      "title": "UrlFilterDone-1781637621411-rhb0u3",
-      "path": "issues/mqh11ensid.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11eoaya",
-      "title": "UrlFilterDone-1781637620893-hvrfxc",
-      "path": "issues/mqh11eoaya.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11eqjxo",
-      "title": "UrlFilterInProgress-1781637621411-rhb0u3",
-      "path": "issues/mqh11eqjxo.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11eqolp",
-      "title": "UrlFilterTodo-1781637620328-wvrm6q",
-      "path": "issues/mqh11eqolp.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11eroz3",
-      "title": "UrlFilterInProgress-1781637620612-1rsll8",
-      "path": "issues/mqh11eroz3.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11esb9r",
-      "title": "UrlFilterTodo-1781637621150-1zw2ds",
-      "path": "issues/mqh11esb9r.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11evs1a",
-      "title": "UrlFilterInProgress-1781637620893-hvrfxc",
-      "path": "issues/mqh11evs1a.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ewkng",
-      "title": "UrlFilterTodo-1781637620612-1rsll8",
-      "path": "issues/mqh11ewkng.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11eyqc6",
-      "title": "UrlFilterDone-1781637620612-1rsll8",
-      "path": "issues/mqh11eyqc6.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11f198m",
-      "title": "UrlFilterInProgress-1781637621899-qb8cqu",
-      "path": "issues/mqh11f198m.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11f6x29",
-      "title": "UrlFilterTodo-1781637621899-qb8cqu",
-      "path": "issues/mqh11f6x29.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11f84oj",
-      "title": "UrlFilterIdea-1781637622745-7wcgvj",
-      "path": "issues/mqh11f84oj.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fabqs",
-      "title": "UrlFilterDone-1781637622745-7wcgvj",
-      "path": "issues/mqh11fabqs.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fjkcw",
-      "title": "UrlFilterInProgress-1781637621657-pxidtw",
-      "path": "issues/mqh11fjkcw.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11flw2u",
-      "title": "UrlFilterIdea-1781637622345-oxpfxx",
-      "path": "issues/mqh11flw2u.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fm7pf",
-      "title": "UrlFilterDone-1781637621899-qb8cqu",
-      "path": "issues/mqh11fm7pf.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fmk0r",
-      "title": "UrlFilterDone-1781637622345-oxpfxx",
-      "path": "issues/mqh11fmk0r.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fodpi",
-      "title": "UrlFilterTodo-1781637622345-oxpfxx",
-      "path": "issues/mqh11fodpi.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11foeyc",
-      "title": "UrlFilterInProgress-1781637622345-oxpfxx",
-      "path": "issues/mqh11foeyc.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fqlw2",
-      "title": "UrlFilterTodo-1781637621657-pxidtw",
-      "path": "issues/mqh11fqlw2.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fqqjg",
-      "title": "UrlFilterTodo-1781637622745-7wcgvj",
-      "path": "issues/mqh11fqqjg.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fv834",
-      "title": "UrlFilterIdea-1781637621899-qb8cqu",
-      "path": "issues/mqh11fv834.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fwn1c",
-      "title": "UrlFilterDone-1781637621657-pxidtw",
-      "path": "issues/mqh11fwn1c.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fx2u5",
-      "title": "UrlFilterIdea-1781637621657-pxidtw",
-      "path": "issues/mqh11fx2u5.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fxa99",
-      "title": "UrlFilterInProgress-1781637622745-7wcgvj",
-      "path": "issues/mqh11fxa99.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11g1zhp",
-      "title": "UrlFilterDone-1781637623171-u360kg",
-      "path": "issues/mqh11g1zhp.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11g3ycx",
-      "title": "UrlFilterIdea-1781637623171-u360kg",
-      "path": "issues/mqh11g3ycx.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11g6c0y",
-      "title": "UrlFilterTodo-1781637623588-jr94xp",
-      "path": "issues/mqh11g6c0y.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11g7ubz",
-      "title": "UrlFilterTodo-1781637623171-u360kg",
-      "path": "issues/mqh11g7ubz.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11gleai",
-      "title": "UrlFilterDone-1781637623588-jr94xp",
-      "path": "issues/mqh11gleai.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11gsctb",
-      "title": "UrlFilterInProgress-1781637623171-u360kg",
-      "path": "issues/mqh11gsctb.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11gsvzc",
-      "title": "UrlFilterInProgress-1781637623588-jr94xp",
-      "path": "issues/mqh11gsvzc.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11guucp",
-      "title": "UrlFilterIdea-1781637623588-jr94xp",
-      "path": "issues/mqh11guucp.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11he5pp",
-      "title": "UrlFilterDone-1781637624188-nn22sx",
-      "path": "issues/mqh11he5pp.json",
-      "status": "done",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11hpj77",
-      "title": "UrlFilterIdea-1781637624188-nn22sx",
-      "path": "issues/mqh11hpj77.json",
-      "status": "idea",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11hvu8g",
-      "title": "UrlFilterInProgress-1781637624188-nn22sx",
-      "path": "issues/mqh11hvu8g.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11hwj8q",
-      "title": "UrlFilterTodo-1781637624188-nn22sx",
-      "path": "issues/mqh11hwj8q.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18p04o9",
-      "title": "Timestamp Test Unique",
-      "path": "issues/mqh18p04o9.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18p505i",
-      "title": "Desc Display Test Unique",
-      "path": "issues/mqh18p505i.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18p6hem",
-      "title": "Status Badge Test Unique",
-      "path": "issues/mqh18p6hem.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18p986v",
-      "title": "Detail Display Test Unique",
-      "path": "issues/mqh18p986v.json",
-      "status": "todo",
-      "assignee": "test-bot",
-      "parentId": null,
+      "assignee": "webapp-developer",
+      "parentId": "mqh2h9dlr5",
       "tags": [
-        "display-test-unique"
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh2hwfsqg",
+      "title": "Validate /status endpoint and E2E environment guard",
+      "path": "issues/mqh2hwfsqg.json",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqh2h9dlr5",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh2hwglif",
+      "title": "Validate webapp port configuration",
+      "path": "issues/mqh2hwglif.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh2h99uob",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh2hwl22k",
+      "title": "Plan /status endpoint and E2E environment guard",
+      "path": "issues/mqh2hwl22k.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh2h9dlr5",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh2hwulrt",
+      "title": "Implement webapp port configuration changes",
+      "path": "issues/mqh2hwulrt.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh2h99uob",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqh2nk7khi",
+      "title": "Extract shared e2e API base URL constant",
+      "path": "issues/mqh2nk7khi.json",
+      "status": "idea",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh326adbp",
+      "title": "Update specs/roadmap/expertise docs for new webapp ports",
+      "path": "issues/mqh326adbp.json",
+      "status": "idea",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [],
+      "priority": 3
+    },
+    {
+      "id": "mqh3sj0wn5",
+      "title": "Plan E2E isolation hardening",
+      "path": "issues/mqh3sj0wn5.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh0su9kgq",
+      "tags": [
+        "task"
       ],
       "priority": 2
     },
     {
-      "id": "mqh18pfndn",
-      "title": "Title Edit Test Updated",
-      "path": "issues/mqh18pfndn.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
+      "id": "mqh3ss1nfh",
+      "title": "Implement E2E isolation hardening (Layers A/B/C)",
+      "path": "issues/mqh3ss1nfh.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh0su9kgq",
+      "tags": [
+        "task"
+      ],
+      "priority": 2
     },
     {
-      "id": "mqh18pnks8",
-      "title": "Tag Display Test Unique",
-      "path": "issues/mqh18pnks8.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
+      "id": "mqh3syrrnb",
+      "title": "Validate E2E isolation hardening",
+      "path": "issues/mqh3syrrnb.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqh0su9kgq",
       "tags": [
-        "unique-tag-display-test"
+        "task"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mqh4gfibr3",
+      "title": "Plan: wire up Geist font in webapp",
+      "path": "issues/mqh4gfibr3.json",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgzu3jjyb",
+      "tags": [
+        "task"
       ],
       "priority": 3
     },
     {
-      "id": "mqh18q09xi",
-      "title": "Status Change Test Unique",
-      "path": "issues/mqh18q09xi.json",
-      "status": "in-progress",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18q2ni9",
-      "title": "Priority Change Test Unique",
-      "path": "issues/mqh18q2ni9.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 5
-    },
-    {
-      "id": "mqh18qqk1j",
-      "title": "Desc Edit Test Unique",
-      "path": "issues/mqh18qqk1j.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r022k",
-      "title": "Edit Comment Validation 1781637964014-ue9x2a",
-      "path": "issues/mqh18r022k.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r0aj3",
-      "title": "Blocker Delete Test 1781637964084-mloeqg",
-      "path": "issues/mqh18r0aj3.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r3y85",
-      "title": "Comment Count Test 1781637964391-4dwp22",
-      "path": "issues/mqh18r3y85.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r4bfg",
-      "title": "Blocked Resolve Test 1781637964069-t97r2y",
-      "path": "issues/mqh18r4bfg.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r4t93",
-      "title": "Comment Validation Test 1781637963986-0f97il",
-      "path": "issues/mqh18r4t93.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r6duk",
-      "title": "Child 2 1781637964149-ztu3ee",
-      "path": "issues/mqh18r6duk.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh18ran8x",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r6e5e",
-      "title": "Add Comment Test 1781637963979-nx8kgy",
-      "path": "issues/mqh18r6e5e.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18r92jw",
-      "title": "Child Issue 1781637964128-n20c4n",
-      "path": "issues/mqh18r92jw.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh18rh1gn",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18ran8x",
-      "title": "Parent Filter Test 1781637964146-elyya4",
-      "path": "issues/mqh18ran8x.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rbj3w",
-      "title": "Comments List Test 1781637963963-yusnge",
-      "path": "issues/mqh18rbj3w.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rc5xt",
-      "title": "Assignee Change Test Unique",
-      "path": "issues/mqh18rc5xt.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rdqvq",
-      "title": "History Test 1781637964100-dbtogk",
-      "path": "issues/mqh18rdqvq.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rebkc",
-      "title": "Delete Comment Test 1781637964021-wjvhi2",
-      "path": "issues/mqh18rebkc.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18reldf",
-      "title": "Blocker Issue 1781637964037-0ll7rs",
-      "path": "issues/mqh18reldf.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rg2lh",
-      "title": "Blocker Resolve Test 1781637964067-16esi6",
-      "path": "issues/mqh18rg2lh.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rgwr5",
-      "title": "Blocked For Add 1781637964047-82m0fb",
-      "path": "issues/mqh18rgwr5.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rh1gn",
-      "title": "Parent Issue 1781637964127-q2qbgl",
-      "path": "issues/mqh18rh1gn.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rj0rp",
-      "title": "Blocked Issue 1781637964039-3p9fdl",
-      "path": "issues/mqh18rj0rp.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rjc3b",
-      "title": "Comment Type Test 1781637963998-y2yzd2",
-      "path": "issues/mqh18rjc3b.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rl7rm",
-      "title": "Child 1 1781637964148-l2a6py",
-      "path": "issues/mqh18rl7rm.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh18ran8x",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rlndw",
-      "title": "Delete Validation 1781637964095-1axi43",
-      "path": "issues/mqh18rlndw.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rn00p",
-      "title": "Clear Parent Test 1781637964136-9s3k5a",
-      "path": "issues/mqh18rn00p.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rnjsv",
-      "title": "Blocker For Add 1781637964048-d6mhgy",
-      "path": "issues/mqh18rnjsv.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rnqu7",
-      "title": "Blocked Delete Test 1781637964085-7x132b",
-      "path": "issues/mqh18rnqu7.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18ron6o",
-      "title": "No Comments Test 1781637964181-36enfp",
-      "path": "issues/mqh18ron6o.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rq409",
-      "title": "Blockage Empty Array 1781637964061-1wewrv",
-      "path": "issues/mqh18rq409.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18ru6ja",
-      "title": "Child Clear Test 1781637964138-eljswu",
-      "path": "issues/mqh18ru6ja.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rv37o",
-      "title": "Blockage Validation 1781637964055-jhs070",
-      "path": "issues/mqh18rv37o.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rv4wd",
-      "title": "History Update Test 1781637964107-orkim3",
-      "path": "issues/mqh18rv4wd.json",
+      "id": "mqh4glovns",
+      "title": "Dev: wire up Geist font in webapp",
+      "path": "issues/mqh4glovns.json",
       "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
+      "assignee": "webapp-developer",
+      "parentId": "mqgzu3jjyb",
+      "tags": [
+        "task"
+      ],
       "priority": 3
     },
     {
-      "id": "mqh18rv9vq",
-      "title": "Comment Empty Test 1781637963992-mkbcsi",
-      "path": "issues/mqh18rv9vq.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rvf2s",
-      "title": "Blockages List Test 1781637964030-y5b4vk",
-      "path": "issues/mqh18rvf2s.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rwbqf",
-      "title": "Next Issue Test 1781637964120-hnadw5",
-      "path": "issues/mqh18rwbqf.json",
+      "id": "mqh4gpb0h4",
+      "title": "Validate: Geist font wire-up in webapp",
+      "path": "issues/mqh4gpb0h4.json",
       "status": "todo",
-      "assignee": "next-tester-1781637964120-ov9pyf",
-      "parentId": null,
-      "tags": [],
+      "assignee": "webapp-validator",
+      "parentId": "mqgzu3jjyb",
+      "tags": [
+        "task"
+      ],
       "priority": 3
     },
     {
-      "id": "mqh18rwpec",
-      "title": "Edit Comment Test 1781637964004-jqk07o",
-      "path": "issues/mqh18rwpec.json",
+      "id": "mqh5aew5am",
+      "title": "E2E cleanupE2ESeeds parallel-DELETE race leaves stragglers",
+      "path": "issues/mqh5aew5am.json",
       "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rwwhv",
-      "title": "Comment Shape Test 1781637963970-qp9tz2",
-      "path": "issues/mqh18rwwhv.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rxhzc",
-      "title": "Add Comment UI Test 1781637964610-eok1vs",
-      "path": "issues/mqh18rxhzc.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh18rzd61",
-      "title": "Resolve Validation 1781637964078-qdeig4",
-      "path": "issues/mqh18rzd61.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh19029m9",
-      "title": "Test Issue",
-      "path": "issues/mqh19029m9.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1923f0j",
-      "title": "No Blockages Test 1781637979005-bdhz35",
-      "path": "issues/mqh1923f0j.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1923wtm",
-      "title": "Delete Comment UI Test 1781637978724-fzmskm",
-      "path": "issues/mqh1923wtm.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh192vrx5",
-      "title": "UI Blocker 1781637979224-2aycal",
-      "path": "issues/mqh192vrx5.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh192y95u",
-      "title": "UI Blocked 1781637979227-t7vwa7",
-      "path": "issues/mqh192y95u.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh19350dx",
-      "title": "No Sub-issues Test 1781637980371-xqbunm",
-      "path": "issues/mqh19350dx.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh19352n9",
-      "title": "Delete Blocker 1781637980066-hfkund",
-      "path": "issues/mqh19352n9.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh19357ss",
-      "title": "Resolve Blocked 1781637979462-uo1gqv",
-      "path": "issues/mqh19357ss.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh193ou4n",
-      "title": "Delete Blocked 1781637980069-qcedq6",
-      "path": "issues/mqh193ou4n.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh193scag",
-      "title": "Resolve Blocker 1781637979455-n3kdmc",
-      "path": "issues/mqh193scag.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh193xzc3",
-      "title": "Add Blockage Dialog Test 1781637979763-veew30",
-      "path": "issues/mqh193xzc3.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh19400ir",
-      "title": "Sub-issue Click Parent 1781637981103-0qyok5",
-      "path": "issues/mqh19400ir.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh19441bd",
-      "title": "Sub-issue Click Child 1781637981106-qqzk14",
-      "path": "issues/mqh19441bd.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh19400ir",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1947aas",
-      "title": "Tree Root 1781637981362-po5wac",
-      "path": "issues/mqh1947aas.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh194aim7",
-      "title": "Sub-issue Parent 1781637980587-d98x0j",
-      "path": "issues/mqh194aim7.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh194cf97",
-      "title": "Sub-issue Child 1781637980590-00h518",
-      "path": "issues/mqh194cf97.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": "mqh194aim7",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh194fr7b",
-      "title": "Tree Child 1781637981609-l9isuf",
-      "path": "issues/mqh194fr7b.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": "mqh194xwfk",
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh194kqat",
-      "title": "Sub-issue Create Parent 1781637980796-qu3gcf",
-      "path": "issues/mqh194kqat.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh194xwfk",
-      "title": "Tree Parent 1781637981607-fekxxd",
-      "path": "issues/mqh194xwfk.json",
-      "status": "todo",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh1956dyk",
-      "title": "Timeline Update Display 1781637982397-lzvymn",
-      "path": "issues/mqh1956dyk.json",
-      "status": "in-progress",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh195jebd",
-      "title": "Timeline Collapsed Test 1781637981923-5tlfc4",
-      "path": "issues/mqh195jebd.json",
-      "status": "idea",
-      "assignee": null,
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh195x48e",
-      "title": "Timeline Expand Test 1781637982136-6sxmjd",
-      "path": "issues/mqh195x48e.json",
-      "status": "todo",
-      "assignee": null,
+      "assignee": "project-manager",
       "parentId": null,
       "tags": [],
       "priority": 3
@@ -3958,6 +1076,58 @@
       "priority": 3
     },
     {
+      "id": "mqe2745bhi",
+      "title": "Verify complete: library token override",
+      "path": "issues/mqe2745bhi.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe26nou8f",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe27h6jl1",
+      "title": "Verify complete: webapp regenerate route fix (BUG-1)",
+      "path": "issues/mqe27h6jl1.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe26n00jo",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe27hts2g",
+      "title": "Verify BUG-1 fully resolved",
+      "path": "issues/mqe27hts2g.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe162cmbi",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe2xmxeiv",
+      "title": "Verify complete",
+      "path": "issues/mqe2xmxeiv.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
       "id": "mqgsy9a1xm",
       "title": "Bug: Webapp dashboard lists child issues at top level instead of only roots",
       "path": "issues/mqgsy9a1xm.json",
@@ -4066,6 +1236,140 @@
       "priority": 3
     },
     {
+      "id": "mqgw46luxr",
+      "title": "Apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgw46luxr.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "chore"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgwmy76fo",
+      "title": "Review idea: apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgwmy76fo.json",
+      "status": "closed",
+      "assignee": "webapp-developer",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgwn6zwiu",
+      "title": "Check review decision: apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgwn6zwiu.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdfjpuc",
+      "title": "Events namespace: replace agt history with agt events list/add + type filtering",
+      "path": "issues/mqgxdfjpuc.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "feature"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdt6csi",
+      "title": "Release: agt events namespace",
+      "path": "issues/mqgxdt6csi.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdt9me7",
+      "title": "Implement: agt events list/add commands + type filtering + custom events",
+      "path": "issues/mqgxdt9me7.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdtkaca",
+      "title": "Validate: agt events list/add + type filtering and custom events",
+      "path": "issues/mqgxdtkaca.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdtmenb",
+      "title": "Plan: agt events namespace (list/add) + custom event type design",
+      "path": "issues/mqgxdtmenb.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxk7rj2a",
+      "title": "Status filter dropdown shows raw status values instead of labels",
+      "path": "issues/mqgxk7rj2a.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "bug"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxnab1q9",
+      "title": "Review idea: Status filter dropdown shows raw status values instead of labels",
+      "path": "issues/mqgxnab1q9.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxnehpqc",
+      "title": "Check review decision: Status filter dropdown shows raw status values instead of labels",
+      "path": "issues/mqgxnehpqc.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
       "id": "mqgza1pg6m",
       "title": "Fix transparent/unreadable shadcn-ui styles in webapp (inputs, selects, modals)",
       "path": "issues/mqgza1pg6m.json",
@@ -4114,327 +1418,63 @@
       "priority": 3
     },
     {
-      "id": "mqh0fp0kw5",
-      "title": "UrlFilterClosed-1781636609158-71r20j",
-      "path": "issues/mqh0fp0kw5.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fp23hw",
-      "title": "UrlFilterIdea-1781636609158-71r20j",
-      "path": "issues/mqh0fp23hw.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fpcyzu",
-      "title": "UrlFilterInProgress-1781636609158-71r20j",
-      "path": "issues/mqh0fpcyzu.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fptqoq",
-      "title": "UrlFilterTodo-1781636609158-71r20j",
-      "path": "issues/mqh0fptqoq.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fpycws",
-      "title": "UrlFilterDone-1781636609158-71r20j",
-      "path": "issues/mqh0fpycws.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fqb1cu",
-      "title": "UrlFilterInProgress-1781636609656-6h9846",
-      "path": "issues/mqh0fqb1cu.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fqmrsy",
-      "title": "UrlFilterDone-1781636609656-6h9846",
-      "path": "issues/mqh0fqmrsy.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fqscwm",
-      "title": "UrlFilterIdea-1781636609656-6h9846",
-      "path": "issues/mqh0fqscwm.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fqutxe",
-      "title": "UrlFilterTodo-1781636609656-6h9846",
-      "path": "issues/mqh0fqutxe.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0fqx74m",
-      "title": "UrlFilterClosed-1781636609656-6h9846",
-      "path": "issues/mqh0fqx74m.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0h61iyc",
-      "title": "Phase2 Test: Full issue",
-      "path": "issues/mqh0h61iyc.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [
-        "test",
-        "phase2",
-        "full"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mqh0lg4zyo",
-      "title": "UrlFilterClosed-1781636877117-tcsjzj",
-      "path": "issues/mqh0lg4zyo.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lg9d2i",
-      "title": "UrlFilterTodo-1781636877343-uz574m",
-      "path": "issues/mqh0lg9d2i.json",
+      "id": "mqgzjnns95",
+      "title": "Plan: apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgzjnns95.json",
       "status": "closed",
       "assignee": "project-manager",
-      "parentId": null,
-      "tags": [],
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
       "priority": 3
     },
     {
-      "id": "mqh0lgasbg",
-      "title": "UrlFilterClosed-1781636877343-uz574m",
-      "path": "issues/mqh0lgasbg.json",
+      "id": "mqgzjuwgpw",
+      "title": "Apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgzjuwgpw.json",
       "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
+      "assignee": "project-manager",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
       "priority": 3
     },
     {
-      "id": "mqh0lgsh57",
-      "title": "UrlFilterClosed-1781636877566-1yg76g",
-      "path": "issues/mqh0lgsh57.json",
+      "id": "mqgzjyv8j4",
+      "title": "Validate sibling parent-selector test fix",
+      "path": "issues/mqgzjyv8j4.json",
       "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
+      "assignee": "project-manager",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
       "priority": 3
     },
     {
-      "id": "mqh0lh5lpf",
-      "title": "UrlFilterClosed-1781636877784-v78324",
-      "path": "issues/mqh0lh5lpf.json",
+      "id": "mqgznigv4t",
+      "title": "Fix Status filter dropdown trigger to show label instead of raw value",
+      "path": "issues/mqgznigv4t.json",
       "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
+      "assignee": "project-manager",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ],
       "priority": 3
     },
     {
-      "id": "mqh0lhgbvm",
-      "title": "UrlFilterClosed-1781636877998-l5r9qj",
-      "path": "issues/mqh0lhgbvm.json",
+      "id": "mqgznpaoo2",
+      "title": "Validate Status filter dropdown shows label instead of raw value",
+      "path": "issues/mqgznpaoo2.json",
       "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhgctr",
-      "title": "UrlFilterClosed-1781636878208-brvgt2",
-      "path": "issues/mqh0lhgctr.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhqt1h",
-      "title": "UrlFilterClosed-1781636878398-yvvq7e",
-      "path": "issues/mqh0lhqt1h.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh0lhy1j5",
-      "title": "UrlFilterClosed-1781636878757-eo4h4l",
-      "path": "issues/mqh0lhy1j5.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11e5zw9",
-      "title": "UrlFilterClosed-1781637620328-wvrm6q",
-      "path": "issues/mqh11e5zw9.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ea4o9",
-      "title": "UrlFilterClosed-1781637620893-hvrfxc",
-      "path": "issues/mqh11ea4o9.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ebvyi",
-      "title": "UrlFilterClosed-1781637621411-rhb0u3",
-      "path": "issues/mqh11ebvyi.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ewcpk",
-      "title": "UrlFilterClosed-1781637620612-1rsll8",
-      "path": "issues/mqh11ewcpk.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11ezp7n",
-      "title": "UrlFilterClosed-1781637621150-1zw2ds",
-      "path": "issues/mqh11ezp7n.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11f8dcl",
-      "title": "UrlFilterClosed-1781637622345-oxpfxx",
-      "path": "issues/mqh11f8dcl.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fhzqi",
-      "title": "UrlFilterClosed-1781637621657-pxidtw",
-      "path": "issues/mqh11fhzqi.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fthsv",
-      "title": "UrlFilterClosed-1781637621899-qb8cqu",
-      "path": "issues/mqh11fthsv.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11fufli",
-      "title": "UrlFilterClosed-1781637622745-7wcgvj",
-      "path": "issues/mqh11fufli.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11guoin",
-      "title": "UrlFilterClosed-1781637623588-jr94xp",
-      "path": "issues/mqh11guoin.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11gxnq7",
-      "title": "UrlFilterClosed-1781637623171-u360kg",
-      "path": "issues/mqh11gxnq7.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
-      "priority": 3
-    },
-    {
-      "id": "mqh11h1rga",
-      "title": "UrlFilterClosed-1781637624188-nn22sx",
-      "path": "issues/mqh11h1rga.json",
-      "status": "closed",
-      "assignee": "webapp-validator",
-      "parentId": null,
-      "tags": [],
+      "assignee": "project-manager",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ],
       "priority": 3
     }
   ],
@@ -4498,6 +1538,7 @@
       "mqe1im1zwi",
       "mqe26nou8f",
       "mqe26n00jo",
+      "mqe27hts2g",
       "mqe27hts2g"
     ],
     "mqe162svv5": [
@@ -4507,7 +1548,8 @@
       "mqe2xmdugp",
       "mqe2xmprgj",
       "mqe2xmxeiv",
-      "mqgwul2ltn"
+      "mqgwul2ltn",
+      "mqe2xmxeiv"
     ],
     "mqe1drwrck": [
       "mqe1im9n14",
@@ -4528,12 +1570,14 @@
       "mqe2745ekb",
       "mqe274mwm3",
       "mqe27481sa",
+      "mqe2745bhi",
       "mqe2745bhi"
     ],
     "mqe26n00jo": [
       "mqe27g2g7o",
       "mqe27g5z4m",
       "mqe27ge9up",
+      "mqe27h6jl1",
       "mqe27h6jl1"
     ],
     "mqgsy9a1xm": [
@@ -4563,15 +1607,28 @@
       "mqgwn6zwiu",
       "mqgzjnns95",
       "mqgzjuwgpw",
+      "mqgzjyv8j4",
+      "mqgwmy76fo",
+      "mqgwn6zwiu",
+      "mqgzjnns95",
+      "mqgzjuwgpw",
       "mqgzjyv8j4"
     ],
     "mqgxdfjpuc": [
       "mqgxdtmenb",
       "mqgxdt9me7",
       "mqgxdtkaca",
+      "mqgxdt6csi",
+      "mqgxdtmenb",
+      "mqgxdt9me7",
+      "mqgxdtkaca",
       "mqgxdt6csi"
     ],
     "mqgxk7rj2a": [
+      "mqgxnab1q9",
+      "mqgxnehpqc",
+      "mqgznigv4t",
+      "mqgznpaoo2",
       "mqgxnab1q9",
       "mqgxnehpqc",
       "mqgznigv4t",
@@ -4585,79 +1642,33 @@
       "mqgzae4ayr",
       "mqgzaks9u2"
     ],
-    "mqh0gr5yvu": [
-      "mqh0gr1we4"
+    "mqh0su9kgq": [
+      "mqh1ghz42s",
+      "mqh1gpnqjp",
+      "mqh3sj0wn5",
+      "mqh3ss1nfh",
+      "mqh3syrrnb"
     ],
-    "mqh0jnp61x": [
-      "mqh0jndgfd"
+    "mqgzu3jjyb": [
+      "mqh1he4m3q",
+      "mqh1hkjvso",
+      "mqh4gfibr3",
+      "mqh4glovns",
+      "mqh4gpb0h4"
     ],
-    "mqh0jn9cgo": [
-      "mqh0jndumn"
+    "mqh2gvx6nw": [
+      "mqh2h99uob",
+      "mqh2h9dlr5"
     ],
-    "mqh0jn1stt": [
-      "mqh0jnr4sg"
+    "mqh2h99uob": [
+      "mqh2hw1wl3",
+      "mqh2hwulrt",
+      "mqh2hwglif"
     ],
-    "mqh0jnmtaq": [
-      "mqh0jn8s0c"
-    ],
-    "mqh0jnzazf": [
-      "mqh0jnui28"
-    ],
-    "mqh0jnui28": [
-      "mqh0jnvzoh"
-    ],
-    "mqh0jnvz9d": [
-      "mqh0jn9ycc"
-    ],
-    "mqh0jogm2j": [
-      "mqh0jo67n6"
-    ],
-    "mqh0jp6wbv": [
-      "mqh0jpnfqq"
-    ],
-    "mqh0l3ti95": [
-      "mqh0l3zk9h"
-    ],
-    "mqh0l4dxgk": [
-      "mqh0l4o8m4"
-    ],
-    "mqh0l4wlij": [
-      "mqh0l4rn1l"
-    ],
-    "mqh1076kr4": [
-      "mqh107n96b"
-    ],
-    "mqh107j4z7": [
-      "mqh107boib",
-      "mqh107zofp"
-    ],
-    "mqh10ih949": [
-      "mqh10i5oco"
-    ],
-    "mqh10j80b7": [
-      "mqh10jjwy7"
-    ],
-    "mqh10kvam7": [
-      "mqh10ksmdf"
-    ],
-    "mqh10ksumh": [
-      "mqh10kco3e"
-    ],
-    "mqh18rh1gn": [
-      "mqh18r92jw"
-    ],
-    "mqh18ran8x": [
-      "mqh18rl7rm",
-      "mqh18r6duk"
-    ],
-    "mqh194aim7": [
-      "mqh194cf97"
-    ],
-    "mqh19400ir": [
-      "mqh19441bd"
-    ],
-    "mqh194xwfk": [
-      "mqh194fr7b"
+    "mqh2h9dlr5": [
+      "mqh2hwl22k",
+      "mqh2hweq9n",
+      "mqh2hwfsqg"
     ]
   }
 }

@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:32:46.850Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:32:46.850Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: Wire up (or remove) the unused Geist font dependency in webapp",
+      "description": "Idea mqgzu3jjyb needs your decision. @fontsource-variable/geist is listed in packages/webapp/frontend/package.json dependencies but is never imported in src/, so the intended Geist font isn't loaded and the UI falls back to the browser default. It was discovered while fixing the shadcn theme tokens and filed as out-of-scope/cosmetic. As the webapp team's tech lead, decide: (1) accept -- wire up the font (import in src/main.tsx + set font-family in base/body styles) since someone already added the dep intending to use it; (2) accept -- instead remove the unused dependency; (3) refine scope; or (4) discard. Add your decision (accept/refine/discard + which option + rationale) as a comment, then mark this task done.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgzu3jjyb",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:35:57.665Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:36:10.972Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqh1lrc9z5",
+      "content": "Decision: ACCEPT — Option (1) wire up the Geist font.\n\n## Verified state\n- `@fontsource-variable/geist@^5.2.9` is in `frontend/package.json` dependencies.\n- It is imported nowhere in `src/` — confirmed `main.tsx`, `App.tsx`, and the single stylesheet `src/index.css` all have no font import.\n- No `font-family` is declared in any base/body styles, so the UI currently falls back to the browser default serif (Times-like) — which looks unpolished next to the now-correct shadcn theme tokens.\n\n## Rationale for wiring up (vs removing)\n1. **Intent.** Someone deliberately added the dep; leaving it unused is dead weight / dependency rot. We should either use it or remove it — doing neither is the worst option.\n2. **Good fit.** Geist (Vercel's variable sans-serif) is a modern, high-legibility UI font that pairs well with the shadcn \"neutral\" aesthetic we just finished fixing. It completes the visual-polish arc.\n3. **Low risk / small surface.** The change is two lines: an import in `main.tsx` and a `font-family` on `body` in the `@layer base` block of `index.css`. No component contracts change.\n4. **Good perf characteristics.** `@fontsource-variable/geist` ships a single self-hosted variable woff2 (no external CDN request, good for privacy/offline; negligible size — tens of KB), with a regular `@font-face` so there's no FOUT-to-Google dependency.\n5. **Closes the loop.** Pairing this with the recent theme-token fix means the UI finally renders as designed rather than half-styled.\n\n## Implementation guidance for the follow-up (blocked child mqh1hkjvso)\n- In `frontend/src/main.tsx`: add `import \"@fontsource-variable/geist\";` (side-effect import, before `./index.css`).\n- In `frontend/src/index.css` `@layer base` `html, body` block: set `font-family: \"Geist Variable\", ui-sans-serif, system-ui, -apple-system, sans-serif;` — keep `system-ui` in the fallback stack so SSR/no-JS and any render before the font loads stays sane.\n- Verify the build (`cd packages/webapp/frontend && bun run build`) and run a relevant e2e phase to confirm no visual assertions break (Phase 1 is the most likely to care about layout).\n\nNot implementing here since this task is the gating decision; the child issue picks up the actual change."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:36:15.376Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

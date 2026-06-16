@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:01:10.068Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:10.068Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Validate /status endpoint and E2E environment guard",
+      "description": "Verify the endpoint and guard:\n\nEndpoint:\n- GET /api/status returns 200 with { agentrackPath: <path> } matching the resolved AGENTRACK_CWD (or cwd fallback).\n- Returns the isolated path when AGENTRACK_CWD points at validation/.e2edata/, and the real path when unset.\n\nGuard:\n- When the E2E backend is correctly isolated (validation/.e2edata/), the suite runs normally.\n- Simulate/force the backend to resolve to the real .agentrack/ (e.g. start the API without AGENTRACK_CWD pointing at the real .agentrack) and confirm the guard aborts the run before tests execute — no issues/users are created in the real tracker.\n- Confirm the abort is fast and clearly reports why.\n\nReport findings; do not fix issues yourself.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqh2h9dlr5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T20:01:18.433Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqh2hweq9n"
+    }
+  }
+]

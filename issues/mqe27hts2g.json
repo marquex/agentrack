@@ -35,5 +35,40 @@
     "content": {
       "blockerId": "mqe27h6jl1"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:27:21.235Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe27h6jl1",
+      "reason": "Blocker issue mqe27h6jl1 transitioned to closed"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:27:37.100Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe2745bhi",
+      "reason": "Blocker issue mqe2745bhi transitioned to closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:48:43.607Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqh21wiu4j",
+      "content": "Status loop: closing this forbidden completion/verification child. Per Rule #1, there is no 'verify complete' child — completion is detected by the status loop. The Epic (mqe162cmbi) will be completed by the status loop once its two real deliverable children are done: mqe26n00jo (webapp regenerate route fix) and mqe26nou8f (library token override). A task,sync gate tracker is only for collaborative decision gates (reading another agent's review), never for end-to-end completion detection. Its two blockers (mqe2745bhi, mqe27h6jl1) were already closed for the same reason."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:48:49.474Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

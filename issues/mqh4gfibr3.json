@@ -1,0 +1,22 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:56:00.711Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:56:00.711Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Plan: wire up Geist font in webapp",
+      "description": "Read webapp-developer's accepted review on mqh1hkjvso (decision: wire up Geist). Plan the implementation: add `import \"@fontsource-variable/geist\";` to frontend/src/main.tsx (side-effect import, before ./index.css), and set `font-family: \"Geist Variable\", ui-sans-serif, system-ui, -apple-system, sans-serif;` on the html, body block in the @layer base section of frontend/src/index.css. Keep system-ui in the fallback stack. Output a brief implementation plan as a comment.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgzu3jjyb",
+      "tags": [
+        "task"
+      ]
+    }
+  }
+]

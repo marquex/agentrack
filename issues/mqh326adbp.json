@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:16:56.247Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:16:56.247Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Update specs/roadmap/expertise docs for new webapp ports",
+      "description": "The webapp port standardization (parent mqh2h99uob, implementation mqh2hwulrt) moved dev API to 3001 / dev vite to 3000 / E2E API to 5001 / E2E vite to 5000. The following non-code docs still reference old ports and need refreshing for guidance accuracy (section D of the prescription, comment mqh2nfnt2o):\n\n- .agentic/specs/webapp-spec.md:\n  - Line 724: `const port = process.env.PORT || 3000;` -> 3001\n  - Line 762: env table row `| PORT | 3000 | Server port |` -> 3001\n  - Lines 768-779 (section 4.6 Dev server setup): currently says Vite on 5173 proxying to Hono on 3000; rewrite to vite on 3000 proxying /api to Hono on 3001, and update the embedded vite.config.ts snippet accordingly.\n- .agentic/specs/webapp-roadmap.md line 35: \"Configure Vite proxy for /api -> http://localhost:3000\" -> 3001\n- .agentic/expertise/webapp-validator/webapp-server-ports.expertise.md: verify and update any documented port values to match the new dev (3001/3000) and E2E (5001/5000) ports.\n\nThese files are read-only for webapp-developer and outside its domain, so could not be updated as part of mqh2hwulrt. Assigning to project-manager for triage/assignment to the appropriate agent (likely webapp-validator for the expertise file, and whoever owns the specs).",
+      "assignee": "project-manager"
+    }
+  }
+]

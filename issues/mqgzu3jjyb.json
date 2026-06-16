@@ -13,5 +13,33 @@
       "description": "@fontsource-variable/geist is listed in packages/webapp/frontend/package.json dependencies but is never imported in src/ (no import of '@fontsource-variable/geist' anywhere). As a result the intended Geist font is not loaded and the UI falls back to the browser default. To fix: import the font in src/main.tsx (e.g. import '@fontsource-variable/geist') and set the font-family in the base layer / body styles. Discovered while fixing the shadcn theme tokens (mqgzae4ayr) — cosmetic, out of scope there.",
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:33:01.974Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:33:02.012Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh1hp6iea",
+      "content": "Triaged (ideas loop). Non-duplicate: no prior issue covers the Geist font (search across all statuses found no match). Created by anonymous, not a manager, so routed for review rather than auto-accepted. Technical webapp-frontend housekeeping -- routed to webapp-developer as the webapp team's de-facto tech lead (the team has no architect role). Review task mqh1he4m3q + gate tracker mqh1hkjvso (blocked by review) created. Idea set in-progress, assigned to PM."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:55:52.792Z",
+    "author": "project-manager",
+    "content": {
+      "tags": [
+        "chore"
+      ]
+    }
   }
 ]

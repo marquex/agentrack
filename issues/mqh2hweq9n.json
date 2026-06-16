@@ -1,0 +1,39 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:01:10.032Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:10.032Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Implement /status endpoint and E2E environment guard",
+      "description": "Implement:\n\nPart A — endpoint:\n- Create server/routes/status.ts: GET / returns { agentrackPath: <cwd> } using the shared cwd resolution.\n- Register app.route('/api/status', statusRoute) in server/index.ts.\n- Add StatusResponse to server/types.ts.\n\nPart B — guard:\n- In e2e/global-setup.ts (or setup.ts), after webServers are up, fetch the /api/status endpoint on the E2E API port (5001). If agentrackPath equals <projectRoot>/.agentrack, throw to abort the test run before any test runs. Otherwise proceed.\n- Implement the ordering/fetch-failure fallback defined in the plan.\n\nFirst implement the endpoint, then the guard (the guard depends on the endpoint existing).",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqh2h9dlr5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T20:01:18.400Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqh2hwl22k"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T21:11:48.380Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh2hwl22k",
+      "reason": "Blocker issue mqh2hwl22k transitioned to done"
+    }
+  }
+]

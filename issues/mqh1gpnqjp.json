@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T19:32:15.121Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:32:15.121Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Check review decision: E2E seed cleanup idea",
+      "description": "Gate tracker. Blocked by the library-architect's review of idea mqh0su9kgq. When the review lands, read the decision: accept -> retag idea as chore and create implementation children; refine -> reset idea to idea status; discard -> close idea with idea,discarded tags + comment.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqh0su9kgq",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T19:32:22.507Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqh1ghz42s"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:36:40.101Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh1ghz42s",
+      "reason": "Blocker issue mqh1ghz42s transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T20:36:56.783Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqh3rw9otc",
+      "content": "Read the library-architect's review (mqh1ghz42s). DECISION: ACCEPT both work items with refinements. Work Item 1 (bulk cleanup) is ALREADY COMPLETE — the tracker was swept (388 leaked seed issues + 26 children + 27 test users deleted; 114 real issues remain, audited in comments on mqh0su9kgq at 2026-06-16T20:30). The remaining work is Work Item 2 (harden E2E isolation against recurrence): Layer A (health endpoint cwd echo + global-setup assertion), Layer B (tag all e2e seeds + afterEach cleanup helper), Layer C (README invariants). Retagging the idea as a chore and creating Plan -> Dev -> Validate children for the hardening. Gate cleared."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:37:02.766Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  }
+]

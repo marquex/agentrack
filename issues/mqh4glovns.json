@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:56:09.240Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:56:09.240Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Dev: wire up Geist font in webapp",
+      "description": "Implement the Geist font wire-up per the plan. (1) In frontend/src/main.tsx add `import \"@fontsource-variable/geist\";` as a side-effect import before ./index.css. (2) In frontend/src/index.css within the @layer base html, body block, set font-family: \"Geist Variable\", ui-sans-serif, system-ui, -apple-system, sans-serif;. Do not change component contracts. Verify the build: cd packages/webapp/frontend && bun run build.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgzu3jjyb",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T20:56:17.483Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqh4gfibr3"
+    }
+  }
+]

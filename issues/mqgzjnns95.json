@@ -43,5 +43,22 @@
       "status": "done",
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:40:18.801Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:40:18.915Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

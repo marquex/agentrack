@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T21:19:18.630Z",
+    "author": "webapp-validator"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T21:19:18.630Z",
+    "author": "webapp-validator",
+    "content": {
+      "title": "E2E cleanupE2ESeeds parallel-DELETE race leaves stragglers",
+      "description": "Found during validation of mqh3syrrnb (E2E isolation hardening).\n\nDEFECT (Low-Medium severity, no real-data leak): The cleanupE2ESeeds() helper in packages/webapp/e2e/setup.ts issues parallel DELETEs via Promise.all against the agentrack backend. The backend's file store performs unlocked read-modify-write cycles on index.json / issue files, so concurrent DELETEs race and some are silently dropped.\n\nREPRODUCTION (validated against an isolated backend on 5001 with AGENTRACK_CWD=validation/.e2edata):\n- Seeded 3 issues tagged 'e2e-seed'.\n- Ran cleanupE2ESeeds() once (parallel Promise.all of DELETEs).\n- Result: 2 of 3 tagged issues REMAINED. A second cleanup pass removed the rest.\n\nIMPACT:\n- The README claim 'an interrupted/failed spec does not leave stale seeds behind for the next spec' is weaker than reality — a single afterAll can leave stragglers within the .e2edata worktree.\n- Does NOT cause real-data leakage: Layer A (cwd assertion), the e2e-seed tag, the e2edata isolation, and the authoritative resetWorktreeData() in global-setup all still hold. Stragglers only accumulate briefly inside validation/.e2edata/ until the next run's global-setup reset wipes them.\n\nSUGGESTED FIX (for the webapp-developer):\n- Serialize the DELETEs in cleanupE2ESeeds() (a for...of await loop), or\n- Loop the list-then-delete-until-empty pattern until a listByTag pass returns 0, or\n- Add a short retry loop per delete.\n\nADJACENT MINOR BUG (same file, packages/webapp/e2e/global-setup.ts): the Layer A guard error message contains a literal '${BACKEND_PORT}' because the second concatenated string uses regular double quotes instead of a backtick template literal, so the port number is not interpolated. Cosmetic only; the guard still fires correctly.",
+      "assignee": "project-manager"
+    }
+  }
+]

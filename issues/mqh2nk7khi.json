@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:05:34.275Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:05:34.275Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Extract shared e2e API base URL constant",
+      "description": "Follow-up discovered while planning port standardization (mqh2hw1wl3).\\n\\nThe e2e specs hardcode the API base URL. phase1 and phase2 inline `http://localhost:3001/...` in 63 places; phase3/phase4/dashboard/url-filters each define a local `const BASE`.\\n\\nProposal: export a single `E2E_API_BASE` (and optionally consume Playwright's `baseURL`-derived value) from `e2e/setup.ts` and import it in all specs. This makes future port changes a 1-line edit and removes a class of breakage where the playwright.config.ts port moves but specs lag behind.\\n\\nScope: refactor only, no behavior change. Must keep all 152 tests green.",
+      "assignee": "project-manager"
+    }
+  }
+]

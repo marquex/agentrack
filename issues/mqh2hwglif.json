@@ -1,0 +1,65 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:01:09.962Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:09.962Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Validate webapp port configuration",
+      "description": "Verify the port changes are correct and complete:\n- Confirm dev: API on 3001, webapp on 3000 (boot dev, check both ports respond).\n- Confirm E2E: API on 5001, webapp on 5000 (run playwright config, confirm webServers bind the new ports).\n- Confirm no stale references to old ports (3000 API / 5174) remain in server, vite, playwright config, package.json, docs, or expertise files.\n- Confirm the E2E webServers still spawn with AGENTRACK_CWD pointing at validation/.e2edata/ (isolation intact).\n\nReport findings; do not fix issues yourself.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqh2h99uob",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T20:01:18.331Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqh2hwulrt"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T20:18:09.045Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh2hwulrt",
+      "reason": "Blocker issue mqh2hwulrt transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:35:42.551Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T20:40:21.041Z",
+    "author": "webapp-validator",
+    "content": {
+      "id": "mqh3wae71j",
+      "content": "Validation of the port changes (mqh2hwulrt) - COMPLETE.\n\nDEV MODE - PASS. Backend API on 3001 (default PORT): booted, health endpoint returned HTTP 200. Frontend on 3000 (VITE_PORT default): booted Vite, root returned HTTP 200. The API proxy forwards to localhost:3001 (API_PORT default); confirmed live via request logs showing issues and users calls returning 200 through the proxy.\n\nE2E CONFIG - PASS at the code level. The Playwright config points the backend webServer at PORT 5001 with AGENTRACK_CWD set to validation/.e2edata, so isolation is intact; the frontend webServer uses VITE_PORT 5000 and API_PORT 5001; baseURL is localhost:5000. reuseExistingServer is correctly ABSENT on both webServers, and E2E ports (5001/5000) differ from dev ports (3001/3000), so the isolation invariants hold. The config loads cleanly: 176 tests in 6 files. Backend port 5001 is free and binds fine.\n\nE2E RUNTIME - BLOCKED BY ENVIRONMENT, not a code regression. Port 5000 is held by the macOS AirPlay Receiver: I confirmed EADDRINUSE on 5000 while 5001, 3000 and 3001 are all free. Vite uses strictPort so it cannot fall back, and npx playwright test aborts with 'http://localhost:5000 is already used'. This is the DOCUMENTED environment constraint captured in the webapp-developer ports expertise (Gotchas), not a defect from the port change; the 5000 choice was deliberate per prescription mqh2nfnt2o. Workaround is to disable AirPlay Receiver or free port 5000. The full E2E regression still needs to run once 5000 is free.\n\nSTALE REFERENCES. The webapp source code (server, vite, playwright config, package.json, all six e2e specs) is CLEAN: no leftover 5173/5174 or old API-3000 references; the only :3000 is the intended new dev Vite default. Out-of-domain items I can only report: the webapp spec doc still says Vite 5173 and API 3000, and the webapp-validator expertise files still document the old ports; the webapp-developer expertise is correctly updated. Doc cleanup is already tracked in idea mqh326adbp.\n\nVERDICT: Dev ports are fully verified and working. The E2E port config is internally correct with isolation intact; only the runtime bind on 5000 is blocked by the known, pre-documented macOS AirPlay constraint, which is not a regression from mqh2hwulrt. Safe to unblock mqh2hwl22k for the E2E test updates: the config under test is correct, and port-reference edits do not require running the suite."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:40:25.436Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:56:13.866Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:56:13.866Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate: Geist font wire-up in webapp",
+      "description": "Validate the Geist font wire-up. Confirm: (1) the import is present in frontend/src/main.tsx before index.css; (2) font-family with \"Geist Variable\" + system-ui fallback is set on the body in the @layer base block of frontend/src/index.css; (3) the build passes (cd packages/webapp/frontend && bun run build); (4) run a relevant e2e phase (Phase 1 most likely to care about layout) to confirm no visual assertions break. Report pass/fail with evidence.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqgzu3jjyb",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T20:56:17.519Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqh4glovns"
+    }
+  }
+]

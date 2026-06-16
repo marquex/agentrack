@@ -78,5 +78,48 @@
       "id": "mqh13jlcq1",
       "content": "Status-loop reset: this Validate task was in-progress with no progress comment. No work signal → likely crashed/never started. The fix it validates (mqgzjuwgpw) is done. Resetting to todo, same assignee, so the work loop re-hands it for validation."
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:30:34.745Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:32:53.249Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh1hjk5qm",
+      "content": "Validated. The waitForResponse attach-order fix in \"sets a parent via search and selection\" (phase3-validation.spec.ts:1235) is correct, stable, and complete.\n\nCode review:\n- searchResponsePromise (page.waitForResponse) is now hoisted ABOVE searchInput.fill (the trigger), matching the canonical Playwright pattern and the sibling \"changes an existing parent\" test.\n- Matcher is tightly scoped: GET method + URL contains /api/issues + new URL(...).searchParams.get('search') === 'Set Parent Target'. Cannot latch onto unrelated concurrent GET /api/issues calls.\n- await searchResponsePromise correctly placed after the fill.\n\nAudit of remaining waitForResponse sites in the file (lines 29, 44, 622, 672, 713, 802, 871, 1029, 1085, 1115, 1168, 1200, 1276, 1349, 1390): all register the wait BEFORE the action that actually triggers the request (button click or Enter press). The two cases where a .fill precedes the wait (line 619->622 Add Comment, line 1167->1168 tag Enter) are safe because the fill does not fire the request — the subsequent click/Enter does, and the wait is set up before that trigger. The search-response case was the ONLY true attach-order anti-pattern; it is now resolved. No remaining instances.\n\nValidation results:\n- Targeted test: 1/1 passed.\n- Parent Selector block (5 tests): 5/5 passed across 3 consecutive runs — deterministic.\n- Full phase3-validation.spec.ts: 52/52 passed in one clean run.\n\nNo regressions. The fix fully resolves the attach-order anti-pattern noted in the mqgzjnns95 audit. No typecheck/lint script configured for the webapp package; Playwright is the validation gate."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:32:53.286Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:40:18.801Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:40:18.991Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

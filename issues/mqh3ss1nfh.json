@@ -1,0 +1,66 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:37:38.028Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:37:38.028Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Implement E2E isolation hardening (Layers A/B/C)",
+      "description": "Implement the accepted hardening design (review mqh1ghz42s) per the plan from the Plan task. Three layers, all mandatory:\n\nLayer A — startup cwd assertion (strongest guard): make the resolved tracker cwd available from the backend (extend packages/webapp/server/routes/health.ts response, or add a test-only debug route e.g. api/debug/cwd). In packages/webapp/e2e/global-setup.ts, after ensureE2EWorktree + resetWorktreeData, GET the cwd-echoing endpoint and assert the path equals the e2e data dir; throw a clear, explicit error on mismatch so any non-isolated server on port 3001 fails the run before any seed is created.\n\nLayer B — self-healing tagged seeds: update every seed-creation call site across all e2e specs (url-filters-validation, phase2/3/4, dashboard-roots, comments, blockages, parent/tag, search, etc.) to tag created issues with 'e2e-seed' and capture their ids. Add a shared afterEach (or per-spec afterAll) in packages/webapp/e2e/setup.ts that lists issues tagged 'e2e-seed' and deletes them; tolerate already-deleted ids.\n\nLayer C — documentation: add a short section to the webapp e2e README stating (1) never start a dev server on port 3001 manually while tests run, (2) never set reuseExistingServer to true on either webServer entry, (3) the backend reads AGENTRACK_CWD to isolate data and the health cwd assertion enforces it, (4) ports 3001 (backend) and 5174 (frontend) are the isolation boundary and must not be changed to 3000/5173.\n\nInvariants to preserve (do NOT break): AGENTRACK_CWD env var name is correct and consistent — do not rename; reuseExistingServer must stay absent from both webServer entries in playwright.config.ts; e2e ports 3001/5174 must stay distinct from production 3000/5173; the global-setup worktree reset (ensureE2EWorktree + resetWorktreeData) must continue to run before every run.\n\nComment what was changed and any deviation from the plan.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "webapp-developer",
+      "parentId": "mqh0su9kgq",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T20:37:52.804Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqh3sj0wn5"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T20:43:11.335Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh3sj0wn5",
+      "reason": "Blocker issue mqh3sj0wn5 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:55:33.124Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T21:06:43.630Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqh4u7h8aq",
+      "content": "Done. Implemented all three isolation-hardening layers for the webapp E2E suite.\n\nLAYER A - Startup cwd assertion (strongest guard):\n- The health endpoint now echoes the resolved tracker cwd (the directory AGENTRACK_CWD points at).\n- The E2E global setup now waits for the backend, then asserts the health cwd equals the isolated validation/.e2edata/ directory, throwing a clear error before any seed is created if a wrong/stale server is hit.\n\nLAYER B - Self-healing tagged seeds:\n- Every issue created by the E2E specs is now tagged \"e2e-seed\" (121 issue-creation call sites across the four seeding specs).\n- Added a new DELETE issue route on the backend (the library already supported it; the webapp just exposed it).\n- Added a shared cleanup helper that lists all e2e-seed issues and deletes them, tolerant of already-deleted ids. Wired it as a per-file afterAll in every spec that creates issues, so interrupted/failed specs no longer leave stale data behind.\n\nLAYER C - Documentation:\n- Added an E2E README recording the isolation invariants: the AGENTRACK_CWD mechanism and health assertion, never start a dev server on the e2e ports, never set reuseExistingServer, and the port boundaries (e2e 5001/5000 vs dev 3001/3000).\n\nDeviation from the plan worth flagging: the task description references isolation ports as 3001/5174, but the actual configured e2e ports in the repo are 5001 (backend) and 5000 (frontend), with dev on 3001/3000. I kept the real ports as-is (they are load-bearing and the docs already encode them) and documented the actual values in the README rather than renaming anything.\n\nVerification:\n- All 176 E2E tests load cleanly (playwright test --list succeeds across all 6 spec files).\n- Typecheck of the server code shows only pre-existing errors (missing Node type defs in standalone mode); none of my changes introduce new type errors.\n- Note: the full E2E suite cannot be executed on this machine because macOS AirPlay Receiver holds port 5000. The webapp-validator should run the suite in an environment where 5000/5001 are free.\n\nNo invariants were broken: AGENTRACK_CWD name unchanged, reuseExistingServer absent, e2e ports remain distinct from dev, and the global-setup worktree reset still runs before every run."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T21:06:47.016Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

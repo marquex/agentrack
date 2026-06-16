@@ -1,0 +1,74 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T20:01:09.892Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:01:09.892Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Plan webapp port configuration changes",
+      "description": "Plan the port standardization for the webapp. Identify every location that hardcodes or defaults a port and define the exact edits needed:\n\nTargets:\n- Dev: webapp (vite) = 3000, API = 3001\n- E2E: webapp (vite) = 5000, API = 5001\n\nAudit at minimum: server/index.ts (PORT default), frontend/vite.config.ts (apiPort + vitePort defaults), playwright.config.ts (webServer ports, baseURL, env vars, explanatory comment), package.json scripts, docs/markdown, and .agentic/expertise/** files (e.g. webapp-server-ports.expertise.md). Note any other consumers of the API port (e.g. frontend proxy, e2e fetch helpers).\n\nOutput a concrete change list as a comment. Do not make code changes in this phase.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqh2h99uob",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:02:49.621Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T20:05:27.743Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh2nfnt2o",
+      "content": "Port standardization audit complete. Concrete change list below — NO code changes made in this phase (planning task only).\n\n## Target ports\n- **Dev:** vite frontend = 3000, API (hono) = 3001\n- **E2E/validation:** vite frontend = 5000, API (hono) = 5001\n\n## A. Config files (the 3 the parent issue prescribes)\n\n### A1. `packages/webapp/server/index.ts` (line 29)\n- Current: `process.env.PORT || \"3000\"`\n- New: `process.env.PORT || \"3001\"`\n- Effect: dev API moves from 3000 → 3001. E2E already overrides via `PORT` env, so unaffected until A3.\n\n### A2. `packages/webapp/frontend/vite.config.ts` (lines 6–7)\n- `apiPort` default (line 6): `\"3000\"` → `\"3001\"` (keep parity with A1).\n- `vitePort` default (line 7): currently only set when `VITE_PORT` is provided, else undefined → Vite falls back to its built-in 5173. Change so dev vite defaults to **3000** when `VITE_PORT` is unset. Concretely:\n  ```ts\n  const apiPort = process.env.API_PORT || \"3001\";\n  const vitePort = process.env.VITE_PORT ? parseInt(process.env.VITE_PORT, 10) : 3000;\n  ```\n  The existing `...(vitePort !== undefined && { port: vitePort, strictPort: true })` then always binds 3000 in dev and 5000 in E2E (where `VITE_PORT=5000` is set in A3). `strictPort: true` should remain so a port clash fails loudly rather than silently rolling to another port.\n- The proxy `/api` target already derives from `apiPort`, so it follows automatically (no separate edit).\n\n### A3. `packages/webapp/playwright.config.ts`\n- Header comment (lines 5–12): replace \"dedicated ports (3001 backend, 5174 frontend)\" → \"(5001 backend, 5000 frontend)\".\n- `baseURL` (line 34): `http://localhost:5174` → `http://localhost:5000`.\n- Backend webServer (lines 46–54): `port: 3001` → `5001`; env `PORT: \"3001\"` → `\"5001\"`.\n- Vite webServer (lines 55–63): `port: 5174` → `5000`; env `API_PORT: \"3001\"` → `\"5001\"`, `VITE_PORT: \"5174\"` → `\"5000\"`.\n\n## B. E2E spec files — CRITICAL, missed by the parent issue's prescription\n\nThese specs hardcode the API URL against port **3001**. After A3 moves the backend to 5001, every direct-API call breaks unless these are updated. (The browser-driven tests go through the Vite proxy and are unaffected, but all `request.get/post(...)` API-direct calls are.)\n\n### B1. Files that use a single `BASE` constant (1-line edit each):\n- `e2e/phase3-validation.spec.ts:20` — `const BASE = \"http://localhost:3001\"` → `\"http://localhost:5001\"`\n- `e2e/phase4-validation.spec.ts:29` — same\n- `e2e/dashboard-roots-validation.spec.ts:20` — same\n- `e2e/url-filters-validation.spec.ts:24` — same\n\n### B2. Files with inline `http://localhost:3001` URLs (no BASE const):\n- `e2e/phase1-validation.spec.ts` — 3 occurrences (all `/api/health`, lines 15/20/32)\n- `e2e/phase2-validation.spec.ts` — **60 occurrences** across the file (all `http://localhost:3001/...`)\n\n  Recommended approach for phase1 & phase2: introduce a `const BASE = \"http://localhost:5001\"` constant (matching phase3/phase4 convention) and replace inline URLs with `${BASE}/...` template strings. This both fixes the port and prevents future port-wide renames from requiring 60 edits. Alternatively a mechanical find/replace of `http://localhost:3001` → `http://localhost:5001` is acceptable but leaves the inline-URL footgun in place. Either way, all 63 occurrences must change.\n\n**Note for the implementer:** the `request` fixture used in these specs is Playwright's independent APIRequestContext — it does NOT inherit `baseURL` from the `use` config (that only applies to the browser `page`). So the URLs must be changed in the specs themselves; raising `baseURL` alone is insufficient.\n\n## C. No changes needed (verified)\n\n- `packages/webapp/frontend/src/api/client.ts` — uses relative `\"/api\"` and relies on the Vite proxy. No port hardcoding. ✓\n- All `frontend/src/hooks/*` — call the client, not fetch directly. ✓\n- `packages/webapp/package.json` scripts — no port references (`dev:server`, `dev:frontend`, `dev`, `build`, `test:e2e`). ✓\n- `packages/webapp/frontend/package.json` — no port references. ✓\n- `e2e/setup.ts` / `e2e/global-setup.ts` — no port references. ✓\n- The 3000s appearing in `frontend/src/components/layout/Header.tsx` (lines 32, 47) are `setTimeout(..., 3000)` durations (ms), NOT ports. Leave unchanged.\n\n## D. Docs & expertise files (update for guidance accuracy — outside webapp code, but in scope per issue)\n\n- `.agentic/specs/webapp-spec.md`:\n  - Line 724: `const port = process.env.PORT || 3000;` → `3001`\n  - Line 762: env table row `| PORT | 3000 | Server port |` → `3001`\n  - Lines 768–775 (§4.6 Dev server setup): currently says \"Vite dev server runs on port 5173 ... proxies to Hono on port 3000\". Rewrite to: vite on 3000, proxies `/api` to Hono on 3001. Update the embedded vite.config.ts snippet accordingly.\n- `.agentic/specs/webapp-roadmap.md` line 35: \"Configure Vite proxy for `/api` -> `http://localhost:3000`\" → `3001`.\n- `.agentic/expertise/webapp-validator/webapp-server-ports.expertise.md` — referenced by the parent issue; the implementer should verify and update any documented port values there (I could not read it — outside webapp-developer access).\n\n## E. Implementation & validation notes for the next agent\n\n1. Order matters: do A1→A2→A3 together, then B (specs must match A3's new API port).\n2. Dev sanity check after A1/A2: run `bun run dev:server` and `bun run dev:frontend` separately and confirm server logs `http://localhost:3001` and vite logs `http://localhost:3000`.\n3. E2E regression: run the full suite `cd packages/webapp && npx playwright test` (use `npx`, NOT `bunx` — see webapp-e2e-validation expertise). Expect all 152 to pass once B is done.\n4. Suggested follow-up (out of scope here): extract the e2e API base URL into a single shared constant (e.g. in `e2e/setup.ts`) so phase1/phase2 stop hardcoding it. I'll file this as a separate idea issue.\n\n## Summary\n- 3 config files to edit (A1–A3).\n- 6 e2e spec files to edit (B1: 4 one-liners; B2: 63 inline URLs across phase1+phase2).\n- Docs/specs/expertise to refresh (D).\n- No frontend client or package.json changes needed."
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T20:05:39.790Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh2nowmpp",
+      "content": "Completed the planning audit. Posted the concrete change list in the previous comment (comment mqh2nfnt2o). Key finding: the parent issue's prescription missed the 6 e2e spec files that hardcode the API port (phase1 + phase2 alone have 63 inline `http://localhost:3001` URLs that would all break when the backend moves to 5001). Also filed a follow-up idea (mqh2nk7khi) to extract a shared e2e base-URL constant.\n\nNo code changes were made — this was a planning-only task. Reassigning to project-manager for review and to unblock the implementation child (mqh2hwulrt)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:05:39.826Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T20:08:17.016Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqh2r1cfah",
+      "content": "Reviewed the planning audit (comment mqh2nfnt2o). Spot-checked against source: server/index.ts:29 (PORT \"3000\"), vite.config.ts:6-7 (apiPort \"3000\", vitePort undefined fallback), playwright.config.ts (3001/5174/baseURL 5174) — all match exactly. The audit correctly extends beyond the parent's prescription to include the 6 e2e spec files with hardcoded API URLs (63 occurrences in phase1+phase2), which would have broken on the port move. Plan is approved. Marking done to unblock implementation (mqh2hwulrt)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:08:24.085Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  }
+]

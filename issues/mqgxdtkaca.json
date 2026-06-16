@@ -26,5 +26,57 @@
     "content": {
       "blockerId": "mqgxdt9me7"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:29:40.154Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgxdt9me7",
+      "reason": "Blocker issue mqgxdt9me7 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:31:40.565Z",
+    "author": "library-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:50:07.023Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqh23o6iwn",
+      "content": "Done. Validated the full `agt events` namespace against the spec and closed the test-coverage gap the implementer explicitly left for validation.\n\n## What I verified\n\n**Spec conformance (all acceptance criteria §6 checked):**\n- `events list` returns the same raw array the old `history` did; `--type` filters by exact match (reserved AND custom types).\n- `events add` appends a custom event, auto-stamps ISO timestamp + author, round-trips `content` through `replayEvents` byte-for-byte.\n- Custom events bump `updatedAt` but leave title/status/assignee/tags/priority/parentId/comments untouched.\n- Every one of the 8 `RESERVED_EVENT_TYPES` is rejected with exit 22 (`RESERVED_EVENT_TYPE`); malformed payloads (invalid JSON, missing/empty type, array/null content, non-object payload) reuse exit 10 (`INVALID_PARAMS`).\n- `agt history` is removed (commander unknown-command, non-zero exit); `tracker.history` remains as a working deprecated alias delegating to `eventsList`.\n\n**Manual CLI verification** confirmed the happy paths (list, filter, add round-trip) before I hit sandbox file-write limits in the validation dir; the remaining behavior is covered by the CLI tests below, which run in isolated tmpdirs.\n\n## Tests added (36 new tests, 0 failures)\n- **New file `tests/core/tracker/tracker-events.test.ts` (26 tests):** `eventsList` full/filtered (update, comment, custom, empty), NOT_FOUND / ISSUE_MISSING / NOT_INITIALIZED; `eventsAdd` success, timestamp/author resolution, explicit author override, updatedAt-bump/state-unchanged, comments-isolation, all-reserved-types rejection, empty/whitespace type, array/null content, NOT_FOUND / ISSUE_MISSING / NOT_INITIALIZED, content round-trip; `history()` alias parity; `RESERVED_EVENT_TYPES` registry contents + `isReservedEventType` truthy/falsy cases.\n- **Extended `tests/cli/commands.test.ts` (10 tests):** `events list --type` filter; `events add` success round-trip, reserved (exit 22), invalid JSON / missing type / array content / non-object payload (exit 10), NOT_FOUND, NOT_INITIALIZED; `history` command removal.\n\n## Quality checks\n- `bun run typecheck` — clean. `bun run lint` — clean.\n- Full suite: **999 pass, 5 skip, 0 fail** (was 963 pass).\n- Coverage: `src/core/tracker.ts` events lines now covered (98.95% funcs / 100% lines); `src/types/event.ts` 100%.\n\n## Notes / non-issues\n- `src/cli/commands/events.ts` still shows 0% in the coverage report — this is a known repo-wide pattern: every `cli/commands/*.ts` file reads 0% because CLI handlers are exercised through subprocess spawns (outside the coverage collector) rather than direct import. The new CLI tests cover the behavior fully via subprocess, consistent with how all other commands are tested. Not a real gap.\n- No backward-compat regressions: existing `tracker.history` callers in worktree/tracker/tracker-crud tests still pass via the deprecated alias."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:50:11.537Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:03:12.915Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T20:03:13.025Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]
