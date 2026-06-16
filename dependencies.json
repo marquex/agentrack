@@ -1,20 +1,4 @@
 {
-  "blockedBy": {
-    "mpmw7qw8jc": [
-      {
-        "blockerId": "mpmw7qrlqp",
-        "blockedId": "mpmw7qw8jc",
-        "status": "resolved"
-      }
-    ]
-  },
-  "blocks": {
-    "mpmw7qrlqp": [
-      {
-        "blockerId": "mpmw7qrlqp",
-        "blockedId": "mpmw7qw8jc",
-        "status": "resolved"
-      }
-    ]
-  }
+  "blockedBy": {},
+  "blocks": {}
 }

@@ -1,24 +1,14 @@
 {
   "open": [
     {
-      "id": "mpmw7qrlqp",
-      "title": "Blocker",
-      "path": "issues/mpmw7qrlqp.json",
+      "id": "mqgw9ojffa",
+      "title": "Test",
+      "path": "issues/mqgw9ojffa.json",
       "status": "idea",
       "assignee": null,
       "parentId": null,
       "tags": [],
       "priority": 3
-    },
-    {
-      "id": "mpmw7qw8jc",
-      "title": "Previously Blocked",
-      "path": "issues/mpmw7qw8jc.json",
-      "status": "todo",
-      "assignee": "alice",
-      "parentId": null,
-      "tags": [],
-      "priority": 1
     }
   ],
   "closed": [],
