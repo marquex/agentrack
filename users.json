@@ -1,3 +1,29 @@
 {
-  "users": []
+  "users": [
+    {
+      "name": "apitest-list-1781634791411-62ffbp",
+      "token": "tk_xc0mfnm5",
+      "registeredAt": "2026-06-16T18:33:11.412Z"
+    },
+    {
+      "name": "apitest-reg-1781634791428-mrm4y9",
+      "token": "tk_ps4maxst",
+      "registeredAt": "2026-06-16T18:33:11.429Z"
+    },
+    {
+      "name": "upper1781634791438-tg4mah",
+      "token": "tk_9z6az8d8",
+      "registeredAt": "2026-06-16T18:33:11.439Z"
+    },
+    {
+      "name": "dup-1781634791454-xv0a5p",
+      "token": "tk_r0d8bfom",
+      "registeredAt": "2026-06-16T18:33:11.455Z"
+    },
+    {
+      "name": "regen-1781634791484-gw7v6a",
+      "token": "tk_9i2anerx",
+      "registeredAt": "2026-06-16T18:33:11.484Z"
+    }
+  ]
 }
