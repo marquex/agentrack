@@ -1,0 +1,31 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:45:25.984Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:45:25.984Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Resolve Blocked 1781635525983-dkb1gy"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T18:45:25.986Z",
+    "author": "tester",
+    "content": {
+      "blockerId": "mqgzsi300x"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T18:45:26.171Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqgzsi300x"
+    }
+  }
+]

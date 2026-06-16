@@ -1,0 +1,24 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:45:23.973Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:45:23.973Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Comment Shape Test 1781635523973-q7nywr"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T18:45:23.975Z",
+    "author": "tester",
+    "content": {
+      "id": "mqgzsgw7vw",
+      "content": "Test comment for shape validation"
+    }
+  }
+]

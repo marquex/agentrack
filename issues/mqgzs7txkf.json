@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:45:12.654Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:45:12.654Z",
+    "author": "anonymous",
+    "content": {
+      "title": "E2E Created Issue 1781635512508",
+      "description": "Created by E2E test",
+      "status": "todo"
+    }
+  }
+]

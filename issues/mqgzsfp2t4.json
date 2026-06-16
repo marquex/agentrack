@@ -1,0 +1,24 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:45:23.013Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:45:23.013Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Status Change Test Unique",
+      "status": "todo"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:45:23.247Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]
