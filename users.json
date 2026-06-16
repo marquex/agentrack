@@ -1,44 +1,29 @@
 {
   "users": [
     {
-      "name": "display-1781630696634-xv7viv",
-      "token": "tk_z7syozkl",
-      "registeredAt": "2026-06-16T17:24:56.635Z"
+      "name": "apitest-list-1781631415698-w47p7r",
+      "token": "tk_kaymhnt5",
+      "registeredAt": "2026-06-16T17:36:55.699Z"
     },
     {
-      "name": "avatar-1781630696817-chhd6a",
-      "token": "tk_1v72odzs",
-      "registeredAt": "2026-06-16T17:24:56.818Z"
+      "name": "apitest-reg-1781631415710-jgitmf",
+      "token": "tk_vxdgvjqg",
+      "registeredAt": "2026-06-16T17:36:55.711Z"
     },
     {
-      "name": "ui-reg-1781630697416-uknu5o",
-      "token": "tk_mdckd5v5",
-      "registeredAt": "2026-06-16T17:24:57.456Z"
+      "name": "upper1781631415716-11ms3a",
+      "token": "tk_yh63bbx8",
+      "registeredAt": "2026-06-16T17:36:55.716Z"
     },
     {
-      "name": "ui-list-1781630697791-4m7jvo",
-      "token": "tk_o5a3sc0y",
-      "registeredAt": "2026-06-16T17:24:57.835Z"
+      "name": "dup-1781631415728-ca93to",
+      "token": "tk_d0m076qa",
+      "registeredAt": "2026-06-16T17:36:55.728Z"
     },
     {
-      "name": "revoke-ui-1781630698545-oaee79",
-      "token": "tk_q8y2ihfv",
-      "registeredAt": "2026-06-16T17:24:58.546Z"
-    },
-    {
-      "name": "revoke-cancel-1781630699077-14p62n",
-      "token": "tk_thxptnyy",
-      "registeredAt": "2026-06-16T17:24:59.078Z"
-    },
-    {
-      "name": "regen-btn-1781630699337-p7byny",
-      "token": "tk_rdrlebzd",
-      "registeredAt": "2026-06-16T17:24:59.338Z"
-    },
-    {
-      "name": "regen-api-1781630699521-izgbvc",
-      "token": "tk_6ffj84mm",
-      "registeredAt": "2026-06-16T17:24:59.522Z"
+      "name": "regen-1781631415748-asir06",
+      "token": "tk_tivrklzr",
+      "registeredAt": "2026-06-16T17:36:55.748Z"
     }
   ]
 }

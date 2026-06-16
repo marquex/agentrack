@@ -1,0 +1,23 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:36:53.172Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:53.172Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Timeline Expand Test 1781631413171-gyfptc"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:53.173Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  }
+]

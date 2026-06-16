@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:36:48.879Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:48.879Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Next Issue Test 1781631408878-56euvf",
+      "status": "todo",
+      "assignee": "next-tester-1781631408878-04z5uq"
+    }
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:36:48.794Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:48.794Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Delete Comment Test 1781631408794-29u4hr"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:36:48.795Z",
+    "author": "tester",
+    "content": {
+      "id": "mqgxc9p0ng",
+      "content": "Comment to be deleted"
+    }
+  },
+  {
+    "type": "comment-delete",
+    "timestamp": "2026-06-16T17:36:48.796Z",
+    "author": "tester",
+    "content": {
+      "id": "mqgxc9p0ng"
+    }
+  }
+]

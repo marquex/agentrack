@@ -1,0 +1,25 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:36:53.888Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:53.888Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Tag Add Test 1781631413887-v3frmo"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:54.047Z",
+    "author": "anonymous",
+    "content": {
+      "tags": [
+        "new-e2e-tag"
+      ]
+    }
+  }
+]

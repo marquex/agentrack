@@ -1,0 +1,31 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:36:48.850Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:48.850Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Blocked Delete Test 1781631408849-xvtvzw"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T17:36:48.851Z",
+    "author": "tester",
+    "content": {
+      "blockerId": "mqgxc9lkub"
+    }
+  },
+  {
+    "type": "blockage-deleted",
+    "timestamp": "2026-06-16T17:36:48.852Z",
+    "author": "tester",
+    "content": {
+      "blockerId": "mqgxc9lkub"
+    }
+  }
+]

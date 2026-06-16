@@ -1,0 +1,32 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:36:50.065Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:36:50.065Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Delete Comment UI Test 1781631410064-xxwew2"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:36:50.067Z",
+    "author": "tester",
+    "content": {
+      "id": "mqgxcae5w3",
+      "content": "Comment to be deleted via UI"
+    }
+  },
+  {
+    "type": "comment-delete",
+    "timestamp": "2026-06-16T17:36:50.277Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgxcae5w3"
+    }
+  }
+]
