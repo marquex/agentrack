@@ -129,6 +129,26 @@
       "name": "regen-1781637582538-965ibv",
       "token": "tk_tx6braqu",
       "registeredAt": "2026-06-16T19:19:42.538Z"
+    },
+    {
+      "name": "ui-reg-1781637598317-7ejjbq",
+      "token": "tk_5uyy23qm",
+      "registeredAt": "2026-06-16T19:19:58.440Z"
+    },
+    {
+      "name": "ui-list-1781637598865-c0jwzq",
+      "token": "tk_eh9100co",
+      "registeredAt": "2026-06-16T19:19:58.964Z"
+    },
+    {
+      "name": "revoke-ui-1781637600204-1iah8q",
+      "token": "tk_3apry3ae",
+      "registeredAt": "2026-06-16T19:20:00.205Z"
+    },
+    {
+      "name": "regen-api-1781637611701-ld3rqi",
+      "token": "tk_8dpbuqfu",
+      "registeredAt": "2026-06-16T19:20:11.708Z"
     }
   ]
 }
