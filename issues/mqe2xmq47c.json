@@ -26,5 +26,48 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T15:56:51.885Z",
+    "author": "project-manager",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T15:57:00.051Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgtrwcmia",
+      "content": "Status-loop reset: this implementation task was in-progress since 2026-06-14 with no comment and no activity — appears the library-developer crashed/stalled mid-task. Resetting to todo so the work loop can re-hand it to library-developer. No partial results were reported; the detailed fix spec in the description is still the source of truth."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:12:11.892Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:23:34.145Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqguq2hffs",
+      "content": "Done. Implemented the library-level fix for BUG-2 so pushWorktree/pullWorktree accept cwd as either the PROJECT ROOT or the DATA DIR (worktree) and auto-resolve opts internally.\n\nWHAT CHANGED (packages/library/src/core/worktree.ts):\n- Added an internal helper resolveWorktreeContext(cwd, opts) that:\n  1. Resolves the data dir via the existing resolveTrackerDir() (walks up to find .agentrack.json pointer or the default .agentrack/ dir), then derives the project root as its parent. Falls back to cwd itself if nothing is found (preserves legacy behavior).\n  2. When opts is not provided, reads the branch pointer at the project root via resolveWorktreeOptions() so custom branches like _e2edata resolve correctly.\n- pushWorktree and pullWorktree now use this helper: they compute the worktree dir relative to the resolved project root and gate isWorktreeInitialized on the project root, so they no longer treat cwd as the project root unconditionally.\n\nWHY THIS IS THE COMPLETE FIX (not the half-fix the review warned against): it resolves BOTH the project root AND the {branch, dir} opts from the pointer file. Passing the correct project root alone with default opts would still fail for the _e2edata/.e2edata config — this resolves both.\n\nVERIFICATION:\n- Manually reproduced the bug scenario (custom _e2edata branch, cwd = the .e2edata data dir) and confirmed pushWorktree/pullWorktree now succeed (synced:true / updated) both when cwd is the data dir AND when cwd is the project root (backward compatible).\n- bun run typecheck: clean. bun run lint: clean.\n- bun run test: all 121 worktree tests pass. The 6 failing tests in the suite are pre-existing mentions-test failures (verified via git stash on baseline) — unrelated to this change.\n\nNOTES FOR PM:\n- The webapp sync route (packages/webapp/server/routes/sync.ts) should need NO changes now — it calls pushWorktree(cwd)/pullWorktree(cwd) and the library auto-resolves. Please have webapp-developer confirm and update the phase4 push/pull test assertions (currently asserting 500) to assert success. Those files are outside the library-developer domain so I could not edit them here.\n- No new tests added per my scope."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:23:40.262Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
   }
 ]

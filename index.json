@@ -1,385 +1,6 @@
 {
   "open": [
     {
-      "id": "mppqqp8y26",
-      "title": "Webapp: Build the agentrack web UI",
-      "path": "issues/mppqqp8y26.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": null,
-      "tags": [
-        "webapp",
-        "epic"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mppqswn3jl",
-      "title": "Webapp Phase 4: Users & sync",
-      "path": "issues/mppqswn3jl.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mppqqp8y26",
-      "tags": [
-        "webapp",
-        "phase-4"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mppqt90kot",
-      "title": "Webapp Phase 4: Validation",
-      "path": "issues/mppqt90kot.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": "mppqqp8y26",
-      "tags": [
-        "webapp",
-        "phase-4",
-        "validation"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mpqn5bi2us",
-      "title": "Isolated E2E data for webapp validation",
-      "path": "issues/mpqn5bi2us.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": "mppqqp8y26",
-      "tags": [
-        "webapp",
-        "e2e-isolation"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mpqn5i7wui",
-      "title": "Implement isolated E2E data for webapp",
-      "path": "issues/mpqn5i7wui.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": "mpqn5bi2us",
-      "tags": [
-        "webapp",
-        "e2e-isolation"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mpqn5qf6zq",
-      "title": "Validate isolated E2E data for webapp",
-      "path": "issues/mpqn5qf6zq.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": "mpqn5bi2us",
-      "tags": [
-        "webapp",
-        "e2e-isolation",
-        "validation"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mpr50trdgw",
-      "title": "Fix E2E test isolation - dedicated test ports",
-      "path": "issues/mpr50trdgw.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": null,
-      "tags": [],
-      "priority": 1
-    },
-    {
-      "id": "mpr51myb9q",
-      "title": "Validate E2E test isolation - verify no pollution in main .agentrack/",
-      "path": "issues/mpr51myb9q.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": null,
-      "tags": [],
-      "priority": 1
-    },
-    {
-      "id": "mps4sfny0f",
-      "title": "Feature: agt delete issue-id command",
-      "path": "issues/mps4sfny0f.json",
-      "status": "done",
-      "assignee": "library-developer",
-      "parentId": null,
-      "tags": [
-        "feature",
-        "delete",
-        "core"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mps4uwcsqx",
-      "title": "Validate: agt delete command",
-      "path": "issues/mps4uwcsqx.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": null,
-      "tags": [
-        "validation",
-        "delete",
-        "core"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mps4viae0a",
-      "title": "Document: agt delete command",
-      "path": "issues/mps4viae0a.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": null,
-      "tags": [
-        "docs",
-        "delete",
-        "core"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mpscu5l9rk",
-      "title": "Bug: removeAllBlockagesForIssue has inverted counterpart filter",
-      "path": "issues/mpscu5l9rk.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": null,
-      "tags": [
-        "bug",
-        "delete",
-        "blockages"
-      ],
-      "priority": 1
-    },
-    {
-      "id": "mpscw71ria",
-      "title": "Fix inverted counterpart filter in dependency-manager",
-      "path": "issues/mpscw71ria.json",
-      "status": "done",
-      "assignee": "cto",
-      "parentId": null,
-      "tags": [],
-      "priority": 1
-    },
-    {
-      "id": "mqdzlo4ia8",
-      "title": "Fix pre-existing Phase 1-3 e2e test failures",
-      "path": "issues/mqdzlo4ia8.json",
-      "status": "in-progress",
-      "assignee": "project-manager",
-      "parentId": null,
-      "tags": [
-        "webapp",
-        "epic"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqdzppxnai",
-      "title": "Review idea: Fix pre-existing Phase 1-3 e2e test failures",
-      "path": "issues/mqdzppxnai.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqdzlo4ia8",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqdzq6ngeh",
-      "title": "Check review decision: Fix pre-existing Phase 1-3 e2e test failures",
-      "path": "issues/mqdzq6ngeh.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqdzlo4ia8",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe04tpyqc",
-      "title": "Fix IssueDetailPage UX gaps: back link, issue ID display, inline title edit",
-      "path": "issues/mqe04tpyqc.json",
-      "status": "in-progress",
-      "assignee": "project-manager",
-      "parentId": "mqdzlo4ia8",
-      "tags": [
-        "webapp",
-        "bug"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe054ells",
-      "title": "Implement detail page back link, ID display, inline title edit",
-      "path": "issues/mqe054ells.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe04tpyqc",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe054i6vm",
-      "title": "Reproduce IssueDetailPage UX gaps",
-      "path": "issues/mqe054i6vm.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe04tpyqc",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe054quhm",
-      "title": "Verify A complete",
-      "path": "issues/mqe054quhm.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqe04tpyqc",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe054vy4l",
-      "title": "Validate IssueDetailPage fixes against e2e suite",
-      "path": "issues/mqe054vy4l.json",
-      "status": "in-progress",
-      "assignee": "webapp-validator",
-      "parentId": "mqe04tpyqc",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe060d1lh",
-      "title": "Align e2e assertions with actual webapp UI (header landmark, comments copy)",
-      "path": "issues/mqe060d1lh.json",
-      "status": "in-progress",
-      "assignee": "project-manager",
-      "parentId": "mqdzlo4ia8",
-      "tags": [
-        "webapp",
-        "chore"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe06b32sm",
-      "title": "Validate e2e assertion alignment",
-      "path": "issues/mqe06b32sm.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": "mqe060d1lh",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe06bbvql",
-      "title": "Fix phase1 header + phase3 comments e2e assertions",
-      "path": "issues/mqe06bbvql.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe060d1lh",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe06bszo6",
-      "title": "Verify B complete",
-      "path": "issues/mqe06bszo6.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqe060d1lh",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe06v82ul",
-      "title": "Isolate flaky shared-state backend e2e test",
-      "path": "issues/mqe06v82ul.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqdzlo4ia8",
-      "tags": [
-        "webapp",
-        "chore"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mqe0745gy7",
-      "title": "Isolate shared-state backend e2e test",
-      "path": "issues/mqe0745gy7.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe06v82ul",
-      "tags": [
-        "task"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mqe074qctj",
-      "title": "Verify C complete",
-      "path": "issues/mqe074qctj.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe06v82ul",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mqe074zvth",
-      "title": "Validate backend test isolation",
-      "path": "issues/mqe074zvth.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe06v82ul",
-      "tags": [
-        "task"
-      ],
-      "priority": 2
-    },
-    {
-      "id": "mqe07n9gwr",
-      "title": "Verify all Phase 1-3 e2e fixes complete",
-      "path": "issues/mqe07n9gwr.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqdzlo4ia8",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
       "id": "mqe162cmbi",
       "title": "Fix BUG-1: regenerate token returns 401 in open auth mode",
       "path": "issues/mqe162cmbi.json",
@@ -404,18 +25,6 @@
       "priority": 3
     },
     {
-      "id": "mqe1drwrck",
-      "title": "Investigate flaky frontend e2e tests (parent-selector and copy-token)",
-      "path": "issues/mqe1drwrck.json",
-      "status": "in-progress",
-      "assignee": "project-manager",
-      "parentId": null,
-      "tags": [
-        "chore"
-      ],
-      "priority": 3
-    },
-    {
       "id": "mqe1im1zwi",
       "title": "Check review decision: regenerate token 401 fix (BUG-1)",
       "path": "issues/mqe1im1zwi.json",
@@ -429,18 +38,6 @@
       "priority": 3
     },
     {
-      "id": "mqe1im9n14",
-      "title": "Review idea: investigate flaky frontend e2e tests (parent-selector, copy-token)",
-      "path": "issues/mqe1im9n14.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe1drwrck",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
       "id": "mqe1imi4lg",
       "title": "Review idea: regenerate token returns 401 in open auth mode (BUG-1)",
       "path": "issues/mqe1imi4lg.json",
@@ -449,19 +46,6 @@
       "parentId": "mqe162cmbi",
       "tags": [
         "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe1imqlgf",
-      "title": "Check review decision: flaky frontend e2e tests",
-      "path": "issues/mqe1imqlgf.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe1drwrck",
-      "tags": [
-        "task",
-        "sync"
       ],
       "priority": 3
     },
@@ -485,43 +69,6 @@
       "status": "done",
       "assignee": "project-manager",
       "parentId": "mqe162svv5",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe1uw075w",
-      "title": "Verify e2e stabilization complete",
-      "path": "issues/mqe1uw075w.json",
-      "status": "todo",
-      "assignee": "project-manager",
-      "parentId": "mqe1drwrck",
-      "tags": [
-        "task",
-        "sync"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe1uwxa5q",
-      "title": "Validate frontend e2e test stability",
-      "path": "issues/mqe1uwxa5q.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
-      "parentId": "mqe1drwrck",
-      "tags": [
-        "task"
-      ],
-      "priority": 3
-    },
-    {
-      "id": "mqe1uwxw8c",
-      "title": "Stabilize flaky parent-selector and copy-token e2e tests",
-      "path": "issues/mqe1uwxw8c.json",
-      "status": "done",
-      "assignee": "project-manager",
-      "parentId": "mqe1drwrck",
       "tags": [
         "task"
       ],
@@ -580,8 +127,8 @@
       "id": "mqe2745ekb",
       "title": "Implement: usersRegenerate token override",
       "path": "issues/mqe2745ekb.json",
-      "status": "todo",
-      "assignee": "library-developer",
+      "status": "done",
+      "assignee": "project-manager",
       "parentId": "mqe26nou8f",
       "tags": [
         "task"
@@ -592,8 +139,8 @@
       "id": "mqe27481sa",
       "title": "Release: library token override",
       "path": "issues/mqe27481sa.json",
-      "status": "todo",
-      "assignee": "project-manager",
+      "status": "in-progress",
+      "assignee": "library-releaser",
       "parentId": "mqe26nou8f",
       "tags": [
         "task"
@@ -616,7 +163,7 @@
       "id": "mqe274mwm3",
       "title": "Validate: usersRegenerate token override",
       "path": "issues/mqe274mwm3.json",
-      "status": "todo",
+      "status": "done",
       "assignee": "project-manager",
       "parentId": "mqe26nou8f",
       "tags": [
@@ -641,8 +188,8 @@
       "id": "mqe27g2g7o",
       "title": "Reproduce: regenerate returns 401 in open auth mode (BUG-1)",
       "path": "issues/mqe27g2g7o.json",
-      "status": "todo",
-      "assignee": "webapp-validator",
+      "status": "done",
+      "assignee": "project-manager",
       "parentId": "mqe26n00jo",
       "tags": [
         "task"
@@ -703,8 +250,8 @@
       "id": "mqe2xmdugp",
       "title": "Validate sync push/pull end-to-end",
       "path": "issues/mqe2xmdugp.json",
-      "status": "todo",
-      "assignee": "library-validator",
+      "status": "done",
+      "assignee": "project-manager",
       "parentId": "mqe162svv5",
       "tags": [
         "task"
@@ -715,7 +262,7 @@
       "id": "mqe2xmprgj",
       "title": "Release library fix",
       "path": "issues/mqe2xmprgj.json",
-      "status": "todo",
+      "status": "in-progress",
       "assignee": "library-releaser",
       "parentId": "mqe162svv5",
       "tags": [
@@ -727,8 +274,8 @@
       "id": "mqe2xmq47c",
       "title": "Fix pushWorktree/pullWorktree project root resolution + update phase4 tests",
       "path": "issues/mqe2xmq47c.json",
-      "status": "in-progress",
-      "assignee": "library-developer",
+      "status": "done",
+      "assignee": "project-manager",
       "parentId": "mqe162svv5",
       "tags": [
         "task"
@@ -752,6 +299,321 @@
       "id": "mqe32t3er6",
       "title": "Investigate bunx playwright test loader failure",
       "path": "issues/mqe32t3er6.json",
+      "status": "in-progress",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "chore"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgvczj5ua",
+      "title": "Review idea: bunx playwright test loader failure (standardize E2E runner invocation)",
+      "path": "issues/mqgvczj5ua.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgvczw3qe",
+      "title": "Check review decision: bunx playwright test loader failure",
+      "path": "issues/mqgvczw3qe.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgvvj3qhv",
+      "title": "Validate standardized E2E runner docs + bunx caveat",
+      "path": "issues/mqgvvj3qhv.json",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgvvj3ysq",
+      "title": "Standardize webapp E2E runner docs on npx playwright test + document bunx caveat",
+      "path": "issues/mqgvvj3ysq.json",
+      "status": "in-progress",
+      "assignee": "webapp-validator",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgw46luxr",
+      "title": "Apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgw46luxr.json",
+      "status": "in-progress",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "chore"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgwmy76fo",
+      "title": "Review idea: apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgwmy76fo.json",
+      "status": "done",
+      "assignee": "webapp-developer",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgwn6zwiu",
+      "title": "Check review decision: apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgwn6zwiu.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgwul2ltn",
+      "title": "Flip phase4 push/pull e2e assertions to success + run suite (BUG-2)",
+      "path": "issues/mqgwul2ltn.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdfjpuc",
+      "title": "Events namespace: replace agt history with agt events list/add + type filtering",
+      "path": "issues/mqgxdfjpuc.json",
+      "status": "in-progress",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "feature"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdt6csi",
+      "title": "Release: agt events namespace",
+      "path": "issues/mqgxdt6csi.json",
+      "status": "todo",
+      "assignee": "library-releaser",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdt9me7",
+      "title": "Implement: agt events list/add commands + type filtering + custom events",
+      "path": "issues/mqgxdt9me7.json",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdtkaca",
+      "title": "Validate: agt events list/add + type filtering and custom events",
+      "path": "issues/mqgxdtkaca.json",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxdtmenb",
+      "title": "Plan: agt events namespace (list/add) + custom event type design",
+      "path": "issues/mqgxdtmenb.json",
+      "status": "in-progress",
+      "assignee": "library-architect",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxk7rj2a",
+      "title": "Status filter dropdown shows raw status values instead of labels",
+      "path": "issues/mqgxk7rj2a.json",
+      "status": "in-progress",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "bug"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxnab1q9",
+      "title": "Review idea: Status filter dropdown shows raw status values instead of labels",
+      "path": "issues/mqgxnab1q9.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgxnehpqc",
+      "title": "Check review decision: Status filter dropdown shows raw status values instead of labels",
+      "path": "issues/mqgxnehpqc.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgza1pg6m",
+      "title": "Fix transparent/unreadable shadcn-ui styles in webapp (inputs, selects, modals)",
+      "path": "issues/mqgza1pg6m.json",
+      "status": "in-progress",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "bug"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgza7xio7",
+      "title": "Reproduce: investigate why shadcn-ui styles are not applied (transparent inputs/selects/modals)",
+      "path": "issues/mqgza7xio7.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqgza1pg6m",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzae4ayr",
+      "title": "Fix shadcn-ui theme/CSS so all components render with correct styles",
+      "path": "issues/mqgzae4ayr.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqgza1pg6m",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzaks9u2",
+      "title": "Validate webapp shadcn-ui styles are correctly applied",
+      "path": "issues/mqgzaks9u2.json",
+      "status": "in-progress",
+      "assignee": "webapp-validator",
+      "parentId": "mqgza1pg6m",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzjnns95",
+      "title": "Plan: apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgzjnns95.json",
+      "status": "done",
+      "assignee": "project-manager",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzjuwgpw",
+      "title": "Apply waitForResponse fix to sibling parent-selector test",
+      "path": "issues/mqgzjuwgpw.json",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzjyv8j4",
+      "title": "Validate sibling parent-selector test fix",
+      "path": "issues/mqgzjyv8j4.json",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgznigv4t",
+      "title": "Fix Status filter dropdown trigger to show label instead of raw value",
+      "path": "issues/mqgznigv4t.json",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgznpaoo2",
+      "title": "Validate Status filter dropdown shows label instead of raw value",
+      "path": "issues/mqgznpaoo2.json",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgzu3jjyb",
+      "title": "Geist font dependency is imported nowhere in webapp",
+      "path": "issues/mqgzu3jjyb.json",
       "status": "idea",
       "assignee": "project-manager",
       "parentId": null,
@@ -759,16 +621,589 @@
       "priority": 3
     }
   ],
-  "closed": [],
+  "closed": [
+    {
+      "id": "mppqqp8y26",
+      "title": "Webapp: Build the agentrack web UI",
+      "path": "issues/mppqqp8y26.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "webapp",
+        "epic"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mppqswn3jl",
+      "title": "Webapp Phase 4: Users & sync",
+      "path": "issues/mppqswn3jl.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-4"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mppqt90kot",
+      "title": "Webapp Phase 4: Validation",
+      "path": "issues/mppqt90kot.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "phase-4",
+        "validation"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mpqn5bi2us",
+      "title": "Isolated E2E data for webapp validation",
+      "path": "issues/mpqn5bi2us.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": "mppqqp8y26",
+      "tags": [
+        "webapp",
+        "e2e-isolation"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mpqn5i7wui",
+      "title": "Implement isolated E2E data for webapp",
+      "path": "issues/mpqn5i7wui.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": "mpqn5bi2us",
+      "tags": [
+        "webapp",
+        "e2e-isolation"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mpqn5qf6zq",
+      "title": "Validate isolated E2E data for webapp",
+      "path": "issues/mpqn5qf6zq.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": "mpqn5bi2us",
+      "tags": [
+        "webapp",
+        "e2e-isolation",
+        "validation"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mpr50trdgw",
+      "title": "Fix E2E test isolation - dedicated test ports",
+      "path": "issues/mpr50trdgw.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [],
+      "priority": 1
+    },
+    {
+      "id": "mpr51myb9q",
+      "title": "Validate E2E test isolation - verify no pollution in main .agentrack/",
+      "path": "issues/mpr51myb9q.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [],
+      "priority": 1
+    },
+    {
+      "id": "mps4sfny0f",
+      "title": "Feature: agt delete issue-id command",
+      "path": "issues/mps4sfny0f.json",
+      "status": "closed",
+      "assignee": "library-developer",
+      "parentId": null,
+      "tags": [
+        "feature",
+        "delete",
+        "core"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mps4uwcsqx",
+      "title": "Validate: agt delete command",
+      "path": "issues/mps4uwcsqx.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "validation",
+        "delete",
+        "core"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mps4viae0a",
+      "title": "Document: agt delete command",
+      "path": "issues/mps4viae0a.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "docs",
+        "delete",
+        "core"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mpscu5l9rk",
+      "title": "Bug: removeAllBlockagesForIssue has inverted counterpart filter",
+      "path": "issues/mpscu5l9rk.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [
+        "bug",
+        "delete",
+        "blockages"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mpscw71ria",
+      "title": "Fix inverted counterpart filter in dependency-manager",
+      "path": "issues/mpscw71ria.json",
+      "status": "closed",
+      "assignee": "cto",
+      "parentId": null,
+      "tags": [],
+      "priority": 1
+    },
+    {
+      "id": "mqdzlo4ia8",
+      "title": "Fix pre-existing Phase 1-3 e2e test failures",
+      "path": "issues/mqdzlo4ia8.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "webapp",
+        "epic"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqdzppxnai",
+      "title": "Review idea: Fix pre-existing Phase 1-3 e2e test failures",
+      "path": "issues/mqdzppxnai.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqdzq6ngeh",
+      "title": "Check review decision: Fix pre-existing Phase 1-3 e2e test failures",
+      "path": "issues/mqdzq6ngeh.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe04tpyqc",
+      "title": "Fix IssueDetailPage UX gaps: back link, issue ID display, inline title edit",
+      "path": "issues/mqe04tpyqc.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "webapp",
+        "bug"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe054ells",
+      "title": "Implement detail page back link, ID display, inline title edit",
+      "path": "issues/mqe054ells.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe04tpyqc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe054i6vm",
+      "title": "Reproduce IssueDetailPage UX gaps",
+      "path": "issues/mqe054i6vm.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe04tpyqc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe054quhm",
+      "title": "Verify A complete",
+      "path": "issues/mqe054quhm.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe04tpyqc",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe054vy4l",
+      "title": "Validate IssueDetailPage fixes against e2e suite",
+      "path": "issues/mqe054vy4l.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe04tpyqc",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe060d1lh",
+      "title": "Align e2e assertions with actual webapp UI (header landmark, comments copy)",
+      "path": "issues/mqe060d1lh.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "webapp",
+        "chore"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe06b32sm",
+      "title": "Validate e2e assertion alignment",
+      "path": "issues/mqe06b32sm.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe060d1lh",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe06bbvql",
+      "title": "Fix phase1 header + phase3 comments e2e assertions",
+      "path": "issues/mqe06bbvql.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe060d1lh",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe06bszo6",
+      "title": "Verify B complete",
+      "path": "issues/mqe06bszo6.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe060d1lh",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe06v82ul",
+      "title": "Isolate flaky shared-state backend e2e test",
+      "path": "issues/mqe06v82ul.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "webapp",
+        "chore"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mqe0745gy7",
+      "title": "Isolate shared-state backend e2e test",
+      "path": "issues/mqe0745gy7.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe06v82ul",
+      "tags": [
+        "task"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mqe074qctj",
+      "title": "Verify C complete",
+      "path": "issues/mqe074qctj.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe06v82ul",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mqe074zvth",
+      "title": "Validate backend test isolation",
+      "path": "issues/mqe074zvth.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe06v82ul",
+      "tags": [
+        "task"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "mqe07n9gwr",
+      "title": "Verify all Phase 1-3 e2e fixes complete",
+      "path": "issues/mqe07n9gwr.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqdzlo4ia8",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe1drwrck",
+      "title": "Investigate flaky frontend e2e tests (parent-selector and copy-token)",
+      "path": "issues/mqe1drwrck.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "chore"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe1im9n14",
+      "title": "Review idea: investigate flaky frontend e2e tests (parent-selector, copy-token)",
+      "path": "issues/mqe1im9n14.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe1imqlgf",
+      "title": "Check review decision: flaky frontend e2e tests",
+      "path": "issues/mqe1imqlgf.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe1uw075w",
+      "title": "Verify e2e stabilization complete",
+      "path": "issues/mqe1uw075w.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task",
+        "sync"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe1uwxa5q",
+      "title": "Validate frontend e2e test stability",
+      "path": "issues/mqe1uwxa5q.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqe1uwxw8c",
+      "title": "Stabilize flaky parent-selector and copy-token e2e tests",
+      "path": "issues/mqe1uwxw8c.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe1drwrck",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqgsy9a1xm",
+      "title": "Bug: Webapp dashboard lists child issues at top level instead of only roots",
+      "path": "issues/mqgsy9a1xm.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "bug"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqgsyjo9c7",
+      "title": "Reproduce: dashboard renders child issues at top level",
+      "path": "issues/mqgsyjo9c7.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgsy9a1xm",
+      "tags": [
+        "task"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqgsyy3wjl",
+      "title": "Fix: dashboard fetches only root issues and lazy-loads children",
+      "path": "issues/mqgsyy3wjl.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgsy9a1xm",
+      "tags": [
+        "task"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqgszbo6eu",
+      "title": "Validate: dashboard shows only roots and lazy-loads children",
+      "path": "issues/mqgszbo6eu.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqgsy9a1xm",
+      "tags": [
+        "task"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mqguh00fd7",
+      "title": "URL-driven dashboard filtering with Open default",
+      "path": "issues/mqguh00fd7.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": null,
+      "tags": [
+        "feature"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqguh6opdc",
+      "title": "Plan URL-driven dashboard filtering",
+      "path": "issues/mqguh6opdc.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqguh00fd7",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqguhco4qj",
+      "title": "Implement URL-driven dashboard filtering",
+      "path": "issues/mqguhco4qj.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqguh00fd7",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqguhe7eyw",
+      "title": "Validate URL-driven dashboard filtering",
+      "path": "issues/mqguhe7eyw.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqguh00fd7",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "mqguy5lkt9",
+      "title": "Fix phase1 header assertion — scope regex to header landmark",
+      "path": "issues/mqguy5lkt9.json",
+      "status": "closed",
+      "assignee": "project-manager",
+      "parentId": "mqe060d1lh",
+      "tags": [
+        "task"
+      ],
+      "priority": 3
+    }
+  ],
   "childrenOf": {
     "mppqqp8y26": [
-      "mpqn5bi2us"
+      "mpqn5bi2us",
+      "mpqn5bi2us",
+      "mppqswn3jl",
+      "mppqt90kot"
     ],
     "mpqn5bi2us": [
+      "mpqn5i7wui",
+      "mpqn5qf6zq",
       "mpqn5i7wui",
       "mpqn5qf6zq"
     ],
     "mqdzlo4ia8": [
+      "mqdzppxnai",
+      "mqdzq6ngeh",
+      "mqe04tpyqc",
+      "mqe060d1lh",
+      "mqe06v82ul",
+      "mqe07n9gwr",
       "mqdzppxnai",
       "mqdzq6ngeh",
       "mqe04tpyqc",
@@ -780,14 +1215,26 @@
       "mqe054i6vm",
       "mqe054ells",
       "mqe054vy4l",
+      "mqe054quhm",
+      "mqe054i6vm",
+      "mqe054ells",
+      "mqe054vy4l",
       "mqe054quhm"
     ],
     "mqe060d1lh": [
       "mqe06bbvql",
       "mqe06b32sm",
-      "mqe06bszo6"
+      "mqe06bszo6",
+      "mqguy5lkt9",
+      "mqe06bbvql",
+      "mqe06b32sm",
+      "mqe06bszo6",
+      "mqguy5lkt9"
     ],
     "mqe06v82ul": [
+      "mqe0745gy7",
+      "mqe074zvth",
+      "mqe074qctj",
       "mqe0745gy7",
       "mqe074zvth",
       "mqe074qctj"
@@ -805,9 +1252,15 @@
       "mqe2xmq47c",
       "mqe2xmdugp",
       "mqe2xmprgj",
-      "mqe2xmxeiv"
+      "mqe2xmxeiv",
+      "mqgwul2ltn"
     ],
     "mqe1drwrck": [
+      "mqe1im9n14",
+      "mqe1imqlgf",
+      "mqe1uwxw8c",
+      "mqe1uwxa5q",
+      "mqe1uw075w",
       "mqe1im9n14",
       "mqe1imqlgf",
       "mqe1uwxw8c",
@@ -828,6 +1281,52 @@
       "mqe27g5z4m",
       "mqe27ge9up",
       "mqe27h6jl1"
+    ],
+    "mqgsy9a1xm": [
+      "mqgsyjo9c7",
+      "mqgsyy3wjl",
+      "mqgszbo6eu",
+      "mqgsyjo9c7",
+      "mqgsyy3wjl",
+      "mqgszbo6eu"
+    ],
+    "mqguh00fd7": [
+      "mqguh6opdc",
+      "mqguhco4qj",
+      "mqguhe7eyw",
+      "mqguh6opdc",
+      "mqguhco4qj",
+      "mqguhe7eyw"
+    ],
+    "mqe32t3er6": [
+      "mqgvczj5ua",
+      "mqgvczw3qe",
+      "mqgvvj3ysq",
+      "mqgvvj3qhv"
+    ],
+    "mqgw46luxr": [
+      "mqgwmy76fo",
+      "mqgwn6zwiu",
+      "mqgzjnns95",
+      "mqgzjuwgpw",
+      "mqgzjyv8j4"
+    ],
+    "mqgxdfjpuc": [
+      "mqgxdtmenb",
+      "mqgxdt9me7",
+      "mqgxdtkaca",
+      "mqgxdt6csi"
+    ],
+    "mqgxk7rj2a": [
+      "mqgxnab1q9",
+      "mqgxnehpqc",
+      "mqgznigv4t",
+      "mqgznpaoo2"
+    ],
+    "mqgza1pg6m": [
+      "mqgza7xio7",
+      "mqgzae4ayr",
+      "mqgzaks9u2"
     ]
   }
 }

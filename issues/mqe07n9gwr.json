@@ -59,5 +59,57 @@
       "blockerId": "mqe074qctj",
       "reason": "Blocker issue mqe074qctj transitioned to done"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T16:15:11.052Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe054quhm",
+      "reason": "Blocker issue mqe054quhm transitioned to done"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T18:29:26.319Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe06bszo6",
+      "reason": "Blocker issue mqe06bszo6 transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T18:31:37.259Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgzaq8s3t",
+      "content": "Epic-level gate review: all three deliverable sync trackers are done and blockages resolved. Verified each: A (mqe054quhm PASS — IssueDetailPage back link/ID/inline edit), B (mqe06bszo6 PASS — header landmark + comments copy assertions, 59/59), C (mqe074qctj PASS — flaky test isolated, 30+ runs zero failures). All three deliverables and all their children are done. Marking this gate done and closing the Epic."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:31:43.566Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:00.613Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:24.391Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

@@ -26,5 +26,39 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:15:42.666Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:15:42.702Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgufy8ds1",
+      "content": "Status-loop: complete. All phase tasks done — Reproduce (mqe054i6vm), Implement (mqe054ells), Validate (mqe054vy4l, all tests pass). IssueDetailPage UX gaps (back link, ID display, inline title edit) delivered."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:00.610Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:24.049Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

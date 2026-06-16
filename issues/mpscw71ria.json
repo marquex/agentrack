@@ -41,5 +41,22 @@
       "status": "done",
       "assignee": "cto"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:57:39.324Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgvxwa8xj",
+      "content": "Fix complete. No parent/children. Closing."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:39.364Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

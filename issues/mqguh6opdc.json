@@ -1,0 +1,81 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T16:16:39.970Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:16:39.970Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Plan URL-driven dashboard filtering",
+      "description": "Plan the implementation of URL-parameter-driven filtering for the issues dashboard.\n\nRequirements:\n- The status selector defaults to 'Open', which displays issues with status todo, in-progress, or done.\n- 'Idea' and 'Closed' issues are shown ONLY when their respective option is explicitly selected.\n- Selecting any value in the status, search, or assignee controls updates the URL search params.\n- The dashboard reads filter state exclusively from URL params (no component state as source of truth) so filtered lists are bookmarkable/shareable.\n\nDeliverable: a plan covering the URL param schema (names, encoding of the 'open' meta-status vs raw statuses, default handling when params absent), the components/hooks to change (IssuesPage state removal, IssueFilters wiring, a useSearchParams-based filter hook), and how the IssueList query maps the 'open' meta-status to multiple statuses. Note any edge cases (clearing filters, unknown param values).",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqguh00fd7",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T16:17:02.473Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqguhco4qj"
+    }
+  },
+  {
+    "type": "blockage-deleted",
+    "timestamp": "2026-06-16T16:17:23.324Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqguhco4qj"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:19:34.341Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:28:21.468Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqguw7l29w",
+      "content": "# Plan: URL-driven dashboard filtering\n\n## Goal recap\nMake the issues dashboard read filter state exclusively from URL search params (shareable and bookmarkable), default to the Open view on first load, and define how the open meta-status maps to underlying statuses.\n\n## Current state (verified in code)\n- IssuesPage keeps filters in useState - local React state is the source of truth today. Must be removed.\n- IssueFilters already has the three controls (search input, status Select with an open option, assignee Select) plus a Clear button, calling onFiltersChange.\n- IssueList receives a filters prop, forces parentId null (root issues), and calls useIssues with the filters.\n- useIssues passes through to issuesApi list, which serializes them via buildQueryString (already handles status, assignee, tags, parentId, search).\n- Backend GET issues endpoint forwards to tracker.list. The library status open returns all non-closed entries, meaning idea plus todo plus in-progress plus done.\n\n## Key semantic mismatch\nThe spec requires the default Open view to show only todo, in-progress, and done (idea and closed are shown only when explicitly selected). But the backend open meta-status includes idea. So we cannot use the backend response as-is for the default view.\n\nDecision: the client filters idea out of the response whenever the active status is the open meta-status. Backend semantics stay untouched.\n\n## URL param schema\n- status: one of open (meta), idea, todo, in-progress, done, closed, all. Default when absent: open.\n- assignee: assignee name string. Default when absent: all.\n- search: free text. Default when absent: none.\n- tags is not in the current filter UI, so excluded from the URL schema for now.\n- parentId is intentionally not URL-driven: the dashboard always shows root issues.\n- Keep the URL clean: do NOT rewrite the root path to include status open. Absence equals open. The dropdown still displays Open.\n\n## Default and open mapping\n- status absent OR status open - request status open from backend, then drop idea entries client-side, leaving todo, in-progress, done.\n- status all - send no status param; returns everything (idea, todo, in-progress, done, closed). Explicit show-everything.\n- concrete status (todo, in-progress, done, idea, closed) - forwarded as-is, backend filters natively.\n\n## Components and hooks to change\n\n### 1. NEW hooks use-issue-filters.ts\nSingle source of truth, wraps React Router useSearchParams.\n- parse: reads status, assignee, search; returns typed Filters; applies defaults (status omitted becomes open). Validates status against the allowed set; unknown values fall back to open.\n- setFilters(partial): merges into current params and calls setSearchParams; empty values remove the param.\n- clearFilters(): resets to no params (default open view).\n- Debounced setSearch (~250ms) so typing doesn't churn URL and history per keystroke. Status and assignee need no debounce.\n\n### 2. pages IssuesPage.tsx\n- Remove useState for filters. Call useIssueFilters. Keep showCreateDialog as local UI state.\n- Pass setFilters and clearFilters to IssueFilters; filters to IssueList.\n\n### 3. components IssueFilters.tsx\n- Replace the filters and onFiltersChange props with filters, onSetFilters, onClearFilters.\n- Search: drive off filters.search, call the debounced setSearch. Keep a local synchronous input value for snappy typing that syncs to URL debounced.\n- Status Select: value becomes filters.status or open, so it shows Open by default.\n- Assignee Select: unchanged logic, writes via setFilters with assignee.\n- Clear button: calls clearFilters (resets to default open).\n\n### 4. components IssueList.tsx\n- Fetching shape unchanged.\n- Fix empty-state copy logic: today it checks filters.search or filters.status or filters.assignee, which is always truthy now that status defaults to open. Replace with hasNonDefaultFilters = filters.search OR filters.assignee OR (filters.status and filters.status not open).\n\n### 5. api issues.ts (issuesApi.list)\n- After fetching, when requested filters.status is open, filter out entries whose status is idea before returning. Keeps idea-exclusion at the API boundary.\n\n### 6. optional types index.ts\n- Add a DashboardStatus union (open OR all OR IssueStatus) for tighter typing in the new hook.\n\n## Edge cases and decisions\n- Unknown status param (status foo): hook treats it as default open.\n- Clearing filters: Clear resets URL to root, giving default open view.\n- Back and forward: works for free via useSearchParams.\n- Bookmarkability: a URL with status closed, assignee bob, search auth fully reconstructs the view.\n- Search debouncing: URL and history updates debounced; TanStack Query key changes only after the debounce.\n- Initial load: no params equals Open view (todo, in-progress, done). URL not rewritten.\n- All statuses versus Open: all is an explicit choice yielding status all (everything including idea and closed); open is the default yielding the trimmed view. Distinct by design.\n\n## Out of scope\n- Tags filter in URL and UI (no UI today).\n- Sorting or sort-direction in the URL.\n\n## Testable scenarios for the validator (mqguhe7eyw)\n1. Empty URL root shows todo, in-progress, done (no idea, no closed); dropdown reads Open.\n2. status closed shows only closed.\n3. status idea shows only idea.\n4. status all shows every status.\n5. assignee name shows only that assignee; URL updates when picking one.\n6. Typing in search updates the URL (debounced) and filters the list.\n7. Clear resets to default Open view (URL back to root).\n8. Browser back and forward restores previous filter state.\n9. Bad status garbage falls back to the Open default without error.\n10. parentId is never user-toggleable via URL (dashboard stays root-only).\n\n## Files touched\n- NEW frontend src hooks use-issue-filters.ts\n- frontend src pages IssuesPage.tsx\n- frontend src components issues IssueFilters.tsx\n- frontend src components issues IssueList.tsx (empty-state predicate)\n- frontend src api issues.ts (idea-exclusion for open)\n- optional frontend src types index.ts - DashboardStatus type\n\nNo backend changes required. No new dependencies."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:28:28.806Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:35:45.436Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:35:45.472Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

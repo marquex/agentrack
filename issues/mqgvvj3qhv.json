@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T16:55:49.086Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:55:49.086Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate standardized E2E runner docs + bunx caveat",
+      "description": "Validate the Dev task output for the ACCEPTED CTO decision (review mqgvczj5ua / idea mqe32t3er6). Verify:\n\n1. webapp-developer expertise files (webapp-overview.expertise.md, recipe-validate-webapp-phase.md, webapp-e2e-validation.expertise.md) consistently use `cd packages/webapp && npx playwright test` — no stale `bunx playwright test` references remain as THE recommended command.\n2. The bunx-caveat gotcha text is present and accurate in both webapp-validator-gotchas.md and webapp-developer/webapp-overview.expertise.md.\n3. If a `test:e2e` script was added to packages/webapp/package.json, it is correct and discoverable.\n4. Confirm NO test/source-code logic was changed (this is docs/tooling-only).\n5. Optionally confirm `npx playwright test --list` loads the suite cleanly from packages/webapp.\n\nReproduce/diagnose only — do NOT fix. Report findings via comment. If valid, mark done.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T16:55:58.197Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqgvvj3ysq"
+    }
+  }
+]

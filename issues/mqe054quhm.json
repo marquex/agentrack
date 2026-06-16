@@ -34,5 +34,48 @@
     "content": {
       "blockerId": "mqe054vy4l"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T16:14:44.791Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe054vy4l",
+      "reason": "Blocker issue mqe054vy4l transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:15:11.049Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:15:11.090Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgufarihg",
+      "content": "Status-loop: completion gate. Implement (mqe054ells) and Validate (mqe054vy4l) both done — IssueDetailPage fixes verified. Marking gate done."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:00.611Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:24.152Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

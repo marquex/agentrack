@@ -1,0 +1,17 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:46:40.438Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:46:40.438Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Geist font dependency is imported nowhere in webapp",
+      "description": "@fontsource-variable/geist is listed in packages/webapp/frontend/package.json dependencies but is never imported in src/ (no import of '@fontsource-variable/geist' anywhere). As a result the intended Geist font is not loaded and the UI falls back to the browser default. To fix: import the font in src/main.tsx (e.g. import '@fontsource-variable/geist') and set the font-family in the base layer / body styles. Discovered while fixing the shadcn theme tokens (mqgzae4ayr) — cosmetic, out of scope there.",
+      "assignee": "project-manager"
+    }
+  }
+]

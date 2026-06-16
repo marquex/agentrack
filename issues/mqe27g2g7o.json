@@ -18,5 +18,31 @@
         "task"
       ]
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:04:35.742Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:07:49.625Z",
+    "author": "webapp-validator",
+    "content": {
+      "id": "mqgwazh3jf",
+      "content": "Done. BUG-1 reproduced and root cause confirmed.\n\n**Reproduction:**\n- Manual: POST to the regenerate endpoint in open auth mode returns HTTP 401 with code INVALID_TOKEN and message \"You can only regenerate your own token.\"\n- The existing E2E test e2e/phase4-validation.spec.ts:198 (\"returns 401 in open mode without token — BUG-1\") passes, confirming the bug is currently locked in.\n\n**Root cause confirmed:**\npackages/webapp/server/routes/users.ts:54 calls tracker.usersRegenerate(name) passing only the target user's name and forwarding no auth/caller context. Inside the tracker, resolveAuthor then returns the default author (\"anonymous\") in open auth mode, which fails the self-service check (callerName !== targetName) inside usersRegenerate, producing the 401.\n\n**Server log captured during reproduction:**\n- [Error] You can only regenerate your own token.\n- --> POST regenerate endpoint 401 1ms\n\n**Scope note for the fix:** The fix belongs to webapp-developer (forward the caller identity / token from the request to usersRegenerate). Once fixed, the Phase 4 test at lines 197-216 must be rewritten to assert a 200 + new token response instead of the 401.\n\nNo code changed — validation only."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:07:54.845Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
   }
 ]

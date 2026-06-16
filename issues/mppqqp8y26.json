@@ -51,5 +51,22 @@
     "content": {
       "status": "done"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:57:25.336Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgvxle1yc",
+      "content": "All deliverables complete (isolated E2E data, Phase 4 users & sync, Phase 4 validation). Closing epic and descendants."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:28.991Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

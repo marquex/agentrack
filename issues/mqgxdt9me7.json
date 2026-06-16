@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:38:02.135Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:38:02.135Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Implement: agt events list/add commands + type filtering + custom events",
+      "description": "Implement the agreed spec for the `agt events` namespace in the library/CLI: new `events list` command (replaces `history`), `--type` filter, new `events add` command storing custom events, tracker API methods, type definitions, and the reserved-type collision validation. Remove or deprecate the old `history` command per the spec. Add/extend library tests.",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T17:38:02.255Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqgxdtmenb"
+    }
+  }
+]

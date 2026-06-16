@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:38:02.211Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:38:02.211Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Release: agt events namespace",
+      "description": "Release the library version that includes the new `agt events` namespace (list with --type filter, add custom events) and the removal/deprecation of `agt history`. Bump version, update docs (CLI reference) and changelog as needed, publish.",
+      "status": "todo",
+      "assignee": "library-releaser",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T17:38:02.327Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqgxdtkaca"
+    }
+  }
+]

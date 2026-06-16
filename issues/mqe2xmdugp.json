@@ -26,5 +26,82 @@
     "content": {
       "blockerId": "mqe2xmq47c"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T16:23:40.264Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe2xmq47c",
+      "reason": "Blocker issue mqe2xmq47c transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:55:39.176Z",
+    "author": "library-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:13:26.720Z",
+    "author": "library-validator",
+    "content": {
+      "id": "mqgwi73i8s",
+      "content": "Partial validation — library portion FULLY VERIFIED; phase4 e2e portion BLOCKED on webapp-domain work (outside my access).\n\nWHAT I VERIFIED (library domain):\n- typecheck: clean. lint: clean.\n- All 125 worktree tests pass (was 121; I added 4 new tests to close the coverage gap for the BUG-2 fix — see below).\n- Confirmed the fix in packages/library/src/core/worktree.ts (resolveWorktreeContext) correctly resolves BOTH the project root AND {branch, dir} from the pointer file when cwd is the data dir. This is the complete fix, not the half-fix the review warned against.\n- Confirmed packages/webapp/server/routes/sync.ts needs NO changes — it calls pushWorktree(cwd)/pullWorktree(cwd) with no opts, and the library auto-resolves. Verified at the library API level with a test that mirrors the exact e2e config (_e2edata branch, .e2edata dir, cwd = data dir).\n\nNEW TESTS ADDED (tests/core/worktree-branch.test.ts, 'BUG-2 fix' describe block):\n1. pushWorktree succeeds when cwd is the data dir (custom branch from pointer, opts omitted).\n2. pullWorktree succeeds when cwd is the data dir (custom branch from pointer, opts omitted).\n3. pushWorktree backward compatible when cwd is the project root (custom branch still resolved from pointer).\n4. pushWorktree with e2e-like config (_e2edata branch, .e2edata dir) — reproduces the BUG-2 scenario end-to-end at the library level.\nAll 4 pass. The previous suite only exercised cwd=project-root; the cwd=data-dir path (the actual BUG-2 condition) was uncovered.\n\nPRE-EXISTING FAILURES (not caused by this change): 3 mentions 'spec-deviation' tests fail (extractMentions/rebuildMentionsIndex/mentionsRead/mentionsUnread). Verified via git stash that these fail on baseline without the worktree change. Plus some flaky E2E tests (users/hierarchy/mentions) that vary run-to-run — unrelated.\n\nBLOCKER — cannot complete steps 2 & 3 of this task:\n- The phase4 e2e suite (packages/webapp/e2e/phase4-validation.spec.ts) is OUTSIDE my access domain, so I cannot run it or edit it.\n- Critically: the phase4 push/pull tests STILL assert status 500 / BUG-2 (lines 222-242, 626-657). They have NOT been flipped to assert success (200, synced:true / updated). With the library fix landed, the sync API now returns 200, so these un-flipped assertions will FAIL if the suite is run now.\n- Flipping these assertions was an explicit acceptance criterion of the sibling dev task mqe2xmq47c, but that task was closed 'done' without doing it (the developer correctly flagged webapp files as outside their domain).\n\nNEEDED FROM PM: route a task to webapp-developer to (a) flip the phase4 push/pull assertions from 500 to success (200, synced:true / updated), and (b) run the full phase4 e2e suite against the fixed library in the e2e config (AGENTRACK_CWD=validation/.e2edata, _e2edata branch, .e2edata dir) and confirm all push/pull tests pass. Until that lands, the end-to-end validation (steps 2 & 3) is not complete and the release (mqe2xmprgj, blocked by me) should not proceed.\n\nReassigning to project-manager to route the webapp-domain work. Library validation is complete on my side."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:13:33.124Z",
+    "author": "library-validator",
+    "content": {
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T17:23:14.687Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqgwul2ltn"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:23:14.723Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgwuty3pg",
+      "content": "Status-loop diagnosis: validation is partially complete — library portion fully verified by library-validator (all 125 worktree tests pass, fix confirmed). The remaining end-to-end step (phase4 e2e suite) is blocked because the phase4 push/pull assertions still expect 500/BUG-2 and were never flipped — the original dev task mqe2xmq47c was closed done without touching them (webapp files outside library-developer's domain).\n\nAction: created mqgwul2ltn (webapp-developer) to flip the phase4 assertions to success and run the suite in the e2e config. Blocking this validate task on it. Once mqgwul2ltn reports phase4 passing, this task can be marked done (library validation already confirmed) and the BUG-2 release (mqe2xmprgj) proceeds. Leaving in-progress; the dependency is now explicit."
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T18:35:17.433Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgwul2ltn",
+      "reason": "Blocker issue mqgwul2ltn transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T19:00:30.590Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqh0bww1kg",
+      "content": "Status-loop: marking this validate task done. Work is complete — library portion fully verified by library-validator (125 worktree tests pass, fix confirmed), and the cross-domain phase4 e2e work (mqgwul2ltn) is done with the full suite green (174/174, assertions flipped to success). Both blockers resolved. This unblocks the BUG-2 release (mqe2xmprgj)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:00:38.038Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
   }
 ]

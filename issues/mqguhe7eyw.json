@@ -1,0 +1,99 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T16:16:50.129Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:16:50.129Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate URL-driven dashboard filtering",
+      "description": "Validate the URL-driven dashboard filtering meets the requirements.\n\nVerify:\n- Default view (no URL params) shows 'Open' issues only (todo, in-progress, done) — NOT idea or closed.\n- Selecting 'Idea' shows only idea issues; selecting 'Closed' shows only closed.\n- Changing status, search, and assignee controls updates the URL params correctly.\n- Loading a bookmarked URL with params applies the expected filters.\n- Clearing filters returns to the default 'Open' state in the URL.\n- Typecheck, lint, and existing tests pass; add component/E2E coverage for the param-driven behavior.\n\nReport quality metrics. Do not fix bugs — report them back.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqguh00fd7",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T16:17:27.145Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqguhco4qj"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T17:27:48.485Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqguhco4qj",
+      "reason": "Blocker issue mqguhco4qj transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:29:28.679Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:43:17.123Z",
+    "author": "webapp-validator",
+    "content": {
+      "id": "mqgxkkld0e",
+      "content": "Validation complete. URL-driven dashboard filtering MEETS all requirements.\n\n## Requirements verified (all PASS)\n- Default view (no URL params) shows Open issues only (todo, in-progress, done); idea and closed are excluded. Backend 'open' meta-status returns todo/in-progress/done/idea, and the frontend filters out idea client-side (api/issues.ts). URL stays clean with no status param.\n- Selecting Idea / Closed / Todo writes the corresponding ?status= value to the URL and shows only those issues.\n- Changing status, search, and assignee controls updates the URL params (search is debounced ~250ms).\n- Bookmarking a URL with params applies the expected filters on load (verified for status, combined status+search, and status reflected in the dropdown).\n- Clearing filters strips all params and returns to the default Open state in the URL.\n\n## Tests added\n- New E2E spec: packages/webapp/e2e/url-filters-validation.spec.ts (12 tests covering default view, deep-linking, control→URL sync, and clear-filters). All 12 pass.\n- No component/unit test framework exists in the webapp today (only E2E), so coverage was added at the E2E layer.\n\n## Quality metrics\n- Frontend build/typecheck (tsc -b + vite build): PASS.\n- No lint script is configured in the webapp (none found) — typecheck is the only static gate.\n- Full E2E suite: 170 passed, 4 failed.\n- The 4 failures are PRE-EXISTING and UNRELATED to URL filtering: they are the phase4 BUG-2 sync tests that assert the old buggy .toBe(500). They now fail because sync push/pull returns 200 instead of 500, which strongly suggests BUG-2 (mqe162svv5) has been fixed and those tests are now stale (they need updating to assert 200 and verify end-to-end sync behavior). Flagging for the PM to route back to webapp-developer.\n\n## Defect found (reported separately)\n- Created idea mqgxk7rj2a: the Status filter dropdown trigger displays raw status values ('closed', 'in-progress') instead of the human-readable labels ('Closed', 'In Progress'). Cosmetic only; filtering works correctly.\n\n## Minor note (not a spec violation)\n- useSearchParams uses { replace: false } for every filter change, so debounced search typing pushes many history entries (back button needs several clicks to leave). Tracking as an observation, not blocking."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:43:21.401Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:48:15.533Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgxqz0p13",
+      "content": "Done. The validation work for URL-driven dashboard filtering was performed by webapp-validator (see their report above). All requirements PASS:\n\n- Default view shows Open issues only (todo/in-progress/done); idea and closed excluded. PASS\n- Idea / Closed / Todo filters write correct ?status= values. PASS\n- Status, search (debounced), and assignee controls sync to URL params. PASS\n- Bookmark/deep-link loading applies expected filters. PASS\n- Clearing filters strips params and returns to default Open state. PASS\n\nQuality: typecheck + vite build PASS; full E2E suite 170 passed / 4 failed (the 4 failures are pre-existing stale phase4 BUG-2 tests asserting .toBe(500) — unrelated to this feature, flagged for webapp-developer).\n\nFollow-up items raised by the validator (tracked separately, NOT blockers for this feature):\n- mqgxk7rj2a (idea): Status filter dropdown shows raw values instead of human-readable labels. Cosmetic.\n- Stale phase4 sync tests need updating now that BUG-2 appears fixed.\n\nFeature meets acceptance criteria. Marking validation done."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:48:23.114Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:35:45.437Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:35:45.540Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

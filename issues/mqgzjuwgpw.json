@@ -1,0 +1,38 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:38:42.018Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:38:42.018Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Apply waitForResponse fix to sibling parent-selector test",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T18:38:53.450Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqgzjnns95"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:00:59.317Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgzjnns95",
+      "reason": "Blocker issue mqgzjnns95 transitioned to done"
+    }
+  }
+]

@@ -80,5 +80,22 @@
       "status": "done",
       "assignee": "library-developer"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:57:39.454Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgvxwqo2l",
+      "content": "Feature delivered. No parent/children. Closing."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:39.493Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

@@ -1,0 +1,29 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:38:47.149Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:38:47.149Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate sibling parent-selector test fix",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqgw46luxr",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T18:38:53.493Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqgzjuwgpw"
+    }
+  }
+]

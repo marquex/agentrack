@@ -1,0 +1,66 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T15:34:09.999Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T15:34:09.999Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Reproduce: dashboard renders child issues at top level",
+      "description": "Reproduce the bug in the webapp dashboard.\n\nSteps to reproduce:\n1. Start the webapp (frontend + server) against this repo's .agentrack/.\n2. Open the Issues dashboard page.\n3. Observe that issues which have a parent (e.g. phase tasks under a feature) appear BOTH at the top level of the list AND nested under their parent when the parent is expanded.\n\nExpected (per the bug): the top-level list should contain ONLY root issues (parentId === null). Children must appear ONLY when their parent's collapsible is expanded (lazy-loaded via parentId).\n\nConfirm via the API too: `GET /api/issues` (no parentId) returns all issues, while `GET /api/issues?parentId=null` returns only roots. Document findings in a comment: the concrete reproduction, the curl/API evidence, and confirm the backend already supports parentId filtering (so no backend/library work is required). Do not fix anything.",
+      "status": "todo",
+      "priority": 1,
+      "assignee": "webapp-validator",
+      "parentId": "mqgsy9a1xm",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T15:56:58.617Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:04:38.853Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgu1qrrpi",
+      "content": "Reproduced and confirmed. The dashboard's top-level list shows child issues alongside roots, and the same children appear a second time (nested) once their parent is expanded.\n\n## What I verified\n\n**1. Backend already supports parentId filtering (no backend/library work needed).**\n- `GET /api/issues` (no `parentId` query) calls `tracker.list({})` and returns ALL issues.\n- `GET /api/issues?parentId=null` calls `tracker.list({ parentId: null })` and returns ONLY roots.\n- Code path: `packages/webapp/server/routes/issues.ts` lines 11, 18-20 (query parsing) and `packages/library/src/core/tracker.ts` ~line 447 (`if (params?.parentId !== undefined)`). Both work correctly.\n\n**2. Concrete reproduction against this repo's `.agentrack/` (65 issues total):**\n- `agt list`                     -> 65 issues returned (14 roots + 51 children)\n- `agt list --parentId null`     -> 14 issues returned (roots only)\n- So 51 child issues are currently rendered at the top level of the dashboard.\n- Worked example: this very issue `mqgsyjo9c7` (parentId=`mqgsy9a1xm`) appears as a top-level row; its parent `mqgsy9a1xm` is also a top-level row, so once the parent is expanded the child shows twice.\n\n**3. Root cause is in the frontend.**\n- `packages/webapp/frontend/src/pages/IssuesPage.tsx:9` initializes `filters` as `{}` (no `parentId`).\n- That flows to `IssueList` -> `useIssues({})` -> `GET /api/issues` (no filter) -> all 65 issues.\n- `packages/webapp/frontend/src/components/issues/IssueTree.tsx:15-17` renders every received issue at depth 0 (top level), so the 51 children show at the top.\n- On expand, `IssueTree.tsx:30-32` lazy-fetches `{ parentId: issue.id }` and nests them -> the same children are shown a second time under the parent. This is the 'both at top level AND nested' symptom from the bug report.\n\n## Fix hint (for mqgsyy3wjl)\nDefault the top-level fetch to roots only — e.g. initialize `filters` in `IssuesPage.tsx` (or the `useIssues` call in `IssueList.tsx`) with `{ parentId: null }`. No backend or library change required.\n\n## Notes for validation\n- Did not modify any code (advisory/verification only).\n- Skipped spinning up the live webapp because the sandbox blocked HTTP/curl against localhost; the reproduction is established equivalently by (a) reading the backend route + library `list()` implementation, which prove the filter semantics, and (b) running `agt list` vs `agt list --parentId null` against the real index, which proves the data delta. A Playwright spec asserting 'top-level rows all have parentId === null' would be a good regression test to add alongside the fix."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:04:38.890Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:47:45.408Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:47:45.444Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

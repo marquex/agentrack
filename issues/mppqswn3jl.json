@@ -118,5 +118,13 @@
       "status": "done",
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:29.814Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

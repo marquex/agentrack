@@ -43,5 +43,73 @@
     "content": {
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:15:28.009Z",
+    "author": "project-manager",
+    "content": {
+      "assignee": "library-releaser"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:15:28.046Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgufn0ghm",
+      "content": "Status-loop: reassigning release from project-manager to library-releaser. Release is a releaser/devops gate, not PM work. Still blocked by validation (mqe274mwm3) until that passes."
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T16:58:29.952Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe274mwm3",
+      "reason": "Blocker issue mqe274mwm3 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:00:14.946Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:15:10.847Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgwkf6ovq",
+      "content": "Blocked on publishing — cannot complete the npm publish step. Two concrete blockers:\n\n**1. No npm registry credentials available.**\n- `npm whoami` → ENEEDAUTH (not logged in)\n- No `~/.npmrc` exists, no `.npmrc` in the repo, and no `NPM_TOKEN` / `NODE_AUTH_TOKEN` env var is set in this environment.\n- The sandbox also explicitly denied the `npm publish` invocation (Permission denied by the Claude Code auto mode classifier).\n- The `agentrack` package does not currently exist on the npm registry (404 on `npm view agentrack`), so this would be the *first* publication — someone with owner rights on the npm name must publish it (or grant publish credentials).\n\n**2. `prepublishOnly` quality gate fails due to pre-existing test failures.**\n- `packages/library/package.json` has `\"prepublishOnly\": \"bun run quality\"`, and `quality` = typecheck + lint + test:coverage.\n- Typecheck and lint are clean, but `test:coverage` exits 1 because of 5–6 **pre-existing** failures unrelated to this release's change (the mentions spec-deviation tests in `tests/core/mentions.test.ts` — extractMentions double-\\@\\@, rebuildMentionsIndex AC9; and the git-worktree E2E tests in `tests/e2e/pull.test.ts` and `tests/e2e/push.test.ts`). The library-validator already confirmed these were failing before the token-override change and are out of scope (see comment mqgvs0pmc2 on mqe274mwm3).\n- Until either those tests are fixed/skipped, or `prepublishOnly` is adjusted to not gate on them, `npm publish` will fail the quality hook even with valid credentials. `npm publish --ignore-scripts` would bypass the hook but that defeats the safety gate and I did not do it.\n\n**Everything else for the release is ready:**\n- ✅ Test suite reviewed (959 pass; the 5 failures are pre-existing and unrelated).\n- ✅ Docs updated — `docs/markdown/javascript-reference.md` (usersRegenerate signature + params table) and `docs/markdown/authentication.md` (library API note for explicit token in open-auth mode).\n- ✅ Build verified — `bun run build` produces complete dist (index.js/cjs, index.d.ts/cts, bin.js), and `UsersRegenerateParams` is correctly exported.\n- ✅ Version bumped 0.1.0 → **0.2.0** (new optional `params.token` surface on `usersRegenerate` = backward-compatible minor bump) in `packages/library/package.json`.\n\n**To unblock, I need from the PM/owner:**\n1. npm publish credentials (or owner-side execution of `npm publish` from packages/library after npm login).\n2. A decision on the pre-existing failing tests (fix them, quarantine them, or relax `prepublishOnly`) so the quality gate passes.\n\nLeaving status as in-progress. Reassigning to project-manager."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:15:23.587Z",
+    "author": "anonymous",
+    "content": {
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:23:29.063Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgwv41c9r",
+      "content": "Status-loop assessment: this release is genuinely blocked on EXTERNAL/owner input, not a tracker-fixable stall — leaving in-progress.\n\nTwo blockers, both outside any agent's ability to self-resolve:\n1. npm publish credentials — no npm auth in this environment (no ~/.npmrc, no NPM_TOKEN, sandbox denies npm publish). The agentrack npm name has never been published; this requires owner-side execution or credentials. Owner action needed.\n2. prepublishOnly quality gate fails on PRE-EXISTING test failures unrelated to this change (mentions spec-deviation unit tests in tests/core/mentions.test.ts; git-worktree pull/push e2e tests). These are tracked under the pre-existing-failures epic mqdzlo4ia8 and the BUG-2 phase4 work (mqgwul2ltn); they must be resolved (fixed, quarantined, or prepublishOnly relaxed) before the quality hook can pass.\n\nEverything release-prep is done (version bumped 0.1.0→0.2.0, docs updated, build verified, dist complete). Reassigning back to library-releaser so they pick up the moment credentials/tests are unblocked. No tracker action can move this forward until the owner addresses #1."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:23:40.671Z",
+    "author": "anonymous",
+    "content": {
+      "assignee": "library-releaser"
+    }
   }
 ]

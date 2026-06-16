@@ -1,0 +1,29 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:31:04.151Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:31:04.151Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Fix transparent/unreadable shadcn-ui styles in webapp (inputs, selects, modals)",
+      "description": "Inputs, select boxes, and modals in the webapp all appear transparent, making their content very difficult to read. The shadcn-ui theme does not appear to be correctly applied — styles are missing or not loaded. Investigate the root cause (missing CSS imports, Tailwind config, shadcn-ui theme variables, global stylesheet) and fix so all components render with proper backgrounds, borders, and text contrast.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "bug"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:31:44.249Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

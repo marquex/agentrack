@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:41:42.567Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:41:42.567Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate Status filter dropdown shows label instead of raw value",
+      "description": "Validate the fix for parent mqgxk7rj2a (Dev task mqgznigv4t).\n\nVerify:\n- The Status filter dropdown trigger renders the human-readable label ('Closed', 'In Progress', 'Todo') for the selected value, not the raw value ('closed', 'in-progress', 'todo').\n- Extend the URL-driven filtering E2E to assert the trigger text for /?status=closed is 'Closed', not 'closed'.\n- Filtering behavior is unchanged (cosmetic-only fix).\n\nReproduce-then-verify: the original reproduction (trigger shows 'closed' for /?status=closed) is documented in review mqgxnab1q9; confirm the fix resolves it.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T18:41:48.804Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqgznigv4t"
+    }
+  }
+]

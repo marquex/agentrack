@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T16:41:24.145Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:41:24.145Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Review idea: bunx playwright test loader failure (standardize E2E runner invocation)",
+      "description": "Triage review of idea mqe32t3er6. webapp-validator observed that 'bunx playwright test' fails to load test files (ESM bun-protocol loader error) after a lockfile re-save, while 'npx playwright test' passes 152/152. Question for decision: do we standardize the e2e runner on npx, investigate/fix the bunx resolution, or just document the bunx caveat? This is a tooling/test-hygiene concern, distinct from test-logic work in mqdzlo4ia8 / mqe1drwrck.",
+      "status": "todo",
+      "assignee": "cto",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:42:32.205Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:44:40.498Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgvh7i02m",
+      "content": "## Decision: ACCEPT (standardize on `npx playwright test` + document the bunx caveat) — discard the deep-investigation option\n\n### Verdict\nCombine option (a) standardize the e2e runner on `npx` and option (c) document the bunx caveat. **Do NOT** pursue option (b) investigating/fixing bunx module resolution.\n\n### Evidence gathered\n1. **Not currently reproducible.** `bunx playwright test --list` from a fresh shell loads all 162 tests cleanly (exit 0, no `bun:` protocol ESM-loader error). Matches the reporter's own description: intermittent, surfaced only after ~30 repeated invocations and a `Saved lockfile` re-save event. There is no deterministic repro to bisect.\n2. **Docs already contradict each other.** webapp-developer expertise (`webapp-overview`, `recipe-validate-webapp-phase`, `webapp-e2e-validation`) documents `bunx playwright test` as THE command. But webapp-validator's gotchas file already describes `npx playwright test` as the command actually used (and documents the lingering-server port collision after it). The team has already drifted to npx in practice.\n3. **No package.json script.** `packages/webapp/package.json` has no `test`/`e2e` entry — the invocation lives only in expertise docs, so standardizing is a docs-only change with no build/test wiring to touch.\n4. **Playwright is an npm devDependency** (`@playwright/test ^1.60.0`); `npx playwright` is the canonical, supported runner and sidesteps bun's experimental ESM loader entirely.\n\n### Why discard option (b)\nA bunx-loader investigation is low ROI: the failure is non-reproducible, occurs under a rare hard-to-trigger condition, and the root cause most likely lives in bun's `bun:` protocol loader — not in our code. Time is better spent removing the footgun from a documented command that has demonstrably failed and aligning docs with what the team already runs.\n\n### Suggested implementation scope (for the gate tracker → implementation child)\n- Update webapp-developer expertise files to use `cd packages/webapp && npx playwright test` consistently (webapp-overview.expertise.md, recipe-validate-webapp-phase.md, webapp-e2e-validation.expertise.md).\n- Add a gotcha to webapp-validator/webapp-validator-gotchas.md and webapp-developer/webapp-overview.expertise.md: \"`bunx playwright test` can intermittently fail to load test files (`Only URLs with ... protocol bun:` / `Playwright Test did not expect test.describe`) after repeated invocations or a lockfile re-save; use `npx playwright test` for deterministic runs.\"\n- Optionally add a root-level `test:e2e` script in `packages/webapp/package.json` (`npx playwright test`) so the canonical command is discoverable.\n\nThis is distinct from the test-logic work in mqdzlo4ia8 / mqe1drwrck — no test or source code changes, tooling/docs only.\n\nGate tracker (mqgvczw3qe): decision is **accept** — proceed to create the implementation child as scoped above."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:44:45.191Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "name": "cto",
+      "name": "library-architect",
       "token": "tk_22jil4mu",
       "registeredAt": "2026-05-13T06:39:50.045Z"
     },
@@ -44,6 +44,21 @@
       "name": "project-manager",
       "token": "tk_acdfd28b",
       "registeredAt": "2026-06-04T00:00:00.000Z"
+    },
+    {
+      "name": "revoke-cancel-1781636597637-5e3bab",
+      "token": "tk_5zaqgc6a",
+      "registeredAt": "2026-06-16T19:03:17.638Z"
+    },
+    {
+      "name": "regen-btn-1781636598141-u1w5cp",
+      "token": "tk_2lf9zl6r",
+      "registeredAt": "2026-06-16T19:03:18.142Z"
+    },
+    {
+      "name": "regen-api-1781636598345-632ulq",
+      "token": "tk_p3hyc9l0",
+      "registeredAt": "2026-06-16T19:03:18.346Z"
     }
   ]
 }

@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:23:05.223Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:23:05.223Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Flip phase4 push/pull e2e assertions to success + run suite (BUG-2)",
+      "description": "The BUG-2 library fix (pushWorktree/pullWorktree project-root resolution) landed in mqe2xmq47c, but the phase4 e2e suite still asserts the OLD failing behavior. This is the webapp-domain portion that the library-developer could not touch.\n\nScope:\n1. In packages/webapp/e2e/phase4-validation.spec.ts, flip the push/pull assertions from status 500 / BUG-2 failure to SUCCESS (200, synced:true / updated). Approx lines 222-242 and 626-657 (confirm exact locations).\n2. Run the full phase4 e2e suite against the fixed library in the e2e config: AGENTRACK_CWD=validation/.e2edata, custom branch _e2edata, custom dir .e2edata. All push/pull tests must pass.\n3. Report results. Do NOT fix library code (already fixed) — only the webapp e2e assertions.\n\nContext: library-validator (mqe2xmdugp) verified the library-level fix; this unblocks end-to-end validation and the BUG-2 release.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqe162svv5",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:30:02.612Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T18:35:14.374Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgzfebqwl",
+      "content": "Done. Flipped the phase4 sync push/pull e2e assertions from the BUG-2 failure behavior (500 / NOT_INITIALIZED) to the now-correct success behavior.\n\n## What changed\nIn `packages/webapp/e2e/phase4-validation.spec.ts` (5 test blocks touched):\n- **Backend push** (`POST /api/sync/push`): now asserts status 200 and `body.synced === true`.\n- **Backend pull** (`POST /api/sync/pull`): now asserts status 200 and that `body.updated` is a boolean.\n- **Frontend Push button**: now asserts the API call resolves 200 with `synced: true`.\n- **Frontend Pull button**: now asserts 200 with a boolean `updated`.\n- **Frontend \"buttons re-enable\"**: renamed from \"after failed sync\" to \"after successful sync\".\n- Updated the file's BUG-2 doc comment to mark it as FIXED.\n\n## Note on the pull assertion\nOn the first run, pull returned `updated: false` (not `true`). This is correct, not a regression: `updated` indicates whether the remote had new commits to merge, and the e2e worktree is already up-to-date with the remote, so a successful pull legitimately reports `updated: false`. The push always reports `synced: true` on success. I deliberately did NOT force the library to return `updated: true` — that would be wrong semantics and out of scope (no library changes were made).\n\n## Verification\n- `npx playwright test e2e/phase4-validation.spec.ts` → 38/38 passed.\n- Full serial suite `npx playwright test` → 174/174 passed, no regressions, no Phase 1-3 gaps surfaced.\n\n## Tooling note\nThere is no `tsc` or eslint config in the webapp package itself (TypeScript is not a direct dependency; e2e specs are type-checked by Playwright's runtime). The webapp's verification is the e2e run, which is fully green.\n\nNo library code was touched, per scope."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:35:17.431Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  }
+]

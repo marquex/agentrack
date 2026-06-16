@@ -26,5 +26,22 @@
     "content": {
       "blockerId": "mqe2xmdugp"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T19:00:38.040Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe2xmdugp",
+      "reason": "Blocker issue mqe2xmdugp transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:02:13.489Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "in-progress"
+    }
   }
 ]

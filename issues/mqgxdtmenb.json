@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:38:02.097Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:38:02.097Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Plan: agt events namespace (list/add) + custom event type design",
+      "description": "Design the new `agt events` CLI namespace and the library API backing it. Scope: (1) New CLI namespace replacing `agt history <issueId>` with `agt events list <issueId>`; add `--type <event-type>` filter flag. (2) New `agt events add <issueId> <event-json>` command accepting a JSON object with `type` and `content` (content is an arbitrary JSON object); agentrack auto-attaches `timestamp` and `author`. (3) Define the set of agentrack default/reserved event types and the validation rule that custom event `type` MUST NOT collide with them. (4) Tracker API methods (e.g. eventsList / eventsAdd) and resulting type changes. (6) Migration/deprecation note for the removed `agt history` command. Produce a spec for the library-developer.",
+      "status": "todo",
+      "assignee": "library-architect",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T19:03:00.774Z",
+    "author": "library-architect",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

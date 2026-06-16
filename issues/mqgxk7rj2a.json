@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:43:00.357Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:43:00.357Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Status filter dropdown shows raw status values instead of labels",
+      "description": "Cosmetic UI defect found while validating URL-driven dashboard filtering (mqguhe7eyw).\n\nThe Status filter dropdown trigger (components/issues/IssueFilters.tsx) renders the RAW status value (e.g. 'closed', 'in-progress', 'todo') instead of the human-readable label ('Closed', 'In Progress', 'Todo'). The option labels are correctly defined in STATUS_OPTIONS but the trigger does not map the selected value back to its label.\n\nRoot cause: the Select uses @base-ui/react Select.Value without a children render function, so it displays the raw value. Confirmed via E2E: the trigger text for /?status=closed is 'closed' not 'Closed'.\n\nSuggested fix: pass a render/matcher to SelectValue that maps the current value to its STATUS_OPTIONS label, or restructure so the trigger shows the label.\n\nImpact: cosmetic only; filtering behavior is correct. Out of scope for the URL-filtering validation task, so reporting separately for triage.",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:45:42.988Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress",
+      "assignee": "project-manager",
+      "tags": [
+        "idea"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:45:54.343Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgxnyngfm",
+      "content": "Triage (ideas loop): Duplicate check passed — no existing issue covers this status-filter-label defect (the related URL-filtering feature mqguh00fd7 is where it was found, not a dupe). Routed to the CTO as the technical lead for decision: this is a clear code defect (labels exist in STATUS_OPTIONS but the Select.Value trigger never maps values→labels), so it's a technical call, not a product/UX tradeoff. Created Review task mqgxnab1q9 (assigned cto) and a gate tracker mqgxnehpqc (task,sync, assigned me) blocked by the review. Idea set to in-progress pending the decision; will plan implementation (likely a small webapp bug: Reproduce→Dev→Validate) if accepted, or discard with idea+discarded tags if not."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:41:22.740Z",
+    "author": "project-manager",
+    "content": {
+      "tags": [
+        "bug"
+      ]
+    }
+  }
+]

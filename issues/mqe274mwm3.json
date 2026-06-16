@@ -43,5 +43,74 @@
     "content": {
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T16:10:06.981Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe2745ekb",
+      "reason": "Blocker issue mqe2745ekb transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:15:18.841Z",
+    "author": "project-manager",
+    "content": {
+      "assignee": "library-validator"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:15:18.877Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgufgnzwe",
+      "content": "Status-loop: reassigning validation from project-manager to library-validator. Validation must be performed by a validator, never the implementer or the PM. Implement (mqe2745ekb) is done; blockage already auto-cleared."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:47:05.334Z",
+    "author": "library-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:53:04.141Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgvs0pmc2",
+      "content": "Validated. The token-override change is correct, backward-compatible, and now has dedicated test coverage.\n\n**Verification performed**\n- `bun run quality` (typecheck + lint + test:coverage): typecheck clean, lint clean. Tests: 959 pass / 5 fail — the 5 failures are pre-existing mentions spec-deviation tests (extractMentions double-@@, rebuildMentionsIndex AC9, mentionsRead/mentionsUnread TOKEN_REQUIRED in open mode); I confirmed they are unrelated to this change and were already failing before it.\n- Reviewed the implementation in `src/core/tracker.ts:1890-1939`: `usersRegenerate(name, params?)` forwards `params.token` into `resolveAuthor` only when provided, leaving the env-var fallback intact. New `UsersRegenerateParams` interface is properly exported from `src/types/api.ts`, `src/types/index.ts`, and `src/index.ts`. JSDoc is clear.\n- Confirmed the BUG-1 scenario is fixed: in open-auth mode with no `AGT_USER_TOKEN`, a registered user can now prove identity via the explicit `{ token }` argument, where previously the call authenticated as \"anonymous\" and the self-service check rejected with INVALID_TOKEN.\n\n**Test coverage added** (`tests/core/tracker/tracker-users.test.ts`, new `usersRegenerate token override` describe block, 5 tests, all green):\n1. Succeeds with explicit token in open mode (no env var) — direct BUG-1 repro.\n2. Explicit token takes precedence over a conflicting `AGT_USER_TOKEN` env var.\n3. Rejects with INVALID_TOKEN when the explicit token belongs to a different user than the target.\n4. Throws INVALID_TOKEN when the explicit token matches no user.\n5. Omitting params preserves the pre-existing backward-compatible behavior.\n\n**Out of scope (flagged for PM, not blocking):**\n- The CLI `agt users regenerate <name>` command does not expose a `--token` flag, so the override is only reachable programmatically (which is what the webapp needs). If CLI forwarding is desired later, that would be a separate task.\n- Webapp-developer should verify their Phase 4 e2e assertion about the BUG-1 401 behavior now that the library forwards tokens."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:53:08.842Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:58:26.009Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgvywgefr",
+      "content": "Validation complete — confirmed via library-validator's audit above. The token-override change is verified correct and backward-compatible, BUG-1 is fixed (explicit token forwarding in open-auth mode), and 5 new dedicated tests are green. The 5 failing tests are pre-existing mentions spec-deviations unrelated to this change. Out-of-scope items noted: (1) CLI `users regenerate` has no `--token` flag — programmatic-only, which is what the webapp needs; (2) webapp-developer should re-check their Phase 4 BUG-1 401 assertion now that tokens forward. Marking this validation done; blockage on Release (mqe27481sa) auto-clears."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:58:29.949Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
   }
 ]

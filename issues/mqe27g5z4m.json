@@ -34,5 +34,14 @@
     "content": {
       "blockerId": "mqe27481sa"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T17:07:54.847Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe27g2g7o",
+      "reason": "Blocker issue mqe27g2g7o transitioned to done"
+    }
   }
 ]

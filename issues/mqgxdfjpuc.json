@@ -1,0 +1,29 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:37:43.017Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:37:43.017Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Events namespace: replace agt history with agt events list/add + type filtering",
+      "description": "Replace the current `agt history <issue-id>` command with a new `agt events` namespace that: (1) `agt events list <issue-id>` returns raw events (replacing `history`); (2) `agt events list <issue-id> --type <event-type>` filters events by type; (3) `agt events add <issue-id> <event>` stores a custom event from a JSON object with a `type` (must not collide with agentrack default types) and a `content` JSON object, with agentrack auto-adding `timestamp` and `author`. Covers library core (events, tracker API), types, and CLI command wiring.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "feature"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:38:02.361Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  }
+]

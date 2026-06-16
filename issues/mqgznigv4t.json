@@ -1,0 +1,22 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T18:41:33.661Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:41:33.661Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Fix Status filter dropdown trigger to show label instead of raw value",
+      "description": "Cosmetic UI bug (parent mqgxk7rj2a). Root cause already confirmed in review mqgxnab1q9.\n\nIn packages/webapp/frontend/src/components/issues/IssueFilters.tsx, the Status filter's Select renders <SelectValue /> with no render child, so the trigger displays the RAW status value ('closed', 'in-progress', 'todo') instead of the human-readable label ('Closed', 'In Progress', 'Todo'). STATUS_OPTIONS already defines the correct labels.\n\nFix (from review, ~5 lines): give SelectValue a function-as-child render that maps the current value to its STATUS_OPTIONS label, e.g. build STATUS_LABEL: Record<string,string> from STATUS_OPTIONS and render <SelectValue>{(value) => STATUS_LABEL[value] ?? value}</SelectValue>. Apply the same pattern to the Assignee trigger for consistency (optional, no visible change today).\n\nFiltering behavior is correct and must not change. Add a unit/component assertion that the trigger shows the label for a selected status.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqgxk7rj2a",
+      "tags": [
+        "task"
+      ]
+    }
+  }
+]

@@ -62,5 +62,22 @@
     "content": {
       "status": "done"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:57:38.621Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgvxvkh0p",
+      "content": "Bug fixed and validated. No parent/children. Closing."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:38.659Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

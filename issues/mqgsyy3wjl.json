@@ -1,0 +1,83 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T15:34:30.218Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T15:34:30.218Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Fix: dashboard fetches only root issues and lazy-loads children",
+      "description": "Implement the frontend-only fix so the Issues dashboard shows only root issues and lazy-loads children on expand.\n\nContext (from investigation, already verified):\n- Backend already supports `GET /api/issues?parentId=null` (roots only) and `?parentId=<id>` (children). No backend/library change is needed.\n- The API client (`packages/webapp/frontend/src/api/issues.ts`) already serializes parentId (including null).\n\nRequired changes (all in the webapp frontend):\n\n1. `packages/webapp/frontend/src/components/issues/IssueList.tsx` (and/or `pages/IssuesPage.tsx`): the dashboard list MUST request only root issues by default. Ensure the issues query is issued with `parentId: null` when no explicit parent filter is set by the user, so only top-level issues render in the tree. Do NOT drop the user's other filters (status/assignee/tags/search) — combine them with parentId=null for the top-level query.\n\n2. `packages/webapp/frontend/src/components/issues/IssueTree.tsx` `IssueTreeRow`: currently calls `useIssues(expanded ? { parentId: issue.id } : {})`. When collapsed this fetches the entire issue list on EVERY row. Fix it so a collapsed row does NOT fetch all issues — e.g. keep the query disabled while collapsed (use the query's enabled flag, or query `{ parentId: issue.id }` only and gate with enabled=expanded). Keep the existing correct behavior when expanded (lazy-load children by parentId).\n\nAcceptance criteria:\n- Dashboard initially shows only root issues (no parent).\n- Expanding a parent lazily loads ONLY its direct children via parentId.\n- Collapsed rows do not trigger an all-issues fetch.\n- Existing filters (status, assignee, tags, search) continue to work on the top-level list.\n- Children are no longer duplicated at the top level.\n\nAdd a comment summarizing the changes and any decisions.",
+      "status": "todo",
+      "priority": 1,
+      "assignee": "webapp-developer",
+      "parentId": "mqgsy9a1xm",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T15:34:46.578Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqgsyjo9c7"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-16T16:04:38.892Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgsyjo9c7",
+      "reason": "Blocker issue mqgsyjo9c7 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:08:38.998Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:13:07.658Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqgucmw5mr",
+      "content": "Done. Implemented the frontend-only fix so the dashboard shows only root issues and lazy-loads children on expand.\n\nChanges (all in packages/webapp/frontend/src):\n1. hooks/use-issues.ts — added an optional `options.enabled` flag to `useIssues` so callers can gate the query (defaults to true; preserves existing call sites in SubIssuesSection, ParentSelector, BlockagesSection).\n2. components/issues/IssueList.tsx — the dashboard list now merges the user's filters with `parentId: null`, so only top-level issues render. Existing status/assignee/tags/search filters are preserved and combined with the root-only filter.\n3. components/issues/IssueTree.tsx (IssueTreeRow) — children are always queried via `{ parentId: issue.id }` but the query is now gated with `enabled: expanded`. Previously a collapsed row passed `{}` which fetched the entire issue list on every row; that no longer happens.\n\nDecisions:\n- Kept the chevron visible on all rows (out of scope to hide it for childless issues — would require a hasChildren signal from the backend, which we don't have without fetching). The issue scope was the fetch behavior, which is fully addressed.\n- No backend/library changes needed — the API client already serialized parentId (including null).\n\nVerification:\n- tsc --noEmit: clean\n- Frontend production build (tsc -b + vite build): success\n- Full Playwright e2e suite: 152/152 passing (Phase 1 covers the issues list)\n\nAcceptance criteria met: dashboard initially shows only roots; expanding lazy-loads direct children via parentId; collapsed rows do not trigger all-issues fetch; existing filters continue to work on the top-level list; children are no longer duplicated at the top level."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:13:14.617Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:47:45.408Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:47:45.482Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

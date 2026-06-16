@@ -61,5 +61,22 @@
       "status": "done",
       "assignee": "cto"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:28.993Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:29.153Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

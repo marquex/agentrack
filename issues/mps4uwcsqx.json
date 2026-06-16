@@ -155,5 +155,22 @@
       "status": "done",
       "assignee": "cto"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:57:39.837Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgvxwoic3",
+      "content": "Validation complete. No parent/children. Closing."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:39.876Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

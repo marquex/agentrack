@@ -111,5 +111,13 @@
       "status": "done",
       "assignee": "cto"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:57:29.904Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

@@ -1,0 +1,64 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T16:55:48.995Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:55:48.995Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Standardize webapp E2E runner docs on npx playwright test + document bunx caveat",
+      "description": "Implement the ACCEPTED CTO decision (review task mqgvczj5ua, comment mqgvh7i02m) for idea mqe32t3er6. Docs/tooling-only — NO test or source-code logic changes. Scope:\n\n1. Update webapp-developer expertise files to use `cd packages/webapp && npx playwright test` consistently instead of `bunx playwright test`:\n   - .agentic/expertise/webapp-developer/webapp-overview.expertise.md\n   - .agentic/expertise/webapp-developer/recipe-validate-webapp-phase.md\n   - .agentic/expertise/webapp-developer/webapp-e2e-validation.expertise.md\n2. Add a gotcha to BOTH .agentic/expertise/webapp-validator/webapp-validator-gotchas.md AND .agentic/expertise/webapp-developer/webapp-overview.expertise.md: \"`bunx playwright test` can intermittently fail to load test files (`Only URLs with ... protocol bun:` / `Playwright Test did not expect test.describe`) after repeated invocations or a lockfile re-save; use `npx playwright test` for deterministic runs.\"\n3. (Optional) Add a `test:e2e` script (`npx playwright test`) to packages/webapp/package.json so the canonical command is discoverable.\n\nPlaywright is an npm devDependency (@playwright/test ^1.60.0); npx is the canonical runner and sidesteps bun's experimental ESM loader. Distinct from test-logic work in mqdzlo4ia8 / mqe1drwrck. Comment progress/decisions (esp. whether you add the package.json script).",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:45:22.815Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T17:47:52.807Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgxqh1bc8",
+      "content": "## Progress: in-domain scope complete; one cross-domain file blocked\n\n### Done (webapp-developer domain)\n\n**1. Expertise files standardized on `npx playwright test`:**\n- `webapp-overview.expertise.md` — Commands section now uses `npx playwright test` (with `npm run test:e2e` alias).\n- `webapp-e2e-validation.expertise.md` — all three command blocks (single phase / several / full suite) switched to `npx`. Added a load-bearing **'Runner invocation'** paragraph at the top of the Mental Model explaining: always use `npx`, never `bunx`; full symptom list (`protocol bun:` loader error, `Playwright Test did not expect test.describe`, `No tests found`, exit 0 with zero tests run); root cause in Bun's experimental `bun:` ESM loader; non-deterministic repro; webapp server still on Bun, only the runner moves to `npx`. Timeline entry bumped (2026-06-16).\n- `recipe-validate-webapp-phase.md` — all three command blocks (run-phase, regression-check, baseline-compare) switched to `npx`.\n\n**2. Gotcha added to `webapp-overview.expertise.md`** with the exact CTO-decision wording (`bunx playwright test` intermittently fails to load test files after repeated invocations or lockfile re-save → use `npx playwright test`).\n\n**3. `test:e2e` script added to `packages/webapp/package.json`:** `\"test:e2e\": \"npx playwright test\"` — so the canonical runner is now discoverable via `npm run test:e2e`. Verified: `npm run test:e2e -- --list` enumerates all 174 tests across 6 spec files cleanly.\n\n### Verification\n- Frontend build (`bun run build` → `tsc -b` + Vite): clean. ✓\n- No lint script exists project-wide (documented gap); `tsc -b` in the build is the de facto typecheck — passed.\n- I did **not** re-run the full e2e suite: this change is docs-only + a one-line `scripts` addition that does not touch test/source code. `npx playwright test --list` confirms the runner loads the suite correctly under npx.\n\n### Blocked — outside my access domain\n\nThe task description also requires adding the same gotcha to `.agentic/expertise/webapp-validator/webapp-validator-gotchas.md`. That path is **outside the webapp-developer access domain** — I get `ACCESS_DENIED` reading it, so I cannot edit it. The webapp-validator owns that folder.\n\nTwo options for unblocking:\n- (a) Reassign this issue to `webapp-validator` (or whoever owns the validator expertise files) to add the gotcha, OR\n- (b) Grant webapp-developer read/write access to `.agentic/expertise/webapp-validator/` so I can finish it.\n\n### Adjacent observation (not in scope)\n`.agentic/expertise/webapp-validator/webapp-overview.expertise.md` still contains a `bunx playwright` reference (separate from the gotchas file). Same access restriction applies — flagging so the manager can route a sweep of the validator domain in the same pass.\n\nReassigning to project-manager to route the cross-domain file edit. Status stays in-progress."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:47:57.267Z",
+    "author": "anonymous",
+    "content": {
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T18:35:45.740Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgzg2tim3",
+      "content": "Status-loop routing fix: the in-domain scope (3 webapp-developer expertise files + package.json script) is complete, but the remaining file — .agentic/expertise/webapp-validator/webapp-validator-gotchas.md — is in the webapp-validator's domain and webapp-developer hit ACCESS_DENIED on it. Reassigning to webapp-validator to finish that one file (and sweep the adjacent bunx reference in the validator's own overview file noted in the prior comment). No structural change — same task, routed to the agent who owns the blocked folder."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:35:45.774Z",
+    "author": "anonymous",
+    "content": {
+      "assignee": "webapp-validator"
+    }
+  }
+]

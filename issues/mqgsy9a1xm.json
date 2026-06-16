@@ -1,0 +1,56 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T15:33:57.701Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T15:33:57.701Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Bug: Webapp dashboard lists child issues at top level instead of only roots",
+      "description": "The webapp dashboard (Issues page) displays ALL issues in the top-level list, including children that already appear nested under their parent's collapsible. This results in children being shown twice (once nested, once at top level) and defeats the purpose of the tree navigation.\n\nDesired behavior: the dashboard should show ONLY root issues (no parent), and users navigate deeper by opening a parent's collapsible, which lazy-loads that parent's children.\n\nInvestigation findings (PM):\n- CLI/library: `agt list --parentId null` and `agt list --parentId <id>` ALREADY work correctly. No library change needed.\n- Webapp backend (`packages/webapp/server/routes/issues.ts`): the `parentId` query param is ALREADY supported and maps the string 'null' to null. No backend change needed.\n- Webapp frontend API client (`packages/webapp/frontend/src/api/issues.ts`): already serializes parentId (including null) into the query string. No API-client change needed.\n\nThe bug is entirely in the frontend components:\n1. `packages/webapp/frontend/src/pages/IssuesPage.tsx` initializes filters to `{}` and `components/issues/IssueList.tsx` calls `useIssues(filters)` WITHOUT `parentId: null`, so the backend returns all issues and they all render at the top level.\n2. `components/issues/IssueTree.tsx` `IssueTreeRow` calls `useIssues(expanded ? { parentId: issue.id } : {})` — when collapsed it fetches the entire issue list on every row (wasteful). The children lazy-loading mechanism itself is already correct.\n\nFix scope (frontend only):\n- Make the dashboard request only root issues by default (`parentId: null`) so only top-level issues render.\n- Ensure collapsed tree rows do not fetch the entire issue list (e.g., disable the query when not expanded). Children should load lazily only when a parent is expanded, which the existing code already does when expanded.",
+      "status": "todo",
+      "priority": 1,
+      "assignee": "project-manager",
+      "tags": [
+        "bug"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T15:35:11.513Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T15:35:11.555Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgszu9c26",
+      "content": "Planned as a frontend-only bug after a stack-wide investigation.\n\nInvestigation summary:\n- CLI/library: `--parentId null` and `--parentId <id>` already work — no library task.\n- Webapp backend (`server/routes/issues.ts`): parentId query param already supported (incl. 'null'->null) — no backend task.\n- Webapp frontend API client (`api/issues.ts`): already serializes parentId — no API-client task.\n\nThe only gap is in the frontend components (`IssuesPage`/`IssueList` default to {} so all issues render at top level; `IssueTreeRow` fetches all issues while collapsed). Phases: Reproduce (webapp-validator) -> Dev (webapp-developer) -> Validate (webapp-validator). No release phase (frontend bug). Priority 1 per request."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:47:45.407Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:48:06.816Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqgvlm5bc8",
+      "content": "Status loop: all phase tasks (Reproduce, Fix, Validate) are done. Closing top-level deliverable and descendants — work fully delivered."
+    }
+  }
+]

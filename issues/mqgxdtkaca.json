@@ -1,0 +1,30 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-16T17:38:02.174Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T17:38:02.174Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Validate: agt events list/add + type filtering and custom events",
+      "description": "Validate the implemented `agt events` namespace against the spec: list replaces history, --type filter works, events add stores custom events with auto timestamp/author, reserved-type collision is rejected, and the old history command behaves per deprecation spec. Run the library test suite and exercise the commands from the validation directory.",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mqgxdfjpuc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-16T17:38:02.291Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqgxdt9me7"
+    }
+  }
+]

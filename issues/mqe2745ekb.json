@@ -60,5 +60,31 @@
     "content": {
       "assignee": "library-developer"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T15:55:46.975Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:10:00.196Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgu8m8qfj",
+      "content": "Done. Implemented the agreed backward-compatible token override for `usersRegenerate`.\n\n**What changed (library API):**\n- `Tracker.usersRegenerate(name, params?)` now accepts an optional `{ token?: string }` argument and forwards it into `resolveAuthor({ token })` (which already supported the option). This is the root-cause fix for BUG-1: in open-auth mode a registered user can now pass their token explicitly to prove identity, instead of the call silently authenticating as the default \"anonymous\" user and failing the self-service check with `INVALID_TOKEN`.\n- Existing callers are unaffected — the new param is optional and the env-var fallback (`AGT_USER_TOKEN`) still works as before.\n\n**Files touched (packages/library):**\n- `src/core/tracker.ts` — new optional param + JSDoc + conditional token forwarding.\n- `src/types/api.ts` — added exported `UsersRegenerateParams` interface.\n- `src/types/index.ts` and `src/index.ts` — re-exported the new type so it's part of the public API.\n\n**Quality gates:**\n- `bun run typecheck` — clean.\n- `bun run lint` — clean.\n- `bun run test` — 954 pass / 5 fail. I verified (by stashing my changes and re-running) that the 5 failures are **pre-existing** and unrelated to this change — they live in the mentions suite (`extractMentions`/`rebuildMentionsIndex`/`mentionsRead`/`mentionsUnread` spec-deviation tests). All user/regenerate tests (22 in `tracker-users.test.ts` + `e2e/users.test.ts`) pass.\n\n**Note on tests:** Per my role I do not author tests; the new `{ token }` override path needs unit/integration coverage — recommend assigning that to the test agent. Also worth flagging for the webapp-developer: the webapp Phase 4 e2e suite reportedly asserts the BUG-1 401 behavior of `usersRegenerate`; now that the library forwards the token that assertion may need updating once the webapp/CLI is wired to pass the token through."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:10:06.979Z",
+    "author": "library-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
   }
 ]

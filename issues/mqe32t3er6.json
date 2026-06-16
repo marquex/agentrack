@@ -13,5 +13,33 @@
       "description": "During validation of the backend isolation fix (mqe074zvth), I observed that 'bunx playwright test' became unable to load test files after a lockfile re-save event. Symptoms: repeated 'Error: Only URLs with a scheme in file, data, and node are supported by the default ESM loader. Received protocol bun:' messages on stderr, followed by 'Error: Playwright Test did not expect test.describe to be called here' and 'Error: No tests found'. The suite exited with code 0 despite finding no tests.\n\nSwitching to 'npx playwright test' resolved it immediately and produced 152/152 passing. Both webServers (bun run dev:server and cd frontend and bun run dev) start fine when invoked manually, so the issue is specific to how bunx resolves the playwright test loader after a lockfile re-save.\n\nThis is NOT related to the isolation fix (which is validated and working). It is a bun tooling or module-resolution concern. Filing as an idea because: (a) the team's documented run command is bunx playwright test, (b) if this is reproducible it undermines the determinism guarantee of the isolation fix, (c) it may be worth standardizing the e2e runner invocation (npx vs bunx) or adding a note to the README.\n\nReproduction context: observed after roughly 30 bunx playwright invocations during validation. A 'Saved lockfile' message preceded the failure. bun install reports no changes, so the lockfile content is stable — the re-save itself seems to perturb bunx's resolution.",
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:41:34.687Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-16T16:41:34.723Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqgvd8qi1k",
+      "content": "Ideas-loop triage: NOT a duplicate (related e2e work mqdzlo4ia8 / mqe1drwrck covers test logic, but this is a distinct bun tooling / module-resolution concern). Creator is webapp-validator (not a manager) so no auto-accept. Routed to cto as the technical decider via review task mqgvczj5ua; gate tracker mqgvczw3qe will wake me to act on the decision. Set to in-progress + assigned to PM so the work loop won't re-triage it."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T16:55:46.051Z",
+    "author": "project-manager",
+    "content": {
+      "tags": [
+        "chore"
+      ]
+    }
   }
 ]

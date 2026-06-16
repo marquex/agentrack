@@ -44,5 +44,22 @@
     "content": {
       "status": "done"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:00.612Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-16T18:32:23.838Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
   }
 ]
