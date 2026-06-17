@@ -16,9 +16,7 @@
  * 5. No regressions in the issue tree (expand/collapse, navigation).
  */
 import { test, expect } from "@playwright/test";
-import { cleanupE2ESeeds } from "./setup.js";
-
-const BASE = "http://localhost:5001";
+import { cleanupE2ESeeds, E2E_BACKEND_URL as BASE } from "./setup.js";
 
 // Self-healing: remove every e2e-seed issue created by this spec so leftover
 // data never accumulates in the shared isolated worktree.

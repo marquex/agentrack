@@ -8,8 +8,7 @@
  * 4. Vite proxy successfully hits /api/health
  */
 import { test, expect } from "@playwright/test";
-
-const BASE = "http://localhost:5001";
+import { E2E_BACKEND_URL as BASE } from "./setup.js";
 
 test.describe("Phase 1 Validation", () => {
   test.describe("Backend: Health Endpoint", () => {

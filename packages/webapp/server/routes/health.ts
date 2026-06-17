@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { tracker, cwd } from "../utils/tracker.js";
+import { tracker } from "../utils/tracker.js";
 import type { HealthResponse } from "../types.js";
 
 const health = new Hono();
@@ -18,9 +18,6 @@ health.get("/", (c) => {
   return c.json<HealthResponse>({
     status: "ok",
     tracker: trackerStatus,
-    // Echo the resolved cwd so test harnesses can verify data isolation
-    // (the backend must point at validation/.e2edata/, never real .agentrack/).
-    cwd,
   });
 });
 

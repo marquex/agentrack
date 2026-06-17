@@ -32,7 +32,7 @@ Phase 5: Polish          (responsive, empty states, error handling)
      - `dev:frontend` -- runs Vite dev server
      - `dev` -- runs both concurrently
      - `build` -- builds frontend + starts server
-   - Configure Vite proxy for `/api` -> `http://localhost:3000`
+   - Configure Vite proxy for `/api` -> `http://localhost:3001`
 
 2. **Health check endpoint**
    - `GET /api/health` that checks if agentrack is initialized

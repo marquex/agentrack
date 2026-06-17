@@ -721,7 +721,7 @@ app.route("/api/health", healthRoute);
 // Serve frontend static files (production)
 app.use("/*", serveStatic({ root: "./frontend/dist" }));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 console.log(`Server running on http://localhost:${port}`);
 export default { port, fetch: app.fetch };
 ```
@@ -759,20 +759,24 @@ function handleAgentrackError(error: AgentrackError, c: Context) {
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | `3000` | Server port |
+| `PORT` | `3001` | Server port |
 | `AGENTACK_CWD` | `process.cwd()` | Repository root (overrides tracker cwd) |
 | `AGENTACK_AUTHOR` | `"anonymous"` | Default author for operations without explicit author |
 
 ### 4.6 Dev server setup
 
-During development, the Vite dev server runs on port 5173 and proxies `/api` requests to the Hono server on port 3000:
+During development, the Vite dev server runs on port 3000 and proxies `/api` requests to the Hono server on port 3001:
 
 ```typescript
 // frontend/vite.config.ts
+const apiPort = process.env.API_PORT || "3001";
+const port = process.env.VITE_PORT ? Number(process.env.VITE_PORT) : 3000;
+
 export default defineConfig({
   server: {
+    port,
     proxy: {
-      "/api": "http://localhost:3000",
+      "/api": `http://localhost:${apiPort}`,
     },
   },
 });

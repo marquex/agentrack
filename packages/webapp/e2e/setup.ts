@@ -125,7 +125,7 @@ export const E2E_SEED_TAG = "e2e-seed";
  * Backend base URL. Playwright always boots the backend on port 5001
  * (see playwright.config.ts) — distinct from the dev port 3001.
  */
-const E2E_BACKEND_URL =
+export const E2E_BACKEND_URL =
   process.env.E2E_BACKEND_URL ?? "http://localhost:5001";
 
 /**
@@ -149,16 +149,19 @@ export async function cleanupE2ESeeds(): Promise<void> {
   if (!listRes.ok) return;
 
   const seeds = (await listRes.json()) as Array<{ id: string }>;
-  await Promise.all(
-    seeds.map(async (seed) => {
-      try {
-        await fetch(`${E2E_BACKEND_URL}/api/issues/${seed.id}`, {
-          method: "DELETE",
-        });
-      } catch {
-        // Swallow: the global-setup reset is the authoritative wipe; this
-        // helper is best-effort defense-in-depth.
-      }
-    }),
-  );
+  // Delete sequentially. The agentrack backend performs unlocked
+  // read-modify-write on the file store, so issuing the DELETEs concurrently
+  // (e.g. via Promise.all) can race and silently drop some deletes. The
+  // global-setup reset remains the authoritative wipe; this loop is
+  // best-effort defense-in-depth and still tolerates already-deleted ids.
+  for (const seed of seeds) {
+    try {
+      await fetch(`${E2E_BACKEND_URL}/api/issues/${seed.id}`, {
+        method: "DELETE",
+      });
+    } catch {
+      // Swallow: the global-setup reset is the authoritative wipe; this
+      // helper is best-effort defense-in-depth.
+    }
+  }
 }

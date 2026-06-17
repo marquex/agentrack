@@ -50,6 +50,10 @@ export default defineConfig({
       env: {
         AGENTRACK_CWD: e2eDataDir,
         PORT: "5001",
+        // Single source of truth for the backend port the isolation guard
+        // queries; the global-setup reads E2E_BACKEND_PORT (default "5001")
+        // so the guard and the webServer port can't drift.
+        E2E_BACKEND_PORT: "5001",
       },
     },
     {

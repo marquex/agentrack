@@ -8,27 +8,27 @@
 
 ## Mental Model
 
-The library-releaser cuts and publishes releases of the Agentrack package (the `agt` CLI installable via NPM, which also exposes a TypeScript library API). It does **not** implement features — it takes already-completed, already-validated changes and ships them.
+The library-releaser cuts releases of the Agentrack package (the `agt` CLI installable via NPM, which also exposes a TypeScript library API). It does **not** implement features — it takes already-completed, already-validated changes and prepares them for release. **NPM publishing is explicitly deferred** as of the 2026-06-17 owner-directed decision (no credentials, no need yet); a release is considered complete once tests pass, docs are updated, the build is verified, and the version is bumped/committed.
 
 ### The publishable package (concrete facts as of 2026-06-16)
 
 - Location: `packages/library/` (the repo is an npm workspace root with `workspaces: ["packages/*"]`; sibling is `packages/webapp`).
-- npm package name: `agentrack`. **Not yet on the npm registry** as of v0.3.0 (npm returns 404 for `agentrack`); publication depends on the `NPM_TOKEN` GitHub secret being configured.
+- npm package name: `agentrack`. **Not on the npm registry** as of v0.3.0 (npm returns 404 for `agentrack`); **publication is intentionally deferred** as of 2026-06-17 (no credentials, no need yet) — see [release-recipe](release-recipe.expertise.md).
 - Build tool: **`tsup`** via `bun run build`; output in `packages/library/dist/` (ESM + CJS + `.d.ts` + CLI binary).
 - Quality gate: `bun run quality` (= `typecheck` + `lint` + `test:coverage`), run from `packages/library`. Also re-run by the `prepublishOnly` hook.
 - Version: last released `0.3.0` (see [release-recipe](release-recipe.expertise.md)). Re-read `packages/library/package.json` before bumping — concurrent agents leave uncommitted bumps in the working tree (HEAD lagged the working tree during the v0.3.0 release).
 
-### Release flow — VERIFIED end-to-end as of 2026-06-16 (v0.3.0)
+### Release flow — VERIFIED end-to-end as of 2026-06-16 (v0.3.0); publish DEFERRED as of 2026-06-17
 
-The 5-step flow is now confirmed and captured with concrete commands in [release-recipe.expertise.md](release-recipe.expertise.md):
+The flow is confirmed and captured with concrete commands in [release-recipe.expertise.md](release-recipe.expertise.md). As of 2026-06-17 the publish step is **explicitly deferred** — a release is **DONE** after step 4:
 
 1. **Test** — `bun run quality` from `packages/library`.
 2. **Docs** — update `README.md` + `docs/markdown/cli-reference.md` + `docs/markdown/javascript-reference.md`.
 3. **Build** — `bun run build` (tsup); verify dist symbols.
-4. **Version bump** — manual edit of `packages/library/package.json` (no `npm version`, no release script).
-5. **Publish** — **NOT local `npm publish`.** Commit on a `release/v<version>` branch, tag `v<version>`, push branch + tag; the `release.yml` GitHub Actions workflow does quality → build → `npm publish --access public` using `secrets.NPM_TOKEN`.
+4. **Version bump** — manual edit of `packages/library/package.json` (no `npm version`, no release script) + commit.
+5. **Publish** — **DEFERRED.** Originally: commit on a `release/v<version>` branch, tag `v<version>`, push branch + tag; the `release.yml` GitHub Actions workflow does quality → build → `npm publish --access public` using `secrets.NPM_TOKEN`. Do **not** run this step or block on it; mark the release `done` after step 4.
 
-Key correction vs. earlier hypothesis: the publish mechanism is **git-tag-driven CI**, never a direct `npm publish` (no npm auth exists on the dev machine).
+Historical note: the publish mechanism is **git-tag-driven CI**, never a direct `npm publish` (no npm auth exists on the dev machine). The deferral does not change the mechanism — it just removes publish from the current deliverable.
 
 ### The validation gate (structural pattern)
 
@@ -55,5 +55,5 @@ Every observed release issue is paired with a **validation issue** that blocks i
 
 ## Gaps And Validation Needs
 
-- **NPM publication not yet observed succeeding.** The publish runs in GitHub Actions via `NPM_TOKEN`; the agent cannot observe the run locally (no `gh`, no API token). The package was not on the registry yet, and the `NPM_TOKEN` secret may still need one-time manual setup per the publish-pipeline spec. Confirm on the next release whether `agentrack` actually appears on npm.
+- **NPM publication is intentionally deferred (2026-06-17).** This is no longer an open gap — it is a decision. Publishing will be revisited when the project decides its release strategy. Do **not** treat the missing `NPM_TOKEN` or the package's absence from the registry as a blocker for any release; the release is complete at version-bump + build + commit. (Historical context: publish was never observed succeeding — the workflow runs via `NPM_TOKEN` in GitHub Actions and the agent cannot observe the run locally.)
 - **Patch-version bump is unverified.** v0.3.0 was a minor bump (new namespace + CLI break). No fix-only release has been cut yet — confirm the patch convention when one occurs.

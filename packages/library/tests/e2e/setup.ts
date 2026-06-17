@@ -1,26 +1,29 @@
 /**
- * E2E test infrastructure for the shared worktree approach.
+ * E2E test infrastructure for per-test ephemeral worktree isolation.
  *
  * Two test types:
- * - Type A (git operations): init, push, pull — each test creates/destroys its own worktree
- * - Type B (tracker operations): create, update, list, etc. — shared long-lived worktree with data reset
+ * - Type A (git operations): init, push, pull — each test runs inside its own
+ *   ephemeral directory via `withEphemeralWorktree`.
+ * - Type B (tracker operations): create, update, list, etc. — one ephemeral
+ *   directory per test file, shared across tests with data reset in beforeEach.
  *
- * IMPORTANT: E2E tests must run serially (not in parallel across files) because
- * they share the validation/.agentrack.json pointer file. Use `bun test tests/e2e/`
- * and ensure --jobs is 1 if running alongside other tests.
+ * Each ephemeral directory lives under `os.tmpdir()` (prefix `agt-e2e-`) and is
+ * a fresh git repository. No test ever writes to repo paths (`validation/` or
+ * similar). Tests are parallel-safe by default: branch names embed the pid and a
+ * random suffix so concurrent files never collide.
  *
  * Phase 2 of the E2E refactor spec (.agentic/specs/e2e-refactor.md).
  */
 import { execSync } from "node:child_process";
 import {
   existsSync,
-  mkdirSync,
+  mkdtempSync,
   readdirSync,
-  readFileSync,
   rmSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "bun";
 import { expect } from "bun:test";
@@ -30,52 +33,103 @@ import { expect } from "bun:test";
 /** Path to the CLI binary (TypeScript source) */
 const BIN_PATH = join(import.meta.dir, "..", "..", "src", "bin.ts");
 
-/** Branch name for Type B (tracker operation) tests */
+/** Base branch name for Type B (tracker operation) tests */
 export const E2E_DATA_BRANCH = "e2edata";
 
-/** Branch name for Type A (git operation) tests */
+/** Base branch name for Type A (git operation) tests */
 export const E2E_GIT_BRANCH = "e2egit";
 
-// ─── Path helpers ────────────────────────────────────────────────────
+/** Default per-spawn timeout (30s) — guards against hung children stalling CI. */
+const DEFAULT_SPAWN_TIMEOUT_MS = 30_000;
 
-let _projectRoot: string | null = null;
-
-/** Get the git project root directory. */
-function getProjectRoot(): string {
-  if (_projectRoot) return _projectRoot;
-  _projectRoot = execSync("git rev-parse --show-toplevel", {
-    encoding: "utf-8",
-    cwd: import.meta.dir,
-  }).trim();
-  return _projectRoot;
-}
-
-let _validationDir: string | null = null;
+// ─── Ephemeral dir helpers ───────────────────────────────────────────
 
 /**
- * Get the absolute path to the validation/ directory at the project root.
- * Creates it if it doesn't exist.
+ * Create a unique ephemeral directory under `os.tmpdir()`.
+ * Caller is responsible for removing it when done (`rmEphemeralDir`).
  */
-export function getValidationDir(): string {
-  if (_validationDir && existsSync(_validationDir)) return _validationDir;
-  _validationDir = join(getProjectRoot(), "validation");
-  if (!existsSync(_validationDir)) {
-    mkdirSync(_validationDir, { recursive: true });
+export function createEphemeralDir(prefix = "agt-e2e-"): string {
+  return mkdtempSync(join(tmpdir(), prefix));
+}
+
+/** Best-effort recursive removal of an ephemeral directory. */
+export function rmEphemeralDir(dir: string): void {
+  try {
+    rmSync(dir, { recursive: true, force: true });
+  } catch {
+    // Swallow — best-effort cleanup.
   }
-  return _validationDir;
 }
 
 /**
- * Get the tracker data directory for a branch.
- * e.g., for branch "e2edata" -> validation/.e2edata/
+ * Initialize a fresh git repo at `dir`. Optionally creates a local bare "origin"
+ * remote (at `<dir>/remote.git`) for push/pull tests so they don't depend on any
+ * real upstream.
  */
-export function getTrackerDir(branch: string): string {
-  return join(getValidationDir(), `.${branch}`);
+export function initGitRepo(
+  dir: string,
+  opts?: { withRemote?: boolean },
+): void {
+  execSync("git init", { cwd: dir, stdio: "pipe" });
+  // Stable identity so commits don't fail
+  execSync('git config user.name "agt-e2e"', {
+    cwd: dir,
+    stdio: "pipe",
+  });
+  execSync('git config user.email "agt-e2e@localhost"', {
+    cwd: dir,
+    stdio: "pipe",
+  });
+  // Use a stable default branch name
+  try {
+    execSync("git symbolic-ref HEAD refs/heads/main", {
+      cwd: dir,
+      stdio: "pipe",
+    });
+  } catch {
+    // Older git — ignore; default branch name doesn't matter for the tests.
+  }
+  // An empty repo still has no commits; create one so `git push`/branch ops
+  // behave predictably and to give `git ls-remote origin` something to compare.
+  writeFileSync(join(dir, ".gitkeep"), "", "utf-8");
+  execSync("git add .gitkeep", { cwd: dir, stdio: "pipe" });
+  execSync("git commit -m bootstrap", { cwd: dir, stdio: "pipe" });
+
+  if (opts?.withRemote) {
+    const remotePath = join(dir, "remote.git");
+    execSync(`git init --bare "${remotePath}"`, {
+      cwd: dir,
+      stdio: "pipe",
+    });
+    execSync(`git remote add origin "${remotePath}"`, {
+      cwd: dir,
+      stdio: "pipe",
+    });
+    // Push the bootstrap commit so `origin/main` exists; needed for clean
+    // `git push` of the orphan data branch later.
+    execSync("git push origin main", { cwd: dir, stdio: "pipe" });
+  }
 }
 
-/** Derive git branch name from test branch: "e2edata" -> "_e2edata" */
+/** Derive git branch name from a test branch: "e2edata" -> "_e2edata" */
 function getGitBranch(branch: string): string {
   return `_${branch}`;
+}
+
+/**
+ * Produce a unique branch name from a base, embedding pid + random suffix so
+ * parallel test files never collide on the same git branch.
+ */
+export function uniqueBranch(base: string): string {
+  return `${base}-${process.pid}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/**
+ * Get the tracker data directory for a branch inside an ephemeral dir.
+ * e.g., for branch "e2edata" -> <dir>/.e2edata/
+ */
+export function getTrackerDir(dir: string, branch: string): string {
+  return join(dir, `.${branch}`);
 }
 
 // ─── CLI helper ──────────────────────────────────────────────────────
@@ -87,28 +141,52 @@ export interface CLIResult {
 }
 
 /**
- * Run the agt CLI and capture output.
- * Defaults cwd to the validation directory.
+ * Run the agt CLI in the given `cwd` and capture output.
+ *
+ * `cwd` is required — every call site must explicitly pass the ephemeral dir
+ * it intends to target. This makes accidental fallback to the test runner's
+ * `process.cwd()` (which would point at the repo root) impossible.
+ *
+ * The child is killed after `timeoutMs` (default 30s) so a hung `agt` process
+ * can never stall CI.
  */
 export async function runAgt(
   args: string[],
-  cwd?: string,
+  cwd: string,
   env?: Record<string, string>,
+  timeoutMs: number = DEFAULT_SPAWN_TIMEOUT_MS,
 ): Promise<CLIResult> {
-  const dir = cwd ?? getValidationDir();
   const proc = spawn({
     cmd: ["bun", "run", BIN_PATH, ...args],
-    cwd: dir,
+    cwd,
     stdout: "pipe",
     stderr: "pipe",
     env: { ...process.env, ...env },
   });
 
-  const stdout = await new Response(proc.stdout).text();
-  const stderr = await new Response(proc.stderr).text();
-  const exitCode = await proc.exited;
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    try {
+      proc.kill();
+    } catch {
+      // Process may already be dead — ignore.
+    }
+  }, timeoutMs);
 
-  return { stdout, stderr, exitCode };
+  try {
+    const stdout = await new Response(proc.stdout).text();
+    const stderr = await new Response(proc.stderr).text();
+    const exitCode = await proc.exited;
+    if (timedOut) {
+      throw new Error(
+        `agt ${args.join(" ")} timed out after ${timeoutMs}ms (cwd=${cwd})`,
+      );
+    }
+    return { stdout, stderr, exitCode };
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 // ─── Assertion helpers ───────────────────────────────────────────────
@@ -150,47 +228,15 @@ export function extractId(result: CLIResult): string {
   return parsed.id;
 }
 
-// ─── Pre-init helper ────────────────────────────────────────────────
+// ─── Pointer helper ──────────────────────────────────────────────────
 
 /**
- * Prepare the validation dir to prevent auto-commits during agt init.
- * Pre-creates .gitignore with worktree entry and pointer file so that
- * commitGitignoreChange finds nothing to commit.
+ * Ensure the pointer file exists at `<dir>/.agentrack.json` for a given branch.
+ * Used as a safety net after data resets.
  */
-function prepareForCleanInit(branch: string): void {
-  const validationDir = getValidationDir();
-  const worktreeDir = `.${branch}`;
-
-  // Pre-create .gitignore with entry for the worktree dir
-  const gitignorePath = join(validationDir, ".gitignore");
-  const entry = `/${worktreeDir}/`;
-  if (existsSync(gitignorePath)) {
-    const content = readFileSync(gitignorePath, "utf-8");
-    if (!content.split("\n").some((line) => line.trim() === entry)) {
-      const suffix = content.endsWith("\n") ? "" : "\n";
-      writeFileSync(gitignorePath, content + suffix + entry + "\n");
-    }
-  } else {
-    writeFileSync(gitignorePath, entry + "\n");
-  }
-
-  // Pre-create pointer file (same content that writeBranchPointer writes)
-  writeFileSync(
-    join(validationDir, ".agentrack.json"),
-    JSON.stringify({ branch: getGitBranch(branch) }, null, 2) + "\n",
-  );
-}
-
-/**
- * Ensure the pointer file exists for a given branch.
- * Used by Type B tests to restore the pointer after Type A tests may have deleted it.
- */
-export function ensurePointer(branch: string): void {
-  const validationDir = getValidationDir();
-  const pointerPath = join(validationDir, ".agentrack.json");
-  const trackerDir = getTrackerDir(branch);
-
-  // Only write pointer if the worktree actually exists
+export function ensurePointer(dir: string, branch: string): void {
+  const pointerPath = join(dir, ".agentrack.json");
+  const trackerDir = getTrackerDir(dir, branch);
   if (existsSync(trackerDir)) {
     writeFileSync(
       pointerPath,
@@ -199,154 +245,88 @@ export function ensurePointer(branch: string): void {
   }
 }
 
-// ─── Git cleanup helper ─────────────────────────────────────────────
-
-/**
- * Remove a worktree, local branch, and remote branch.
- * All operations are tolerant of missing resources.
- */
-function cleanupWorktree(branch: string): void {
-  const validationDir = getValidationDir();
-  const projectRoot = getProjectRoot();
-  const gitBranch = getGitBranch(branch);
-  const worktreePath = join(validationDir, `.${branch}`);
-
-  // Remove worktree
-  try {
-    execSync(`git worktree remove -f "${worktreePath}"`, {
-      cwd: projectRoot,
-      stdio: "pipe",
-    });
-  } catch {
-    // Worktree may not exist — ignore
-  }
-
-  // Prune stale worktree entries
-  try {
-    execSync("git worktree prune", { cwd: projectRoot, stdio: "pipe" });
-  } catch {
-    // Ignore
-  }
-
-  // Delete local branch
-  try {
-    execSync(`git branch -D ${gitBranch}`, {
-      cwd: projectRoot,
-      stdio: "pipe",
-    });
-  } catch {
-    // Branch may not exist — ignore
-  }
-
-  // Delete remote branch
-  try {
-    execSync(`git push origin --delete ${gitBranch}`, {
-      cwd: projectRoot,
-      stdio: "pipe",
-    });
-  } catch {
-    // Remote branch may not exist — ignore
-  }
-
-  // Force-remove worktree directory if still present
-  try {
-    rmSync(worktreePath, { recursive: true, force: true });
-  } catch {
-    // Directory may not exist — ignore
-  }
-}
-
 // ─── Type A helpers (git operation tests) ────────────────────────────
 
-/**
- * Initialize a fresh E2E worktree for Type A tests.
- * Ensures clean state: removes old worktree/branch, then runs agt init.
- */
-export async function initE2EWorktree(branch: string): Promise<CLIResult> {
-  const validationDir = getValidationDir();
-
-  // Full cleanup of previous state
-  cleanupWorktree(branch);
-
-  // Remove pointer file
-  try {
-    rmSync(join(validationDir, ".agentrack.json"), { force: true });
-  } catch {
-    // Pointer file may not exist — ignore
-  }
-
-  // Pre-create files to prevent auto-commits on the main branch
-  prepareForCleanInit(branch);
-
-  // Run agt init --branch
-  return runAgt(["init", "--branch", branch], validationDir);
+export interface EphemeralWorktreeOptions {
+  /** Set up a local bare `origin` so push/pull tests work without a real remote. */
+  withRemote?: boolean;
+  /** Per-spawn timeout override passed to `runAgt`. */
+  timeoutMs?: number;
 }
 
 /**
- * Tear down an E2E worktree after a Type A test.
- * Removes worktree, branches, and pointer file. Restores Type B pointer
- * if the Type B worktree exists.
+ * Run a Type A test inside its own ephemeral git repo.
+ *
+ * Creates a fresh dir under tmpdir, inits git (optionally with a local bare
+ * `origin`), runs `agt init --branch <branch>`, invokes `fn`, and ALWAYS removes
+ * the dir in `finally` (best-effort, ENOENT-tolerant).
+ *
+ * The callback receives the dir (use as `cwd` for `runAgt`) and the tracker dir.
  */
-export async function teardownE2EWorktree(branch: string): Promise<void> {
-  const validationDir = getValidationDir();
-
-  // Full cleanup
-  cleanupWorktree(branch);
-
-  // Remove pointer file
+export async function withEphemeralWorktree(
+  branch: string,
+  fn: (dir: string, trackerDir: string) => Promise<void>,
+  opts?: EphemeralWorktreeOptions,
+): Promise<void> {
+  const dir = createEphemeralDir();
+  initGitRepo(dir, opts);
   try {
-    rmSync(join(validationDir, ".agentrack.json"), { force: true });
-  } catch {
-    // Pointer file may not exist — ignore
+    const initResult = await runAgt(
+      ["init", "--branch", branch],
+      dir,
+      undefined,
+      opts?.timeoutMs,
+    );
+    const parsed = parseJson(initResult.stdout);
+    if (
+      initResult.exitCode !== 0 ||
+      (parsed.result !== "OK" && parsed.result !== "ALREADY_INITIALIZED")
+    ) {
+      throw new Error(
+        `withEphemeralWorktree: agt init failed: ${initResult.stderr || initResult.stdout}`,
+      );
+    }
+    await fn(dir, getTrackerDir(dir, branch));
+  } finally {
+    rmEphemeralDir(dir);
   }
-
-  // Restore pointer for Type B worktree if it exists
-  ensurePointer(E2E_DATA_BRANCH);
 }
 
 // ─── Type B helpers (tracker operation tests) ────────────────────────
 
 /**
- * Ensure the E2E worktree is initialized (idempotent).
- * Called in beforeAll for Type B tests.
+ * Initialize the worktree for a Type B test file inside the given ephemeral dir.
+ * Idempotent — safe to call in `beforeAll`.
  */
-export async function ensureE2EWorktree(branch: string): Promise<void> {
-  const trackerDir = getTrackerDir(branch);
+export async function ensureE2EWorktree(
+  dir: string,
+  branch: string,
+): Promise<void> {
+  const trackerDir = getTrackerDir(dir, branch);
   if (existsSync(trackerDir)) {
-    // Worktree exists — ensure pointer file is present
-    ensurePointer(branch);
+    ensurePointer(dir, branch);
     return;
   }
 
-  // Full cleanup of any leftover state
-  cleanupWorktree(branch);
-
-  const validationDir = getValidationDir();
-  try {
-    rmSync(join(validationDir, ".agentrack.json"), { force: true });
-  } catch {
-    // Pointer file may not exist — ignore
-  }
-
-  // Pre-create files to prevent auto-commits
-  prepareForCleanInit(branch);
-
-  // Initialize
-  const result = await runAgt(["init", "--branch", branch], validationDir);
+  const result = await runAgt(["init", "--branch", branch], dir);
   const parsed = parseJson(result.stdout);
   if (parsed.result !== "OK" && parsed.result !== "ALREADY_INITIALIZED") {
     throw new Error(
-      `Failed to init E2E worktree: ${result.stderr || result.stdout}`,
+      `ensureE2EWorktree: agt init failed: ${result.stderr || result.stdout}`,
     );
   }
 }
 
 /**
- * Reset data files to defaults and delete all issue event files.
- * Called in beforeEach for Type B tests. Fast (~1ms) — no git operations.
+ * Reset data files to defaults and delete all issue event files inside the
+ * ephemeral dir's tracker. Also resets mentions.json to empty so tests start
+ * from a clean index.
+ *
+ * Called in `beforeEach` for Type B tests. Fast (~1ms) — no git operations.
  */
-export function resetWorktreeData(branch: string): void {
-  const trackerDir = getTrackerDir(branch);
+export function resetWorktreeData(dir: string, branch: string): void {
+  const trackerDir = getTrackerDir(dir, branch);
+  const gitBranch = getGitBranch(branch);
 
   // Write default data files
   writeFileSync(
@@ -362,11 +342,16 @@ export function resetWorktreeData(branch: string): void {
     JSON.stringify({ users: [] }, null, 2) + "\n",
   );
   writeFileSync(
+    join(trackerDir, "mentions.json"),
+    "{}\n",
+    "utf-8",
+  );
+  writeFileSync(
     join(trackerDir, "config.json"),
     JSON.stringify(
       {
         auth: { mode: "open", defaultUser: "anonymous" },
-        branch: getGitBranch(branch),
+        branch: gitBranch,
       },
       null,
       2,
@@ -383,7 +368,7 @@ export function resetWorktreeData(branch: string): void {
   }
 
   // Ensure pointer file is present (safety net for parallel execution)
-  ensurePointer(branch);
+  ensurePointer(dir, branch);
 }
 
 /**
@@ -391,11 +376,12 @@ export function resetWorktreeData(branch: string): void {
  * Used by auth tests to switch modes between tests.
  */
 export function setAuthMode(
+  dir: string,
   branch: string,
   mode: string,
   defaultUser?: string,
 ): void {
-  const trackerDir = getTrackerDir(branch);
+  const trackerDir = getTrackerDir(dir, branch);
   writeFileSync(
     join(trackerDir, "config.json"),
     JSON.stringify(

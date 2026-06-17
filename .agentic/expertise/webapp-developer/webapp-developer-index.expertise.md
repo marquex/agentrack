@@ -24,8 +24,8 @@ Read every file related to the task at hand.
 
 ### Webapp server ports & runtime config
 - File: [webapp-server-ports.expertise.md](webapp-server-ports.expertise.md)
-- Prompts: "which port does the webapp run on", "e2e port", "playwright baseURL", "PORT", "VITE_PORT", "API_PORT", "port 5000 blocked", "AirPlay", "change a webapp port"
-- Covers: Dev vs e2e port layout (dev 3001/3000, e2e 5001/5000), env vars, the macOS AirPlay/port-5000 gotcha that blocks the e2e suite, and the invariants for changing ports.
+- Prompts: "which port does the webapp run on", "e2e port", "playwright baseURL", "PORT", "VITE_PORT", "API_PORT", "port 5000 blocked", "AirPlay", "change a webapp port", "extract shared e2e URL constant", "e2e BACKEND URL refactor", "dedupe http://localhost:5001 in specs", "E2E_BACKEND_URL", "e2e base URL source of truth"
+- Covers: Dev vs e2e port layout (dev 3001/3000, e2e 5001/5000), env vars, the macOS AirPlay/port-5000 gotcha that blocks the e2e suite, the invariants for changing ports, and the single-source-of-truth `E2E_BACKEND_URL` in `e2e/setup.ts` (implemented `mqibv7ai6j`, 2026-06-17) that all six e2e specs import.
 
 ### Webapp styling, fonts, and theme tokens
 - File: [webapp-styling-and-theme.expertise.md](webapp-styling-and-theme.expertise.md)
@@ -34,8 +34,8 @@ Read every file related to the task at hand.
 
 ### Webapp e2e data isolation
 - File: [webapp-e2e-isolation.expertise.md](webapp-e2e-isolation.expertise.md)
-- Prompts: "how does e2e data stay separate from real data", "e2e worktree", "AGENTRACK_CWD", "validation/.e2edata", "resetWorktreeData", "seeds leaked into .agentrack", "tag e2e seeds", "delete seed issues", "isolation hardening", "health cwd", "Layer A / Layer B / Layer C", "cleanupE2ESeeds", "afterAll cleanup", "DELETE issue route", "e2e README"
-- Covers: How the `AGENTRACK_CWD` env var + per-run `resetWorktreeData()` isolate test data, plus the **implemented (2026-06-16, `mqh3ss1nfh`)** three-layer hardening: startup health-cwd assertion (Layer A), self-healing `e2e-seed` tags + `cleanupE2ESeeds()` per-file `test.afterAll` + `DELETE /api/issues/:id` route (Layer B), and `e2e/README.md` invariants (Layer C). Includes the `test.afterAll`-not-a-named-export gotcha.
+- Prompts: "how does e2e data stay separate from real data", "e2e worktree", "AGENTRACK_CWD", "validation/.e2edata", "resetWorktreeData", "seeds leaked into .agentrack", "tag e2e seeds", "delete seed issues", "isolation hardening", "health cwd", "Layer A / Layer B / Layer C", "cleanupE2ESeeds", "afterAll cleanup", "DELETE issue route", "e2e README", "parallel DELETE race", "cleanupE2ESeeds race", "seed straggler", "mass-edit spec literals", "perl replacement stripped prefix", "python heredoc for refactor", "shell cwd does not persist", "sandbox blocks perl one-liner"
+- Covers: How the `AGENTRACK_CWD` env var + per-run `resetWorktreeData()` isolate test data, plus the **implemented (2026-06-16, `mqh3ss1nfh`)** three-layer hardening: startup health-cwd assertion (Layer A), self-healing `e2e-seed` tags + `cleanupE2ESeeds()` per-file `test.afterAll` + `DELETE /api/issues/:id` route (Layer B), and `e2e/README.md` invariants (Layer C). Includes the `test.afterAll`-not-a-named-export gotcha, the **open** `cleanupE2ESeeds` parallel-DELETE race (fix task `mqib7bbznm`, accepted 2026-06-17), and the **webapp-developer tooling/sandbox gotchas** (access-control scanner quirks, mechanical-refactor lessons: perl `${...}` interpolation, over-broad regex scope, sandbox-friendly `python3` heredoc, shell cwd persistence, `Edit` after `git checkout`).
 
 ### Webapp e2e validation workflow
 - File: [webapp-e2e-validation.expertise.md](webapp-e2e-validation.expertise.md)

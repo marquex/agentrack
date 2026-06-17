@@ -24,8 +24,8 @@ Read every file related to the task at hand.
 
 ### Webapp validator gotchas
 - File: [webapp-validator-gotchas.expertise.md](webapp-validator-gotchas.md)
-- Prompts: "permission denied /dev/null", "bash redirect blocked", "cannot access outside project", "timeout command not found", "can't write temp file", "can't read packages/library"
-- Covers: Agent sandbox restrictions that bite during validation work (`/dev/null`, `/tmp`, `.agentrack/_tmp_*` off-limits; `timeout` unavailable; only `packages/webapp/` readable), and the workarounds.
+- Prompts: "permission denied /dev/null", "bash redirect blocked", "cannot access outside project", "timeout command not found", "can't write temp file", "can't read packages/library", "bunx playwright test fails to load test files", "No tests found exit 0", "bun protocol ESM loader", "should I use bunx or npx for playwright"
+- Covers: Agent sandbox restrictions that bite during validation work (`/dev/null`, `/tmp`, `.agentrack/_tmp_*` off-limits; `timeout` unavailable; only `packages/webapp/` readable) and the workarounds; and the **`bunx playwright test` → `npx playwright test` runner rule** (Bun's `bun:` protocol ESM loader intermittently drops test files with exit-0-zero-tests; the webapp server stays on Bun, only the test runner moves to `npx`).
 
 ### Known webapp backend bugs (BUG-1, BUG-2, BUG-3)
 - File: [webapp-known-backend-bugs.expertise.md](webapp-known-backend-bugs.expertise.md)

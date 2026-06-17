@@ -23,7 +23,8 @@
   },
   "scripts": {
     "test": "bun test",
-    "test:coverage": "bun test --coverage",
+    "test:e2e": "bun test tests/e2e",
+    "test:coverage": "bun test --coverage --path-ignore-patterns '**/e2e/**'",
     "test:watch": "bun test --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/ tests/",

@@ -1,42 +1,40 @@
 /**
  * E2E: push — Type A tests (git push operations)
  *
- * Each test does its own init/teardown to avoid hook timeout issues.
- * Pushes initial commit after init to establish a clean baseline.
+ * Each test runs inside its own ephemeral git repo with a local bare `origin`
+ * so push/pull exercises a real round-trip without depending on any project
+ * remote.
  */
 import { describe, expect, test } from "bun:test";
 import {
   E2E_GIT_BRANCH,
   assertSuccess,
-  initE2EWorktree,
   parseJson,
   runAgt,
-  teardownE2EWorktree,
+  withEphemeralWorktree,
 } from "./setup";
-
-async function setupPushTest(): Promise<void> {
-  await teardownE2EWorktree(E2E_GIT_BRANCH);
-  await initE2EWorktree(E2E_GIT_BRANCH);
-  // Push the initial data commit from init to establish a clean baseline
-  await runAgt(["push"]);
-}
 
 describe("E2E: push", () => {
   test(
     "push with no changes returns no changes to sync",
     async () => {
-      await setupPushTest();
+      await withEphemeralWorktree(
+        E2E_GIT_BRANCH,
+        async (dir) => {
+          // Push the initial data commit from init to establish a clean baseline
+          await runAgt(["push"], dir);
 
-      const result = await runAgt(["push"]);
+          const result = await runAgt(["push"], dir);
 
-      expect(result.exitCode).toBe(0);
+          expect(result.exitCode).toBe(0);
 
-      const parsed = parseJson(result.stdout);
-      expect(parsed.result).toBe("OK");
-      expect(parsed.synced).toBe(false);
-      expect(parsed.message).toContain("No changes");
-
-      await teardownE2EWorktree(E2E_GIT_BRANCH);
+          const parsed = parseJson(result.stdout);
+          expect(parsed.result).toBe("OK");
+          expect(parsed.synced).toBe(false);
+          expect(parsed.message).toContain("No changes");
+        },
+        { withRemote: true },
+      );
     },
     { timeout: 120000 },
   );
@@ -44,20 +42,25 @@ describe("E2E: push", () => {
   test(
     "push after creating issue syncs successfully",
     async () => {
-      await setupPushTest();
+      await withEphemeralWorktree(
+        E2E_GIT_BRANCH,
+        async (dir) => {
+          // Establish clean baseline
+          await runAgt(["push"], dir);
 
-      const createResult = await runAgt(["create", "Test Issue"]);
-      assertSuccess(createResult);
+          const createResult = await runAgt(["create", "Test Issue"], dir);
+          assertSuccess(createResult);
 
-      const result = await runAgt(["push"]);
+          const result = await runAgt(["push"], dir);
 
-      expect(result.exitCode).toBe(0);
+          expect(result.exitCode).toBe(0);
 
-      const parsed = parseJson(result.stdout);
-      expect(parsed.result).toBe("OK");
-      expect(parsed.synced).toBe(true);
-
-      await teardownE2EWorktree(E2E_GIT_BRANCH);
+          const parsed = parseJson(result.stdout);
+          expect(parsed.result).toBe("OK");
+          expect(parsed.synced).toBe(true);
+        },
+        { withRemote: true },
+      );
     },
     { timeout: 120000 },
   );
@@ -65,19 +68,24 @@ describe("E2E: push", () => {
   test(
     "push with custom message",
     async () => {
-      await setupPushTest();
+      await withEphemeralWorktree(
+        E2E_GIT_BRANCH,
+        async (dir) => {
+          // Establish clean baseline
+          await runAgt(["push"], dir);
 
-      await runAgt(["create", "Test Issue"]);
+          await runAgt(["create", "Test Issue"], dir);
 
-      const result = await runAgt(["push", "--message", "custom push message"]);
+          const result = await runAgt(["push", "--message", "custom push message"], dir);
 
-      expect(result.exitCode).toBe(0);
+          expect(result.exitCode).toBe(0);
 
-      const parsed = parseJson(result.stdout);
-      expect(parsed.result).toBe("OK");
-      expect(parsed.synced).toBe(true);
-
-      await teardownE2EWorktree(E2E_GIT_BRANCH);
+          const parsed = parseJson(result.stdout);
+          expect(parsed.result).toBe("OK");
+          expect(parsed.synced).toBe(true);
+        },
+        { withRemote: true },
+      );
     },
     { timeout: 120000 },
   );

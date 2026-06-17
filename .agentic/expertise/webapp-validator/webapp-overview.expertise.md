@@ -17,7 +17,7 @@ The validator agent's role is advisory + verification: answer questions about we
 ## Commands
 
 - **Build (includes typecheck):** `cd packages/webapp/frontend && bun run build` — runs `tsc -b` then Vite. A clean build means frontend types pass.
-- **Run e2e tests:** `cd packages/webapp && bunx playwright test [e2e/phaseN-validation.spec.ts]`. The Playwright config spins up the webServer automatically — no manual server start needed.
+- **Run e2e tests:** `cd packages/webapp && npx playwright test [e2e/phaseN-validation.spec.ts]`. The Playwright config spins up the webServer automatically — no manual server start needed. **Use `npx`, not `bunx`** — see the gotcha below.
 - **Lint:** No lint script is configured anywhere in the project. The `tsc -b` inside `bun run build` is the closest equivalent when a workflow asks for "lint or equivalent".
 
 ## Related Topics

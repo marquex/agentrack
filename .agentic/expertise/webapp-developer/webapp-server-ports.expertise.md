@@ -30,7 +30,8 @@ Neither e2e `webServer` entry sets `reuseExistingServer` — the flag is intenti
 - E2E ports (5001/5000) must stay different from dev ports (3001/3000) — they encode isolation.
 - The `reuseExistingServer` flag must stay ABSENT from the e2e webservers.
 - The backend reads its port from a single env var (`PORT`). The frontend reads its port from `VITE_PORT` and falls back to Vite's default — there is no single shared port config.
-- When changing a port, sweep ALL of: `server/index.ts`, `frontend/vite.config.ts`, `playwright.config.ts`, every `e2e/*.spec.ts` (inline URLs + `BASE` constants), and the spec docs at `.agentic/specs/webapp-spec.md`. The e2e specs mix double-quoted and template-literal port strings — a single `sed` over `http://localhost:<old>` is the safe mechanical replacement.
+- When changing a port, sweep ALL of: `server/index.ts`, `frontend/vite.config.ts`, `playwright.config.ts`, the single `E2E_BACKEND_URL` constant in `e2e/setup.ts` (the e2e base URL source of truth — see below), and the spec docs at `.agentic/specs/webapp-spec.md`.
+- **The e2e base URL has one source of truth (since 2026-06-17, issue `mqibv7ai6j`):** `export const E2E_BACKEND_URL = process.env.E2E_BACKEND_URL ?? "http://localhost:5001";` in `e2e/setup.ts`. The six e2e specs import it — five via `import { ..., E2E_BACKEND_URL as BASE } from "./setup.js"` (phase1, phase3, phase4, dashboard-roots, url-filters) and phase2 imports it unaliased and interpolates `${E2E_BACKEND_URL}` inline. Changing the e2e backend port means editing that one line in `setup.ts` only; the specs pick it up automatically. Do not re-introduce local `const BASE = "..."` declarations or inline `http://localhost:5001` literals in specs.
 
 ## Gotchas
 
@@ -44,10 +45,11 @@ Neither e2e `webServer` entry sets `reuseExistingServer` — the flag is intenti
 
 ## Timeline
 
+- 2026-06-17: Extracted the e2e base URL into one exported constant (`mqibv7ai6j`, plan `mqibuy0y3q`). Added `export` to `E2E_BACKEND_URL` in `e2e/setup.ts`; aliased-imported it as `BASE` in the 5 specs that used a local `const BASE`; replaced all 60 inline `http://localhost:5001` literals in phase2 with `${E2E_BACKEND_URL}`. No port change. Verified via `playwright test --list` (176 specs load). Refactor gotchas (perl `${...}` interpolation, over-broad regex, sandbox-friendly `python3` heredoc, shell cwd persistence) captured in [webapp-e2e-isolation.expertise.md](webapp-e2e-isolation.expertise.md) Gotchas.
 - 2026-06-16: Standardized webapp ports in `mqh2hwulrt` per prescription `mqh2nfnt2o` (plan `mqh2hw1wl3`, parent `mqh2h99uob`). Dev API 3000→3001, dev Vite default→3000, e2e 3001/5174→5001/5000. Touched `server/index.ts`, `frontend/vite.config.ts`, `playwright.config.ts`, and all six e2e specs (phase1–4, dashboard-roots, url-filters). Could not run the full e2e suite because port 5000 is held by macOS AirPlay Receiver — verified config via `playwright test --list` (176 specs load), backend binds 5001, Vite default 3000 works. Could not update `.agentic/specs/webapp-spec.md` (read-only domain). Filed an idea issue for the docs/expertise updates.
 
 ## Gaps And Validation Needs
 
 - Port values were set in code on 2026-06-16. If a task touches `playwright.config.ts`, `server/index.ts`, or `frontend/vite.config.ts`, re-read those files to confirm before reporting.
 - The full e2e regression run after the port change has **not** been completed locally due to the AirPlay/port-5000 conflict. The next time AirPlay Receiver is off (or 5000 is otherwise free), run the full suite to confirm zero regressions on the new ports.
-- The follow-up issue `mqh2nk7khi` exists for properly extracting a shared `BASE` constant in `phase2-validation.spec.ts` (the standardization only did a mechanical `sed` port replacement there, not the BASE refactor).
+- The e2e base-URL extraction refactor (`mqibv7ai6j`) **landed 2026-06-17** — `E2E_BACKEND_URL` is now the single source of truth in `e2e/setup.ts` and all six specs import it. The phase2-only follow-up `mqh2nk7khi` is subsumed and obsolete. Re-read `e2e/setup.ts` and one spec's import line if a task touches e2e URLs.

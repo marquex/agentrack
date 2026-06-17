@@ -7,7 +7,9 @@
 
 ## Mental Model
 
-The release has 5 steps: **test → docs → build → version bump → publish**. The first four run locally; **publish is NOT a local `npm publish`** — it is triggered by pushing a `v*` git tag, which drives the `release.yml` GitHub Actions workflow that runs quality → build → `npm publish --access public` using the `NPM_TOKEN` repo secret. There is no npm auth on the dev machine and direct publishing is not the intended path.
+The release has **four delivering steps and one deferred step**: **test → docs → build → version bump → (deferred) publish**. A release is considered **DONE** once tests pass, docs are updated, the build is verified, and the version bump is committed (a `v*` tag is optional but harmless). **NPM publishing is explicitly deferred** as of the 2026-06-17 owner-directed decision: there are no NPM credentials, the library does not need to be on the registry yet, and the publish mechanism will be revisited when the project decides its release strategy. Do **not** block on npm auth, do **not** report missing NPM credentials as a blocker, and do **not** leave a release issue `in-progress` waiting for publish.
+
+The historical publish mechanism (push a `v*` git tag → `release.yml` GitHub Actions workflow → `npm publish --access public` using the `NPM_TOKEN` secret) is preserved in **Step 5 — Publish (DEFERRED)** below for reference, but is **not currently invoked** and is **not a release deliverable**.
 
 ### Step 1 — Test (quality gate)
 
@@ -54,9 +56,13 @@ Semver convention used (0.x line, as of v0.3.0):
 
 Note: `git diff` compares against HEAD, so the committed version can lag the working-tree version (e.g. HEAD was `0.1.0`, working tree had an uncommitted `0.2.1`, release moved to `0.3.0`). Bump relative to the change's semantics, not relative to uncommitted intermediates.
 
-### Step 5 — Publish (via git tag → GitHub Actions)
+### Step 5 — Publish (DEFERRED as of 2026-06-17)
 
-There is **no local `npm publish`**. `npm whoami` returns `ENEEDAUTH` and there is no token in env or `.npmrc`. The publish path is:
+> **This step is currently deferred and is NOT part of the release deliverable.** A release is complete at the end of Step 4 (version bump + commit). Skip this entire step unless explicitly re-enabled by a future decision. If a release issue's only remaining step is publish, mark the issue `done` with a comment noting publish was skipped per the deferral decision (reference: `mqi9cwnzhd`).
+
+The mechanism below is the **historical/intended** publish path, preserved for when the project decides to enable publishing. It is **not currently invoked**.
+
+There is **no local `npm publish`**. `npm whoami` returns `ENEEDAUTH` and there is no token in env or `.npmrc`. The intended publish path is:
 
 1. **Branch** (we are on `main` by default): create `release/v<version>` and switch to it.
    ```bash
@@ -87,7 +93,9 @@ Switch back to `main` afterwards so the repo isn't left on the release branch:
 git checkout main
 ```
 
-### Verifying the publish
+### Verifying the publish (DEFERRED — not currently applicable)
+
+> While publishing is deferred, this verification does not apply. The release is complete once Step 4 finishes.
 
 You cannot run `gh` (not installed/accessible) and have no GitHub API token locally, so you generally **cannot** observe the workflow run directly. Treat the successful `v*` tag push as the trigger. Confirm the tagged commit's contents if unsure:
 
@@ -100,7 +108,8 @@ The actual `npm publish` depends on the **`NPM_TOKEN` GitHub secret** being conf
 
 ## Invariants & Business Rules
 
-- **Never** `npm publish` locally — publish only via the tag-push → `release.yml` workflow.
+- **A release is DONE at version-bump + build + commit.** Do not block on NPM auth or treat publish as a deliverable. NPM publishing is **explicitly deferred** as of 2026-06-17 (decision reference: `mqi9cwnzhd`); do not report missing NPM credentials as a blocker. If a release issue's only remaining step is publish, mark it `done` with a comment noting publish was skipped per the deferral.
+- **Never** `npm publish` locally — even if publish were re-enabled, it is tag-push → `release.yml` only.
 - **Never** commit unrelated working-tree changes — stage only release files explicitly.
 - **Never** close the release issue yourself — mark `done`, comment, reassign to project-manager.
 - The **validation gate** must be cleared first (paired validation issue `done`). See [release-overview.expertise.md](release-overview.expertise.md).
@@ -122,7 +131,7 @@ Workarounds that worked:
 
 - `packages/library/package.json` — version field (bump target), scripts (`quality`, `build`, `prepublishOnly`).
 - `packages/library/tsup.config.ts` — build config.
-- `.github/workflows/release.yml` — publish workflow (tag trigger, NPM_TOKEN).
+- `.github/workflows/release.yml` — publish workflow (tag trigger, NPM_TOKEN). **Note:** currently **not invoked** — NPM publishing is deferred as of 2026-06-17; this file is kept for when the publish strategy is decided.
 - `.agentic/specs/10-publish-pipeline-spec.md` — design spec for the publish pipeline (NPM_TOKEN manual setup, GitHub Pages deploy).
 - `README.md`, `docs/markdown/cli-reference.md`, `docs/markdown/javascript-reference.md` — doc surface.
 

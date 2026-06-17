@@ -3,47 +3,46 @@
  *
  * Tests the mentions CLI commands: list, view, read, unread, rebuild.
  * Also tests auto-indexing integration: add/update/delete comments.
- *
- * Note: resetWorktreeData() does not currently reset mentions.json (spec
- * deviation CL5). We manually reset it in beforeEach as a workaround.
  */
-import { existsSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { beforeAll, beforeEach, describe, expect, test } from "bun:test";
+import { afterAll, beforeAll, beforeEach, describe, expect, test } from "bun:test";
 import {
   E2E_DATA_BRANCH,
   assertError,
   assertSuccess,
+  createEphemeralDir,
   ensureE2EWorktree,
   extractId,
-  getTrackerDir,
+  initGitRepo,
   parseJson,
   resetWorktreeData,
+  rmEphemeralDir,
   runAgt,
 } from "./setup";
 
 describe("E2E: mentions", () => {
+  let dir: string;
+
   beforeAll(async () => {
-    await ensureE2EWorktree(E2E_DATA_BRANCH);
+    dir = createEphemeralDir();
+    initGitRepo(dir);
+    await ensureE2EWorktree(dir, E2E_DATA_BRANCH);
   });
 
   beforeEach(() => {
-    resetWorktreeData(E2E_DATA_BRANCH);
-    // Workaround: resetWorktreeData doesn't reset mentions.json (spec deviation CL5)
-    const trackerDir = getTrackerDir(E2E_DATA_BRANCH);
-    const mentionsPath = join(trackerDir, "mentions.json");
-    if (existsSync(mentionsPath)) {
-      writeFileSync(mentionsPath, "{}\n", "utf-8");
-    }
+    resetWorktreeData(dir, E2E_DATA_BRANCH);
+  });
+
+  afterAll(() => {
+    rmEphemeralDir(dir);
   });
 
   // ─── mentions list ────────────────────────────────────────────────
 
   describe("mentions list", () => {
     test("returns empty array for user with no mentions", async () => {
-      await runAgt(["users", "register", "alice"]);
+      await runAgt(["users", "register", "alice"], dir);
 
-      const result = await runAgt(["mentions", "list", "alice"]);
+      const result = await runAgt(["mentions", "list", "alice"], dir);
       assertSuccess(result);
 
       const parsed = parseJson(result.stdout);
@@ -51,23 +50,23 @@ describe("E2E: mentions", () => {
     });
 
     test("returns USER_NOT_FOUND for unregistered user", async () => {
-      const result = await runAgt(["mentions", "list", "nonexistent"]);
+      const result = await runAgt(["mentions", "list", "nonexistent"], dir);
       assertError(result, "USER_NOT_FOUND", 9);
     });
 
     test("lists mentions after comment with @mention", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Bug Fix"]));
+      const issueId = extractId(await runAgt(["create", "Bug Fix"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice review this"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
-      const result = await runAgt(["mentions", "list", "alice"]);
+      const result = await runAgt(["mentions", "list", "alice"], dir);
       assertSuccess(result);
 
       const parsed = parseJson(result.stdout);
@@ -77,55 +76,55 @@ describe("E2E: mentions", () => {
     });
 
     test("includes read mentions with --include-reads flag", async () => {
-      const aliceReg = await runAgt(["users", "register", "alice"]);
+      const aliceReg = await runAgt(["users", "register", "alice"], dir);
       const aliceToken = parseJson(aliceReg.stdout).token;
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice review"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
       // Get mention id and mark as read
-      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       const mentionId = parseJson(listResult.stdout)[0].id;
-      await runAgt(["mentions", "read", mentionId], undefined, {
+      await runAgt(["mentions", "read", mentionId], dir, {
         AGT_USER_TOKEN: aliceToken,
       });
 
       // Without --include-reads: empty
-      const unreadResult = await runAgt(["mentions", "list", "alice"]);
+      const unreadResult = await runAgt(["mentions", "list", "alice"], dir);
       assertSuccess(unreadResult);
       expect(parseJson(unreadResult.stdout)).toHaveLength(0);
 
       // With --include-reads: 1 result
-      const allResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const allResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       assertSuccess(allResult);
       expect(parseJson(allResult.stdout)).toHaveLength(1);
       expect(parseJson(allResult.stdout)[0].isRead).toBe(true);
     });
 
     test("results sorted by createdAt descending", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice first"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice second"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
-      const result = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const result = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       assertSuccess(result);
 
       const parsed = parseJson(result.stdout);
@@ -138,22 +137,22 @@ describe("E2E: mentions", () => {
 
   describe("mentions view", () => {
     test("returns mention with full context", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Fix login"]));
+      const issueId = extractId(await runAgt(["create", "Fix login"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice can you review?"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
       // Get mention id
-      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       const mentionId = parseJson(listResult.stdout)[0].id;
 
-      const result = await runAgt(["mentions", "view", mentionId]);
+      const result = await runAgt(["mentions", "view", mentionId], dir);
       assertSuccess(result);
 
       const parsed = parseJson(result.stdout);
@@ -165,7 +164,7 @@ describe("E2E: mentions", () => {
     });
 
     test("returns MENTION_NOT_FOUND for nonexistent id", async () => {
-      const result = await runAgt(["mentions", "view", "nonexistent"]);
+      const result = await runAgt(["mentions", "view", "nonexistent"], dir);
       assertError(result, "MENTION_NOT_FOUND", 20);
     });
   });
@@ -174,22 +173,22 @@ describe("E2E: mentions", () => {
 
   describe("mentions read", () => {
     test("marks mention as read when called by mentioned user", async () => {
-      const aliceReg = await runAgt(["users", "register", "alice"]);
+      const aliceReg = await runAgt(["users", "register", "alice"], dir);
       const aliceToken = parseJson(aliceReg.stdout).token;
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice review"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
-      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       const mentionId = parseJson(listResult.stdout)[0].id;
 
-      const result = await runAgt(["mentions", "read", mentionId], undefined, {
+      const result = await runAgt(["mentions", "read", mentionId], dir, {
         AGT_USER_TOKEN: aliceToken,
       });
       assertSuccess(result);
@@ -197,32 +196,32 @@ describe("E2E: mentions", () => {
     });
 
     test("returns MENTION_ACCESS_DENIED when wrong user", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice review"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
-      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       const mentionId = parseJson(listResult.stdout)[0].id;
 
       // Bob tries to mark alice's mention as read — should be denied
-      const result = await runAgt(["mentions", "read", mentionId], undefined, {
+      const result = await runAgt(["mentions", "read", mentionId], dir, {
         AGT_USER_TOKEN: bobToken,
       });
       assertError(result, "MENTION_ACCESS_DENIED", 21);
     });
 
     test("returns MENTION_NOT_FOUND for nonexistent id", async () => {
-      const aliceReg = await runAgt(["users", "register", "alice"]);
+      const aliceReg = await runAgt(["users", "register", "alice"], dir);
       const aliceToken = parseJson(aliceReg.stdout).token;
 
-      const result = await runAgt(["mentions", "read", "nonexistent"], undefined, {
+      const result = await runAgt(["mentions", "read", "nonexistent"], dir, {
         AGT_USER_TOKEN: aliceToken,
       });
       assertError(result, "MENTION_NOT_FOUND", 20);
@@ -233,56 +232,56 @@ describe("E2E: mentions", () => {
 
   describe("mentions unread", () => {
     test("marks mention as unread when called by mentioned user", async () => {
-      const aliceReg = await runAgt(["users", "register", "alice"]);
+      const aliceReg = await runAgt(["users", "register", "alice"], dir);
       const aliceToken = parseJson(aliceReg.stdout).token;
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice review"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
-      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       const mentionId = parseJson(listResult.stdout)[0].id;
 
       // First mark as read
-      await runAgt(["mentions", "read", mentionId], undefined, {
+      await runAgt(["mentions", "read", mentionId], dir, {
         AGT_USER_TOKEN: aliceToken,
       });
 
       // Then mark as unread
-      const result = await runAgt(["mentions", "unread", mentionId], undefined, {
+      const result = await runAgt(["mentions", "unread", mentionId], dir, {
         AGT_USER_TOKEN: aliceToken,
       });
       assertSuccess(result);
       expect(parseJson(result.stdout)).toEqual({ result: "OK" });
 
       // Verify it shows up in unread list
-      const unreadList = await runAgt(["mentions", "list", "alice"]);
+      const unreadList = await runAgt(["mentions", "list", "alice"], dir);
       assertSuccess(unreadList);
       expect(parseJson(unreadList.stdout)).toHaveLength(1);
     });
 
     test("returns MENTION_ACCESS_DENIED when wrong user", async () => {
-      const aliceReg = await runAgt(["users", "register", "alice"]);
+      const aliceReg = await runAgt(["users", "register", "alice"], dir);
       const aliceToken = parseJson(aliceReg.stdout).token;
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice review"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: aliceToken },
       );
 
-      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const listResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       const mentionId = parseJson(listResult.stdout)[0].id;
 
-      const result = await runAgt(["mentions", "unread", mentionId], undefined, {
+      const result = await runAgt(["mentions", "unread", mentionId], dir, {
         AGT_USER_TOKEN: bobToken,
       });
       assertError(result, "MENTION_ACCESS_DENIED", 21);
@@ -293,18 +292,18 @@ describe("E2E: mentions", () => {
 
   describe("mentions rebuild", () => {
     test("rebuilds mentions index from scratch", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Rebuild Test"]));
+      const issueId = extractId(await runAgt(["create", "Rebuild Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice review this"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
-      const result = await runAgt(["mentions", "rebuild"]);
+      const result = await runAgt(["mentions", "rebuild"], dir);
       assertSuccess(result);
 
       const parsed = parseJson(result.stdout);
@@ -313,9 +312,9 @@ describe("E2E: mentions", () => {
     });
 
     test("rebuild returns 0 for no mentions", async () => {
-      await runAgt(["users", "register", "alice"]);
+      await runAgt(["users", "register", "alice"], dir);
 
-      const result = await runAgt(["mentions", "rebuild"]);
+      const result = await runAgt(["mentions", "rebuild"], dir);
       assertSuccess(result);
 
       const parsed = parseJson(result.stdout);
@@ -328,59 +327,59 @@ describe("E2E: mentions", () => {
 
   describe("auto-indexing integration", () => {
     test("adding comment indexes mention", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       await runAgt(
         ["comments", "add", issueId, "--content", "@alice check"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
-      const listResult = await runAgt(["mentions", "list", "alice"]);
+      const listResult = await runAgt(["mentions", "list", "alice"], dir);
       assertSuccess(listResult);
       expect(parseJson(listResult.stdout)).toHaveLength(1);
     });
 
     test("deleting comment removes mention", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       const addResult = await runAgt(
         ["comments", "add", issueId, "--content", "@alice check"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
       const commentId = parseJson(addResult.stdout).commentId;
 
       // Verify mention exists
-      let listResult = await runAgt(["mentions", "list", "alice"]);
+      let listResult = await runAgt(["mentions", "list", "alice"], dir);
       expect(parseJson(listResult.stdout)).toHaveLength(1);
 
       // Delete the comment
-      await runAgt(["comments", "delete", issueId, commentId], undefined, {
+      await runAgt(["comments", "delete", issueId, commentId], dir, {
         AGT_USER_TOKEN: bobToken,
       });
 
       // Mention should be gone
-      listResult = await runAgt(["mentions", "list", "alice"]);
+      listResult = await runAgt(["mentions", "list", "alice"], dir);
       assertSuccess(listResult);
       expect(parseJson(listResult.stdout)).toHaveLength(0);
     });
 
     test("updating comment changes mentions", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobReg = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobReg = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobReg.stdout).token;
 
-      const issueId = extractId(await runAgt(["create", "Test"]));
+      const issueId = extractId(await runAgt(["create", "Test"], dir));
       const addResult = await runAgt(
         ["comments", "add", issueId, "--content", "@alice review"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
       const commentId = parseJson(addResult.stdout).commentId;
@@ -388,17 +387,17 @@ describe("E2E: mentions", () => {
       // Update: change from @alice to @bob
       await runAgt(
         ["comments", "update", issueId, commentId, "--content", "@bob check instead"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 
       // Alice should have 0 mentions
-      const aliceResult = await runAgt(["mentions", "list", "alice", "--include-reads"]);
+      const aliceResult = await runAgt(["mentions", "list", "alice", "--include-reads"], dir);
       assertSuccess(aliceResult);
       expect(parseJson(aliceResult.stdout)).toHaveLength(0);
 
       // Bob should have 1 mention
-      const bobResult = await runAgt(["mentions", "list", "bob"]);
+      const bobResult = await runAgt(["mentions", "list", "bob"], dir);
       assertSuccess(bobResult);
       expect(parseJson(bobResult.stdout)).toHaveLength(1);
     });

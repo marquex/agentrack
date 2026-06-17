@@ -25,8 +25,7 @@
  * - Navigation between Users page and Issues page
  */
 import { test, expect } from "@playwright/test";
-
-const BASE = "http://localhost:5001";
+import { E2E_BACKEND_URL as BASE } from "./setup.js";
 
 /**
  * Helper: generate a unique ID for test isolation.

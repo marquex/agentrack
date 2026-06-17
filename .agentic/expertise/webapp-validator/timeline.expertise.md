@@ -204,6 +204,20 @@ User (frustrated): "You are polluting again the real .agentrack. Why do you do i
 - Rewrote [webapp-e2e-data-isolation.expertise.md](webapp-e2e-data-isolation.expertise.md): the leak vector is now CONFIRMED (manual dev server on 3001), the typo theory is REFUTED with evidence, the two missing guards are named, and a pre-flight `ps aux` check before any Playwright run is documented.
 - Added the "`ps aux` is more reliable than `lsof` for leftover dev servers" gotcha to [webapp-validator-gotchas.md](webapp-validator-gotchas.md).
 
+## 2026-06-17 Finished bunx → npx standardization in own expertise (mqif2ba76n)
+
+`/work-issue mqif2ba76n` "Finish bunx standardization in webapp-validator expertise files" — docs-only follow-up to the `webapp-developer` standardization (`mqe32t3er6` / decision `mqgvczj5ua`). The prior dev task had hit ACCESS_DENIED on this folder because it lives in the validator's own domain, not the developer's; this agent picked it up and completed it cleanly. Outcome: **done**, no source or test logic touched.
+
+**Two edits made:**
+- [webapp-overview.expertise.md](webapp-overview.expertise.md): canonical e2e runner command swapped from `bunx playwright test` to `npx playwright test`, with a "Use `npx`, not `bunx`" pointer added.
+- [webapp-validator-gotchas.md](webapp-validator-gotchas.md): new gotcha section "bunx playwright test intermittently fails to load test files — use npx playwright test" added, reusing the webapp-developer root-cause wording (Bun `bun:` protocol ESM loader failure modes, exit-0-zero-tests symptom, `npx`/`npm run test:e2e` workaround, webapp **server** still on Bun — only the **test runner** moves to `npx`, parent `mqe32t3er6`, decision `mqgvczj5ua`).
+
+**Verification:** grep confirmed the only remaining `bunx playwright` mentions in the folder live inside the new gotcha itself (i.e. describing the anti-pattern), which is correct.
+
+**Lessons / expertise changes:**
+- Updated the index routing blurb for the gotchas file to surface the bunx prompts ("bunx playwright test fails to load test files", "No tests found exit 0", "bun protocol ESM loader", "should I use bunx or npx for playwright") and to summarize the runner rule alongside the sandbox gotchas.
+- Note for future validators: this gotcha is the **runner** rule — `npx playwright test` (or `npm run test:e2e`) for invoking the Playwright **test runner**; the webapp **server** still runs under Bun. Don't confuse the two when reading or editing run commands.
+
 ## 2026-06-16 Validated E2E isolation hardening (mqh3syrrnb)
 
 `/work-issue mqh3syrrnb` "Validate E2E isolation hardening" — validate the three-layer fix (Layers A/B/C) that closed the recurring `UrlFilter*` seed leak documented across the entries above. Outcome: **PASS — leak resolved, real tracker clean.** No app code changed.

@@ -1,28 +1,39 @@
 /**
  * E2E: users — Type B tests (tracker operations)
  */
-import { beforeAll, beforeEach, describe, expect, test } from "bun:test";
+import { afterAll, beforeAll, beforeEach, describe, expect, test } from "bun:test";
 import {
   E2E_DATA_BRANCH,
   assertSuccess,
+  createEphemeralDir,
   ensureE2EWorktree,
+  initGitRepo,
   parseJson,
   resetWorktreeData,
+  rmEphemeralDir,
   runAgt,
 } from "./setup";
 
 describe("E2E: users", () => {
+  let dir: string;
+
   beforeAll(async () => {
-    await ensureE2EWorktree(E2E_DATA_BRANCH);
+    dir = createEphemeralDir();
+    initGitRepo(dir);
+    await ensureE2EWorktree(dir, E2E_DATA_BRANCH);
   });
 
   beforeEach(() => {
-    resetWorktreeData(E2E_DATA_BRANCH);
+    resetWorktreeData(dir, E2E_DATA_BRANCH);
+  });
+
+  afterAll(() => {
+    rmEphemeralDir(dir);
   });
 
   describe("users register", () => {
     test("creates a user and returns token", async () => {
-      const result = await runAgt(["users", "register", "Alice"]);
+      const result = await runAgt(["users", "register", "Alice"], dir);
 
       assertSuccess(result);
 
@@ -32,16 +43,16 @@ describe("E2E: users", () => {
     });
 
     test("rejects duplicate name", async () => {
-      await runAgt(["users", "register", "alice"]);
+      await runAgt(["users", "register", "alice"], dir);
 
-      const result = await runAgt(["users", "register", "alice"]);
+      const result = await runAgt(["users", "register", "alice"], dir);
 
       const parsed = parseJson(result.stdout);
       expect(parsed.result).toBe("USER_ALREADY_EXISTS");
     });
 
     test('rejects "anonymous" as reserved name', async () => {
-      const result = await runAgt(["users", "register", "anonymous"]);
+      const result = await runAgt(["users", "register", "anonymous"], dir);
 
       const parsed = parseJson(result.stdout);
       expect(parsed.result).toBe("USER_ALREADY_EXISTS");
@@ -50,10 +61,10 @@ describe("E2E: users", () => {
 
   describe("users list", () => {
     test("shows registered users without tokens", async () => {
-      await runAgt(["users", "register", "alice"]);
-      await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      await runAgt(["users", "register", "bob"], dir);
 
-      const result = await runAgt(["users", "list"]);
+      const result = await runAgt(["users", "list"], dir);
 
       expect(result.exitCode).toBe(0);
       expect(result.stderr).toBe("");
@@ -72,20 +83,20 @@ describe("E2E: users", () => {
 
   describe("users revoke", () => {
     test("removes a user", async () => {
-      await runAgt(["users", "register", "alice"]);
+      await runAgt(["users", "register", "alice"], dir);
 
-      const result = await runAgt(["users", "revoke", "alice"]);
+      const result = await runAgt(["users", "revoke", "alice"], dir);
 
       assertSuccess(result);
 
       // Verify user is gone
-      const listResult = await runAgt(["users", "list"]);
+      const listResult = await runAgt(["users", "list"], dir);
       const listParsed = parseJson(listResult.stdout);
       expect(listParsed).toHaveLength(0);
     });
 
     test("rejects non-existent user", async () => {
-      const result = await runAgt(["users", "revoke", "nonexistent"]);
+      const result = await runAgt(["users", "revoke", "nonexistent"], dir);
 
       expect(result.exitCode).toBe(1);
 
@@ -96,12 +107,12 @@ describe("E2E: users", () => {
 
   describe("users regenerate", () => {
     test("issues new token with own token via env var", async () => {
-      const regResult = await runAgt(["users", "register", "alice"]);
+      const regResult = await runAgt(["users", "register", "alice"], dir);
       const oldToken = parseJson(regResult.stdout).token;
 
       const result = await runAgt(
         ["users", "regenerate", "alice"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: oldToken },
       );
 
@@ -114,13 +125,13 @@ describe("E2E: users", () => {
     });
 
     test("rejects when different user tries to regenerate", async () => {
-      await runAgt(["users", "register", "alice"]);
-      const bobResult = await runAgt(["users", "register", "bob"]);
+      await runAgt(["users", "register", "alice"], dir);
+      const bobResult = await runAgt(["users", "register", "bob"], dir);
       const bobToken = parseJson(bobResult.stdout).token;
 
       const result = await runAgt(
         ["users", "regenerate", "alice"],
-        undefined,
+        dir,
         { AGT_USER_TOKEN: bobToken },
       );
 

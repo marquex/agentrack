@@ -115,6 +115,10 @@ Tokens containing forward slashes, `http://`, backtick-wrapped paths, parenthesi
 
 **Workaround:** rephrase the content to avoid path-like and URL-like substrings. Use plain prose: write `packages webapp e2e spec` instead of `packages/webapp/e2e/...`, `the local API on port 3001` instead of `http://localhost:3001/...`, `Date.now sample` instead of `Date.now()-...`, `close and delete` instead of `close/delete`, and drop backticks around paths. The comment/description text reads slightly less precisely but passes the sandbox. This is the only reliable way to embed evidence-rich comments via the CLI.
 
+### Gotcha: `bunx playwright test` intermittently fails to load test files — use `npx playwright test`
+
+`bunx playwright test` can intermittently fail to load test files (`Error: Only URLs with a scheme in file, data, and node are supported by the default ESM loader. Received protocol bun:` / `Error: Playwright Test did not expect test.describe to be called here` / `Error: No tests found`, exit 0 with zero tests run) after repeated invocations or a `Saved lockfile` re-save event. Use `npx playwright test` (or `npm run test:e2e`) for deterministic runs. Root cause: Bun's experimental `bun:` protocol ESM loader. The webapp **server** still runs under Bun; only the Playwright **test runner** invocation moves to `npx`. Playwright is an npm devDependency (`@playwright/test ^1.60.0`), so `npx` is the canonical runner and sidesteps the loader issue. Tracked in parent issue `mqe32t3er6` (decision: `mqgvczj5ua`).
+
 ### Gotcha: `agt list` output is truncated in the tool preview — a known issue can look missing
 
 `agt list` (no filter) returns a payload large enough that the Bash tool-result preview truncates it, and the persisted full output goes to a `tool-results/*.txt` file. An issue that `agt view <id>` confirms exists can appear **absent** from `agt list` simply because its line fell past the preview window or didn't match a naive `grep` against the truncated slice. This bit during the 15th leak triage (`mqh11fqlw2`): the assigned issue didn't show in the preview, leading to a brief "is it even in the list?" detour.

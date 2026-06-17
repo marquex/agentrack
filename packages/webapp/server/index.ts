@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { errorHandler } from "./middleware/error-handler.js";
 import healthRoute from "./routes/health.js";
+import statusRoute from "./routes/status.js";
 import issueRoutes from "./routes/issues.js";
 import userRoutes from "./routes/users.js";
 import commentRoutes from "./routes/comments.js";
@@ -17,6 +18,7 @@ app.use("/api/*", logger());
 
 // API routes
 app.route("/api/health", healthRoute);
+app.route("/api/status", statusRoute);
 app.route("/api/issues", issueRoutes);
 app.route("/api/issues", commentRoutes);
 app.route("/api/issues", blockageRoutes);
