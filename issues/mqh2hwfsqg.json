@@ -26,5 +26,49 @@
     "content": {
       "blockerId": "mqh2hweq9n"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T16:05:44.721Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh2hweq9n",
+      "reason": "Blocker issue mqh2hweq9n transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:26:48.734Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:39:03.400Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqiapteto3",
+      "content": "Validated both the slash api status endpoint and the E2E isolation guard. All checks PASS.\n\nENDPOINT (GET slash api status):\n- Returns HTTP 200 with body { agentrackPath: <resolved cwd> }.\n- Sourced from the shared cwd export in server utils tracker.ts (process.env.AGENTRACK_CWD || process.cwd()), so the endpoint and the Tracker singleton cannot drift.\n- Verified with a live isolated backend (AGENTRACK_CWD pointed at validation e2edata): agentrackPath equals the e2edata dir.\n- Verified with a non-isolated backend (env unset): agentrackPath equals process cwd (the server's working directory). Matches the cwd-fallback contract from the spec.\n\nGUARD (e2e global-setup.ts):\n- Drove the REAL globalSetup() against a controlled backend on a free port.\n- Positive case (isolated backend): globalSetup completed without throwing, elapsed about 44 ms after the backend became healthy. No seeds created, no real data touched.\n- Negative case (non-isolated backend pointed at packages webapp cwd): globalSetup threw the isolation-guard error before any seed creation, elapsed about 56 ms. The error message clearly reports both the actual agentrackPath and the expected e2edata path, names the port, and tells the operator how to fix it (ensure no dev server is on the e2e port, set AGENTRACK_CWD correctly). Abort is fast and clearly reports why, as required.\n- The guard is implemented as an allowlist of one (abort UNLESS agentrackPath equals the e2edata dir), which is strictly stronger than the spec's abort-if-real-agentrack form.\n\nSIDE FINDINGS (not blockers, not fixed per scope):\n- The earlier cosmetic residual bug noted in expertise (literal BACKEND_PORT in the guard message) is already FIXED: every BACKEND_PORT reference in global-setup.ts is inside a backtick template literal and interpolates correctly.\n- Frontend build (tsc -b then vite build) PASSES cleanly once the incremental tsbuildinfo cache is cleared; an initial stale-cache run reported a spurious TS2307 for the fontsource import that does not reproduce after clearing node modules dot tmp.\n- e2e README section 2 is STALE: it documents the isolation guard as living on slash api health and asserting health.cwd, but the guard actually uses slash api status and the agentrackPath field. The health route only returns status and tracker. Filed as idea mqiapgeep7 for webapp-developer to update the docs.\n- A stray dev backend (bun run dev server, no AGENTRACK_CWD) was observed squatting on port 3001 returning the packages webapp cwd. This is no longer an E2E leak vector (the suite now uses 5001) but is worth flagging if dev-mode behavior is ever investigated.\n\nNo code changes were made. Endpoint and guard meet the spec."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:39:08.431Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:49:59.293Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

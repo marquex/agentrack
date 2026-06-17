@@ -1,0 +1,29 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:03:11.719Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:03:11.719Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Update release expertise: complete release at version-bump/build/commit; do not block on npm auth",
+      "status": "todo",
+      "assignee": "library-releaser",
+      "parentId": "mqi9cm0fxc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:11:25.724Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

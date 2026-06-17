@@ -44,5 +44,14 @@
       "id": "mqh1al0rdr",
       "content": "Status loop: closing this forbidden completion/verification child. Per Rule #1, there is no 'verify complete' child — the status loop completes the parent when all phase tasks are done. A task,sync gate tracker is only for collaborative decision gates, never completion detection. The parent (mqe162svv5, BUG-2) will be completed by the status loop once its real phase tasks (Fix, Validate, Release) are all done."
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T15:52:36.712Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe2xmprgj",
+      "reason": "Blocker issue mqe2xmprgj transitioned to done"
+    }
   }
 ]

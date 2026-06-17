@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T18:40:44.750Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:40:44.750Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Finish bunx standardization in webapp-validator expertise files",
+      "description": "Follow-up to dev task mqgvvj3ysq (which could not edit webapp-validator-domain files due to ACCESS_DENIED). Validation mqgvvj3qhv found the standardization incomplete in the webapp-validator expertise folder. Docs-only — NO test/source-code logic changes.\n\nScope (two edits, both inside .agentic/expertise/webapp-validator/):\n\n1. Add the bunx-caveat gotcha to webapp-validator-gotchas.md. Use the same wording already landed in webapp-developer/webapp-overview.expertise.md for consistency: '`bunx playwright test` can intermittently fail to load test files (`Only URLs with ... protocol bun:` / `Playwright Test did not expect test.describe` / `No tests found`, exit 0 with zero tests run) after repeated invocations or a lockfile re-save; use `npx playwright test` for deterministic runs. Root cause: Bun experimental `bun:` ESM loader. WebServers still run under Bun; only the test runner moves to npx.' Reference decision mqgvczj5ua / parent mqe32t3er6.\n\n2. In webapp-overview.expertise.md (~line 20), replace the canonical runner command `cd packages/webapp && bunx playwright test` with the npx form (`cd packages/webapp && npx playwright test`), matching the webapp-developer expertise standardization.\n\nDo NOT touch any other files. No source/test logic. Comment when done.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqe32t3er6",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:47:01.451Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:47:53.177Z",
+    "author": "webapp-validator",
+    "content": {
+      "id": "mqifbibslx",
+      "content": "Done. Both bunx-standardization edits landed in the webapp-validator expertise folder, docs only, no source or test logic touched.\n\nEdit 1 — webapp-overview.expertise.md (line 20): swapped the canonical runner command from bunx playwright test to npx playwright test and added a 'Use npx, not bunx — see the gotcha below' pointer, matching the webapp-developer expertise standardization.\n\nEdit 2 — webapp-validator-gotchas.md: added a new 'bunx playwright test intermittently fails to load test files — use npx playwright test' gotcha section, reusing the same root-cause wording already landed in webapp-developer webapp-overview.expertise.md (the bun protocol ESM loader failure modes, the exit-0-zero-tests symptom, the npx or npm run test e2e workaround, the note that the webapp server still runs on Bun and only the test runner moves to npx, and the parent mqe32t3er6 and decision mqgvczj5ua references).\n\nVerified with grep that the only remaining bunx playwright mentions in the folder are inside the new gotcha itself (i.e. describing the anti-pattern), which is correct. No other files were modified."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:47:58.872Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:52:05.956Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:31:07.774Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:07.774Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Reproduce: double-@@ regex extracts a spurious mention",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mqib4k139o",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.841Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

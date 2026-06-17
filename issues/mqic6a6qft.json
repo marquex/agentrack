@@ -1,0 +1,74 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:19:51.329Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:19:51.329Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Validate: serialized cleanupE2ESeeds leaves no stragglers",
+      "description": "Validate the fix in mqib7bbznm (serialize DELETEs in cleanupE2ESeeds, packages/webapp/e2e/setup.ts). Reproduce the original race condition to confirm it is gone: seed multiple e2e-seed-tagged issues against an isolated backend (AGENTRACK_CWD=validation/.e2edata, port e.g. 5001), run cleanupE2ESeeds() once, and assert NO tagged issues remain (contrast with the pre-fix repro where 2 of 3 survived the first pass). Also confirm: (1) best-effort semantics preserved (errors still swallowed, no spec failure on already-deleted ids); (2) E2E_SEED_TAG and list-then-delete flow unchanged; (3) specs still load via 'npx playwright test --list'. Severity is low/defense-in-depth (Layer A global-setup reset is the authoritative wipe), so validation focuses on confirming the race is eliminated, not on real-data-leak scenarios. Report pass/fail with repro evidence.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqh5aew5am",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T17:20:05.488Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqib7bbznm"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T18:24:58.320Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqib7bbznm",
+      "reason": "Blocker issue mqib7bbznm transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:37:55.387Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:44:48.720Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqif7j3xwg",
+      "content": "VALIDATION PASS. The serialized cleanupE2ESeeds fix in mqib7bbznm eliminates the Layer B parallel-DELETE race.\n\nReproduction evidence (against an isolated backend on port 5001 with AGENTRACK_CWD pointed at validation .e2edata, isolation verified via the /api/status guard before seeding):\n\n(1) RACE ELIMINATED — single cleanup pass. Seeded 8 e2e-seed-tagged issues, invoked the real cleanupE2ESeeds() ONCE (now a for-of-await loop), result 0 survivors (8 of 8 removed in 9ms). Best-effort semantics preserved: re-running on the empty set does not throw, and a DELETE of a fabricated already-deleted id (HTTP 404) is swallowed by the helper. Non-tagged control issue survived cleanup, confirming the tag filter is intact.\n\n(2) CONTRAST REPRO of the pre-fix behavior. Re-implemented the old parallel Promise.all form locally and ran 5 trials of N=8 seeds each: 33 of 40 tagged seeds survived a single pass (only 7 of 40 deleted) — the race is real and severe on this unlocked file store. The same local serialized form across 5 trials of N=8 left 0 survivors. So the serialization is precisely what closes the gap.\n\n(3) E2E_SEED_TAG unchanged (still the literal e2e-seed), list-then-delete flow unchanged (single GET by tag, then DELETE per id), helper still tolerates already-deleted ids. Confirmed via grep of e2e/setup.ts.\n\n(4) Specs still load. npx playwright test --list reports 176 tests in 6 files with no config errors. Spec wiring of cleanupE2ESeeds is unchanged: phase2, phase3, dashboard-roots, url-filters call cleanupE2ESeeds in afterAll; phase1 and phase4 do not create tracker issues and have no afterAll.\n\nSeverity assessment agrees with the issue: this is defense-in-depth. Layer A (global-setup resetWorktreeData) remains the authoritative wipe, so the residual race never caused real-data leakage.\n\nCaveat (not a validation issue): to boot the isolated backend I started bun run --watch server/index.ts on port 5001 and then killed it via pkill matching the bun watch cmdline. A pre-existing user dev server on port 3001 had the same cmdline and was caught by the same pkill, so the dev backend on 3001 may need to be restarted manually.\n\nNo code changes were made; validation only."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:44:52.836Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:46:58.922Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

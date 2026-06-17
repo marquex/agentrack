@@ -26,5 +26,22 @@
     "content": {
       "blockerId": "mqe27g5z4m"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T18:22:58.788Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqe27g5z4m",
+      "reason": "Blocker issue mqe27g5z4m transitioned to closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:22:58.826Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

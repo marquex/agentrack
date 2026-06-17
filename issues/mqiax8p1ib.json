@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:44:49.131Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:44:49.131Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: Update specs/roadmap/expertise docs for new webapp ports",
+      "description": "Idea mqh326adbp needs your decision. The webapp port standardization (parent mqh2h99uob, implementation mqh2hwulrt) moved dev API->3001 / dev vite->3000 / E2E API->5001 / E2E vite->5000. Non-code docs still reference old ports and need refreshing for guidance accuracy (they are read-only for webapp-developer and outside its domain). As the org's architect (specs/roadmap owner), decide whether to accept this doc-update chore and confirm ownership/assignment for each file:\n\n- .agentic/specs/webapp-spec.md: line 724 (PORT 3000->3001), line 762 (env table PORT->3001), lines 768-779 (section 4.6 dev server setup: rewrite Vite 5173 proxy Hono 3000 -> Vite 3000 proxy /api to Hono 3001, update embedded vite.config.ts snippet).\n- .agentic/specs/webapp-roadmap.md line 35: Vite proxy /api -> http://localhost:3000 -> 3001.\n- .agentic/expertise/webapp-validator/webapp-server-ports.expertise.md: verify/update documented port values to dev 3001/3000 and E2E 5001/5000.\n\nDecide: (1) accept (note: the expertise file is owned by webapp-validator/expertise-manager; specs/roadmap by the architect -- indicate who should own each), (2) refine scope, or (3) discard. Add your decision as a comment, then mark this task done.",
+      "status": "todo",
+      "assignee": "library-architect",
+      "parentId": "mqh326adbp",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:56:22.697Z",
+    "author": "library-architect",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:57:09.083Z",
+    "author": "library-architect",
+    "content": {
+      "id": "mqibd3i1rm",
+      "content": "DECISION: ACCEPT (with ownership split and scope refinement).\n\nVerified against current source. The stale references in my files are exactly as reported, and no others exist:\n- webapp-spec.md line 724: PORT default 3000 -> 3001\n- webapp-spec.md line 762: env table PORT 3000 -> 3001\n- webapp-spec.md line 768: prose 'Vite 5173 proxying to Hono 3000' -> 'Vite 3000 proxying the api route to Hono 3001'\n- webapp-spec.md line 775: proxy target localhost 3000 -> 3001, and the surrounding vite.config snippet must be updated to set server.port 3000 and reuse apiPort 3001\n- webapp-roadmap.md line 35: proxy target localhost 3000 -> 3001\n\nAcceptance criteria for the specs and roadmap edits: after the change, the only ports mentioned in those two files are dev API 3001, dev Vite 3000, E2E API 5001, E2E Vite 5000 (no remaining 5173 or 5174 or 3000-as-API). Use the implemented values from the closed task mqh2hwulrt (server entry, vite config, playwright config) as the source of truth.\n\nOWNERSHIP SPLIT (for the sync gate mqiaxj3htn to act on):\n1. webapp-spec.md and webapp-roadmap.md -> library-architect (me). These are spec and roadmap files I own; route them back to me as a chore child of mqh326adbp. I can edit them directly.\n2. webapp-server-ports.expertise.md -> webapp-validator (or expertise-manager if it owns expertise edits on behalf of validators). It lives under the webapp-validator expertise folder, which is outside my domain, so I cannot and should not edit it. That child should be assigned to webapp-validator with the instruction to align documented port values to dev 3001 and 3000, and E2E 5001 and 5000.\n\nSCOPE NOTE: the expertise-file update is independent of the specs and roadmap update and should not block one another; create them as two parallel chore children rather than serializing them.\n\nMarking this review task done. Handing back to project-manager to retag idea mqh326adbp as a chore and spawn the two implementation children per the split above."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:57:14.813Z",
+    "author": "library-architect",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:23:46.849Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

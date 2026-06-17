@@ -1,0 +1,74 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:11:13.431Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:11:13.431Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Implement e2e API base URL constant extraction",
+      "description": "Execute the refactor planned in the Plan task under this chore. Follow the plan comment and the accepted review scope (mqiax8qo6l comment mqibe8euv8).\\n\\nDo:\\n1. Add 'export' to E2E_BACKEND_URL in packages/webapp/e2e/setup.ts (no new constant, no Playwright baseURL conflation).\\n2. phase2-validation.spec.ts: import E2E_BACKEND_URL, replace all ~60 inline http://localhost:5001/... literals, preserving string quote style per occurrence.\\n3. phase1 / phase3 / phase4 / dashboard-roots / url-filters specs: remove local 'const BASE' and import the shared constant.\\n4. Do NOT touch playwright.config.ts, server/index.ts, frontend/vite.config.ts, e2e/global-setup.ts. No port changes.\\n\\nInvariants: runner is 'npx playwright test' (never bunx); workers:1 / fullyParallel:false is load-bearing — do not perturb. At minimum run 'npx playwright test --list' to confirm config + all specs load after the refactor. Note: full regression needs port 5000 free (macOS AirPlay Receiver) — if unavailable, document that and leave the full run to the Validate task.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqh2nk7khi",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T17:11:24.737Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqibuy0y3q"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T17:17:38.399Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqibuy0y3q",
+      "reason": "Blocker issue mqibuy0y3q transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:19:59.832Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:29:49.977Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqicj4rc53",
+      "content": "Done. Extracted the e2e API base URL into a single shared constant per the plan.\n\nSummary\n- Added `export` to `E2E_BACKEND_URL` in e2e/setup.ts (the only source of truth — no new constant, no Playwright baseURL conflation).\n- phase2-validation.spec.ts: imported `E2E_BACKEND_URL` and replaced all 60 inline `http://localhost:5001/...` literals, preserving quote style (double-quoted became template literals; already-template-literal strings got a host-prefix swap only, keeping their existing interpolations intact).\n- phase1, phase3, phase4, dashboard-roots, url-filters: removed the local `const BASE = \"...\"` declaration and imported the shared constant via an aliased import (`E2E_BACKEND_URL as BASE`) so all existing `${BASE}` call sites kept working untouched — minimal, mechanical diff.\n- Out-of-scope files left alone: playwright.config.ts, server/index.ts, frontend/vite.config.ts, e2e/global-setup.ts. No port changes.\n\nVerification\n- `npx playwright test --list` succeeds: 176 tests across 6 spec files load cleanly (config + every spec compiles).\n- Swept all e2e specs: zero remaining `http://localhost:5001` literals and zero local `const BASE` declarations outside setup.ts.\n- Note: the webapp package exposes no `tsc`/`lint`/`test` npm scripts, so the project's stated gate (`playwright test --list`) is the authoritative compile/config check for this refactor.\n- Full e2e regression was not run locally because port 5000 is held by macOS AirPlay Receiver (ControlCenter); the Validate task can run the full suite once 5000 is free.\n\nCaveat\n- e2e/global-setup.ts shows as modified in the working tree, but that change is pre-existing uncommitted work from a separate effort (it switches the isolation guard from /api/health to /api/status). I did NOT touch it — left as-is per the out-of-scope list."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:29:50.013Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:07:42.619Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:44:49.042Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:44:49.042Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: Extract shared e2e API base URL constant",
+      "description": "Idea mqh2nk7khi needs your decision. The webapp e2e specs hardcode the API base URL: phase1/phase2 inline http://localhost:3001/... in ~63 places; phase3/phase4/dashboard/url-filters each define a local const BASE. Proposal: export a single E2E_API_BASE (and optionally consume Playwright's baseURL-derived value) from e2e/setup.ts and import it in all specs, so future port changes are a 1-line edit. Scope: refactor only, no behavior change, all 152 tests must stay green. As the webapp team's tech lead, decide: (1) accept the refactor as scoped; (2) refine (e.g. consume playwright baseURL only, or split scope); or (3) discard. Add your decision (accept/refine/discard + rationale + any scope guidance) as a comment, then mark this task done.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqh2nk7khi",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:57:30.688Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:58:01.636Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqibe8euv8",
+      "content": "**Decision: accept** (with scope guidance)\n\n### Verdict\nAccept the refactor. It is the unfinished half of the port-standardization task `mqh2hwulrt`: that sweep replaced `3001` with `5001` everywhere via `sed`, but `phase2-validation.spec.ts` was left with inline literals (~60 occurrences of `http://localhost:5001`) while the other four specs already define a local `const BASE = \"http://localhost:5001\"`. Centralizing this is a legitimate, scoped cleanup with no behavior change.\n\n### Verification in code\n- `packages/webapp/e2e/setup.ts` already declares an internal (non-exported) `E2E_BACKEND_URL = process.env.E2E_BACKEND_URL ?? \"http://localhost:5001\"` used by `cleanupE2ESeeds()`. The natural home for the shared constant already exists — just export it.\n- Inline-literal counts: phase2=60, phase1=phase3=phase4=dashboard=url-filters=1 (each already behind a local `const BASE`).\n- `playwright.config.ts` pins the backend to 5001 via `E2E_BACKEND_PORT` env (the isolation-guard contract) and the frontend/baseURL to 5000. The dev/prod split (3001/3000) is unrelated to e2e.\n\n### Scope guidance for the implementation child(ren)\n1. **Export the existing constant from `e2e/setup.ts`** (e.g. `export const E2E_BACKEND_URL` — already correct value, just add `export`). Do not introduce a parallel constant; do not consume Playwright's `baseURL` for API calls — `baseURL` is the **frontend** port (5000) used for page navigation, while the API hits a different port (5001). Conflating them would obscure the frontend/proxy/backend architecture and break the existing `cleanupE2ESeeds` pattern.\n2. **`phase2-validation.spec.ts`**: import the constant and replace all ~60 inline `http://localhost:5001/...` literals. Mix of double-quoted and template-literal strings must be preserved per-string (mechanical replacement of the host prefix only).\n3. **phase1 / phase3 / phase4 / dashboard-roots / url-filters**: delete the per-spec `const BASE = \"http://localhost:5001\"` and import the shared constant instead. Net effect: single source of truth.\n4. **Do not touch** `playwright.config.ts`, `server/index.ts`, `frontend/vite.config.ts`, or `e2e/global-setup.ts` — no port is changing. This is a pure dedupe.\n5. **Invariant to preserve**: any future port/URL change must still sweep `setup.ts` + all six specs + the three config files + the spec doc. The refactor reduces the spec sweep from ~6 edits to ~1, but does not remove the invariant for the other files.\n\n### Caveats for the implementing agent\n- A full e2e regression after the change requires **port 5000 free** (macOS ControlCenter / AirPlay Receiver holds it on this machine). If AirPlay can't be disabled, `npx playwright test --list` at minimum validates that config and all specs still load after the refactor.\n- Runner is `npx playwright test` (never `bunx`); `workers: 1` / `fullyParallel: false` is load-bearing — do not perturb.\n\n### Recommendation\nRetag parent idea `mqh2nk7khi` as `chore` and create a single implementation child scoped to `packages/webapp/e2e/` covering points 1–3 above. Single child is fine — the change is mechanical and one agent should own the full sweep to keep diffs consistent."
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:58:14.400Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqibeicqpg",
+      "content": "Done. Review complete — decision: **accept** with scope guidance (export the existing `E2E_BACKEND_URL` from `e2e/setup.ts`, sweep phase2's ~60 inline literals + the 5 other specs' local `const BASE`; do NOT conflate with Playwright's frontend `baseURL`; full regression needs port 5000 free / AirPlay off). Recommend retagging parent `mqh2nk7khi` as chore with a single implementation child. See full rationale in the previous comment."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:58:14.436Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:07:42.618Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

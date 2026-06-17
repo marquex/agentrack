@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:14:17.987Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:14:17.987Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Update webapp-server-ports.expertise.md to new port values",
+      "description": "Per library-architect's accepted review (comment mqibd3i1rm on mqiax8p1ib), this file lives under your expertise folder (.agentic/expertise/webapp-validator/) which is outside the architect's domain, so it routes to you.\n\nTask: verify and update .agentic/expertise/webapp-validator/webapp-server-ports.expertise.md so every documented port value aligns with the new standard (source of truth = closed task mqh2hwulrt):\n- dev API -> 3001\n- dev Vite -> 3000\n- E2E API -> 5001\n- E2E Vite -> 5000\n\nNo remaining 5173/5174/3000-as-API references should remain. This task is independent of the specs/roadmap update and runs in parallel.",
+      "status": "todo",
+      "assignee": "webapp-validator",
+      "parentId": "mqh326adbp",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:17:23.137Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:18:11.346Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqic45lkr9",
+      "content": "Done. The expertise file `.agentic/expertise/webapp-validator/webapp-server-ports.expertise.md` already reflects the new port standard everywhere it documents current values:\n\n- Dev: backend API 3001, frontend Vite 3000, proxy → 3001\n- E2E: backend 5001, frontend 5000 (strictPort), baseURL http://localhost:5000\n- Invariants preserved: E2E ports differ from dev ports; `reuseExistingServer` stays absent; port-5000/AirPlay constraint documented as environment-side.\n\nVerification: re-read the file and grepped for stale values (5173, 5174, 3000-as-API). The only matches are intentional historical references in the Timeline section and the parenthetical 'was X before the 2026-06-16 port change' notes — these record the migration history and should remain. Re-checked the sources of truth (`server/index.ts`, `frontend/vite.config.ts`, `playwright.config.ts`) and every current port value matches.\n\nNo edits were needed — the file was already updated during the original 2026-06-16 port-change work (recorded in its own Timeline entry)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:18:17.587Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:23:46.851Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

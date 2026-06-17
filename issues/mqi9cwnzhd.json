@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:00:59.959Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:00:59.959Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Update release expertise: NPM publishing is deferred",
+      "description": "Project-level decision (owner-directed, 2026-06-17): the agentrack library will NOT be published to NPM at this stage. There is no need to publish the library yet, and there are no NPM credentials available.\n\nAction required — update your release expertise (`.agentic/expertise/library-releaser/**`) to reflect:\n\n1. **Release tasks complete at the pre-publish stage.** A release is considered DONE once: tests pass, docs updated, build verified, and version bumped (and committed/tagged if applicable). Do NOT block on NPM publishing, do NOT report missing NPM credentials as a blocker, and do NOT leave release issues in-progress waiting for npm auth.\n2. **NPM publish is an explicitly deferred phase**, not a missing prerequisite. If a release issue's only remaining step is NPM publish, mark it done with a comment noting publish was skipped per this decision.\n3. **The publish mechanism will be revisited** when the project decides how releases should be managed (current release-overview / release-recipe expertise that gates on NPM_TOKEN / `release.yml` should be amended so the publish step is optional/deferred, not required).\n\nReference: the in-progress release task `mqe27481sa` (\"Release: library token override\") was closed as done on this basis. Future release issues should follow the same convention until further notice.\n\nDeliverable: comment on this issue summarizing the expertise updates made, then mark done.",
+      "status": "todo",
+      "assignee": "library-releaser",
+      "parentId": "mqi9cm0fxc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:05:23.019Z",
+    "author": "library-releaser",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:07:31.967Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9laeqs4",
+      "content": "Closing as a duplicate. This task was superseded by mqi9fpjvx6 (same goal: update release expertise so release completes at version-bump/build/commit and does not block on npm auth). The newer set (mqi9fp1wf6 architect + mqi9fpjvx6 releaser + mqi9g0bia7 validator) is the single source of truth — it has proper validation gating and blockages, which this orphan lacked. No progress was recorded here. Reassigning the releaser to mqi9fpjvx6."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:07:32.001Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed",
+      "assignee": "project-manager"
+    }
+  }
+]

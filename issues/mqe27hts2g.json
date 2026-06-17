@@ -70,5 +70,13 @@
     "content": {
       "status": "closed"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:23:12.094Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

@@ -18,5 +18,49 @@
         "task"
       ]
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:25:25.913Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:27:47.137Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqiabcfrij",
+      "content": "Plan ready. The geist variable font is already a declared dependency. Implementation is a 2-line change: add the fontsource side-effect import above the stylesheet import in the React entry, and set a font-family (Geist Variable with system-ui fallback) on the html body rule inside the existing at-layer base block. See the Dev task mqh4glovns for the exact instructions; this plan confirms the approach, the correct css font name (Geist Variable), the fallback stack, and the verification step (run the frontend build). No component contracts change; no impact on tests or typecheck."
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:28:10.156Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqiabtuff9",
+      "content": "Plan details and decisions:\n\nPLACEMENT RATIONALE:\n- The side-effect font import goes BEFORE the main stylesheet import so the Geist Variable face is registered before any rules that reference it.\n- The font-family goes on html and body inside the at-layer base block (not on the universal selector, not outside the layer) so it cascades through the Tailwind v4 layering and components can still override via Tailwind font utilities. No component contracts change.\n\nFALLBACK STACK: Geist Variable, then ui-sans-serif, system-ui, dash apple-system, sans-serif. system-ui is kept per the review requirement; the rest is the standard shadcn pairing so non-Geist systems render unchanged.\n\nNON-GOALS: no font-feature or font-variation overrides, no tailwind config change, no font-sans utility token, no component edits. Keeps the low-risk 2-line scope from the accepted review.\n\nVERIFICATION: run the frontend build (bun run build) — the font package is already in node_modules, so the build should succeed; visually the app uses Geist where available and falls back elsewhere. No TS surface changes, so no typecheck impact. No DOM or contract change, so e2e tests are unaffected."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:28:19.977Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:54:34.624Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

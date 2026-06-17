@@ -35,5 +35,40 @@
       "blockerId": "mqh2hwl22k",
       "reason": "Blocker issue mqh2hwl22k transitioned to done"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T15:57:14.360Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:05:35.148Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqi9isvx53",
+      "content": "Done. Implemented the /status endpoint and the E2E environment guard per the plan in mqh2hwl22k.\n\n**Part A — endpoint (server)**\n- New `server/routes/status.ts`: `GET /` returns `{ agentrackPath: <cwd> }` reusing the shared `cwd` export from `server/utils/tracker.ts` so the endpoint and the Tracker singleton can never drift.\n- Registered `app.route(\"/api/status\", statusRoute)` in `server/index.ts` as a sibling top-level route (issues/comments/blockages routes untouched).\n- Added `StatusResponse` to `server/types.ts`.\n- Per Decision 1 of the plan, removed `cwd` from `HealthResponse` and from `server/routes/health.ts` (and its stale isolation-guard comment). `/health` is now a pure liveness probe; `/status` is the authoritative isolation endpoint. The frontend `HealthResponse` already matched this shape, and phase1's health-shape e2e test only asserts `status` + `tracker`, so no regressions.\n\n**Part B — guard (e2e/global-setup.ts)**\n- Kept `waitForBackend()` polling `/api/health`.\n- After the readiness gate, fetches `/api/status` and asserts `body.agentrackPath === getE2EDataDir()` (allowlist-of-one — strictly stronger than the spec's 'abort if equals real .agentrack/' form, as recommended in the plan).\n- Fetch-failure fallback: if the `/api/status` fetch throws after the server was confirmed healthy, abort with 'isolation unverified'. If it returns non-2xx, abort (catches stale dev servers without the `/status` route). Both throw before any seed is created.\n- Fixed the pre-existing string-interpolation bug: the mismatch throw now uses a backtick template literal so `` actually interpolates.\n- Added `E2E_BACKEND_PORT: \"5001\"` to the backend webServer env in `playwright.config.ts` so the guard's port and the webServer port share a single source of truth (no magic-number drift).\n\n**Verification**\n- Frontend build (tsc -b + vite) passes — clean.\n- Manually hit both endpoints with AGENTRACK_CWD set: `/api/status` returned the e2e path; `/api/health` returned `{ status, tracker }` with no `cwd`.\n- Hit `/api/status` with AGENTRACK_CWD unset: returned the repo root, i.e. the guard would throw and abort — the failure path the validator (mqh2hwfsqg) exercises works as intended.\n\n**Caveat for the validator**\n- I could NOT run the full `npx playwright test` suite on this machine: port 5000 is held by the macOS AirPlay Receiver, so the frontend webServer fails to bind. Backend-only verification (above) works. The validator should plan around the 5000/5001 bind (called out in the plan's GOTCHAS). Note also the known-gap pre-existing phase1–3 failures (mqdzlo4ia8) — those are unrelated to this change.\n\nNo lint script exists for the webapp; the frontend build is the project's typecheck/lint gate (per the webapp expertise notes)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:05:44.718Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:49:59.293Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

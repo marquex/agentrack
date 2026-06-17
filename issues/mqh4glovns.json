@@ -26,5 +26,49 @@
     "content": {
       "blockerId": "mqh4gfibr3"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T16:28:19.979Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh4gfibr3",
+      "reason": "Blocker issue mqh4gfibr3 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:32:33.460Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:36:49.542Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqiamynpkq",
+      "content": "Done. Wired up the Geist variable font in the webapp frontend:\n\n- Added side-effect import in `frontend/src/main.tsx` before `./index.css`. Used the explicit CSS path `@fontsource-variable/geist/index.css` instead of the bare specifier in the plan — the bare form has no TS types and fails `tsc -b`; the explicit `.css` path is matched by vite/client's `declare module '*.css'` and resolves to the same stylesheet via the package's exports map. Functionally identical to the plan.\n- Set `font-family: \"Geist Variable\", ui-sans-serif, system-ui, -apple-system, sans-serif;` in the `@layer base` `html, body` block of `frontend/src/index.css`.\n\nVerified with `cd packages/webapp/frontend && bun run build` (tsc -b + Vite) — passes cleanly. The Geist woff2 font subsets (latin, latin-ext, cyrillic, cyrillic-ext, vietnamese) are now self-hosted in the dist assets bundle, so no external/CDN font request is needed. No component contracts changed.\n\nNote: no lint or test scripts are configured for the webapp package; the build is the only gate. No regressions observed."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:36:53.662Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:54:34.624Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

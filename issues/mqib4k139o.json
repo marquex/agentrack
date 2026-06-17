@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:50:31.504Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:50:31.504Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Fix double-at regex deviation in mentions extractor",
+      "description": "The mentions extraction regex in src core mentions.ts currently uses a lookbehind class that treats the at-sign as a non-word boundary, so double-at tokens like @@alice incorrectly match the second at-sign and extract alice. Per the spec, the lookbehind class should EXCLUDE the at-sign character so that @@name does not produce a mention.\n\nScope:\n- Update the regex in extractMentions so the lookbehind uses a negated character class that excludes both word chars AND the at-sign (equivalent to: start of string, OR preceded by a char that is neither a word char nor an at-sign).\n- Un-skip the two currently-skipped deviation tests in tests core mentions.test.ts named 'double @@ should NOT match' and 'double @@ in middle of text should NOT match'. They should pass as-is once the regex is fixed.\n- Add one or two extra edge cases if helpful (for example @alice@@bob, or triple @@@alice) to lock the behavior.\n\nRisk: low. One-line regex change. Verify the full mentions and tracker-mentions suites still pass.\n\nParent context: review mqiax842ch item 1a. Origin: idea mqh1l5phtj found during release prep mqe2xmprgj.",
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:30:50.756Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "bug"
+      ],
+      "parentId": "mqh1l5phtj"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.842Z",
+    "author": "system",
+    "content": {
+      "status": "in-progress",
+      "reason": "auto-promoted to 'in-progress': child advanced to 'closed'"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:15:06.795Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

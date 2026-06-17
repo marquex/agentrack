@@ -60,5 +60,31 @@
     "content": {
       "assignee": "webapp-validator"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T07:01:01.679Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqhq2h4z9f",
+      "content": "I will close this task as the validator already knows about this issue."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T07:01:08.855Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:52:05.955Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

@@ -1,0 +1,48 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:50:31.568Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:50:31.568Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Implement requiresIdentity flag on resolveAuthor for TOKEN_REQUIRED semantics",
+      "description": "Spec gap. The mentions spec calls for an optional requiresIdentity true flag on resolveAuthor that bypasses the open-mode fallback and returns TOKEN_REQUIRED when no token is present, regardless of auth mode. The current implementation only has requiresWrite, which in open auth mode falls through to the default user and returns MENTION_ACCESS_DENIED instead of TOKEN_REQUIRED for mentionsRead and mentionsUnread when no token is set.\n\nScope:\n- Add the requiresIdentity option to resolveAuthor (or an equivalent identity-required path). When true and no token is present, short-circuit to TOKEN_REQUIRED even in open auth mode.\n- Wire mentionsRead (AC6) and mentionsUnread (AC7) to use requiresIdentity true rather than requiresWrite true, since these operations need a real identity to record reads against.\n- Un-skip the two deviation tests in tests core tracker tracker-mentions.test.ts named 'should return TOKEN_REQUIRED in open mode without token' for AC6 and AC7. They should pass once wired.\n- Add a regression test for the closed-mode path too, confirming TOKEN_REQUIRED still surfaces there when identity is required.\n- Update the mentions spec doc to reflect that requiresIdentity is implemented, and note the relationship with requiresWrite.\n\nRisk: medium. Touches the auth resolution path shared across commands, so audit other callers of resolveAuthor to confirm no behavior change where requiresIdentity is not set. Run the full core and integration suites.\n\nParent context: review mqiax842ch item 1c. Origin: idea mqh1l5phtj found during release prep mqe2xmprgj.",
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:30:50.790Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "bug"
+      ],
+      "parentId": "mqh1l5phtj"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.993Z",
+    "author": "system",
+    "content": {
+      "status": "in-progress",
+      "reason": "auto-promoted to 'in-progress': child advanced to 'closed'"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:15:06.834Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

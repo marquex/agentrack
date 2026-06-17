@@ -26,5 +26,30 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:13:53.074Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:14:37.432Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9uer7ln",
+      "content": "Status loop: all phase tasks done (Design, Review, Verify-agreed gate, Implement, Validate, Release). The backward-compatible token override for usersRegenerate is delivered and released. Marking this sub-deliverable done; parent epic mqe162cmbi will cascade once its sibling webapp bug mqe26n00jo also completes."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:23:11.989Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

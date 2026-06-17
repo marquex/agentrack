@@ -13,5 +13,59 @@
       "description": "The webapp port standardization (parent mqh2h99uob, implementation mqh2hwulrt) moved dev API to 3001 / dev vite to 3000 / E2E API to 5001 / E2E vite to 5000. The following non-code docs still reference old ports and need refreshing for guidance accuracy (section D of the prescription, comment mqh2nfnt2o):\n\n- .agentic/specs/webapp-spec.md:\n  - Line 724: `const port = process.env.PORT || 3000;` -> 3001\n  - Line 762: env table row `| PORT | 3000 | Server port |` -> 3001\n  - Lines 768-779 (section 4.6 Dev server setup): currently says Vite on 5173 proxying to Hono on 3000; rewrite to vite on 3000 proxying /api to Hono on 3001, and update the embedded vite.config.ts snippet accordingly.\n- .agentic/specs/webapp-roadmap.md line 35: \"Configure Vite proxy for /api -> http://localhost:3000\" -> 3001\n- .agentic/expertise/webapp-validator/webapp-server-ports.expertise.md: verify and update any documented port values to match the new dev (3001/3000) and E2E (5001/5000) ports.\n\nThese files are read-only for webapp-developer and outside its domain, so could not be updated as part of mqh2hwulrt. Assigning to project-manager for triage/assignment to the appropriate agent (likely webapp-validator for the expertise file, and whoever owns the specs).",
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:45:30.973Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:45:31.300Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqiay5128l",
+      "content": "Triaged via ideas loop. Duplicate check: no existing issue covers refreshing the port references in specs/roadmap/expertise docs. Routed to library-architect (specs/roadmap owner; org architect) in review mqiax8p1ib, with a note to confirm ownership split (architect for specs/roadmap, webapp-validator/expertise-manager for the expertise file). Gate tracker mqiaxj3htn will wake me to act on the decision. Idea set to in-progress to prevent work-loop re-wake."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:13:59.890Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:16:19.213Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:23:46.848Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:24:04.672Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqicbqrx9p",
+      "content": "Status loop: all children done (port references in webapp-spec.md/webapp-roadmap.md updated, webapp-server-ports.expertise.md updated). Top-level chore complete - closing."
+    }
   }
 ]

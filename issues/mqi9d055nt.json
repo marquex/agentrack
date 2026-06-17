@@ -1,0 +1,40 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:01:06.194Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:01:06.194Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Update architecture expertise: NPM publishing is deferred",
+      "description": "Project-level decision (owner-directed, 2026-06-17): the agentrack library will NOT be published to NPM at this stage. There is no need to publish the library yet, and there are no NPM credentials available. This is intentional, not a gap to fix.\n\nAction required — update your architecture expertise (`.agentic/expertise/library-architect/**`) to reflect:\n\n1. **Architectural plans must not assume NPM publish as a release deliverable.** Specs and plans that touch the library release surface should treat publication as deferred/out-of-scope, not as a step that will occur.\n2. **Do NOT design around NPM publishing** (no publish pipeline work, no NPM_TOKEN secret wiring, no `release.yml` CI publish design) unless explicitly asked. A future task to design how releases should be managed will be filed separately when the project is ready to revisit this.\n3. **Do not propose release/publish-blocking work.** If a planning issue would previously have ended in a release phase that depends on NPM publish, scope the plan to end at version bump / build / docs instead.\n\nReference: release task `mqe27481sa` was closed as done without NPM publish on this basis.\n\nDeliverable: comment on this issue summarizing the expertise updates made, then mark done.",
+      "status": "todo",
+      "assignee": "library-architect",
+      "parentId": "mqi9cm0fxc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:07:32.082Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9lapajq",
+      "content": "Closing as a duplicate. This task was superseded by mqi9fp1wf6 (same goal: update architecture expertise so plans do not assume NPM publish as a release deliverable). The newer set (mqi9fp1wf6 + mqi9fpjvx6 + mqi9g0bia7) is the properly-structured single source of truth with validation gating. No progress recorded here."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:07:32.116Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed",
+      "assignee": "project-manager"
+    }
+  }
+]

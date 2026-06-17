@@ -1,0 +1,73 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:00:47.054Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:00:47.054Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Defer library NPM publishing until release strategy is decided",
+      "description": "Project-level decision (owner-directed, 2026-06-17): the agentrack library will NOT be published to NPM at this stage. Release tasks must not block on NPM credentials or treat `npm publish` as a required step. The publish phase is deferred until we decide how library releases will be managed going forward (CI-driven via NPM_TOKEN, manual owner-side publish, or another mechanism).\n\nTwo phase tasks:\n1. library-releaser: update release expertise so release tasks complete at the version-bump/build/commit stage; do not block on npm auth.\n2. library-architect: update architecture expertise so plans do not assume NPM publish as a release deliverable; a future strategy for release management will be planned separately when needed.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:04:27.223Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9hbi2dj",
+      "content": "Planned as a 3-task chore (parent left at todo; status loop will promote it when a child starts):\n\n1. [mqi9fp1wf6] library-architect — update architecture expertise so plans do not assume NPM publish as a release deliverable. Unblocked.\n2. [mqi9fpjvx6] library-releaser — update release expertise so release tasks complete at version-bump/build/commit and do not block on npm auth. Unblocked.\n3. [mqi9g0bia7] library-validator — validate both expertise updates for correctness/consistency. Blocked by the two tasks above.\n\nThe architect and releaser updates are independent (different domains) so they run in parallel; validation gates completion. The deferred publish strategy itself is intentionally left for a separate future planning effort, not handled here."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:05:23.020Z",
+    "author": "system",
+    "content": {
+      "status": "in-progress",
+      "reason": "auto-promoted to 'in-progress': child advanced to 'in-progress'"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:07:57.341Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9luhe12",
+      "content": "Structural cleanup: closed two orphaned duplicate children (mqi9cwnzhd releaser, mqi9d055nt architect) that were left from earlier planning — they had no blockages, no validation gate, and no recorded progress. They duplicated the properly-structured set.\n\nActive structure (single source of truth):\n1. [mqi9fp1wf6] library-architect — todo, unblocked\n2. [mqi9fpjvx6] library-releaser — todo, unblocked\n3. [mqi9g0bia7] library-validator — todo, blocked by 1 and 2\n\nThe two expertise updates are independent and will run in parallel; validation gates completion. Stepping back — the work loop will hand the unblocked tasks to the workers, and the status loop will complete this parent once all three children are done."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:11:28.952Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:13:53.012Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:14:29.953Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9u9ydmd",
+      "content": "Status loop: all children closed (architect mqi9fp1wf6, releaser mqi9fpjvx6, validator mqi9g0bia7, plus the two superseded duplicates). The deferred-NPM-publishing expertise updates are delivered and validated. Closing this top-level chore."
+    }
+  }
+]

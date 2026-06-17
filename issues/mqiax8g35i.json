@@ -1,0 +1,83 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:44:49.213Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:44:49.213Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: E2E cleanupE2ESeeds parallel-DELETE race leaves stragglers",
+      "description": "Idea mqh5aew5am needs your decision. Found during validation of mqh3syrrnb (E2E isolation hardening). DEFECT (low-medium severity, no real-data leak): cleanupE2ESeeds() in packages/webapp/e2e/setup.ts issues parallel DELETEs via Promise.all against the agentrack backend; the backend's file store performs unlocked read-modify-write cycles on index.json/issue files, so concurrent DELETEs race and some are silently dropped. Validated repro: seeded 3 tagged issues, ran cleanup once (parallel) -> 2 of 3 remained; second pass cleared the rest. Impact: the README claim about no stale seeds left behind is weaker than reality; stragglers only accumulate inside validation/.e2edata/ until the next global-setup reset, so no real-data leak. Adjacent minor cosmetic bug (same area, packages/webapp/e2e/global-setup.ts): Layer A guard error message has a literal '${BACKEND_PORT}' because a double-quoted string is used instead of a backtick template literal. Suggested fix (serialize DELETEs in a for...of await, or loop list-then-delete-until-empty, or retry per delete). As the webapp team's tech lead, decide: (1) accept (plan a fix to webapp-developer); (2) refine; or (3) discard (e.g. if global-setup reset makes it moot). Add your decision as a comment, then mark this task done.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqh5aew5am",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:50:36.876Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:51:18.558Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqib5lgyvk",
+      "content": "## Decision: ACCEPT (with severity refinements)\n\nI verified the claim against the actual code. The **core finding is technically correct and worth fixing**; two of the supporting framings are not.\n\n### Verified facts\n1. **Parallel DELETEs confirmed.** `packages/webapp/e2e/setup.ts` lines 152-163 issue all deletes via `Promise.all(seeds.map(...))` — concurrent fetches, no serialization.\n2. **Unlocked store confirmed.** `playwright.config.ts` (lines 21-30) and `e2e/README.md` (lines 82-84) both document that the backend performs *unlocked read-modify-write* on `index.json`/issue files. `workers: 1` only serializes *specs*, not concurrent in-process requests — so the race surface the idea describes is real.\n3. **`cleanupE2ESeeds` swallows errors silently** (lines 158-161), so a dropped delete leaves no trace.\n\nSo yes: under contention, parallel DELETEs against the file store can race and silently drop some deletes. The repro in the idea (2 of 3 surviving the first pass) is plausible.\n\n### Where I would refine the idea's framing\n- **\"README claim weaker than reality\" — not quite.** The README is accurately hedged: it explicitly calls Layer B *\"defense-in-depth\"*, says it *\"tolerates already-deleted ids\"*, and names the global-setup reset as the *\"authoritative wipe\"*. It does **not** promise zero stragglers. So the docs are honest; the bug is in the implementation, not the docs.\n- **\"No real-data leak\" — agreed.** Layer A (`resetWorktreeData()` in `global-setup.ts`) wipes the whole `validation/.e2edata/` directory at the start of every run (README section 5), so any stragglers survive only until the next run begins. Severity is correctly **low-medium**, not a leak.\n- **Adjacent cosmetic bug — does NOT exist in current code.** I grepped every occurrence of `${BACKEND_PORT}` in `e2e/global-setup.ts`; all of them (lines 21, 32, 47, 65, 74) live inside backtick template literals and interpolate correctly. No double-quoted literal is present. This sub-claim is stale and should be dropped.\n\n### Fix recommendation\nTrivial and low-risk: serialize the deletes in `cleanupE2ESeeds` — replace the `Promise.all(seeds.map(...))` with a `for...of await` loop. This keeps the helper's role (best-effort Layer B) intact while removing the only concurrency the single-worker serialization cannot protect against. No backend changes needed.\n\n### Action\nAccepting. Creating a child implementation task for the fix (serialize DELETEs in `cleanupE2ESeeds`). Marking this review done so gate tracker `mqiaxjq61m` can proceed."
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:52:47.849Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqib7i0qtx",
+      "content": "Created implementation task mqib7bbznm (assigned to project-manager for triage/runner pickup) to serialize the deletes in cleanupE2ESeeds. This review is complete."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:52:47.884Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:55:29.774Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:55:29.813Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqibazchje",
+      "content": "Status loop audit: the reviewer's comment explicitly states the decision (ACCEPT, serialize the DELETEs in cleanupE2ESeeds) and 'This review is complete.' The blockage on gate tracker mqiaxjq61m already auto-resolved. Marking this review done on the reviewer's behalf — it was a missed status flip, not incomplete work. Gate mqiaxjq61m is now ready for the work loop to wake the PM to read the decision and act."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:46:58.921Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

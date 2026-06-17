@@ -26,5 +26,108 @@
     "content": {
       "blockerId": "mqgvvj3ysq"
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T07:01:08.858Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqgvvj3ysq",
+      "reason": "Blocker issue mqgvvj3ysq transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:00:11.139Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:31:00.716Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:33:18.641Z",
+    "author": "webapp-validator",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:35:42.025Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqievu48or",
+      "content": "Validation of dev task mqgvvj3ysq (standardize webapp E2E runner docs on npx playwright test plus bunx caveat). Reproduce and diagnose only, no fixes applied.\n\nRESULTS BY CRITERION\n\n1. webapp-developer expertise files use npx consistently: PASS.\n   webapp-overview, recipe-validate-webapp-phase, and webapp-e2e-validation all prescribe `npx playwright test`. No stale `bunx playwright test` remains as the recommended command in any webapp-developer file. The previous bunx form has been fully removed from the canonical runner lines.\n\n2. bunx-caveat gotcha present in both required files: PARTIAL FAIL.\n   webapp-developer webapp-overview.expertise.md contains a full, accurate caveat (Bun bun-protocol ESM loader quirk, observed error messages, decision mqgvczj5ua, parent mqe32t3er6). However webapp-validator-gotchas.md has NO bunx caveat entry. I read the full file (127 lines across roughly a dozen gotchas). It references `npx playwright test` in passing (ports and leftover-server gotchas) but never explains why `bunx playwright test` must be avoided. The issue explicitly required the caveat in both files, so this is a missed deliverable.\n\n3. test:e2e script in packages/webapp package.json: PASS.\n   Line 11 reads `test:e2e: npx playwright test`. Correct, discoverable via npm run.\n\n4. No source or test logic changed: PASS.\n   The standardization touched only markdown docs (expertise files and the e2e README) plus the new package.json script field. No application code or test spec logic was modified by the dev task. Other working-tree changes present in the repo belong to separate tasks, not this one.\n\n5. npx playwright test list loads cleanly: PASS.\n   176 tests across 6 spec files. Playwright config and every spec compile and register without error.\n\nADDITIONAL GAP (just outside the strict scope but directly relevant)\n\nwebapp-validator webapp-overview.expertise.md line 20 still prescribes `cd packages/webapp && bunx playwright test` as the canonical runner command. The dev task updated only the webapp-developer expertise folder, leaving the validator's own overview in direct contradiction with the standardization. Every future retrieval for the validator agent will keep reintroducing the bunx form. This is exactly the class of stale doc the standardization was meant to eliminate.\n\nVERDICT\n\nPartial delivery. Criteria 1, 3, 4, 5 fully pass. Criterion 2 is incomplete: the bunx caveat is missing from webapp-validator-gotchas.md. Additionally, the validator-side overview expertise still recommends bunx as the canonical runner.\n\nRecommended follow-up: a small dev task to (a) add the bunx caveat to webapp-validator-gotchas.md, and (b) update the runner line in webapp-validator webapp-overview.expertise.md to the npx form. Until then the standardization is inconsistent across the two expertise folders.\n\nNot marking this validation issue done because criterion 2 is not satisfied. Reassigning to project-manager for re-planning. The dev task mqgvvj3ysq itself should probably stay done (its primary deliverables landed); the gap is best closed by a new follow-up task rather than reopening the original."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:35:48.871Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T18:40:55.489Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqif2ba76n"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:40:55.530Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqif2kgbbn",
+      "content": "Re-planning: validation is complete but found the deliverable partially incomplete. The dev task mqgvvj3ysq could not edit the webapp-validator expertise folder (ACCESS_DENIED — that domain belongs to webapp-validator), so two gaps remain in the validator's own domain:\n\n1. Criterion 2 fail: bunx caveat missing from .agentic/expertise/webapp-validator/webapp-validator-gotchas.md.\n2. webapp-overview.expertise.md (~line 20) still prescribes 'bunx playwright test' as canonical, contradicting the standardization.\n\nCreated follow-up dev task mqif2ba76n (assigned to webapp-validator, parent mqe32t3er6) scoped to exactly those two file edits. Blocked this validation on it — when mqif2ba76n lands, the blockage auto-clears and this task re-wakes me to re-validate the now-complete deliverable. Validation task stays todo (blocked). Not marking done because criterion 2 is not yet satisfied."
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T18:47:58.875Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqif2ba76n",
+      "reason": "Blocker issue mqif2ba76n transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:50:51.072Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqiffbm85b",
+      "content": "Re-validation after follow-up mqif2ba76n landed. Criterion 2 (previously FAILED) now PASS:\n\n- webapp-validator/webapp-validator-gotchas.md (lines 118-120): full bunx caveat present — root cause (Bun experimental bun: protocol ESM loader), the three observed error symptoms, exit-0-zero-tests behavior, the npx/npm-run-test:e2e workaround, the note that the webapp server still runs under Bun (only the runner moves to npx), and references to decision mqgvczj5ua / parent mqe32t3er6. Wording is consistent with the webapp-developer overview caveat.\n- webapp-validator/webapp-overview.expertise.md (line 20): canonical runner command now 'cd packages/webapp && npx playwright test' with an explicit 'Use npx, not bunx — see the gotcha below' pointer.\n- grep confirms the ONLY remaining 'bunx playwright' mentions in the webapp-validator expertise folder are inside the new gotcha itself (i.e. describing the anti-pattern), which is correct.\n\nAll five criteria now pass (1, 3, 4, 5 were already green from the prior run). Standardization is consistent across both expertise folders. Docs/tooling-only — no source or test logic touched. Marking validation done."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:50:58.102Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:52:05.956Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

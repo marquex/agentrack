@@ -1,0 +1,83 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:52:39.241Z",
+    "author": "webapp-developer"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:52:39.241Z",
+    "author": "webapp-developer",
+    "content": {
+      "title": "Fix serialize deletes in cleanupE2ESeeds E2E seed straggler race",
+      "description": "In packages/webapp/e2e/setup.ts cleanupE2ESeeds issues all DELETE calls concurrently. The agentrack backend performs unlocked read-modify-write on the file store so concurrent deletes can race and silently drop some (errors are swallowed in the inner catch). Result e2e-seed stragglers can survive a spec afterAll until the next run global-setup reset. Low severity no real-data leak but trivial to fix. Acceptance criteria replace the concurrent call with a sequential for-of-await loop over the seeds array preserve best-effort semantics with errors still swallowed keep E2E_SEED_TAG and the list-then-delete flow unchanged optionally update the docstring run npx playwright test --list to confirm specs still load. Context Accepted in review mqiax8g35i child of idea mqh5aew5am. Do NOT touch global-setup the cosmetic BACKEND_PORT sub-claim was verified stale.",
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:19:51.253Z",
+    "author": "project-manager",
+    "content": {
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "tags": [
+        "task"
+      ],
+      "parentId": "mqh5aew5am"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:32:41.241Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:33:33.967Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqicnxann3",
+      "content": "Done. Replaced the concurrent Promise.all DELETE in cleanupE2ESeeds (packages/webapp/e2e/setup.ts) with a sequential for...of await loop over the seeds array. Best-effort semantics preserved — per-delete try/catch still swallows already-deleted/404 errors, and the global-setup reset remains the authoritative wipe. E2E_SEED_TAG and the list-then-delete flow are unchanged. Updated the explanatory comment to document why serialization is required (unlocked read-modify-write on the backend file store).\n\nVerification:\n- `npx playwright test --list` → all 176 tests in 6 files load cleanly.\n- `npx tsc --noEmit` → no errors in e2e/setup.ts (no new errors introduced).\n\nNo backend change. global-setup and README untouched as scoped. Full regression run (npx playwright test) delegated to webapp-validator — note port 5000 may be held by macOS AirPlay Receiver locally."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:33:39.720Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:24:47.837Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqiehty2t2",
+      "content": "Verified complete. The worker (webapp-developer) delivered the fix and reported it in the previous comment but left status at `todo`. Audit: packages/webapp/e2e/setup.ts cleanupE2ESeeds() now uses a sequential for...of await loop (no Promise.all), per-delete try/catch still swallows already-deleted/404, E2E_SEED_TAG and list-then-delete flow unchanged, docstring explains the race rationale. Acceptance criteria met. Marking done."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:24:58.318Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:46:58.922Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

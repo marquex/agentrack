@@ -1,0 +1,56 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:31:18.852Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:18.852Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Plan: design per-test ephemeral worktree isolation for E2E suite",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-architect",
+      "parentId": "mqib4kqx2y",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:36:04.406Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:37:26.456Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqicswtq9q",
+      "content": "Planning complete. Spec written to .agentic/specs/e2e-per-test-isolation.md (it supersedes the older e2e-refactor.md, which proposed a shared validation/ worktree and is now stale).\n\nKey findings during planning:\n\n1. A first-cut implementation already exists. packages/library/tests/e2e/setup.ts (commit 73c81ae) already provides per-test/per-file ephemeral worktree isolation using fs.mkdtemp under os.tmpdir, with two test shapes: Type A (git ops, one dir per test via withEphemeralWorktree) and Type B (tracker ops, one dir per file with a fast beforeEach data reset). The README documents the isolation contract, and all 17 spec files are already migrated onto it.\n\n2. Verified by running the suite: 100/100 tests pass, 497 expect() calls, 17 files, ~15s, under bun's default parallelism (no --jobs 1 needed).\n\n3. Settled the AGENTRACK_CWD question raised in the parent. The library CLI does NOT read AGENTRACK_CWD anywhere in src/ (it resolves the tracker from cwd via resolveTrackerDir, walking up for .agentrack.json). AGENTRACK_CWD is a webapp-only concept. The spec therefore decides isolation is achieved by spawning the subprocess with cwd=ephemeral-dir (already the case), NOT by adding env-var support to the library. This unblocks the dev task without a prerequisite.\n\nImplications for the downstream tasks:\n- mqicl1m8uw (Dev) is now an audit + hardening job, not green-field: verify every spec file is migrated, confirm resetWorktreeData covers all data files, delete the stale e2e-refactor.md, and do NOT wire AGENTRACK_CWD into the library. The task title mentions AGENTRACK_CWD; the spec clarifies the cwd mechanism satisfies the intent.\n- mqibohp1zk (Validate) has concrete acceptance criteria in the spec, including 3 consecutive clean parallel runs and no repo pollution.\n- mqiboor9kc (Release) decides publish-gate re-inclusion of the e2e dir and removing the coverage path-ignore. No --jobs 1 serial flag exists to remove (already parallel).\n\nSpec: .agentic/specs/e2e-per-test-isolation.md"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:37:30.257Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.655Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

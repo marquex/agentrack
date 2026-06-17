@@ -49,5 +49,22 @@
       "id": "mqe2y0s23k",
       "content": "Implementation planned (idea ACCEPTED as library bug).\n\nDECISION: Library-level fix (reviewer's preferred approach — robust, benefits CLI too). The root cause is in the library (pushWorktree/pullWorktree don't resolve the project root), so the fix belongs there.\n\nPHASES (reproduction skipped — the review mqe1imzt2i already contains a code-verified reproduction confirmed by the existing phase4 e2e tests asserting the 500):\n1. Dev (mqe2xmq47c, library-developer): Fix pushWorktree/pullWorktree to resolve project root + read branch pointer for {branch, dir} opts. Also flip phase4 test assertions from 500 to success.\n2. Validate (mqe2xmdugp, library-validator): Run phase4 e2e suite + library unit tests, verify end-to-end.\n3. Release (mqe2xmprgj, library-releaser): Version bump + publish.\n4. Sync (mqe2xmxeiv, project-manager): Verify + close.\n\nThe dev task description includes the reviewer's CRITICAL refinement: resolveTrackerDir returns the data dir, not the project root, and the worktree uses a custom branch/dir (_e2edata/.e2edata) — so the fix must resolve the project root AND read the branch pointer, not just call resolveTrackerDir."
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T15:57:51.346Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T15:59:18.478Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9aprtk9",
+      "content": "Status loop: completing this deliverable. All children are done/closed (Review mqe1imzt2i, gate mqe1imrj5n, Dev mqe2xmq47c, Validate mqe2xmdugp, Release mqe2xmprgj, assertion-flip mqgwul2ltn, sync mqe2xmxeiv). The sync push/pull 500 fix is shipped, phase4 e2e assertions flipped to success, library released. Top-level bug with no parent -> closing (descendants already terminal)."
+    }
   }
 ]

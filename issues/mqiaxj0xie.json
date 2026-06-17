@@ -1,0 +1,66 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:45:03.529Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:45:03.529Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Check review decision: Extract shared e2e API base URL constant",
+      "description": "Gate tracker. Read webapp-developer's decision on idea mqh2nk7khi (review task mqiax8qo6l) and act on it: accept -> retag idea as chore and create implementation children; refine -> reset idea to idea; discard -> close idea with idea,discarded tags + comment.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqh2nk7khi",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T16:45:30.571Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqiax8qo6l"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T16:58:14.437Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqiax8qo6l",
+      "reason": "Blocker issue mqiax8qo6l transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:10:42.976Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqibujpkrf",
+      "content": "Decision read: webapp tech lead ACCEPTED the refactor with scope guidance (export existing E2E_BACKEND_URL from e2e/setup.ts; sweep phase2's ~60 inline literals + 5 other specs' local const BASE; do NOT conflate with Playwright frontend baseURL; pure dedupe, no port changes). Acting on accept: retagging idea mqh2nk7khi as chore and creating implementation children (Plan -> Dev -> Validate). Webapp is client/frontend, so completes at Validate (no release). Validation is a separate task per rules even though the refactor is mechanical."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:10:49.025Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:07:42.618Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

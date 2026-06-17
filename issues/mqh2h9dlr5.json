@@ -26,5 +26,31 @@
     "content": {
       "status": "in-progress"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:49:36.311Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:49:50.861Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqib3p4r7f",
+      "content": "Status loop: all phase tasks (Plan mqh2hwl22k, Implement mqh2hweq9n, Validate mqh2hwfsqg) are done. Completing this sub-deliverable; parent mqh2gvx6nw will cascade."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:49:59.292Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

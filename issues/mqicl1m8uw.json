@@ -1,0 +1,47 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:31:18.889Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:18.889Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Dev: implement fs.mkdtemp-based ephemeral worktrees + AGENTRACK_CWD + cleanup in E2E suite",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-developer",
+      "parentId": "mqib4kqx2y",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T17:31:18.999Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqicl1n3so"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T17:37:30.259Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqicl1n3so",
+      "reason": "Blocker issue mqicl1n3so transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.535Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

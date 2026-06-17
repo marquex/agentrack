@@ -1,0 +1,66 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:45:03.610Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:45:03.610Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Check review decision: Update specs/roadmap/expertise docs for new webapp ports",
+      "description": "Gate tracker. Read library-architect's decision on idea mqh326adbp (review task mqiax8p1ib) and act on it: accept -> retag idea as chore and create implementation children (split by owner: architect for specs/roadmap, webapp-validator/expertise-manager for the expertise file); refine -> reset idea to idea; discard -> close idea with idea,discarded tags + comment.",
+      "status": "todo",
+      "assignee": "project-manager",
+      "parentId": "mqh326adbp",
+      "tags": [
+        "task",
+        "sync"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T16:45:30.651Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqiax8p1ib"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T16:57:14.815Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqiax8p1ib",
+      "reason": "Blocker issue mqiax8p1ib transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:13:52.958Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqibymncxq",
+      "content": "Gate decision read. library-architect ACCEPTED with ownership split:\n- webapp-spec.md + webapp-roadmap.md -> library-architect (parallel child)\n- webapp-server-ports.expertise.md -> webapp-validator (parallel child, independent)\n\nActing on the decision: retagging idea mqh326adbp as a chore and spawning two parallel implementation children (no serialization per architect's scope note). Marking this gate done."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:13:59.854Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:23:46.850Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

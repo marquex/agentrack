@@ -1,0 +1,57 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:14:17.905Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:14:17.905Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Update webapp-spec.md and webapp-roadmap.md port references",
+      "description": "Per library-architect's accepted review (comment mqibd3i1rm on mqiax8p1ib), refresh stale port references in the specs/roadmap you own. Source of truth = implemented values from closed task mqh2hwulrt (dev API 3001, dev Vite 3000, E2E API 5001, E2E Vite 5000).\n\nEdits (exact):\n1. .agentic/specs/webapp-spec.md line 724: 'const port = process.env.PORT || 3000;' -> default 3001.\n2. .agentic/specs/webapp-spec.md line 762: env table row '| PORT | 3000 | Server port |' -> 3001.\n3. .agentic/specs/webapp-spec.md line 768 prose: 'Vite 5173 proxying to Hono 3000' -> 'Vite 3000 proxying the api route to Hono 3001'.\n4. .agentic/specs/webapp-spec.md line 775 area: proxy target localhost 3000 -> 3001, and update the embedded vite.config.ts snippet to set server.port 3000 reusing apiPort 3001.\n5. .agentic/specs/webapp-roadmap.md line 35: proxy target localhost 3000 -> 3001.\n\nAcceptance criteria: after the change, the only ports mentioned in those two files are dev API 3001, dev Vite 3000, E2E API 5001, E2E Vite 5000 (no remaining 5173/5174/3000-as-API).",
+      "status": "todo",
+      "assignee": "library-architect",
+      "parentId": "mqh326adbp",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:17:02.759Z",
+    "author": "library-architect",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:17:53.065Z",
+    "author": "library-architect",
+    "content": {
+      "id": "mqic3r8yij",
+      "content": "Done. Updated port references in the two spec docs to match the implemented dev layout (issue mqh2hwulrt).\n\nwebapp-spec.md:\n- L724: PORT default 3000 to 3001\n- L762: env table PORT row 3000 to 3001\n- L768 prose: rewrote to 'Vite 3000 proxying the api route to Hono 3001'\n- L770-779: updated the embedded vite.config.ts snippet to set server.port 3000 (via VITE_PORT) and reuse apiPort 3001 in the proxy target\n\nwebapp-roadmap.md:\n- L35: Vite proxy target localhost 3000 to 3001\n\nVerified with a grep sweep: no remaining 5173/5174/localhost-3000/3000-as-API references in either file. E2E ports (5001/5000) are not mentioned in these two docs, so nothing to add there. Sister issue mqibz5my2g covers the webapp-validator expertise copy."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:17:59.497Z",
+    "author": "library-architect",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:23:46.850Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:44:48.957Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:44:48.957Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Review idea: Clean up library test suite (spec-deviation tests, flaky E2E, version drift)",
+      "description": "Idea mqh1l5phtj needs your decision. During release prep (mqe2xmprgj) the library-releaser found pre-existing library test-suite issues and applied stop-gap fixes; the underlying issues need an owner and a decision. As the library team's tech lead, decide each item:\n\n1. Spec-deviation tests (tests/core/mentions.test.ts, tests/core/tracker/tracker-mentions.test.ts): 5 tests asserting spec behavior the implementation does NOT provide (@@name matching, rebuild extracting unregistered users, TOKEN_REQUIRED in open mode). They were converted to test.skip() with deviation comments. Decide: (a) implement the spec behavior and un-skip, (b) formally accept/document the deviation and keep skipped, or (c) refine.\n\n2. CLI version drift: src/cli/runner.ts hardcoded version (was 0.1.0 vs package.json 0.2.0). Releaser wired it to import from package.json. Decide: accept the fix as-is (close out), or refine into a broader version-sync check.\n\n3. Library E2E suite (tests/e2e/, subprocess-based against validation/ worktree): flaky, requires serial execution + clean validation/ state, excluded from publish gate. The isolation/state-management root cause still needs a proper fix. Decide: accept (plan a real fix), refine scope, or discard.\n\n4. Package version test (tests/integration/package.test.ts): hardcoded 0.1.0; releaser made it version-agnostic. Decide: accept or refine.\n\nAdd your decision (accept/refine/discard + per-item rationale) as a comment, then mark this task done.",
+      "status": "todo",
+      "assignee": "library-architect",
+      "parentId": "mqh1l5phtj",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:49:58.698Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:50:53.210Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqib51efkh",
+      "content": "ARCHITECT DECISION — test-suite cleanup review\n\nReviewed each of the 4 items against current source (src core mentions.ts, src cli runner.ts, tests core mentions.test.ts, tests core tracker tracker-mentions.test.ts, tests integration package.test.ts, tests e2e). Decisions and follow-ups below.\n\nITEM 1 — Spec-deviation tests: REFINE (split per deviation)\n\n1a. Double-at regex deviation (2 tests). DECISION: accept as a real bug to fix. Root cause: the extraction regex uses a lookbehind class that treats the at-sign as a non-word boundary, so @@alice matches the second at-sign and extracts alice. Spec says the lookbehind should exclude the at-sign so @@name produces no mention. One-line regex change, low risk. Follow-up issue mqib4k139o.\n\n1b. Rebuild AC9 — extract ALL at-names, not just registered (1 test). DECISION: formally ACCEPT the deviation and remove the skipped test. Reasoning: the mentions index is a live view keyed by currently-registered users; rebuilding it against the current registered set is consistent behavior, not a defect. Revoked-user history is preserved in the event log and surfaces via the history commands, not via the mentions index. Recommend the spec be amended to match the implementation. No code change; spec owner to note.\n\n1c. TOKEN_REQUIRED in open mode, AC6 and AC7 (2 tests). DECISION: accept as a real spec gap to implement. Spec calls for an optional requiresIdentity true flag on resolveAuthor that bypasses the open-mode fallback and returns TOKEN_REQUIRED when no token is present. Implementation only has requiresWrite, which in open mode falls through to the default user and returns MENTION_ACCESS_DENIED. This is an identity-security gap for mentionsRead and mentionsUnread. Follow-up issue mqib4kzypc.\n\nITEM 2 — CLI version drift: ACCEPT the releaser fix as-is. src cli runner.ts now imports pkg and wires .version with pkg.version. The version-sync is also asserted by the package.test.ts --version test (CLI output equals pkg.version). No further work; close out. Note: package.json shows 0.1.0 on trunk, which is correct pre-release state; the 0.2.0 bump lives on the release branch.\n\nITEM 3 — Library E2E suite flakiness: REFINE. The stop-gap (exclude e2e from the publish-gate coverage command via path-ignore, add a serial test:e2e script) is correct and accepted. The root cause — subprocess tests sharing mutable state in the validation worktree — still needs a real fix. Direction: each e2e test should spin up a unique ephemeral worktree via fs.mkdtemp under the OS tmpdir, point AGENTRACK_CWD at it, and clean up in afterEach; no test should touch the shared validation dir. Follow-up issue mqib4kqx2y. Not blocking the publish gate.\n\nITEM 4 — Package version test: ACCEPT the releaser fix as-is. tests integration package.test.ts now asserts pkg.version matches a semver regex and that CLI --version output equals pkg.version. Version-agnostic, will not drift. No further work; close out.\n\nSUMMARY\n- Accept as-is, close out: items 2 and 4.\n- Accepted deviation, spec-amendment only, no code: item 1b.\n- New follow-up issues (assigned to project-manager for triage): 1a regex fix mqib4k139o, 1c requiresIdentity flag mqib4kzypc, item 3 e2e isolation mqib4kqx2y.\n\nThis review is complete; handing back to project-manager."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:51:02.961Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:15:06.872Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

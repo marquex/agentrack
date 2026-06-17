@@ -111,5 +111,48 @@
     "content": {
       "assignee": "library-releaser"
     }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T06:58:08.016Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqhpyrnh29",
+      "content": "We are not publishing the library just yet. The releases won't include the NPM publishing phase until we decide how we are going to manage them."
+    }
+  },
+  {
+    "type": "comment-update",
+    "timestamp": "2026-06-17T06:58:30.506Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqhpyrnh29",
+      "content": "We are not publishing the library just yet. The releases won't include the NPM publishing phase until we decide how we are going to manage them. Mark the task as done with a comment that we won't complete npm publishing."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:00:19.201Z",
+    "author": "project-manager",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:00:31.076Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqi9c9vc9k",
+      "content": "Closing this release task as done without NPM publishing.\n\n**Decision:** The library will NOT be published to NPM for now. The project is in an early stage and there is no need to publish the library just yet. Release tasks should no longer treat NPM publishing as a required step — that phase is deferred until we decide how library releases will be managed going forward.\n\n**What is complete for this release (everything pre-publish):**\n- Tests reviewed (only pre-existing unrelated failures remain).\n- Docs updated (javascript-reference.md, authentication.md).\n- Build verified, dist complete.\n- Version bumped 0.1.0 → 0.2.0.\n\n**What is intentionally skipped:**\n- NPM publish (no credentials, and not needed at this stage).\n\nA separate chore has been filed to update library-releaser and library-architect expertise so future release tasks don't block on NPM credentials."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:22:59.035Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

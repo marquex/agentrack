@@ -1,0 +1,63 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:05:44.536Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:05:44.536Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Plan ephemeral-worktree isolation for e2e suite",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mqib4kqx2y",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:08:30.258Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:08:55.174Z",
+    "author": "project-manager",
+    "content": {
+      "description": "Plan phase for parent mqib4kqx2y (Rework library E2E suite for per-test ephemeral worktree isolation).\n\nGoal of this phase: investigate and confirm the feasibility of the isolation approach BEFORE implementation begins.\n\nConcrete deliverables:\n- Verify the CLI respects the AGENTRACK_CWD env var when spawning as a subprocess. This is the linchpin of the whole approach. If the CLI does NOT honor AGENTRACK_CWD, do NOT proceed to implementation: file a separate prerequisite chore (assign to project-manager) and add it as a blockage on parent mqib4kqx2y and on this issue before marking this task done.\n- Confirm fs.mkdtemp under os.tmpdir() is the right primitive for per-test ephemeral worktrees in the bun/test runner used by tests e2e.\n- Decide on the cleanup strategy (afterEach / per-test finally) and how to make it best-effort (swallow ENOENT).\n- Decide on the spawn timeout-wrapper approach.\n- Record findings + the chosen approach as a comment so the Dev task (mqibocc1kd) can implement directly from it.\n\nParent context: see mqib4kqx2y description and review mqiax842ch item 3. Do not implement code changes in this phase — this is investigation + decision only."
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:15:10.859Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqic0aps7m",
+      "content": "Plan delivered. Full actionable plan posted as comment `mqibzxtdd2` on the implementation issue `mqibocc1kd`.\n\n## Summary for the PM\n\n**Scope**: Rework the library e2e suite (`packages/library/tests/e2e/`) so every test runs against its own ephemeral directory under the OS tmpdir, eliminating the shared `validation/` dir and the serial (`--jobs 1`) execution requirement.\n\n**Key findings**:\n- The parent issue asked to verify whether the CLI respects an `AGENTRACK_CWD` env var. **It doesn't need one.** `Bun.spawn({ cwd })` already sets `process.cwd()` for the subprocess, and the CLI resolves the tracker from `process.cwd()`. So isolation is achieved purely in test code — **no library source changes, no prerequisite task needed.** This de-risks the work significantly.\n- The releaser's stop-gap (`test:e2e` serial script + e2e exclusion from coverage) is **not present in the current `package.json`** (only stale `dist/` still shows it). The plan re-adds it properly: `test:e2e` without `--jobs 1`, and `--path-ignore-patterns '**/e2e/**'` on `test:coverage`.\n\n**Effort**: Medium. ~17 test files (~100 tests), most of it mechanical threading of a `dir` argument through `runAgt` call sites plus a rewrite of `tests/e2e/setup.ts`. No app/library source touched.\n\n**Risks**: push/pull tests currently rely on the project's real `origin`; the plan replaces that with a local bare git repo per test. ~100 `runAgt` call sites need updating — easy to miss one but failures are loud.\n\n**Verification gates** (must all pass before done): typecheck, lint, full test suite, then `bun test tests/e2e` ×3 in a row with no flakes and no leftover `agt-e2e-*` dirs in tmpdir.\n\nUnblocking `mqibocc1kd` (implementation) for assignment."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:15:19.787Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.693Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

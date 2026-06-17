@@ -1,0 +1,81 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:05:53.138Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:05:53.138Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Implement per-test ephemeral worktree isolation in e2e suite",
+      "status": "todo",
+      "assignee": "library-developer",
+      "parentId": "mqib4kqx2y",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T17:06:14.252Z",
+    "author": "project-manager",
+    "content": {
+      "blockerId": "mqibo59t45"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:14:53.730Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqibzxtdd2",
+      "content": "## Implementation Plan: Per-test ephemeral worktree isolation\n\nThis is the actionable plan for the implementation task. Produced by planning issue mqibo59t45. Read it fully before coding.\n\n### Goal\nEach e2e test (or test file) runs against its own ephemeral working directory created under the OS tmpdir. No test ever writes to the shared `validation/` dir. Tests become parallel-safe; the `--jobs 1` serial requirement is removed.\n\n### Key design finding (IMPORTANT)\nThe parent issue suggested pointing the subprocess at the worktree via an `AGENTRACK_CWD` env var. **This is not needed.** `Bun.spawn({ cwd })` already sets `process.cwd()` for the child, and the CLI resolves the tracker dir from `process.cwd()` (`packages/library/src/cli/commands/*.ts` all call `process.cwd()`; `resolveTrackerDir` walks up from there). The existing `runAgt(args, cwd?)` helper already passes `cwd` to spawn. So isolation is achieved purely by giving each test a unique `cwd` — **no library source changes, no new env var, no prerequisite task.**\n\n### Isolation model\n- One ephemeral dir per **test file** for Type B (tracker-op) tests, shared across tests in that file with data-file reset in `beforeEach`.\n- One ephemeral dir per **individual test** for Type A (git-op: init/push/pull) tests, created and destroyed inside the test body (matches current pattern).\n- Each ephemeral dir is a fresh local git repo (`git init`), so worktrees/branches live and die with that dir. No dependence on the project's real `origin`.\n- Branch names are unique per dir, e.g. `e2edata-<pid>-<rand>` and `e2egit-<pid>-<rand>`, so parallel files never collide.\n\n### setup.ts rewrite (the bulk of the work)\n\nKeep all assertion helpers unchanged (`parseJson`, `assertSuccess`, `assertError`, `extractId`). Replace the path/state helpers:\n\n1. `getValidationDir()` → **remove**. No shared dir.\n2. Add `createEphemeralDir(prefix?: string): Promise<string>` — uses `fs.mkdtemp(join(os.tmpdir(), \"agt-e2e-\"))`. Returns absolute path.\n3. Add `initGitRepo(dir: string): void` — runs `git init`, sets `user.name`/`user.email` locally, and (optionally, for push/pull) creates a bare \"remote\" at `<dir>/remote.git` and wires `git remote add origin ./remote.git`. All `execSync` with `stdio: \"pipe\"`.\n4. Add `withEphemeralWorktree(branch: string, fn: (cwd: string, trackerDir: string) => Promise<void>, opts?: { withRemote?: boolean }): Promise<void>` — the recommended Type A wrapper. Creates dir, inits git, runs `agt init --branch <branch>`, calls `fn`, and **always** runs `rmSync(dir, { recursive: true, force: true })` in `finally` (swallow ENOENT).\n5. `ensureE2EWorktree(branch)` → rewrite to operate inside a passed-in `dir` (or return `{ dir, trackerDir }`). For Type B `beforeAll`. No more global pointer file.\n6. `resetWorktreeData(branch)` → `resetWorktreeData(dir: string)` — same file writes/deletes, but resolved against the passed-in ephemeral dir's tracker dir. Also reset `mentions.json` to `\"{}\\n\"` here (currently done ad-hoc in `mentions.test.ts` — fold it in).\n7. `setAuthMode(branch, mode)` → `setAuthMode(dir, mode, defaultUser?)`.\n8. `getTrackerDir(branch)` → `getTrackerDir(dir)` — returns `<dir>/<worktree-dir-name>`. Keep the name; just change input semantics.\n9. `initE2EWorktree(branch)` / `teardownE2EWorktree(branch)` → **remove**. Type A tests use `withEphemeralWorktree`.\n10. `runAgt(args, cwd?, env?)` → **unchanged**. Already accepts `cwd`. Add an optional `timeoutMs?: number` to `withEphemeralWorktree`/the spawn path that kills the child after N ms (default 30000) to prevent flakes hanging CI. Implement via `AbortController` or a `setTimeout(() => proc.kill(), ms)` cleared on exit.\n\nBranch-name helper: `uniqueBranch(base: string)` → `${base}-${process.pid}-${Math.random().toString(36).slice(2, 8)}`.\n\n### Test file migration\n\nMechanical. For each Type B file (`create`, `update`, `list`, `view`, `history`, `next`, `comments`, `blockages`, `users`, `hierarchy`, `auth`, `lifecycle`, `mentions`, `delete`):\n\n```ts\ndescribe(\"E2E: create\", () => {\n  let dir: string;\n  beforeAll(async () => {\n    dir = await createEphemeralDir();\n    initGitRepo(dir);\n    await ensureE2EWorktree(dir, uniqueBranch(\"e2edata\"));\n  });\n  beforeEach(() => resetWorktreeData(dir));\n  afterAll(() => { try { rmSync(dir, { recursive: true, force: true }); } catch {} });\n\n  // tests call runAgt(args, dir) — pass dir explicitly\n});\n```\n\nFor each Type A file (`init`, `push`, `pull`): replace `initE2EWorktree`/`teardownE2EWorktree` pairs with `await withEphemeralWorktree(uniqueBranch(\"e2egit\"), async (dir) => { ... })`. For `push`/`pull`, pass `{ withRemote: true }` so a local bare `origin` exists.\n\nNote: every `runAgt([...])` call site must be updated to pass `dir` as the second arg. Use grep to find them all — there are ~100 call sites across the 17 files. Do this with care; it's the most error-prone part.\n\n### package.json\n\nUpdate `packages/library/package.json` scripts:\n```json\n\"test\": \"bun test\",\n\"test:e2e\": \"bun test tests/e2e\",\n\"test:coverage\": \"bun test --coverage --path-ignore-patterns '**/e2e/**'\",\n```\nThe `--path-ignore-patterns '**/e2e/**'` for coverage is the genuine fix for the stop-gap the releaser previously tried (it isn't currently in `package.json` — only stale `dist/` still shows it). Keeping `test:e2e` as a convenience entrypoint, **without `--jobs 1`**.\n\nAlso delete the stale \"must run serially / --jobs 1\" note from the top of `setup.ts`.\n\n### Documentation\n\nAdd `packages/library/tests/e2e/README.md` (~30 lines) covering:\n- Isolation contract: one ephemeral dir per test file (Type B) or per test (Type A), created under `os.tmpdir()`. Never write to repo paths.\n- How to add a new test: pick Type A or B, use `withEphemeralWorktree` / `createEphemeralDir` + `ensureE2EWorktree`, always pass `dir` to `runAgt`.\n- Cleanup is best-effort and automatic; tests must not assume state from prior files.\n- Parallelism: tests are parallel-safe by default; do not add shared mutable state.\n\n### Verification (do all before marking done)\n1. `cd packages/library && bun run typecheck` — clean.\n2. `cd packages/library && bun run lint` — clean.\n3. `cd packages/library && bun run test` — all green.\n4. `cd packages/library && bun test tests/e2e` three times back-to-back on a clean checkout — no flakes, no failures from polluted state.\n5. After the runs, confirm no leftover `agt-e2e-*` dirs under `os.tmpdir()` (`ls /tmp/ | grep agt-e2e-` should be empty once the suite exits).\n6. Confirm `validation/` is untouched by the suite (no `.agentrack.json`, no `.e2edata/`, no `.e2egit/`).\n\n### Risks / edge cases to watch\n- **~100 `runAgt` call sites** need the `dir` arg threaded through. Easy to miss one; the test will then fail loudly (it would fall back to `process.cwd()` of the test runner = repo root, which has no agentrack init → `NOT_INITIALIZED`).\n- **Push/pull with local bare remote**: verify `git push origin <branch>` works against a `file://`/relative bare repo. If `agt push` hard-codes `origin`, the local bare repo must be named `origin` — it is in the plan.\n- **`delete.test.ts` (14 tests) and `mentions.test.ts` (17 tests)** are the largest Type B files; they currently share one worktree per file. Keep that — per-file shared worktree is fine as long as `beforeEach` resets data.\n- **Timeout wrapper**: pick 30s default (current Type A tests already use 120s `timeout` on the bun test itself; the spawn wrapper can be tighter, e.g. 30s, to fail fast on hangs).\n- **Global cleanup safety net**: optionally add a final sweep test or `globalTeardown` in `bunfig.toml` that `rmSync`s any `agt-e2e-*` dirs older than 1h in tmpdir, to recover from killed runs. Nice-to-have, not required.\n- **Cross-platform**: `os.tmpdir()` returns `/var/folders/...` on macOS, `/tmp` on Linux. `mkdtemp` works on both. `git` operations on a path with spaces would break — our prefix has none, so fine.\n\n### Out of scope (do NOT do here)\n- Any change to `packages/library/src/` (no library code changes required).\n- Any change to `packages/cli/` (not in library-developer's domain anyway).\n- Adding new tests; this is purely an isolation refactor of existing tests."
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T17:15:19.789Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqibo59t45",
+      "reason": "Blocker issue mqibo59t45 transitioned to done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:17:56.817Z",
+    "author": "library-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:36:00.989Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqicr2p76e",
+      "content": "Done — implemented per-test ephemeral worktree isolation in the e2e suite.\n\n## Summary\n\nThe e2e suite now runs each test (or test file) against its own ephemeral directory under `os.tmpdir()` (prefix `agt-e2e-`). No test ever writes to repo paths (`validation/` is untouched), and the `--jobs 1` serial-execution requirement is gone.\n\n## Key design decision (no library code changes needed)\n\nIsolation is achieved purely by passing an explicit `cwd` to `Bun.spawn` — the existing `runAgt(args, cwd?, env?)` helper already forwarded `cwd` to the child, and the CLI resolves its tracker dir from `process.cwd()`. So **no `AGENTRACK_CWD` env var and no library source changes were required**, exactly as the plan predicted.\n\n## What changed\n\n- **`tests/e2e/setup.ts` rewritten** around an ephemeral-dir model:\n  - `createEphemeralDir()` / `rmEphemeralDir()` use `fs.mkdtempSync(join(os.tmpdir(), 'agt-e2e-'))`.\n  - `initGitRepo(dir, { withRemote? })` does `git init`, sets local user config, creates a bootstrap commit, and optionally sets up a local bare `origin` at `<dir>/remote.git` for push/pull round-trips.\n  - `withEphemeralWorktree(branch, fn, opts?)` — Type A wrapper: creates dir, inits git, runs `agt init`, calls `fn(dir, trackerDir)`, and always `rmSync`s the dir in `finally`.\n  - Type B helpers (`ensureE2EWorktree`, `resetWorktreeData`, `setAuthMode`, `getTrackerDir`, `ensurePointer`) now take the ephemeral `dir` as the first argument.\n  - `resetWorktreeData` now also resets `mentions.json` to `{}` (folding in what mentions.test.ts did ad-hoc).\n  - `runAgt` now **requires** `cwd` (so a missing arg is a loud TS error, not a silent fallback to repo root) and kills the child after a 30s timeout to prevent hung processes stalling CI.\n  - Old shared-state helpers (`getValidationDir`, `initE2EWorktree`, `teardownE2EWorktree`, `cleanupWorktree`, `prepareForCleanInit`) removed.\n\n- **All 17 test files migrated** to the new pattern:\n  - 14 Type B files: per-file ephemeral dir via `beforeAll`/`afterAll`, data reset in `beforeEach`, every `runAgt` call passes `dir`.\n  - 3 Type A files (`init`, `push`, `pull`): each test wraps its body in `withEphemeralWorktree` (`init` uses lower-level primitives so it can inspect the init result itself). Push/pull use `{ withRemote: true }` for a real round-trip against the local bare origin.\n\n- **`package.json`**: added `test:e2e` (without `--jobs 1`); `test:coverage` now includes `--path-ignore-patterns '**/e2e/**'` (the genuine fix for the coverage stopgap).\n\n- **`tests/e2e/README.md`** added: documents the isolation contract, how to add a new Type A/B test, and the parallelism/cleanup expectations.\n\n## Verification (all green)\n\n1. `bun run typecheck` — clean.\n2. `bun run lint` — clean.\n3. `bun run test` — 999 pass / 0 fail (full suite, including the 100 e2e tests).\n4. `bun test tests/e2e` ran **three times back-to-back**: 100 pass every time, ~14.8s per run (down from ~119s before).\n5. No leftover `agt-e2e-*` dirs under `os.tmpdir()` after the suite exits.\n6. `git status validation/` is clean — the suite does not touch `validation/` (no `.agentrack.json`, no `.e2edata/`, no `.e2egit/` writes).\n\n## Out of scope (as planned)\n\n- No changes to `packages/library/src/` or `packages/cli/`.\n- No new tests added — this is purely an isolation refactor of the existing 100.\n\nNet effect: e2e suite is parallel-safe, ~8x faster, and self-cleaning."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:36:10.747Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.730Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

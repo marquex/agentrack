@@ -70,5 +70,14 @@
     "content": {
       "status": "done"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:49:59.290Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

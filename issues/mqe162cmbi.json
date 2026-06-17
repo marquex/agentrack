@@ -49,5 +49,22 @@
       "id": "mqe28il482",
       "content": "CTO accepted BUG-1 as a real bug. Planned as a cross-team Epic with two deliverables:\n\nLIBRARY CHORE (mqe26nou8f) — provider side. Adds a backward-compatible token override to usersRegenerate so the webapp can forward an authenticated user's context. Includes joint design agreement: library-developer designs → webapp-developer reviews → I verify agreement → implement → validate → release.\n\nWEBAPP BUG (mqe26n00jo) — consumer side. Fixes the regenerate route (users.ts:54) to forward auth context using the new library API, and flips the e2e test assertion from 401 to 201. Reproduce can start immediately (bug exists now); Implement is blocked by the library release.\n\nEpic sync tracker (mqe27hts2g) is blocked by both deliverables' sync trackers — it wakes me when everything is done.\n\nKey decisions per CTO review (mqe1imi4lg): primary approach is the library API addition + webapp forwarding. The Design task also weighs the alternative (relaxing the self-service check in open mode) — if the library-developer and webapp-developer agree that's better, the webapp Implement task simplifies to just the e2e test update. Do NOT use process.env.AGT_USER_TOKEN (not concurrency-safe)."
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:23:20.007Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:23:20.043Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqiefxnb7u",
+      "content": "Closed per PM directive. Epic and all descendants (webapp regenerate-route fix, library token-override chore, review/gate/verify tasks, and all phase tasks beneath them) are cancelled. Re-plan separately if the work is still needed."
+    }
   }
 ]

@@ -13,5 +13,60 @@
       "description": "Found during validation of mqh3syrrnb (E2E isolation hardening).\n\nDEFECT (Low-Medium severity, no real-data leak): The cleanupE2ESeeds() helper in packages/webapp/e2e/setup.ts issues parallel DELETEs via Promise.all against the agentrack backend. The backend's file store performs unlocked read-modify-write cycles on index.json / issue files, so concurrent DELETEs race and some are silently dropped.\n\nREPRODUCTION (validated against an isolated backend on 5001 with AGENTRACK_CWD=validation/.e2edata):\n- Seeded 3 issues tagged 'e2e-seed'.\n- Ran cleanupE2ESeeds() once (parallel Promise.all of DELETEs).\n- Result: 2 of 3 tagged issues REMAINED. A second cleanup pass removed the rest.\n\nIMPACT:\n- The README claim 'an interrupted/failed spec does not leave stale seeds behind for the next spec' is weaker than reality — a single afterAll can leave stragglers within the .e2edata worktree.\n- Does NOT cause real-data leakage: Layer A (cwd assertion), the e2e-seed tag, the e2edata isolation, and the authoritative resetWorktreeData() in global-setup all still hold. Stragglers only accumulate briefly inside validation/.e2edata/ until the next run's global-setup reset wipes them.\n\nSUGGESTED FIX (for the webapp-developer):\n- Serialize the DELETEs in cleanupE2ESeeds() (a for...of await loop), or\n- Loop the list-then-delete-until-empty pattern until a listByTag pass returns 0, or\n- Add a short retry loop per delete.\n\nADJACENT MINOR BUG (same file, packages/webapp/e2e/global-setup.ts): the Layer A guard error message contains a literal '${BACKEND_PORT}' because the second concatenated string uses regular double quotes instead of a backtick template literal, so the port number is not interpolated. Cosmetic only; the guard still fires correctly.",
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:45:31.053Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:45:31.381Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqiay5cppu",
+      "content": "Triaged via ideas loop. Duplicate check: not a dup of mqh3syrrnb (E2E isolation hardening, closed -- that hardened Layers A/B/C; this is a newly-found race in cleanup) nor of mqh0su9kgq (one-off seed cleanup, closed). Routed to webapp-developer (webapp tech lead) in review mqiax8g35i; gate tracker mqiaxjq61m will wake me to act on the decision. Idea set to in-progress to prevent work-loop re-wake."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:19:51.171Z",
+    "author": "project-manager",
+    "content": {
+      "status": "todo",
+      "tags": [
+        "bug"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:20:12.470Z",
+    "author": "system",
+    "content": {
+      "status": "in-progress",
+      "reason": "auto-promoted to 'in-progress': child advanced to 'done'"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:46:58.918Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:46:59.009Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqifacchk1",
+      "content": "All phase tasks complete (review gate, fix, validation all done). Closing as delivered — serialized deletes in cleanupE2ESeeds validated with no stragglers."
+    }
   }
 ]

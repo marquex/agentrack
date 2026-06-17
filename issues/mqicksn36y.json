@@ -1,0 +1,46 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:31:07.850Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:07.850Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Validate: double-@@ regex fix + mentions suites pass",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mqib4k139o",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T17:31:07.970Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqickschxm"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T18:14:55.883Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqickschxm",
+      "reason": "Blocker issue mqickschxm transitioned to closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.918Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

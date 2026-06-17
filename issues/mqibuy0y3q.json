@@ -1,0 +1,83 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:11:02.119Z",
+    "author": "project-manager"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:11:02.119Z",
+    "author": "project-manager",
+    "content": {
+      "title": "Plan e2e API base URL constant extraction",
+      "description": "Plan the refactor to extract a shared e2e API base URL constant. Read the accepted review decision on mqiax8qo6l (comment mqibe8euv8) — it is the spec.\\n\\nGoal: single source of truth for the e2e backend base URL across packages/webapp/e2e/. Scope is a pure dedupe refactor, NO behavior change, NO port changes.\\n\\nIn your plan, confirm the exact edit set per the review's scope guidance:\\n1. Export the existing E2E_BACKEND_URL from e2e/setup.ts (just add 'export' — already correct value, do NOT introduce a parallel constant, do NOT consume Playwright baseURL which is the frontend port 5000).\\n2. phase2-validation.spec.ts: import the constant, replace all ~60 inline http://localhost:5001/... literals (preserve double-quoted vs template-literal per string; mechanical host-prefix replacement only).\\n3. phase1 / phase3 / phase4 / dashboard-roots / url-filters specs: delete per-spec 'const BASE = \"http://localhost:5001\"' and import the shared constant instead.\\n4. Do NOT touch playwright.config.ts, server/index.ts, frontend/vite.config.ts, or e2e/global-setup.ts.\\n\\nOutput a concrete plan (file list + edit shape) as a comment so the Dev task executes mechanically. Do not implement yet.",
+      "status": "todo",
+      "assignee": "webapp-developer",
+      "parentId": "mqh2nk7khi",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:12:27.998Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:14:45.058Z",
+    "author": "webapp-developer",
+    "content": {
+      "id": "mqibzqi2io",
+      "content": "## Plan: Extract shared e2e API base URL constant\n\nPure dedupe refactor — **no behavior change, no port changes**. Single source of truth for the e2e backend base URL across the webapp e2e suite.\n\n### Edit set (6 files)\n\n**1. e2e/setup.ts (line 128)**\nAdd `export` to the existing constant. No value change, no parallel constant introduced.\n\n```diff\n- const E2E_BACKEND_URL =\n+ export const E2E_BACKEND_URL =\n    process.env.E2E_BACKEND_URL ?? \"http://localhost:5001\";\n```\n\nNote: do NOT rename or alias — `cleanupE2ESeeds()` already uses this name internally.\n\n**2. e2e/phase2-validation.spec.ts (~60 inline literals)**\nIt already imports `{ cleanupE2ESeeds }` from \"./setup.js\" (line 18) — extend that import to also bring in `E2E_BACKEND_URL`:\n\n```diff\n- import { cleanupE2ESeeds } from \"./setup.js\";\n+ import { cleanupE2ESeeds, E2E_BACKEND_URL } from \"./setup.js\";\n```\n\nThen mechanically replace each inline `http://localhost:5001` literal, preserving per-string quote style:\n- Double-quoted: `\"http://localhost:5001/api/issues\"` -> `${E2E_BACKEND_URL}/api/issues` as a template literal.\n- Already template-literal: host-prefix swap only, keep existing interpolations.\n\n**3. The 5 specs with a local const BASE**\nphase1-validation.spec.ts (line 12), phase3-validation.spec.ts (line 21), phase4-validation.spec.ts (line 29), dashboard-roots-validation.spec.ts (line 21), url-filters-validation.spec.ts (line 25).\n\nEach declares `const BASE = \"http://localhost:5001\";`. Replace the local declaration with an aliased import so the many existing BASE references (e.g. 118 in phase3, 22 in dashboard-roots) need NO further edits:\n\n```diff\n- const BASE = \"http://localhost:5001\";\n+ import { E2E_BACKEND_URL as BASE } from \"./setup.js\";\n```\n\nPlacement:\n- phase1, phase4: replace the const BASE line with the aliased import (no existing setup import to merge into).\n- phase3, dashboard-roots, url-filters: merge into the existing `import { cleanupE2ESeeds } from \"./setup.js\";` -> `import { cleanupE2ESeeds, E2E_BACKEND_URL as BASE } from \"./setup.js\";` and delete the const BASE line.\n\nAliasing to BASE (rather than renaming every call site) keeps the diff minimal and mechanical — matches the review \"mechanical host-prefix replacement only\" guidance.\n\n### Files explicitly NOT touched\nplaywright.config.ts, server/index.ts, frontend/vite.config.ts, e2e/global-setup.ts — no port is changing.\n\n### Verification\n- `cd packages/webapp && npx tsc --noEmit` (if e2e is in tsconfig) — must pass.\n- `npx playwright test --list` — must list all 152 tests (config + all specs load).\n- Full regression (`npx playwright test`) requires port 5000 free (disable macOS AirPlay Receiver). Runner is `npx playwright test` only, never bunx; `workers: 1` / `fullyParallel: false` must remain untouched.\n\n### Risk / caveats\n- After refactor, future port/URL changes still sweep setup.ts (1 line) + the 3 config files + the spec doc. The invariant for the non-e2e-spec files is unchanged — this refactor only collapses the 6 e2e-spec edits into 1.\n- Aliased BASE keeps the diff low-risk; if a lint rule forbids import aliases, fall back to renaming call sites (larger but equivalent)."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:14:51.913Z",
+    "author": "webapp-developer",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:17:10.956Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:17:33.985Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqic3csamh",
+      "content": "## Plan confirmed — verified against code\n\nVerified the existing plan comment (webapp-developer) against the codebase; all facts check out and the edit set matches the accepted review scope (mqiax8qo6l, comment mqibe8euv8). Confirmed:\n- `e2e/setup.ts:128` — `const E2E_BACKEND_URL = process.env.E2E_BACKEND_URL ?? \"http://localhost:5001\";` (non-exported, used internally by cleanupE2ESeeds). ✅ just add `export`.\n- `phase2-validation.spec.ts` — 60 inline `http://localhost:5001` literals. ✅\n- `phase1` / `phase3` / `phase4` / `dashboard-roots` / `url-filters` — each declares `const BASE = \"http://localhost:5001\";`. ✅ (phase1:12, phase4:29, dashboard-roots:21, phase3:21, url-filters:25)\n\n### Final edit set for the Dev task (mqibv7ai6j)\n1. **e2e/setup.ts:128** — add `export` to the existing constant. No new constant, no Playwright `baseURL` conflation (baseURL = frontend port 5000; API is 5001).\n2. **phase2-validation.spec.ts** — extend existing `import { cleanupE2ESeeds } from \"./setup.js\";` → also import `E2E_BACKEND_URL`; replace all 60 inline literals, preserving per-string quote style (double-quoted → template literal; already template-literal → host-prefix swap only).\n3. **phase1, phase4** — replace `const BASE = \"http://localhost:5001\";` line with `import { E2E_BACKEND_URL as BASE } from \"./setup.js\";` (no existing setup import to merge).\n4. **phase3, dashboard-roots, url-filters** — merge into existing setup import → `import { cleanupE2ESeeds, E2E_BACKEND_URL as BASE } from \"./setup.js\";` and delete the `const BASE` line.\n\nAliasing to `BASE` keeps existing call sites untouched → minimal, mechanical diff (matches review's \"mechanical host-prefix replacement only\").\n\n### Out of scope (must NOT touch)\n`playwright.config.ts`, `server/index.ts`, `frontend/vite.config.ts`, `e2e/global-setup.ts`. No port changes, no behavior change.\n\n### Dev verification (minimum bar)\n- `cd packages/webapp && npx playwright test --list` → must list all 152 tests (config + all specs load cleanly).\n- `workers: 1` / `fullyParallel: false` untouched; runner is `npx playwright test` (never `bunx`).\n- Full regression needs port 5000 free (macOS AirPlay Receiver); if unavailable, document it and leave the full run to the Validate task.\n\nPlan task complete — Dev task (mqibv7ai6j) is now unblocked and should execute the above mechanically."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:17:38.397Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:07:42.619Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
+  }
+]

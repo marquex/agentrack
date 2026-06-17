@@ -13,5 +13,59 @@
       "description": "Follow-up discovered while planning port standardization (mqh2hw1wl3).\\n\\nThe e2e specs hardcode the API base URL. phase1 and phase2 inline `http://localhost:3001/...` in 63 places; phase3/phase4/dashboard/url-filters each define a local `const BASE`.\\n\\nProposal: export a single `E2E_API_BASE` (and optionally consume Playwright's `baseURL`-derived value) from `e2e/setup.ts` and import it in all specs. This makes future port changes a 1-line edit and removes a class of breakage where the playwright.config.ts port moves but specs lag behind.\\n\\nScope: refactor only, no behavior change. Must keep all 152 tests green.",
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:45:30.893Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:45:31.218Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqiay5hrpc",
+      "content": "Triaged via ideas loop. Duplicate check: no existing issue covers extracting a shared e2e BASE constant (port-standardization work mqh2gvx6nw/mqh2hwulrt did not include this refactor). Routed to webapp-developer (webapp tech lead) in review mqiax8qo6l; gate tracker mqiaxj0xie will wake me to act on the decision. Idea set to in-progress to prevent work-loop re-wake."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:10:49.105Z",
+    "author": "project-manager",
+    "content": {
+      "status": "todo",
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:11:19.210Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:07:42.617Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:07:42.659Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqidvubuo4",
+      "content": "Status loop: all 5 children (review, gate, plan, implement, validate) are done. Closing this top-level chore — the shared e2e API base URL constant has been extracted and validated."
+    }
   }
 ]

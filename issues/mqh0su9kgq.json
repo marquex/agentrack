@@ -69,5 +69,21 @@
       "id": "mqh3saggos",
       "content": "Accepted (ideas loop, gate mqh1gpnqjp cleared). Library-architect review mqh1ghz42s = ACCEPT with refinements.\n\nSTATUS:\n- Work Item 1 (bulk cleanup): COMPLETE. Tracker swept on 2026-06-16 — 388 leaked seed issues + 26 children + 27 test users removed; 114 real issues remain across 26 top-level deliverables. Audited above. No further cleanup work.\n- Work Item 2 (harden E2E isolation): REMAINING. This is now the active scope of this chore.\n\nHardening scope (from the accepted review):\n- Layer A (mandatory): health endpoint echoes resolved cwd (or a test-only debug route does); global-setup.ts asserts the returned path equals the e2e data dir and fails the run otherwise. Directly catches a non-isolated server on port 3001.\n- Layer B (mandatory): every e2e seed-creation call site tags issues with 'e2e-seed' and captures ids; a shared afterEach/afterAll in setup.ts lists+deletes tagged seeds so the suite is self-healing.\n- Layer C (mandatory): README section documenting the isolation invariants (never manually bind 3001, never set reuseExistingServer, AGENTRACK_CWD is the isolation boundary, ports 3001/5174 must stay distinct from 3000/5173).\n\nInvariants to preserve: AGENTRACK_CWD name unchanged; reuseExistingServer stays absent on both webServer entries; ports 3001/5174 stay distinct.\n\nCreated phase tasks: Plan -> Dev -> Validate. Idea retagged chore. Internal test-infrastructure work, so it completes at Validate (no separate release)."
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T06:39:58.019Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T06:40:02.020Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
   }
 ]

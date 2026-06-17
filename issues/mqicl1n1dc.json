@@ -1,0 +1,47 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:31:18.923Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:18.923Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Validate: E2E suite passes 3x in parallel on clean checkout, no validation/ pollution",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "library-validator",
+      "parentId": "mqib4kqx2y",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "blockage-added",
+    "timestamp": "2026-06-17T17:31:19.033Z",
+    "author": "anonymous",
+    "content": {
+      "blockerId": "mqicl1m8uw"
+    }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T18:14:55.537Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqicl1m8uw",
+      "reason": "Blocker issue mqicl1m8uw transitioned to closed"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.578Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

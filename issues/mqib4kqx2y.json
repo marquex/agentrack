@@ -1,0 +1,76 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T16:50:31.629Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:50:31.629Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Rework library E2E suite for per-test ephemeral worktree isolation",
+      "description": "The library E2E suite in tests e2e spawns the agt binary as a subprocess against the shared validation worktree dir. Tests must run serially (bun --jobs 1) and fail when validation state is polluted by prior runs. The releaser excluded the e2e dir from the publish-gate coverage command and added a serial test:e2e script as a stop-gap (accepted in review mqiax842ch item 3). This issue covers the real isolation fix.\n\nScope:\n- Each e2e test must spin up its own unique ephemeral worktree using fs.mkdtemp under the OS tmpdir, never writing to the shared validation dir.\n- Point the subprocess at the worktree via the AGENTRACK_CWD env var (verify the CLI respects it; if not, that is a prerequisite task to file separately).\n- Add an afterEach (or per-test finally) cleanup that removes the ephemeral worktree so no state leaks between runs.\n- Remove the serial-execution requirement once tests are isolated (verify they pass with default parallelism). Keep the test:e2e script as a convenience entrypoint.\n- Add a small README note in the e2e folder documenting the isolation contract for future test authors.\n\nRisk: medium. Subprocess and fs cleanup are the main sources of flake; consider a timeout-wrapper around spawn and a best-effort cleanup that swallows ENOENT. Verify the suite passes 3 times in a row on a clean checkout.\n\nParent context: review mqiax842ch item 3. Origin: idea mqh1l5phtj found during release prep mqe2xmprgj.",
+      "status": "todo",
+      "priority": 2,
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:05:34.642Z",
+    "author": "project-manager",
+    "content": {
+      "tags": [
+        "chore"
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:06:27.069Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqibp2tr09",
+      "content": "Planned as a chore (test-infrastructure rework, no new user-facing capability). Architect direction already on record in review mqiax842ch item 3 (per-test fs.mkdtemp under OS tmpdir, AGENTRACK_CWD env var, afterEach cleanup, drop serial requirement). Broken into the standard 4 phase tasks under library team:\n\n- mqibo59t45  Plan  → library-developer (investigate AGENTRACK_CWD support; if the CLI does NOT respect it, file a separate prerequisite chore and block this issue on it before implementation)\n- mqibocc1kd  Dev    → library-developer  (blocked by Plan)\n- mqibohp1zk  Validate → library-validator  (blocked by Dev; verify 3 consecutive clean parallel runs, no state leak, cleanup swallows ENOENT, spawn timeout-wrapper)\n- mqiboor9kc  Release  → library-releaser   (blocked by Validate; decide publish-gate re-inclusion of e2e dir and drop the --jobs 1 serial requirement from test:e2e script)\n\nParent stays at todo — status loop promotes it when Dev starts. Stop-gap from release prep mqe2xmprgj remains in place until Release task lands."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:08:30.259Z",
+    "author": "system",
+    "content": {
+      "status": "in-progress",
+      "reason": "auto-promoted to 'in-progress': child advanced to 'in-progress'"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:30:50.825Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "chore"
+      ],
+      "parentId": "mqh1l5phtj"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:19.225Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:15:06.755Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]

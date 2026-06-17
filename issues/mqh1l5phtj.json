@@ -14,5 +14,69 @@
       "priority": 2,
       "assignee": "project-manager"
     }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T16:45:30.810Z",
+    "author": "project-manager",
+    "content": {
+      "status": "in-progress",
+      "assignee": "project-manager"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T16:45:31.135Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqiay5knng",
+      "content": "Triaged via ideas loop. Duplicate check: no existing idea/issue covers the library CLI test suite (webapp E2E issues mqe1drwrck/mqe06v82ul/mqh0su9kgq are webapp-side, not the library tests/core|integration|e2e suite). Routed to library-architect (library tech lead) in review mqiax842ch; gate tracker mqiaxjtbly will wake me to act on the decision. Idea set to in-progress to prevent work-loop re-wake."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:30:50.720Z",
+    "author": "anonymous",
+    "content": {
+      "status": "todo",
+      "assignee": "project-manager",
+      "tags": [
+        "epic"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:19.224Z",
+    "author": "anonymous",
+    "content": {
+      "status": "in-progress"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T17:31:37.077Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqiclf1hkj",
+      "content": "Ideas-loop decision applied (architect review mqiax842ch). Disposition of all 4 items:\n\nACCEPTED AS-IS (no code work â releaser stop-gaps stand):\n- Item 2 (CLI version drift, runner.ts): release prep fix accepted, covered by package.test.ts --version assertion. No issue.\n- Item 4 (package version test): version-agnostic fix accepted. No issue.\n\nACCEPTED DEVIATION (no code, spec amendment only):\n- Item 1b (rebuild AC9 â mentions index reflects currently-registered users only): formally accepted. Revoked-user history lives in the event log / history commands, not the mentions index. Spec owner to amend. No issue.\n\nREFINED INTO DELIVERABLES (work tracked below): this idea becomes the Epic grouping them. Each gets its full phase flow (no phases skipped):\n- bug mqib4k139o â fix double-@@ regex deviation (1a). ReproduceâDevâValidateâRelease.\n- bug mqib4kzypc â implement requiresIdentity flag for TOKEN_REQUIRED semantics (1c, identity-security gap). ReproduceâDevâValidateâRelease.\n- chore mqib4kqx2y â per-test ephemeral worktree isolation for E2E suite (3). PlanâDevâValidateâRelease.\n\nThe three deliverables are independent (no cross-blockages); they proceed in parallel once their phase tasks are picked up. Epic completes via the status loop when all three deliverables are done."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:15:13.284Z",
+    "author": "project-manager",
+    "content": {
+      "status": "closed"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T18:15:21.298Z",
+    "author": "project-manager",
+    "content": {
+      "id": "mqie5o3z9l",
+      "content": "Closed per PM directive. Epic and all descendants (E2E isolation chore, mentions spec-deviation bugs, review/gate tasks, and all phase tasks beneath them) are cancelled. Re-plan separately if any of this work is still needed."
+    }
   }
 ]

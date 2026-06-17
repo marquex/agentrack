@@ -103,5 +103,40 @@
       "id": "mqh2drqmqu",
       "content": "Status-loop routing fix: reassigned Release task from project-manager to library-releaser. Release/publish is a releaser/devops gate, not PM work -- matches the sibling release mqe27481sa (corrected the same way last cycle). Still blocked by npm publish credentials (mqh1kqwpy9, active) so no work is picked up yet; the correct owner is now in place for when that blockage clears."
     }
+  },
+  {
+    "type": "blockage-resolved",
+    "timestamp": "2026-06-17T06:56:08.385Z",
+    "author": "system",
+    "content": {
+      "blockerId": "mqh1kqwpy9",
+      "reason": "Blocker issue mqh1kqwpy9 transitioned to done"
+    }
+  },
+  {
+    "type": "comment",
+    "timestamp": "2026-06-17T15:52:28.452Z",
+    "author": "anonymous",
+    "content": {
+      "id": "mqi91xxus2",
+      "content": "There is no need to publish in NPM just yet."
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T15:52:36.710Z",
+    "author": "anonymous",
+    "content": {
+      "status": "done"
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T15:57:51.349Z",
+    "author": "system",
+    "content": {
+      "status": "closed",
+      "reason": "auto-closed: parent closed"
+    }
   }
 ]

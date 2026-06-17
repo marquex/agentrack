@@ -1,0 +1,29 @@
+[
+  {
+    "type": "creation",
+    "timestamp": "2026-06-17T17:31:08.038Z",
+    "author": "anonymous"
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T17:31:08.038Z",
+    "author": "anonymous",
+    "content": {
+      "title": "Reproduce: mentionsRead/Unread return MENTION_ACCESS_DENIED instead of TOKEN_REQUIRED in open mode w/o token",
+      "status": "todo",
+      "assignee": "library-validator",
+      "parentId": "mqib4kzypc",
+      "tags": [
+        "task"
+      ]
+    }
+  },
+  {
+    "type": "update",
+    "timestamp": "2026-06-17T18:14:55.992Z",
+    "author": "anonymous",
+    "content": {
+      "status": "closed"
+    }
+  }
+]
